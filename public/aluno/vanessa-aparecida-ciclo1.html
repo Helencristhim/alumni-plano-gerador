@@ -829,8 +829,27 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
    conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
    linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
-.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-pt{display:block;font-family:var(--font-corpo);font-style:italic;font-weight:var(--peso-leve);font-size:.82rem;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h);max-width:60ch}
 .slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
+/* O TAMANHO E O PESO SAO ABSOLUTOS, e por que isso importa (revisao de 03/09/2026).
+   A regra acima dizia `font-size:.86em` e nao dizia peso nenhum -- as duas coisas herdadas
+   do elemento que hospeda o apoio. Dentro de `.slide-question` (clamp ate 1.9rem, peso 600)
+   o portugues saia com 26px e NEGRITO ao lado de um ingles de 30px: medido no navegador em
+   03/09/2026, na aula 1 da Vanessa. O apoio competia de igual para igual com a frase que
+   ele deveria apenas situar, e o olho ia nele primeiro -- exatamente o que o paragrafo
+   acima diz que ele NAO pode fazer.
+   `em` herda o corpo; `rem` nao. E o peso vai declarado, e nao deixado ao host. */
+.slide-question .slide-pt,.q-item .slide-pt,.slide-subtitle .slide-pt,.slide-lead .slide-pt{
+  font-size:.82rem;font-weight:var(--peso-leve);font-style:italic}
+
+/* A PERGUNTA CENTRALIZADA TEM DE FICAR CENTRADA (revisao de 03/09/2026).
+   `.slide-question` tem `max-width:38ch`. Num slide de abertura -- `.slide-open`, cujo
+   `.slide-inner` e `text-align:center` -- o TEXTO se centraliza dentro da caixa, mas a
+   CAIXA continua encostada a esquerda: 577px de pergunta num inner de 940px deixavam 363px
+   de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
+   da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
+   nada muda, porque a regra so vale onde o inner ja centraliza. */
+.slide-open .slide-question{margin-left:auto;margin-right:auto}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1367,7 +1386,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">A booking is short on purpose. Four things &mdash; who, where, when, what is included &mdash; and you can use it anywhere in the world.<div class="item-pt" lang="pt-BR">A reserva é curta de propósito. Quatro informações — quem, onde, quando e o que está incluído — e ela serve em qualquer lugar do mundo.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd1')">Check / Checar</button>
     <div class="score-out" id="kd1-out"></div>
     <div class="callout" id="kd1-key" style="display:none">
       <div class="callout-title">Por que a aula 1 comeca aqui</div>
@@ -1412,7 +1431,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">reserva</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl1')">Check / Checar</button>
     <div class="score-out" id="kl1-out"></div>
     <div class="callout" id="kl1-key" style="display:none">
       <div class="callout-title">Seis palavras, e voce ja conhece quatro</div>
@@ -1438,7 +1457,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">Hotel Marina</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">Hotel Marina — o nome do hotel.</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>a place</em> = um lugar &middot; <em>a number</em> = um número &middot; <em>a date</em> = uma data &middot; <em>a name</em> = um nome</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl1p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl1p')">Check / Checar</button>
     <div class="score-out" id="cl1p-out"></div>
     <div class="callout" id="cl1p-key" style="display:none">
       <div class="callout-title">A data em ingles vem em outra ordem</div>
@@ -1462,7 +1481,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Check-in on the 14th and check-out on the 18th is four nights. It is the one thing the paper does not say in words &mdash; and the one the hotel will ask you.<div class="item-pt" lang="pt-BR">Check-in no dia 14 e check-out no dia 18 dá quatro noites. É a única informação que o papel não diz com palavras — e é justamente a que o hotel vai perguntar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl1')">Check / Checar</button>
     <div class="score-out" id="fl1-out"></div>
     <div class="callout" id="fl1-key" style="display:none">
       <div class="callout-title">Quatro noites, e o papel nao diz isso</div>
@@ -1482,7 +1501,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">Breakfast is</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">including</option><option value="B">included</option><option value="C">include</option></select><div class="item-why item-pt" lang="pt-BR"><em>Breakfast is included.</em> — O café da manhã está incluído.</div></div>
       <div class="match-row"><span class="match-word">It is a room</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">with two people</option><option value="B">for two people</option><option value="C">of two people</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is a room for two people.</em> — É um quarto para duas pessoas.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn1')">Check / Checar</button>
     <div class="score-out" id="cn1-out"></div>
     <div class="callout" id="cn1-key" style="display:none">
       <div class="callout-title">Quatro frases, e a viagem inteira cabe nelas</div>
@@ -1505,10 +1524,8 @@ document.body.setAttribute('data-view','aluno');
       <div class="item-why item-pt" lang="pt-BR">É de 14 de outubro a 18 de outubro.</div>
       <p class="chunk-line">Breakfast <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> included.</p>
       <div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído.</div>
-      <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> a room for two people.</p>
-      <div class="item-why item-pt" lang="pt-BR">É um quarto para duas pessoas.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz1')">Check / Checar</button>
     <div class="score-out" id="cz1-out"></div>
     <div class="callout" id="cz1-key" style="display:none">
       <div class="callout-title">Este e o seu texto na aula</div>
@@ -1538,7 +1555,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Three questions, five words each, and the same ones every time. Asking for a repeat is normal &mdash; people do it in their own language, at every desk.<div class="item-pt" lang="pt-BR">Três perguntas, cinco palavras cada, e sempre as mesmas. Pedir para repetir é normal — as pessoas fazem isso na própria língua, em qualquer balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd2')">Check / Checar</button>
     <div class="score-out" id="kd2-out"></div>
     <div class="callout" id="kd2-key" style="display:none">
       <div class="callout-title">Esta e a cena que voce ja viveu</div>
@@ -1583,7 +1600,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">quantas noites?</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl2')">Check / Checar</button>
     <div class="score-out" id="kl2-out"></div>
     <div class="callout" id="kl2-key" style="display:none">
       <div class="callout-title">Duas frases resolvem qualquer aperto</div>
@@ -1609,7 +1626,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;Breakfast is from seven to ten.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;O café da manhã é das sete às dez.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>the number of nights</em> = quantas noites &middot; <em>your name</em> = o seu nome &middot; <em>breakfast</em> = o café da manhã</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl2p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl2p')">Check / Checar</button>
     <div class="score-out" id="cl2p-out"></div>
     <div class="callout" id="cl2p-key" style="display:none">
       <div class="callout-title">Sempre as mesmas tres</div>
@@ -1629,7 +1646,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">You did not understand the question.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Thank you.</option><option value="B">Yes, please.</option><option value="C">Sorry, again please?</option></select><div class="item-why item-pt" lang="pt-BR">Você não entendeu a pergunta — <em>Sorry, again please?</em> (Desculpe, de novo, por favor?)</div></div>
       <div class="match-row"><span class="match-word">They are speaking very fast.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">More slowly, please.</option><option value="B">No, thank you.</option><option value="C">I am sorry.</option></select><div class="item-why item-pt" lang="pt-BR">Estão falando muito rápido — <em>More slowly, please.</em> (Mais devagar, por favor.)</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn2')">Check / Checar</button>
     <div class="score-out" id="cn2-out"></div>
     <div class="callout" id="cn2-key" style="display:none">
       <div class="callout-title">Respostas curtas sao respostas</div>
@@ -1653,7 +1670,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Two voices, three questions, said slowly. Nothing about a passport and nothing about the trip &mdash; those are other conversations, in other lessons.<div class="item-pt" lang="pt-BR">Duas vozes, três perguntas, ditas devagar. Nada sobre passaporte e nada sobre a viagem — isso é outra conversa, em outra aula.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl2')">Check / Checar</button>
     <div class="score-out" id="fl2-out"></div>
     <div class="callout" id="fl2-key" style="display:none">
       <div class="callout-title">Duas vozes, e isso importa</div>
@@ -1680,7 +1697,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="More" style="min-width:70px" placeholder="..."> slowly, please.</p>
       <div class="item-why item-pt" lang="pt-BR">Mais devagar, por favor.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz2')">Check / Checar</button>
     <div class="score-out" id="cz2-out"></div>
     <div class="callout" id="cz2-key" style="display:none">
       <div class="callout-title">Cinco frases, e o balcão inteiro</div>
@@ -1710,7 +1727,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">You have been using this verb since the first lesson. Today it gets a name &mdash; and a name for something you can already do is easy to keep.<div class="item-pt" lang="pt-BR">Você usa este verbo desde a primeira aula. Hoje ele ganha um nome — e nome para uma coisa que você já faz é fácil de guardar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd3')">Check / Checar</button>
     <div class="score-out" id="kd3-out"></div>
     <div class="callout" id="kd3-key" style="display:none">
       <div class="callout-title">Este e o verbo que voce citou</div>
@@ -1736,7 +1753,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">I ___ here for four nights.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Eu ___ aqui por quatro noites.</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>am</em> = <em>am</em> — vai com <em>I</em> (eu) &middot; <em>is</em> = <em>is</em> — vai com <em>he</em>, <em>she</em>, <em>it</em> e com um nome &middot; <em>are</em> = <em>are</em> — vai com <em>you</em>, <em>we</em>, <em>they</em></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'kl3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'kl3')">Check / Checar</button>
     <div class="score-out" id="kl3-out"></div>
     <div class="callout" id="kl3-key" style="display:none">
       <div class="callout-title">Tres formas, e so tres</div>
@@ -1760,7 +1777,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">The three that are wrong all use the form of another person. Nothing else changes in the sentence &mdash; and that is the only thing to get right.<div class="item-pt" lang="pt-BR">As três erradas usam a forma de outra pessoa. Nada mais muda na frase — e é só isso que você precisa acertar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'nt3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'nt3')">Check / Checar</button>
     <div class="score-out" id="nt3-out"></div>
     <div class="callout" id="nt3-key" style="display:none">
       <div class="callout-title">O que olhar</div>
@@ -1781,7 +1798,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">___ you from Brazil?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Are</option><option value="B">Am</option><option value="C">Is</option></select><div class="item-why item-pt" lang="pt-BR"><em>Are you from Brazil?</em> — Você é do Brasil?</div></div>
       <div class="match-row"><span class="match-word">It ___ not a big hotel.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is not a big hotel.</em> — Não é um hotel grande.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn3')">Check / Checar</button>
     <div class="score-out" id="cn3-out"></div>
     <div class="callout" id="cn3-key" style="display:none">
       <div class="callout-title">A forma inteira, em uma linha</div>
@@ -1801,7 +1818,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">It is a double room. &amp;rarr; question</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Is it a double room?</option><option value="B">It is a double room?</option><option value="C">Does it a double room?</option></select><div class="item-why item-pt" lang="pt-BR">Pergunta: <em>Is it a double room?</em> — É um quarto de casal?</div></div>
       <div class="match-row"><span class="match-word">I am Vanessa. &amp;rarr; about your daughter</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">She am Vanessa.</option><option value="B">She are Vanessa.</option><option value="C">She is Vanessa.</option></select><div class="item-why item-pt" lang="pt-BR">Sobre a sua filha: <em>She is Vanessa.</em> — Ela é a Vanessa. Muda a pessoa, muda a forma.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'dr3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'dr3')">Check / Checar</button>
     <div class="score-out" id="dr3-out"></div>
     <div class="callout" id="dr3-key" style="display:none">
       <div class="callout-title">Onde escorrega de verdade</div>
@@ -1827,7 +1844,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="Are" style="min-width:60px" placeholder="..."> you here for four nights?</p>
       <div class="item-why item-pt" lang="pt-BR">Você está aqui por quatro noites?</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz3')">Check / Checar</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
       <div class="callout-title">Estas seis sao a sua producao na aula</div>
@@ -1857,7 +1874,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Four short moments: hello, your name, the dates, one request. Everything else is the desk&rsquo;s job.<div class="item-pt" lang="pt-BR">Quatro momentos curtos: o cumprimento, o seu nome, as datas e um pedido. Todo o resto é trabalho de quem está no balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd4')">Check / Checar</button>
     <div class="score-out" id="kd4-out"></div>
     <div class="callout" id="kd4-key" style="display:none">
       <div class="callout-title">A aula que fecha o bloco</div>
@@ -1902,7 +1919,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">por favor</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl4')">Check / Checar</button>
     <div class="score-out" id="kl4-out"></div>
     <div class="callout" id="kl4-key" style="display:none">
       <div class="callout-title">Tres palavras, e nenhuma outra</div>
@@ -1924,7 +1941,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;Have a good day.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Tenha um bom dia.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>in the middle</em> = no meio &middot; <em>at the end</em> = no fim &middot; <em>at the beginning</em> = no começo</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl4p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl4p')">Check / Checar</button>
     <div class="score-out" id="cl4p-out"></div>
     <div class="callout" id="cl4p-key" style="display:none">
       <div class="callout-title">O comeco e o fim custam duas palavras</div>
@@ -1944,7 +1961,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">___ a taxi on Saturday?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is it</option><option value="C">Are you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a taxi on Saturday?</em> — Posso ter um táxi no sábado?</div></div>
       <div class="match-row"><span class="match-word">___ a late check-out?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is there</option><option value="C">Do you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a late check-out?</em> — Posso sair mais tarde no último dia?</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn4')">Check / Checar</button>
     <div class="score-out" id="cn4-out"></div>
     <div class="callout" id="cn4-key" style="display:none">
       <div class="callout-title">Um comeco, cinco pedidos</div>
@@ -1969,7 +1986,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Three moves, and you already have all three from lesson 2. A question you did not expect is not a problem &mdash; it is the normal shape of a real conversation.<div class="item-pt" lang="pt-BR">São três saídas, e você já tem as três desde a aula 2. Uma pergunta que você não esperava não é problema — é o formato normal de uma conversa de verdade.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl4')">Check / Checar</button>
     <div class="score-out" id="fl4-out"></div>
     <div class="callout" id="fl4-key" style="display:none">
       <div class="callout-title">Voce ja tem as tres</div>
@@ -1996,7 +2013,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="Thank you" style="min-width:100px" placeholder="...">. Have a good day.</p>
       <div class="item-why item-pt" lang="pt-BR">Obrigada. Tenha um bom dia.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz4')">Check / Checar</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
       <div class="callout-title">Cinco frases, e o check-in inteiro</div>
@@ -2007,7 +2024,7 @@ document.body.setAttribute('data-view','aluno');
 
   
   <div class="btn-bar pre-acoes" style="justify-content:flex-end;margin-top:var(--space-6);padding-top:var(--space-4);border-top:1px solid var(--border)">
-    <button class="btn-ghost" id="preResetBtn" onclick="preResetAsk()"><span data-view="aluno">Reset my answers</span></button>
+    <button class="btn-ghost" id="preResetBtn" onclick="preResetAsk()"><span data-view="aluno">Reset my answers &middot; Limpar minhas respostas</span></button>
   </div>
 
   
@@ -2108,7 +2125,6 @@ document.body.setAttribute('data-view','aluno');
           <tr><td><strong>The city</strong></td><td><em>I am in Lisbon.</em></td></tr>
           <tr><td><strong>The dates</strong></td><td><em>It is from 14 October to 18 October.</em></td></tr>
           <tr><td><strong>What is included</strong></td><td><em>Breakfast is included.</em></td></tr>
-          <tr><td><strong>The room</strong></td><td><em>It is a room for two people.</em></td></tr>
         </tbody>
       </table>
     </div>
@@ -2117,7 +2133,7 @@ document.body.setAttribute('data-view','aluno');
       Leu um documento inteiro em ingles e disse quatro frases sem ele. <strong>No primeiro dia.</strong> Isso fica anotado &mdash; e daqui a vinte aulas vai ser o comeco da sua comparacao.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas quatro frases, em um lugar só.</strong><br><br>O seu nome — <em>My name is Vanessa.</em><br>A cidade — <em>I am in Lisbon.</em> (Eu estou em Lisboa.)<br>As datas — <em>It is from 14 October to 18 October.</em> (É de 14 a 18 de outubro.)<br>O que está incluído — <em>Breakfast is included.</em> (O café da manhã está incluído.)<br>O quarto — <em>It is a room for two people.</em> (É um quarto para duas pessoas.)<br><br><strong>O que você fez hoje:</strong> leu um documento inteiro em inglês e disse quatro frases sem ele. No primeiro dia.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas quatro frases, em um lugar só.</strong><br><br>O seu nome — <em>My name is Vanessa.</em><br>A cidade — <em>I am in Lisbon.</em> (Eu estou em Lisboa.)<br>As datas — <em>It is from 14 October to 18 October.</em> (É de 14 a 18 de outubro.)<br>O que está incluído — <em>Breakfast is included.</em> (O café da manhã está incluído.)<br><br><strong>O que você fez hoje:</strong> leu um documento inteiro em inglês e disse quatro frases sem ele. No primeiro dia.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2151,13 +2167,13 @@ document.body.setAttribute('data-view','aluno');
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>Write More</h4><span class="badge badge-open">Optional</span></div>
-    <p class="task-instr">Write the same four sentences about someone else in your family.</p>
+    <p class="task-instr">Write the same four sentences about another booking.</p>
     <div class="callout rule-box">
-      <span class="callout-title">Why someone else</span>
-      Because <em>my name is</em> becomes <em>her name is</em>, and that small change is the whole of lesson 3. You will do it before anyone explains it to you.
+      <span class="callout-title">Why another booking</span>
+      The sentences do not change &mdash; only the name of the city, the dates and what is included.<br><br><strong>That is what makes them sentences and not lines you memorized:</strong> new details go in, and the frame still holds.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas quatro frases sobre outra pessoa da sua família.</strong><br><br><strong>Por que outra pessoa:</strong> porque <em>my name is</em> vira <em>her name is</em>, e essa mudança pequena é a aula 3 inteira. Você vai fazer isso antes de alguém ter explicado.</div>
+    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas quatro frases sobre outra reserva.</strong><br><br><strong>Por que outra reserva:</strong> as frases n&atilde;o mudam &mdash; muda s&oacute; a cidade, as datas e o que est&aacute; inclu&iacute;do. &Eacute; isso que faz delas frases, e n&atilde;o linhas decoradas: entram informa&ccedil;&otilde;es novas e a estrutura continua de p&eacute;.</div>
     <label class="mail-label" for="pw1-body">Your note</label>
     <textarea class="writebox" id="pw1-body" style="min-height:170px" placeholder="" oninput="pwCount('pw1-body','pw1-count','post_pw1_writing')"></textarea>
     <div class="wc"><span id="pw1-count">0 words</span></div>
@@ -3450,10 +3466,10 @@ function preSnap(){
 function preResetAsk(){
   var n=_preAtual,aluno=ehAluno();
   if(aluno){
-    askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers?',
-      '<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+
-      '<div class="ask-keep">Nothing your teacher wrote is affected, and the other lessons stay as they are.</div>',
-      'Clear my answers',true,preResetGo);
+    askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers? &middot; Limpar as respostas da aula '+('0'+n).slice(-2)+'?',
+      '<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+'<p lang="pt-BR">Isto apaga <b>as suas respostas</b> do pre-class da aula '+('0'+n).slice(-2)+', e so dela.</p>'+
+      '<div class="ask-keep">Nothing your teacher wrote is affected, and the other lessons stay as they are.<br><span lang="pt-BR">Nada do que a professora escreveu e afetado, e as outras aulas ficam como estao.</span></div>',
+      'Clear my answers &middot; Limpar',true,preResetGo);
   }else{
     askOpen('Fechar todos os gabaritos da Aula '+('0'+n).slice(-2)+'?',
       '<p>Fecha <b>tudo o que você abriu nesta tela</b> no pre-class da aula '+('0'+n).slice(-2)+': painéis de answer key, transcripts, racionais e correções exibidas.</p>'+
@@ -3702,9 +3718,67 @@ function porqueAbre(host){
   var w=host.querySelectorAll('.item-why'),i;
   for(i=0;i<w.length;i++)w[i].classList.add('show');
 }
+/* ---------------- REFAZER: o botao que confere vira o botao que limpa ----------------
+   O rotulo de ida sai do `data-redo` que o EMISSOR escreve (so ele sabe se o material e
+   bilingue); o de volta sai do proprio botao, guardado em `data-check` na primeira vez. */
+var _exSnap={};
+function exGuarda(id,host){
+  if(!id||!host||_exSnap[id]!==undefined)return;
+  /* A COPIA SAI LIMPA, e nao como a tela estava. Ela e tirada na primeira conferida --
+     quando as escolhas da aluna JA estao marcadas --, entao guardar `innerHTML` cru fazia
+     o "Refazer" devolver o exercicio com as mesmas alternativas ainda selecionadas: com
+     cara de respondido, sem estar conferido. Refazer e comecar de novo.
+     Nao ha o que limpar em <select> nem em <input>: a escolha do usuario vive na
+     PROPRIEDADE, e `innerHTML` serializa o atributo -- eles ja voltam vazios. */
+  var d=document.createElement('div'); d.innerHTML=host.innerHTML;
+  var el=d.querySelectorAll('.sel,.correct,.wrong'),i;
+  for(i=0;i<el.length;i++)el[i].classList.remove('sel','correct','wrong');
+  _exSnap[id]=d.innerHTML;
+}
+function exFeito(btn,id){
+  if(!btn||_exSnap[id]===undefined)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function exRefaz(btn,id){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var host=document.getElementById(id),i,el;
+  if(host&&_exSnap[id]!==undefined)host.innerHTML=_exSnap[id];
+  el=document.getElementById(id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(id+'-key'); if(el)el.style.display='none';
+  /* A explicacao da atividade e a traducao sao IRMAS do host, dentro do quiz-item:
+     restaurar o host nao as fecha, e elas ficariam abertas sobre um exercicio em branco. */
+  if(host&&host.parentNode){
+    el=host.parentNode.querySelectorAll('.rationale.show,.item-why.show');
+    for(i=0;i<el.length;i++)el[i].classList.remove('show');
+  }
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  /* O REGISTRO ACOMPANHA A TELA, ou a limpeza dura ate o F5: `preInit` devolveria o valor
+     digitado (pelos campos) e `preMecRestaura` as marcas (pelas classes), e a aluna veria
+     de volta exatamente o que acabou de refazer. Vale so no pre-class -- no deck nao ha
+     bloco `pc*` nem persistencia. */
+  var bl=btn.closest?btn.closest('[id^="pc"]'):null;
+  if(bl&&typeof preMecSalva==='function'){
+    var mortas=[];
+    if(host){ el=host.querySelectorAll('[data-k]');
+              for(i=0;i<el.length;i++)mortas.push(el[i].getAttribute('data-k')); }
+    if(mortas.length&&typeof drop==='function')drop(mortas);
+    preMecSalva(bl);
+    /* Os campos restaurados sao NOVOS: sem tirar a marca de ligado, `preInit` os pularia e
+       eles ficariam sem ouvinte -- digitar deixaria de gravar, sem erro nenhum. */
+    if(host){ el=host.querySelectorAll('[data-lig]');
+              for(i=0;i<el.length;i++)el[i].removeAttribute('data-lig'); }
+    if(typeof preKeys==='function'){ preKeys(); preInit(); preModo(); }
+  }
+  return true;
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
@@ -3718,11 +3792,14 @@ function mCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
@@ -3739,6 +3816,7 @@ function czCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -3753,7 +3831,9 @@ function ppPick(btn){
 }
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
@@ -3767,6 +3847,7 @@ function ppCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -3786,7 +3867,9 @@ function preConsulta(el){
 function tog(el){ if(preConsulta(el))return; el.classList.toggle('sel'); }
 function selCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var o=host.querySelectorAll('.quiz-option'),i,sel,ok,acertos=0,alvo=0;
   for(i=0;i<o.length;i++){
     sel=o[i].classList.contains('sel'); ok=(o[i].getAttribute('data-ok')==='1');
@@ -3799,6 +3882,7 @@ function selCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
   porqueAbre(host.parentNode);
+  exFeito(btn,id);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
@@ -4873,8 +4957,8 @@ function paint(){
 }
 
 
-var RECAP1=["Reading a hotel booking in English", "Finding four things in a paper without reading all of it", "Saying my name in English", "Saying a city and two dates", "Saying a whole sentence, not one word", "Saying the same four things about a different booking"];
-var CONF1=["Saying my name and my city in English", "Saying the dates of my trip", "Reading a booking on my own"];
+var RECAP1=["Reading a hotel booking in English<span class=\"slide-pt\">Ler uma reserva de hotel em inglês</span>", "Finding four things in a paper without reading all of it<span class=\"slide-pt\">Achar quatro informações no papel sem ler tudo</span>", "Saying my name in English<span class=\"slide-pt\">Dizer o meu nome em inglês</span>", "Saying a city and two dates<span class=\"slide-pt\">Dizer uma cidade e duas datas</span>", "Saying a whole sentence, not one word<span class=\"slide-pt\">Dizer uma frase inteira, e não uma palavra só</span>", "Saying the same four things about a different booking<span class=\"slide-pt\">Dizer as mesmas quatro informações sobre outra reserva</span>"];
+var CONF1=["Saying my name and my city in English<span class=\"slide-pt\">Dizer o meu nome e a minha cidade em inglês</span>", "Saying the dates of my trip<span class=\"slide-pt\">Dizer as datas da minha viagem</span>", "Reading a booking on my own<span class=\"slide-pt\">Ler uma reserva sozinha</span>"];
 var RECAP2=["Understanding three questions at a hotel desk", "Answering with a sentence, not with a gesture", "Asking someone to say it again", "Asking someone to speak more slowly", "Saying how many nights", "Saying yes and no politely"];
 var CONF2=["Understanding a short question in English", "Asking for something to be repeated", "Answering at a hotel desk on my own"];
 var RECAP3=["The verb I said I did not know -- and I had already used it", "I am, you are, it is, they are", "Saying what I am not", "Asking a short question: are you...?", "Six sentences about me and my trip", "The same six about someone else"];
@@ -4895,6 +4979,17 @@ document.addEventListener('DOMContentLoaded',function(){
   pwRestore([['pw1-subject',null,'post_l1_subject'],['pw1-body','pw1-count','post_l1_writing'],['pw2-subject',null,'post_l2_subject'],['pw2-body','pw2-count','post_l2_writing'],['pw3-subject',null,'post_l3_subject'],['pw3-body','pw3-count','post_l3_writing'],['pw4-subject',null,'post_l4_subject'],['pw4-body','pw4-count','post_l4_writing']]);
   preKeys();
   hubPaint();
+  /* A COPIA DO PRE-CLASS, E POR QUE ELA FALTAVA AQUI (revisao de 03/09/2026).
+     `preResetGo` restaura `_preSnap[n]` -- e so restaura `if(_preSnap[n]!==undefined)`.
+     Este boot e escrito a mao (nao e o do professor filtrado), e nunca chamou `preSnap()`:
+     no arquivo DA ALUNA o mapa ficava vazio, a condicao era falsa e o "Reset my answers"
+     saia sem tocar na tela. Ele apagava o armazenamento -- entao a limpeza era real e
+     invisivel -- e as alternativas conferidas continuavam verdes. Clicar em Check de novo
+     "resolvia", porque o `classList.toggle('correct',sel&&ok)` recalculava sem `.sel`.
+     Medido no navegador em 03/09/2026, no arquivo publicado da Vanessa.
+     ANTES de `preInit`, como no boot do professor: tirada depois, a copia ja conteria as
+     respostas restauradas, e o Reset devolveria exatamente o que devia apagar. */
+  preSnap();
   preInit();
   /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
      no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes

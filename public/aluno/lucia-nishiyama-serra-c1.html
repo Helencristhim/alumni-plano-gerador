@@ -829,8 +829,27 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
    conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
    linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
-.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-pt{display:block;font-family:var(--font-corpo);font-style:italic;font-weight:var(--peso-leve);font-size:.82rem;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h);max-width:60ch}
 .slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
+/* O TAMANHO E O PESO SAO ABSOLUTOS, e por que isso importa (revisao de 03/09/2026).
+   A regra acima dizia `font-size:.86em` e nao dizia peso nenhum -- as duas coisas herdadas
+   do elemento que hospeda o apoio. Dentro de `.slide-question` (clamp ate 1.9rem, peso 600)
+   o portugues saia com 26px e NEGRITO ao lado de um ingles de 30px: medido no navegador em
+   03/09/2026, na aula 1 da Vanessa. O apoio competia de igual para igual com a frase que
+   ele deveria apenas situar, e o olho ia nele primeiro -- exatamente o que o paragrafo
+   acima diz que ele NAO pode fazer.
+   `em` herda o corpo; `rem` nao. E o peso vai declarado, e nao deixado ao host. */
+.slide-question .slide-pt,.q-item .slide-pt,.slide-subtitle .slide-pt,.slide-lead .slide-pt{
+  font-size:.82rem;font-weight:var(--peso-leve);font-style:italic}
+
+/* A PERGUNTA CENTRALIZADA TEM DE FICAR CENTRADA (revisao de 03/09/2026).
+   `.slide-question` tem `max-width:38ch`. Num slide de abertura -- `.slide-open`, cujo
+   `.slide-inner` e `text-align:center` -- o TEXTO se centraliza dentro da caixa, mas a
+   CAIXA continua encostada a esquerda: 577px de pergunta num inner de 940px deixavam 363px
+   de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
+   da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
+   nada muda, porque a regra so vale onde o inner ja centraliza. */
+.slide-open .slide-question{margin-left:auto;margin-right:auto}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1365,7 +1384,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Signalling adds no facts and no vocabulary. It adds a map. The listener spends nothing on working out where you are, and can spend it all on what you are saying.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd3')">Check</button>
     <div class="score-out" id="kd3-out"></div>
     <div class="callout" id="kd3-key" style="display:none">
       <div class="callout-title">Why the block opens here</div>
@@ -1408,7 +1427,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">this is the ask, and I am standing behind it</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'kl3')">Check</button>
     <div class="score-out" id="kl3-out"></div>
     <div class="callout" id="kl3-key" style="display:none">
       <div class="callout-title">Six expressions, six different jobs</div>
@@ -1427,7 +1446,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;That is the good news. The bad news is harder.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">opening</option><option value="B">turning to the difficulty</option><option value="C">drawing the consequence</option><option value="D">conceding</option><option value="E">closing</option></select></div>
       <div class="match-row"><span class="match-word">&ldquo;So we would ship a product we cannot explain.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">opening</option><option value="B">turning to the difficulty</option><option value="C">drawing the consequence</option><option value="D">conceding</option><option value="E">closing</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'mv3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'mv3')">Check</button>
     <div class="score-out" id="mv3-out"></div>
     <div class="callout" id="mv3-key" style="display:none">
       <div class="callout-title">Concession is the one people skip</div>
@@ -1457,7 +1476,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Same facts, same ask, same length. What Version B adds is the reader&rsquo;s certainty about where each sentence sits in the argument — and that certainty is what makes an executive room follow you.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'fl3')">Check</button>
     <div class="score-out" id="fl3-out"></div>
     <div class="callout" id="fl3-key" style="display:none">
       <div class="callout-title">The one that catches people</div>
@@ -1475,7 +1494,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">Having said that,</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the launch date is October</option><option value="B">I disagree with the whole approach</option><option value="C">the fix is six weeks, not six months</option></select></div>
       <div class="match-row"><span class="match-word">So where does that leave us?</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">I am not sure yet.</option><option value="B">The regulators will decide.</option><option value="C">Hold the launch, rebuild, ship in December.</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'cn3')">Check</button>
     <div class="score-out" id="cn3-out"></div>
     <div class="callout" id="cn3-key" style="display:none">
       <div class="callout-title">The opening writes the sentence</div>
@@ -1495,7 +1514,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="Having said that" style="min-width:160px" placeholder="...">, the correction is small and we have the time.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So where does that leave us" style="min-width:210px" placeholder="...">? <input class="blank-input" data-ok="My recommendation is" style="min-width:180px" placeholder="..."> that we move the review to December.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz3')">Check</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
       <div class="callout-title">This is the skeleton of what you will say in class</div>
@@ -1523,7 +1542,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Two of the wrong ones are the same mistake in different clothes: answering the question you imagined instead of the one that was asked. Checking costs eight seconds and saves the whole answer.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd4')">Check</button>
     <div class="score-out" id="kd4-out"></div>
     <div class="callout" id="kd4-key" style="display:none">
       <div class="callout-title">Why this comes right after lesson 3</div>
@@ -1566,7 +1585,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">I do not know and will not find out</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'kl4')">Check</button>
     <div class="score-out" id="kl4-out"></div>
     <div class="callout" id="kl4-key" style="display:none">
       <div class="callout-title">Two of them buy time</div>
@@ -1585,7 +1604,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;Are you asking us to approve the delay today?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a fact</option><option value="B">a decision</option><option value="C">a challenge to your judgment</option></select></div>
       <div class="match-row"><span class="match-word">&ldquo;Would you bet the launch on that assumption?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a fact</option><option value="B">a decision</option><option value="C">a challenge to your judgment</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'wt4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'wt4')">Check</button>
     <div class="score-out" id="wt4-out"></div>
     <div class="callout" id="wt4-key" style="display:none">
       <div class="callout-title">Each kind wants a different first sentence</div>
@@ -1611,7 +1630,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">&ldquo;We have said December before&rdquo; is where the question actually lives. Answering only the hard-date/direction pair leaves the complaint on the table, and it will come back.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'vg4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'vg4')">Check</button>
     <div class="score-out" id="vg4-out"></div>
     <div class="callout" id="vg4-key" style="display:none">
       <div class="callout-title">Vague is not the same as hostile</div>
@@ -1629,7 +1648,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">Short answer: yes, December is a commitment.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">The longer answer is why the last date moved.</option><option value="B">I will send you the details.</option><option value="C">That is all I can say.</option></select></div>
       <div class="match-row"><span class="match-word">I would push back on the word gold-plating,</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">because six weeks is short</option><option value="B">because the requirement is drafted, not absent</option><option value="C">because you are wrong</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'ck4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'ck4')">Check</button>
     <div class="score-out" id="ck4-out"></div>
     <div class="callout" id="ck4-key" style="display:none">
       <div class="callout-title">The check has to cost the other person something</div>
@@ -1649,7 +1668,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="I would push back on that" style="min-width:190px" placeholder="...">, because a draft that three regulators are consulting on is not nothing.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> — I will send it today.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz4')">Check</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
       <div class="callout-title">This is the answer you will give in class</div>
@@ -1680,7 +1699,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Neither is wrong. English puts what is new at the END of the sentence, and these three structures exist to move it there — which is why they sound like signalling even though they are only word order.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd5')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd5')">Check</button>
     <div class="score-out" id="kd5-out"></div>
     <div class="callout" id="kd5-key" style="display:none">
       <div class="callout-title">This is the grammar under lesson 3</div>
@@ -1723,7 +1742,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">I agree and I am changing my mind</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl5')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'kl5')">Check</button>
     <div class="score-out" id="kl5-out"></div>
     <div class="callout" id="kl5-key" style="display:none">
       <div class="callout-title">Why these three and not others</div>
@@ -1742,7 +1761,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;While I understand the pressure, six weeks is six weeks.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">cleft (What&hellip; is&hellip;)</option><option value="B">fronting (As for&hellip;)</option><option value="C">concessive (While&hellip;)</option></select></div>
       <div class="match-row"><span class="match-word">&ldquo;As for the engineering cost, I have the number.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">cleft (What&hellip; is&hellip;)</option><option value="B">fronting (As for&hellip;)</option><option value="C">concessive (While&hellip;)</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'fm5')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'fm5')">Check</button>
     <div class="score-out" id="fm5-out"></div>
     <div class="callout" id="fm5-key" style="display:none">
       <div class="callout-title">The concessive is the one that changes the room</div>
@@ -1760,7 +1779,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">The accuracy is good but the model cannot explain itself.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">The model cannot explain itself, but the accuracy is good.</option><option value="B">While the accuracy is there, the model cannot explain itself.</option><option value="C">The accuracy is good and the model cannot explain itself.</option></select></div>
       <div class="match-row"><span class="match-word">I am worried about the timing, not the design.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">I have a worry about the timing.</option><option value="B">It is the timing that worries me, not the design.</option><option value="C">The timing worries me more than the design.</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'mv5')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'mv5')">Check</button>
     <div class="score-out" id="mv5-out"></div>
     <div class="callout" id="mv5-key" style="display:none">
       <div class="callout-title">The rejected options are not wrong</div>
@@ -1779,7 +1798,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line">As <input class="blank-input" data-ok="for" style="min-width:70px" placeholder="..."> the October date, it was never a commitment.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="What" style="min-width:90px" placeholder="..."> worries me most is the gap between the two markets.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'gp5')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'gp5')">Check</button>
     <div class="score-out" id="gp5-out"></div>
     <div class="callout" id="gp5-key" style="display:none">
       <div class="callout-title">Two of these catch everyone</div>
@@ -1822,7 +1841,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Two of the wrong ones are the same mistake: treating forty-five seconds as a short essay. It is not. It is a position, two reasons and a close — and the close has to arrive before the clock does.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd6')">Check</button>
     <div class="score-out" id="kd6-out"></div>
     <div class="callout" id="kd6-key" style="display:none">
       <div class="callout-title">Why the exam format is in this block</div>
@@ -1865,7 +1884,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">I am adding a new idea</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'kl6')">Check</button>
     <div class="score-out" id="kl6-out"></div>
     <div class="callout" id="kl6-key" style="display:none">
       <div class="callout-title">Six words that buy structure</div>
@@ -1884,7 +1903,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">&ldquo;I would say launch and correct.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the position</option><option value="B">a reason</option><option value="C">an example</option><option value="D">the close</option></select></div>
       <div class="match-row"><span class="match-word">&ldquo;In my last role we held a release for four months and shipped into a changed market.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the position</option><option value="B">a reason</option><option value="C">an example</option><option value="D">the close</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'pt6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'pt6')">Check</button>
     <div class="score-out" id="pt6-out"></div>
     <div class="callout" id="pt6-key" style="display:none">
       <div class="callout-title">The close is not a summary</div>
@@ -1910,7 +1929,7 @@ document.body.setAttribute('data-view','aluno');
       </div>
       <div class="rationale">Explaining both sides before choosing is the single most common way to run out of time. The prompt already explained them; your forty-five seconds are for the choice.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'md6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'md6')">Check</button>
     <div class="score-out" id="md6-out"></div>
     <div class="callout" id="md6-key" style="display:none">
       <div class="callout-title">The concession is worth four seconds</div>
@@ -1928,7 +1947,7 @@ document.body.setAttribute('data-view','aluno');
       <div class="match-row"><span class="match-word">That said,</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">I would change my answer for a safety-critical system</option><option value="B">I am not sure about this</option><option value="C">the other side is also correct</option></select></div>
       <div class="match-row"><span class="match-word">So on balance,</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">there are arguments both ways</option><option value="B">I would ship early with a plan to correct</option><option value="C">it is a difficult question</option></select></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'sh6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'sh6')">Check</button>
     <div class="score-out" id="sh6-out"></div>
     <div class="callout" id="sh6-key" style="display:none">
       <div class="callout-title">Every rejected option is a way of not answering</div>
@@ -1948,7 +1967,7 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="That said" style="min-width:110px" placeholder="...">, a delay has its own cost and I am not pretending otherwise.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So on balance" style="min-width:140px" placeholder="...">, six weeks now is cheaper than a license review later.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz6')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz6')">Check</button>
     <div class="score-out" id="cz6-out"></div>
     <div class="callout" id="cz6-key" style="display:none">
       <div class="callout-title">This is round one</div>
@@ -3592,9 +3611,67 @@ function porqueAbre(host){
   var w=host.querySelectorAll('.item-why'),i;
   for(i=0;i<w.length;i++)w[i].classList.add('show');
 }
+/* ---------------- REFAZER: o botao que confere vira o botao que limpa ----------------
+   O rotulo de ida sai do `data-redo` que o EMISSOR escreve (so ele sabe se o material e
+   bilingue); o de volta sai do proprio botao, guardado em `data-check` na primeira vez. */
+var _exSnap={};
+function exGuarda(id,host){
+  if(!id||!host||_exSnap[id]!==undefined)return;
+  /* A COPIA SAI LIMPA, e nao como a tela estava. Ela e tirada na primeira conferida --
+     quando as escolhas da aluna JA estao marcadas --, entao guardar `innerHTML` cru fazia
+     o "Refazer" devolver o exercicio com as mesmas alternativas ainda selecionadas: com
+     cara de respondido, sem estar conferido. Refazer e comecar de novo.
+     Nao ha o que limpar em <select> nem em <input>: a escolha do usuario vive na
+     PROPRIEDADE, e `innerHTML` serializa o atributo -- eles ja voltam vazios. */
+  var d=document.createElement('div'); d.innerHTML=host.innerHTML;
+  var el=d.querySelectorAll('.sel,.correct,.wrong'),i;
+  for(i=0;i<el.length;i++)el[i].classList.remove('sel','correct','wrong');
+  _exSnap[id]=d.innerHTML;
+}
+function exFeito(btn,id){
+  if(!btn||_exSnap[id]===undefined)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function exRefaz(btn,id){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var host=document.getElementById(id),i,el;
+  if(host&&_exSnap[id]!==undefined)host.innerHTML=_exSnap[id];
+  el=document.getElementById(id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(id+'-key'); if(el)el.style.display='none';
+  /* A explicacao da atividade e a traducao sao IRMAS do host, dentro do quiz-item:
+     restaurar o host nao as fecha, e elas ficariam abertas sobre um exercicio em branco. */
+  if(host&&host.parentNode){
+    el=host.parentNode.querySelectorAll('.rationale.show,.item-why.show');
+    for(i=0;i<el.length;i++)el[i].classList.remove('show');
+  }
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  /* O REGISTRO ACOMPANHA A TELA, ou a limpeza dura ate o F5: `preInit` devolveria o valor
+     digitado (pelos campos) e `preMecRestaura` as marcas (pelas classes), e a aluna veria
+     de volta exatamente o que acabou de refazer. Vale so no pre-class -- no deck nao ha
+     bloco `pc*` nem persistencia. */
+  var bl=btn.closest?btn.closest('[id^="pc"]'):null;
+  if(bl&&typeof preMecSalva==='function'){
+    var mortas=[];
+    if(host){ el=host.querySelectorAll('[data-k]');
+              for(i=0;i<el.length;i++)mortas.push(el[i].getAttribute('data-k')); }
+    if(mortas.length&&typeof drop==='function')drop(mortas);
+    preMecSalva(bl);
+    /* Os campos restaurados sao NOVOS: sem tirar a marca de ligado, `preInit` os pularia e
+       eles ficariam sem ouvinte -- digitar deixaria de gravar, sem erro nenhum. */
+    if(host){ el=host.querySelectorAll('[data-lig]');
+              for(i=0;i<el.length;i++)el[i].removeAttribute('data-lig'); }
+    if(typeof preKeys==='function'){ preKeys(); preInit(); preModo(); }
+  }
+  return true;
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
@@ -3608,11 +3685,14 @@ function mCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
@@ -3629,6 +3709,7 @@ function czCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -3643,7 +3724,9 @@ function ppPick(btn){
 }
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
@@ -3657,6 +3740,7 @@ function ppCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -3676,7 +3760,9 @@ function preConsulta(el){
 function tog(el){ if(preConsulta(el))return; el.classList.toggle('sel'); }
 function selCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var o=host.querySelectorAll('.quiz-option'),i,sel,ok,acertos=0,alvo=0;
   for(i=0;i<o.length;i++){
     sel=o[i].classList.contains('sel'); ok=(o[i].getAttribute('data-ok')==='1');
@@ -3689,6 +3775,7 @@ function selCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
   porqueAbre(host.parentNode);
+  exFeito(btn,id);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
@@ -4785,6 +4872,17 @@ document.addEventListener('DOMContentLoaded',function(){
   pwRestore([['pw3-subject',null,'post_l3_subject'],['pw3-body','pw3-count','post_l3_writing'],['pw4-subject',null,'post_l4_subject'],['pw4-body','pw4-count','post_l4_writing'],['pw5-subject',null,'post_l5_subject'],['pw5-body','pw5-count','post_l5_writing'],['pw6-subject',null,'post_l6_subject'],['pw6-body','pw6-count','post_l6_writing']]);
   preKeys();
   hubPaint();
+  /* A COPIA DO PRE-CLASS, E POR QUE ELA FALTAVA AQUI (revisao de 03/09/2026).
+     `preResetGo` restaura `_preSnap[n]` -- e so restaura `if(_preSnap[n]!==undefined)`.
+     Este boot e escrito a mao (nao e o do professor filtrado), e nunca chamou `preSnap()`:
+     no arquivo DA ALUNA o mapa ficava vazio, a condicao era falsa e o "Reset my answers"
+     saia sem tocar na tela. Ele apagava o armazenamento -- entao a limpeza era real e
+     invisivel -- e as alternativas conferidas continuavam verdes. Clicar em Check de novo
+     "resolvia", porque o `classList.toggle('correct',sel&&ok)` recalculava sem `.sel`.
+     Medido no navegador em 03/09/2026, no arquivo publicado da Vanessa.
+     ANTES de `preInit`, como no boot do professor: tirada depois, a copia ja conteria as
+     respostas restauradas, e o Reset devolveria exatamente o que devia apagar. */
+  preSnap();
   preInit();
   /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
      no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes

@@ -89,6 +89,16 @@ def rot_check():
     return "Check / Checar" if APOIO["bilingue"] else "Check"
 
 
+def rot_redo():
+    """O rotulo que o MESMO botao passa a ter depois de conferir.
+
+    O shell troca o texto sozinho (`exFeito`), mas quem sabe se este material e bilingue e
+    o emissor -- por isso a palavra viaja no `data-redo` do botao, e nao cravada no JS.
+    Pedido da professora em 03/09/2026: conferido o exercicio, o botao tem de oferecer o
+    caminho de volta, em vez de continuar dizendo `Check` e repintar o mesmo resultado."""
+    return "Redo / Refazer" if APOIO["bilingue"] else "Redo"
+
+
 def esc(t):
     """Texto do autor -> HTML. As aspas e o travessao viram entidade, como no molde.
 
@@ -228,7 +238,7 @@ def r_classificar(b, ident):
             + porque(it) + traducao(it) + '</div>')
     return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n"
             + opcoes_traduzidas(b) + "    </div>\n"
-            f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
+            f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" onclick="mCheck(this,\'{ident}\')">'
             f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
@@ -256,7 +266,7 @@ def r_completar(b, ident):
             f'<option value="" selected="selected">&mdash;</option>{ops}</select>'
             + porque(it) + traducao(it) + '</div>')
     return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
-            f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
+            f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" onclick="mCheck(this,\'{ident}\')">'
             f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
@@ -283,7 +293,7 @@ def r_escolha(b, ident):
     pr = (f'      <p class="task-instr">{esc(b["prompt"])}</p>\n' if b.get("prompt") else "")
     return (f'    <div class="quiz-item">\n' + pr + f'      <div class="quiz-options" id="{ident}">\n'
             + "\n".join(linhas) + f"\n      </div>{rat}\n    </div>\n"
-            f'    <button class="verify-all-btn ghost" onclick="selCheck(this,\'{ident}\')">'
+            f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" onclick="selCheck(this,\'{ident}\')">'
             f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
@@ -307,7 +317,7 @@ def r_par(b, ident):
                       f'        <span class="pair-word">{esc(it["t"])}</span>{bots}\n'
                       f'      </div>')
     return (f'    <div class="pair-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
-            f'    <button class="verify-all-btn ghost" onclick="ppCheck(this,\'{ident}\')">'
+            f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" onclick="ppCheck(this,\'{ident}\')">'
             f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
@@ -461,7 +471,8 @@ def r_lacuna(b, ident, vocab=None):
             # aqui ele nao chegava a ser distribuido -- o unico `Check` do arquivo que nao
             # recebia `ident`. Estava assim nos QUATRO materiais do consultivo, 4 botoes
             # cada, desde que o `lacuna` existe.
-            + f'    <button class="verify-all-btn ghost" onclick="czCheck(this,'
+            + f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" '
+            + f'onclick="czCheck(this,'
             + f"'{ident}'" + f')">{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 

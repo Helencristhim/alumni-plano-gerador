@@ -538,8 +538,27 @@ body[data-view="professor"] #tab-preclass .score-out{display:none}"""),
    frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
    conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
    linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
-.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
-.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}"""),
+.slide-pt{display:block;font-family:var(--font-corpo);font-style:italic;font-weight:var(--peso-leve);font-size:.82rem;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h);max-width:60ch}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
+/* O TAMANHO E O PESO SAO ABSOLUTOS, e por que isso importa (revisao de 03/09/2026).
+   A regra acima dizia `font-size:.86em` e nao dizia peso nenhum -- as duas coisas herdadas
+   do elemento que hospeda o apoio. Dentro de `.slide-question` (clamp ate 1.9rem, peso 600)
+   o portugues saia com 26px e NEGRITO ao lado de um ingles de 30px: medido no navegador em
+   03/09/2026, na aula 1 da Vanessa. O apoio competia de igual para igual com a frase que
+   ele deveria apenas situar, e o olho ia nele primeiro -- exatamente o que o paragrafo
+   acima diz que ele NAO pode fazer.
+   `em` herda o corpo; `rem` nao. E o peso vai declarado, e nao deixado ao host. */
+.slide-question .slide-pt,.q-item .slide-pt,.slide-subtitle .slide-pt,.slide-lead .slide-pt{
+  font-size:.82rem;font-weight:var(--peso-leve);font-style:italic}
+
+/* A PERGUNTA CENTRALIZADA TEM DE FICAR CENTRADA (revisao de 03/09/2026).
+   `.slide-question` tem `max-width:38ch`. Num slide de abertura -- `.slide-open`, cujo
+   `.slide-inner` e `text-align:center` -- o TEXTO se centraliza dentro da caixa, mas a
+   CAIXA continua encostada a esquerda: 577px de pergunta num inner de 940px deixavam 363px
+   de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
+   da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
+   nada muda, porque a regra so vale onde o inner ja centraliza. */
+.slide-open .slide-question{margin-left:auto;margin-right:auto}"""),
 
  ("conferir-explica-mcheck",
   """function mCheck(btn,id){
@@ -657,6 +676,167 @@ function mCheck(btn,id){
   """  var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
   porqueAbre(host.parentNode);
+}"""),
+
+ # ---- REFAZER UM EXERCICIO (revisao da professora, 03/09/2026 -- aula 1 da Vanessa)
+ #
+ # Depois de conferir, o botao continuava escrito "Check", e um segundo clique so repintava
+ # o mesmo resultado. Para tentar de novo, a aluna tinha de usar o "Reset my answers" -- que
+ # limpa a AULA INTEIRA. Nao havia caminho para refazer UM exercicio, e o botao que ela
+ # acabara de usar era justamente o que parecia oferece-lo.
+ #
+ #     "Ao clicar em check/checar e o exercicio mostrar as respostas, o botao pode mudar
+ #      para Refazer ou Limpar."
+ #
+ # A copia sai na PRIMEIRA conferida, antes de qualquer marca: assim nao depende da ordem do
+ # boot e vale igual no pre-class e no deck -- `mCheck` e `selCheck` rodam nos dois.
+ ("refazer-o-exercicio/helpers",
+  """function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}""",
+  """function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
+/* ---------------- REFAZER: o botao que confere vira o botao que limpa ----------------
+   O rotulo de ida sai do `data-redo` que o EMISSOR escreve (so ele sabe se o material e
+   bilingue); o de volta sai do proprio botao, guardado em `data-check` na primeira vez. */
+var _exSnap={};
+function exGuarda(id,host){
+  if(!id||!host||_exSnap[id]!==undefined)return;
+  /* A COPIA SAI LIMPA, e nao como a tela estava. Ela e tirada na primeira conferida --
+     quando as escolhas da aluna JA estao marcadas --, entao guardar `innerHTML` cru fazia
+     o "Refazer" devolver o exercicio com as mesmas alternativas ainda selecionadas: com
+     cara de respondido, sem estar conferido. Refazer e comecar de novo.
+     Nao ha o que limpar em <select> nem em <input>: a escolha do usuario vive na
+     PROPRIEDADE, e `innerHTML` serializa o atributo -- eles ja voltam vazios. */
+  var d=document.createElement('div'); d.innerHTML=host.innerHTML;
+  var el=d.querySelectorAll('.sel,.correct,.wrong'),i;
+  for(i=0;i<el.length;i++)el[i].classList.remove('sel','correct','wrong');
+  _exSnap[id]=d.innerHTML;
+}
+function exFeito(btn,id){
+  if(!btn||_exSnap[id]===undefined)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function exRefaz(btn,id){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var host=document.getElementById(id),i,el;
+  if(host&&_exSnap[id]!==undefined)host.innerHTML=_exSnap[id];
+  el=document.getElementById(id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(id+'-key'); if(el)el.style.display='none';
+  /* A explicacao da atividade e a traducao sao IRMAS do host, dentro do quiz-item:
+     restaurar o host nao as fecha, e elas ficariam abertas sobre um exercicio em branco. */
+  if(host&&host.parentNode){
+    el=host.parentNode.querySelectorAll('.rationale.show,.item-why.show');
+    for(i=0;i<el.length;i++)el[i].classList.remove('show');
+  }
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  /* O REGISTRO ACOMPANHA A TELA, ou a limpeza dura ate o F5: `preInit` devolveria o valor
+     digitado (pelos campos) e `preMecRestaura` as marcas (pelas classes), e a aluna veria
+     de volta exatamente o que acabou de refazer. Vale so no pre-class -- no deck nao ha
+     bloco `pc*` nem persistencia. */
+  var bl=btn.closest?btn.closest('[id^="pc"]'):null;
+  if(bl&&typeof preMecSalva==='function'){
+    var mortas=[];
+    if(host){ el=host.querySelectorAll('[data-k]');
+              for(i=0;i<el.length;i++)mortas.push(el[i].getAttribute('data-k')); }
+    if(mortas.length&&typeof drop==='function')drop(mortas);
+    preMecSalva(bl);
+    /* Os campos restaurados sao NOVOS: sem tirar a marca de ligado, `preInit` os pularia e
+       eles ficariam sem ouvinte -- digitar deixaria de gravar, sem erro nenhum. */
+    if(host){ el=host.querySelectorAll('[data-lig]');
+              for(i=0;i<el.length;i++)el[i].removeAttribute('data-lig'); }
+    if(typeof preKeys==='function'){ preKeys(); preInit(); preModo(); }
+  }
+  return true;
+}"""),
+
+ ("refazer-o-exercicio/mcheck",
+  """function mCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;""",
+  """function mCheck(btn,id){
+  if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
+  var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;"""),
+
+ ("refazer-o-exercicio/ppcheck",
+  """function ppCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;""",
+  """function ppCheck(btn,id){
+  if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
+  var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);"""),
+
+ ("refazer-o-exercicio/czcheck",
+  """function czCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;""",
+  """function czCheck(btn,id){
+  if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
+  var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);"""),
+
+ ("refazer-o-exercicio/selcheck",
+  """function selCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;""",
+  """function selCheck(btn,id){
+  if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
+  var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);"""),
+
+ # O rabo de cada uma: o botao so vira "Refazer" DEPOIS de conferir de verdade. Cada ancora
+ # leva a linha SEGUINTE junto, porque o fim das tres primeiras e identico -- sem isso a
+ # ancora casaria 3x e a extracao pararia, como manda o contrato do CORRECOES.
+ ("refazer-o-exercicio/mcheck-fim",
+  """  porqueAbre(host);
+}
+/* cloze com gabarito por campo */""",
+  """  porqueAbre(host);
+  exFeito(btn,id);
+}
+/* cloze com gabarito por campo */"""),
+
+ ("refazer-o-exercicio/czcheck-fim",
+  """  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);""",
+  """  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
+  exFeito(btn,id);"""),
+
+ ("refazer-o-exercicio/ppcheck-fim",
+  """  porqueAbre(host);
+}
+
+/* ---------------- guarda de papel no pre-class ----------------""",
+  """  porqueAbre(host);
+  exFeito(btn,id);
+}
+
+/* ---------------- guarda de papel no pre-class ----------------"""),
+
+ ("refazer-o-exercicio/selcheck-fim",
+  """  porqueAbre(host.parentNode);
+}""",
+  """  porqueAbre(host.parentNode);
+  exFeito(btn,id);
 }"""),
 
  ("razao-abre-com-qualquer-escolha",
@@ -943,6 +1123,17 @@ document.addEventListener('DOMContentLoaded',function(){
              ['pw20-subject',null,'post_l20_subject'],['pw20-body','pw20-count','post_l20_writing']]);
   preKeys();
   hubPaint();
+  /* A COPIA DO PRE-CLASS, E POR QUE ELA FALTAVA AQUI (revisao de 03/09/2026).
+     `preResetGo` restaura `_preSnap[n]` -- e so restaura `if(_preSnap[n]!==undefined)`.
+     Este boot e escrito a mao (nao e o do professor filtrado), e nunca chamou `preSnap()`:
+     no arquivo DA ALUNA o mapa ficava vazio, a condicao era falsa e o "Reset my answers"
+     saia sem tocar na tela. Ele apagava o armazenamento -- entao a limpeza era real e
+     invisivel -- e as alternativas conferidas continuavam verdes. Clicar em Check de novo
+     "resolvia", porque o `classList.toggle('correct',sel&&ok)` recalculava sem `.sel`.
+     Medido no navegador em 03/09/2026, no arquivo publicado da Vanessa.
+     ANTES de `preInit`, como no boot do professor: tirada depois, a copia ja conteria as
+     respostas restauradas, e o Reset devolveria exatamente o que devia apagar. */
+  preSnap();
   preInit();
   /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
      no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes
