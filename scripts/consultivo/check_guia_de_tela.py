@@ -25,24 +25,31 @@ Siga quando"). Duas consequencias, e as duas foram encontradas por leitura human
 O emissor ja recusa guia declarado incompleto. O que ele nao pode fazer e obrigar alguem a
 declarar: a aula que nunca cria o `guia_telas.json` passa por ele sem ser vista. E isto.
 
-A DIVIDA E ALVARA, NAO LISTA DE TAREFAS (REGRA 30)
----------------------------------------------------
-Materiais escritos antes da forma declarada continuam com a nota em prosa, e eles FUNCIONAM
--- ha aula sendo dada com eles. `guia_em_prosa.json` congela quantas telas de cada material
-ainda estao assim. O gate NUNCA exige que esse numero caia; ele exige que **nao suba**.
+A DIVIDA ACABOU, E O ALVARA FOI APAGADO (03/09/2026)
+-----------------------------------------------------
+Este gate nasceu com `guia_em_prosa.json`: 190 telas de cinco materiais cuja nota ainda era
+prosa livre -- e 118 delas em PORTUGUES, que era o defeito que a revisao de 02/09 nao
+conseguiu avaliar. O arquivo congelava esse numero e exigia que ele nao subisse, nunca que
+caisse. O Dan cortou:
 
-    A migracao e uma aula por vez, quando o Dan pedir aquela aula.
+    "se estamos no alumni-black, nao existe legado, tudo e corrigivel e PRECISA ser
+     corrigido, nada vai ser entregue e ficar como esta simplesmente por darmos o nome
+     de legado"
 
-Material que nao esta no arquivo comeca em zero: aula nova nasce com o guia declarado, de
-graca. E o numero congelado so pode CAIR -- `--update` recongela depois de uma migracao
-legitima, e recusa recongelar para cima.
+As 190 foram migradas no mesmo dia e o arquivo foi apagado. Hoje os SEIS materiais da
+anatomia declaram o guia nas quarenta telas, e o gate cobra isso sem excecao: qualquer tela
+em prosa reprova.
+
+A REGRA 30 continua valendo para o IMERSIVO -- 2.115 arquivos publicados e 13.564 defeitos
+congelados no `scripts/legacy-baseline.json`, nenhum deles da anatomia consultivo. O Black e
+outra coisa: seis materiais, todos reconstruidos do shell a cada correcao (GATE 50), e por
+isso nao ha divida que valha a pena carregar.
 
 ESCOPO: o carimbo `alumni-anatomia=consultivo`, e so o arquivo do PROFESSOR (o do aluno nao
 tem `data-teacher` -- e o GATE 36 que garante isso).
 
 USO:
     python3 scripts/consultivo/check_guia_de_tela.py [arquivo.html ...]
-    python3 scripts/consultivo/check_guia_de_tela.py --update     # recongela a divida
     python3 scripts/consultivo/check_guia_de_tela.py --selftest
 """
 import glob
@@ -54,7 +61,6 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ANATOMIA = "consultivo"
-BASELINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "guia_em_prosa.json")
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"
 
 # Os dez do 04 §8.2, na ordem. `Exact prompt` e CONDICIONAL: a tela em que o professor nao
@@ -112,17 +118,10 @@ def confere(caminho):
             "pt_no_guia": pt_no_guia}
 
 
-def baseline():
-    if not os.path.exists(BASELINE):
-        return {}
-    return json.load(open(BASELINE, encoding="utf-8")).get("em_prosa", {})
-
-
 def main(argv):
     alvos = [a for a in argv if not a.startswith("--")]
     if not alvos:
         alvos = sorted(glob.glob(os.path.join(RAIZ, "public", "professor", "*.html")))
-    base = baseline()
     print(f"=== GATE 53 — o guia de tela tem os dez campos (anatomia {ANATOMIA}) ===")
     atual, total, vistos = {}, 0, 0
     for f in alvos:
@@ -132,55 +131,26 @@ def main(argv):
         vistos += 1
         slug = slug_de(f)
         atual[slug] = r["prosa"]
-        teto = base.get(slug, 0)
         rel = os.path.relpath(f, RAIZ)
         if r["pt_no_guia"]:
             total += len(r["pt_no_guia"])
             print(f"  {VERMELHO}FAIL{ZERA}   {rel}: tela(s) {r['pt_no_guia'][:6]} tem o guia "
                   f"declarado com texto em PORTUGUES. O guia e do professor e continua sendo "
                   f"escrito em ingles — e o que permite avaliar a linguagem didatica dele.")
-        if r["prosa"] > teto:
+        if r["prosa"]:
             total += 1
             print(f"  {VERMELHO}FAIL{ZERA}   {rel}: {r['prosa']} de {r['telas']} telas com a "
-                  f"nota em prosa livre, e a divida congelada e {teto}. Tela(s) "
-                  f"{r['onde']}. Declare o guia em `guia_telas.json` — os dez campos do "
-                  f"04 §8.2, em ingles, iguais em todas as telas.")
-        elif r["prosa"]:
-            print(f"  {VERDE}ok{ZERA}     {rel}  ({r['telas'] - r['prosa']}/{r['telas']} "
-                  f"declaradas · {r['prosa']} em prosa, dentro do congelado)")
+                  f"nota em prosa livre. Tela(s) {r['onde']}. Declare o guia em "
+                  f"`guia_telas.json` — os dez campos do 04 §8.2, em ingles, iguais em "
+                  f"todas as telas.")
         else:
             print(f"  {VERDE}ok{ZERA}     {rel}  ({r['telas']}/{r['telas']} declaradas)")
-
-    if "--update" in argv:
-        # ---- A PRIMEIRA CONGELADA E MEDICAO, NAO AUMENTO
-        #
-        # Gate novo nasce escopado: sem o arquivo, nao ha divida anterior contra a qual
-        # comparar, e recusar o primeiro `--update` deixaria o gate impossivel de ligar.
-        # Depois disso a regra vale inteira -- o numero so cai.
-        primeira = not os.path.exists(BASELINE)
-        sobe = [] if primeira else [s for s, n in atual.items() if n > base.get(s, 0)]
-        if sobe:
-            print(f"\n{VERMELHO}--update RECUSADO{ZERA}: {sobe} teriam a divida AUMENTADA. "
-                  f"Este numero so pode cair.")
-            return 1
-        json.dump({"_o_que_e": "Telas do consultivo cuja nota de professor ainda e prosa "
-                               "livre, e nao o guia declarado de dez campos (Doc 04 §8.2). "
-                               "ALVARA, nunca lista de tarefas: o gate exige que o numero "
-                               "NAO SUBA, e nunca que ele caia (REGRA 30). Migrar e uma "
-                               "aula por vez, quando o Dan pedir aquela aula.",
-                   "em_prosa": {k: v for k, v in sorted(atual.items()) if v}},
-                  open(BASELINE, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-        print(f"\nrecongelado: {sum(atual.values())} tela(s) em prosa.")
-        return 0
 
     if total:
         print(f"\n{VERMELHO}GATE 53 — {total} problema(s) em {vistos} arquivo(s).{ZERA}")
         return 1
-    divida = sum(atual.values())
-    print(f"\n{VERDE}GATE 53 OK{ZERA} — {vistos} arquivo(s).")
-    if divida:
-        print(f"  divida congelada: {divida} tela(s) ainda em prosa "
-              f"(scripts/consultivo/guia_em_prosa.json). Nao e lista de tarefas.")
+    print(f"\n{VERDE}GATE 53 OK{ZERA} — {vistos} arquivo(s), todos com o guia declarado nas "
+          f"dez telas de cada aula.")
     return 0
 
 
