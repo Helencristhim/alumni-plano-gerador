@@ -899,7 +899,43 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 **Zero mudanca de JS. Muda so o TEXTO dentro.** NUNCA invente um componente novo para A2+.
 
-> **A ETAPA NUNCA SOME POR CAUSA DO NIVEL — so muda de IDIOMA e de DENSIDADE.** Vocab card,
+### A UNICA EXCECAO: Pre-A1 muda o TIPO DE TAREFA (norma pedagogica, 03/09/2026)
+
+**A0 / Real Beginner corresponde a faixa Pre-A1 do CEFR Companion Volume.** A0 nao e nivel
+oficial do CEFR; Pre-A1 e um estagio ANTERIOR a capacidade linguistica generativa — o aluno
+depende de palavras isoladas, expressoes formulaicas, linguagem muito familiar, contexto,
+preparacao e apoio do interlocutor.
+
+> **NAO SE PRESUME PRODUCAO AUTONOMA DE FRASES COMO CONDICAO DE ENTRADA.** Palavra solta e
+> resposta formulaica sao DESEMPENHO VALIDO. A frase simples e OBJETIVO progressivo rumo ao
+> A1 — e portanto e o que a aula constroi, nunca o que ela exige na porta.
+
+O que muda em Pre-A1, e so nele:
+
+| Etapa | A1 em diante | **Pre-A1** |
+|---|---|---|
+| Fill-in-the-blank | digita a palavra | **banco de palavras**: escolhe entre candidatas |
+| Producao livre (think card) | prompt aberto | prompt + **modelo falado** e escrito; palavra solta conta |
+| Pronuncia (speech card) | frase inteira | alvo curto: **ate 6 palavras**, chunk formulaico |
+| Apoio em PT no pre/post-class | traducao do item | **cobre a tarefa inteira** — enunciado, alternativa e o que se espera |
+
+O in-class NAO segue a mesma regra: la ha professor mediando, entao o apoio e mais seletivo e
+se combina com modelagem, repeticao, recurso visual e negociacao de sentido.
+
+**O modo e DECLARADO, nunca deduzido de outro campo.** Quem liga e o proprio nivel `A0` no
+primeiro chip do `header` do config — o mesmo que `nivel_cefr()` ja le. Quem entrega e o
+builder (`preclass_pre_a1`), e quem cobra e o **GATE 57** (`check_pre_a1.py`), que pergunta
+*"o material que declarou A0 entrega o apoio inteiro?"* — e nao *"tem portugues?"*.
+
+**De onde veio.** Medicao de 03/09/2026 nos tres A0 do roster: o material deles nao era B1
+(6-7 palavras/aula e apoio bilingue completo, contra 8 e ZERO portugues do B1 de controle),
+mas a fatia de producao autonoma era MAIOR que a do B1 — 48% contra 37% — e o prompt de
+producao livre pedia quatro informacoes autonomas na primeira aula. A professora do Ricardo
+reportou, em tres de cinco aulas, que ele *"had not completed the pre-class activities"*.
+A tarefa presumia o que o nivel ainda nao tem.
+
+> **A ETAPA NUNCA SOME POR CAUSA DO NIVEL — so muda de IDIOMA, de DENSIDADE e, so em
+> Pre-A1, de TIPO DE TAREFA.** Vocab card,
 > matching, grammar tip, survival card: obrigatorios em TODOS os niveis. Omitir uma etapa
 > "porque o aluno e A1" e BUG; traduzir em A2+ tambem e.
 
@@ -912,7 +948,8 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 | Nivel | Portugues na TELA DO ALUNO | Vocabulario | Frases | Gramatica |
 |-------|---------------------------|-------------|--------|-----------|
-| A0-A1 | **SIM — 100% bilingue** (traducao, grammar tip bilingue, survival bilingue) | 5-7 palavras/aula | 3-5 palavras | Presente simples, to be |
+| **A0 / Pre-A1** | **SIM — 100% bilingue**, e o apoio cobre a TAREFA INTEIRA no trabalho autonomo | 5-7 palavras/aula | palavra solta ou chunk formulaico | Presente simples, to be |
+| A1 | **SIM — 100% bilingue** (traducao, grammar tip bilingue, survival bilingue) | 5-7 palavras/aula | 3-5 palavras | Presente simples, to be |
 | A2 | **ZERO** | 8-10 palavras/aula | 5-7 palavras | Past simple, can/could |
 | B1 | **ZERO** | 10-12 palavras/aula | 7-10 palavras | Present perfect, modals |
 | B2 | **ZERO** | 12-15 palavras/aula | 10-15 palavras | Conditionals, passive |

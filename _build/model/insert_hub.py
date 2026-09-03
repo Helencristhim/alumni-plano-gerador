@@ -125,7 +125,7 @@ def hub_audiomap_lines(cfg, content_dir):
     # (dentro do postclass.js, preenchido pelo builder), não no audioMap do hub.
     entries = {}
     if cfg.get('model') != 'kids':
-        pc = read(os.path.join(content_dir, 'preclass.html'))
+        pc = B.read_preclass(content_dir, cfg)
         entries = B.assign_voices(B.extract_phrases(pc), prefix=f'pc{n}_', cfg=cfg)
     lines = {}
     for text, meta in entries.items():
@@ -357,7 +357,7 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     elif tem_preclass:
         pulados.append('pre-class')
     else:
-        preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
+        preclass = B.read_preclass(content_dir, cfg).strip()
         # CARIMBO DE GERAÇÃO NO BLOCO. O hub nunca ganha <meta name="alumni-gen"> (o insert_hub
         # só injeta trechos num arquivo antigo), então gate escopado por geração era CEGO para
         # o Pre-class inteiro. Carimbar o hub seria pior: passaria a cobrar as invariantes novas
