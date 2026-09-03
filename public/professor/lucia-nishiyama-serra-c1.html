@@ -850,6 +850,36 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
    nada muda, porque a regra so vale onde o inner ja centraliza. */
 .slide-open .slide-question{margin-left:auto;margin-right:auto}
+
+/* E O APOIO EM PORTUGUES TAMBEM (revisao de 03/09/2026, a mesma tela de novo).
+   A regra acima centrou a CAIXA da pergunta e parou ali. O `.slide-pt` tem `max-width:60ch`
+   e e ele proprio um bloco: dentro do subtitulo da tela de abertura a caixa saia com 437px
+   encostada na esquerda de um inner de 940 -- 503px de sobra de um lado so -- e o texto,
+   centralizado DENTRO dela, parecia desalinhado do ingles logo acima. Medido no navegador
+   na tela 1 da aula 1 da Vanessa, depois da correcao anterior: o mesmo defeito, na peca ao
+   lado, porque o conserto foi escrito para UM seletor e nao para a causa (bloco com
+   max-width dentro de um inner que centraliza).
+   Vale so onde o inner ja centraliza -- nas telas alinhadas a esquerda nada muda. */
+.slide-open .slide-pt{margin-left:auto;margin-right:auto}
+
+/* LISTA DE ESCOLHAS CURTAS: CADA UMA E UM BLOCO, E ELAS VAO LADO A LADO.
+   A `.qlist` e uma coluna, e para uma lista de PERGUNTAS isso e o certo: cada pergunta e uma
+   linha de leitura. Mas a mesma classe recebe as ESCOLHAS de um "quais destas?" -- e sete
+   escolhas de tres palavras empilhadas gastaram 522px de altura na tela 2 da aula 1 da
+   Vanessa (medido no navegador: 990px de conteudo num deck de 900, com duas escolhas abaixo
+   da dobra). Pedido da professora em 03/09/2026: "cada opcao um bloco sozinho, um ao lado do
+   outro na horizontal".
+   Quem poe a classe e o BUILDER, medindo os itens (`marca_qlist_de_escolhas`) -- nao o autor
+   do conteudo, que teria de lembrar. Uma lista de perguntas nunca a recebe.
+   O seletor e `.qlist.qlist-escolhas` (as duas classes) e nao `.qlist-escolhas`: a regra
+   base `.qlist{flex-direction:column}` esta MAIS ABAIXO no arquivo, e com a mesma
+   especificidade quem vem depois vence. Medido no navegador: com uma classe so, a lista
+   recebia o cartao e continuava empilhada. */
+.qlist.qlist-escolhas{flex-direction:row;flex-wrap:wrap;align-items:stretch;gap:var(--space-3)}
+.qlist.qlist-escolhas .q-item{flex:0 1 auto;max-width:100%;padding:var(--space-2h) var(--space-3h);
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:rgba(0,48,128,.05);
+  font-size:clamp(1.05rem,1.4vw,1.16rem)}
+.slide-dark .qlist.qlist-escolhas .q-item,.slide-open .qlist.qlist-escolhas .q-item{background:rgba(255,255,255,.06)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1267,6 +1297,11 @@ body.tg-guia > #tgGuia{display:block!important}
 .doc-para{font-size:.88rem;line-height:var(--lh-corpo);color:var(--text);
   margin-bottom:var(--space-3)}
 .doc-para:last-child{margin-bottom:0}
+.slide-dark .doc-brief,.slide-open .doc-brief{background:rgba(255,255,255,.06);
+  border-color:var(--d-border);border-left-color:var(--d-accent)}
+.slide-dark .doc-tit,.slide-open .doc-tit{color:var(--d-accent)}
+.slide-dark .doc-fonte,.slide-open .doc-fonte{color:var(--d-text-mid);border-bottom-color:var(--d-border)}
+.slide-dark .doc-para,.slide-open .doc-para{color:var(--d-text)}
 
 /* --- voltar ao topo ---
    Fecha a area, depois do ultimo conteudo e da ultima acao. Regua acima para separar do que
@@ -1615,7 +1650,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Both versions end with the same ask.</span></div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version A is more objective because it has no signposting.</span></div>
       </div>
-      <div class="rationale">Same facts, same ask, same length. What Version B adds is the reader&rsquo;s certainty about where each sentence sits in the argument — and that certainty is what makes an executive room follow you.</div>
+      <div class="rationale">Same facts, same ask, same length. What Version B adds is the reader&rsquo;s certainty about where each sentence sits in the argument &mdash; and that certainty is what makes an executive room follow you.</div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'fl3')">Check</button>
     <div class="score-out" id="fl3-out"></div>
@@ -1646,7 +1681,7 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; One paragraph, with its signals</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
-    <p class="task-instr">Write it about something of your own — a decision you are carrying at work right now — if you prefer. The words are the same.</p>
+    <p class="task-instr">Write it about something of your own &mdash; a decision you are carrying at work right now &mdash; if you prefer. The words are the same.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></div>
     <div class="fill-list" id="cz3">
       <p class="chunk-line"><input class="blank-input" data-ok="Let me start with" style="min-width:170px" placeholder="..."> where the project stands today.</p>
@@ -1785,7 +1820,7 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="match-grid" id="ck4">
       <div class="match-row"><span class="match-word">If I understand you correctly, you are asking</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">whether we can commit to December, not whether December is possible</option><option value="B">if I am sure</option><option value="C">about the model</option></select></div>
       <div class="match-row"><span class="match-word">Let me take that in two parts:</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the past and the future</option><option value="B">the date, and why the last one moved</option><option value="C">the model and the market</option></select></div>
-      <div class="match-row"><span class="match-word">Before I answer — do you mean</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">anything in particular?</option><option value="B">the requirement itself, or the fact that it is not published yet?</option><option value="C">the launch?</option></select></div>
+      <div class="match-row"><span class="match-word">Before I answer &mdash; do you mean</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">anything in particular?</option><option value="B">the requirement itself, or the fact that it is not published yet?</option><option value="C">the launch?</option></select></div>
       <div class="match-row"><span class="match-word">Short answer: yes, December is a commitment.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">The longer answer is why the last date moved.</option><option value="B">I will send you the details.</option><option value="C">That is all I can say.</option></select></div>
       <div class="match-row"><span class="match-word">I would push back on the word gold-plating,</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">because six weeks is short</option><option value="B">because the requirement is drafted, not absent</option><option value="C">because you are wrong</option></select></div>
     </div>
@@ -1807,7 +1842,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="Let me take that in two parts" style="min-width:220px" placeholder="...">: what the requirement is, and why six weeks.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="If I understand you correctly" style="min-width:210px" placeholder="...">, the objection is that nothing has been published yet.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="I would push back on that" style="min-width:190px" placeholder="...">, because a draft that three regulators are consulting on is not nothing.</p>
-      <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> — I will send it today.</p>
+      <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> &mdash; I will send it today.</p>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz4')">Check</button>
     <div class="score-out" id="cz4-out"></div>
@@ -1838,7 +1873,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The first one is wrong.</span></div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Only the second one can be used in a presentation.</span></div>
       </div>
-      <div class="rationale">Neither is wrong. English puts what is new at the END of the sentence, and these three structures exist to move it there — which is why they sound like signalling even though they are only word order.</div>
+      <div class="rationale">Neither is wrong. English puts what is new at the END of the sentence, and these three structures exist to move it there &mdash; which is why they sound like signalling even though they are only word order.</div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd5')">Check</button>
     <div class="score-out" id="kd5-out"></div>
@@ -1930,7 +1965,7 @@ body.tg-guia > #tgGuia{display:block!important}
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>5 &middot; Build the form</h4><span class="badge badge-open">Form</span></div>
-    <p class="task-instr">Complete each sentence with the right form. No word bank — the point is the structure, not the word.</p>
+    <p class="task-instr">Complete each sentence with the right form. No word bank &mdash; the point is the structure, not the word.</p>
     <div class="fill-list" id="gp5">
       <p class="chunk-line">What the board <input class="blank-input" data-ok="wants" style="min-width:110px" placeholder="..."> is a date they can hold us to.</p>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:70px" placeholder="..."> the explainability that fails, not the accuracy.</p>
@@ -1949,7 +1984,7 @@ body.tg-guia > #tgGuia{display:block!important}
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Your own six</h4><span class="badge badge-open">Writing</span></div>
-    <p class="task-instr">Write six sentences about a decision you are carrying right now — two of each structure. Bring them to the lesson; they are what you will say out loud.</p>
+    <p class="task-instr">Write six sentences about a decision you are carrying right now &mdash; two of each structure. Bring them to the lesson; they are what you will say out loud.</p>
     <div class="callout rule-box">
       <span class="callout-title">The frames</span>
       <em>What &hellip; is &hellip;</em> &nbsp;&middot;&nbsp; <em>It is &hellip; that &hellip;</em> &nbsp;&middot;&nbsp; <em>As for &hellip; , &hellip;</em> &nbsp;&middot;&nbsp; <em>While &hellip; , &hellip;</em>
@@ -1969,7 +2004,7 @@ body.tg-guia > #tgGuia{display:block!important}
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>1 &middot; What forty-five seconds is</h4><span class="badge badge-open">Before you start</span></div>
-    <p class="task-instr">You get fifteen seconds to prepare and forty-five seconds to speak. That is the shape of the independent speaking task in the TOEFL iBT — and it is also the shape of the minute you get in a meeting.</p>
+    <p class="task-instr">You get fifteen seconds to prepare and forty-five seconds to speak. That is the shape of the independent speaking task in the TOEFL iBT &mdash; and it is also the shape of the minute you get in a meeting.</p>
     <p class="task-instr">Mark the three statements that are true of a good forty-five-second answer.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd6">
@@ -1980,7 +2015,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It ends when the time ends.</span></div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It needs an example for every reason.</span></div>
       </div>
-      <div class="rationale">Two of the wrong ones are the same mistake: treating forty-five seconds as a short essay. It is not. It is a position, two reasons and a close — and the close has to arrive before the clock does.</div>
+      <div class="rationale">Two of the wrong ones are the same mistake: treating forty-five seconds as a short essay. It is not. It is a position, two reasons and a close &mdash; and the close has to arrive before the clock does.</div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd6')">Check</button>
     <div class="score-out" id="kd6-out"></div>
@@ -2685,7 +2720,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>Write More</h4><span class="badge badge-open">Optional</span></div>
-    <p class="task-instr">Write the six-sentence version of that same argument — one sentence per move.</p>
+    <p class="task-instr">Write the six-sentence version of that same argument &mdash; one sentence per move.</p>
     <div class="callout rule-box">
       <span class="callout-title">Why six</span>
       Six is enough for any argument that fits in three minutes, and it is short enough that you will notice which move you skipped. Most people skip the concession.
@@ -2713,13 +2748,13 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">Two talks where the signalling is doing visible work.</p>
     <div class="res-card">
       <h5>How to speak so that people want to listen</h5>
-      <span class="res-src">TED — Julian Treasure</span>
+      <span class="res-src">TED &mdash; Julian Treasure</span>
       <p>Ten minutes, with English subtitles. Watch what he does at each turn — you will now hear the signals as signals.</p>
       <a class="res-link" href="https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen" target="_blank" rel="noopener">Watch on TED &rarr;</a>
     </div>
     <div class="res-card">
       <h5>The era of blind faith in big data must end</h5>
-      <span class="res-src">TED — Cathy O&rsquo;Neil</span>
+      <span class="res-src">TED &mdash; Cathy O&rsquo;Neil</span>
       <p>An argument about algorithms made to a general audience: an opening, a turn, a concession and an ask, in that order. Close to what you will do in class.</p>
       <a class="res-link" href="https://www.ted.com/talks/cathy_o_neil_the_era_of_blind_faith_in_big_data_must_end" target="_blank" rel="noopener">Watch on TED &rarr;</a>
     </div>
@@ -2792,7 +2827,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>Write More</h4><span class="badge badge-open">Optional</span></div>
-    <p class="task-instr">Write the check you would make for each of the three questions — one sentence each.</p>
+    <p class="task-instr">Write the check you would make for each of the three questions &mdash; one sentence each.</p>
     <div class="callout rule-box">
       <span class="callout-title">Why write the check and not the answer</span>
       The answer changes with the day. The check is the same every time, and it is the part that does not come out under pressure unless you have said it before.
@@ -2820,13 +2855,13 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">Two examples of the same operation, at full length.</p>
     <div class="res-card">
       <h5>Your body language may shape who you are</h5>
-      <span class="res-src">TED — Amy Cuddy</span>
+      <span class="res-src">TED &mdash; Amy Cuddy</span>
       <p>Watch the last four minutes, where she takes the objection to her own research and answers it on stage. That is the move of this lesson, done in front of a thousand people.</p>
       <a class="res-link" href="https://www.ted.com/talks/amy_cuddy_your_body_language_may_shape_who_you_are" target="_blank" rel="noopener">Watch on TED &rarr;</a>
     </div>
     <div class="res-card">
       <h5>How I&rsquo;m fighting bias in algorithms</h5>
-      <span class="res-src">TED — Joy Buolamwini</span>
+      <span class="res-src">TED &mdash; Joy Buolamwini</span>
       <p>A technical argument to a general audience, in your own field. Notice how often she restates the question before answering it.</p>
       <a class="res-link" href="https://www.ted.com/talks/joy_buolamwini_how_i_m_fighting_bias_in_algorithms" target="_blank" rel="noopener">Watch on TED &rarr;</a>
     </div>
@@ -2892,7 +2927,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>Write More</h4><span class="badge badge-open">Optional</span></div>
-    <p class="task-instr">Take any paragraph you wrote in English this month — an email, a summary, a note — and rewrite two sentences of it with the new information at the end.</p>
+    <p class="task-instr">Take any paragraph you wrote in English this month &mdash; an email, a summary, a note &mdash; and rewrite two sentences of it with the new information at the end.</p>
     <div class="callout rule-box">
       <span class="callout-title">Why your own text</span>
       The structures are easy to produce in an exercise and hard to produce in your own writing, where the Portuguese order is already on the page. Rewriting is where they transfer.
@@ -2909,7 +2944,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">Short and precise, on the thing this lesson is about.</p>
     <div class="res-card">
       <h5>Cleft Sentences in Speaking, Writing</h5>
-      <span class="res-src">VOA Learning English — Everyday Grammar</span>
+      <span class="res-src">VOA Learning English &mdash; Everyday Grammar</span>
       <p>The reference for what.. is.. and it is.. that.., with examples and audio. It is the same structure you used today.</p>
       <a class="res-link" href="https://learningenglish.voanews.com/a/cleft-sentences-in-speaking-writing/5164836.html" target="_blank" rel="noopener">Open the article &rarr;</a>
     </div>
@@ -2920,7 +2955,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">One talk, watched for one thing.</p>
     <div class="res-card">
       <h5>The danger of a single story</h5>
-      <span class="res-src">TED — Chimamanda Ngozi Adichie</span>
+      <span class="res-src">TED &mdash; Chimamanda Ngozi Adichie</span>
       <p>Watch for the concessives. She concedes something to the other side roughly every two minutes, and it is why an argument that could sound accusatory does not.</p>
       <a class="res-link" href="https://www.ted.com/talks/chimamanda_ngozi_adichie_the_danger_of_a_single_story" target="_blank" rel="noopener">Watch on TED &rarr;</a>
     </div>
@@ -3002,7 +3037,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">The official description of the task, from the people who write it.</p>
     <div class="res-card">
       <h5>TOEFL iBT Speaking Section</h5>
-      <span class="res-src">ETS — official</span>
+      <span class="res-src">ETS &mdash; official</span>
       <p>What the four tasks are, how long each one gives you, and what the raters are told to look for. It is the source rather than somebody's summary of it.</p>
       <a class="res-link" href="https://www.ets.org/toefl/test-takers/ibt/about/content/speaking.html" target="_blank" rel="noopener">Open the page &rarr;</a>
     </div>
@@ -3013,7 +3048,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <p class="task-instr">Short-form argument, done well.</p>
     <div class="res-card">
       <h5>Ideas worth spreading, in under six minutes</h5>
-      <span class="res-src">TED — playlist</span>
+      <span class="res-src">TED &mdash; playlist</span>
       <p>A set of talks under six minutes. Watch any two for the same thing: how early the position arrives, and how little time is spent on the other side.</p>
       <a class="res-link" href="https://www.ted.com/playlists/153/short_talks_under_6_minutes" target="_blank" rel="noopener">Open the playlist &rarr;</a>
     </div>
@@ -3630,7 +3665,7 @@ superior não compensa lacuna nas habilidades prioritárias.
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ran out of time before the close.</span></div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Used an example from my own work.</span></div>
       </div>
-      <div class="rationale">This is your own attempt, not a right answer. Mark it honestly — the point is to hear the model against what you actually did, not against what you meant to do.</div>
+      <div class="rationale">This is your own attempt, not a right answer. Mark it honestly &mdash; the point is to hear the model against what you actually did, not against what you meant to do.</div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'at6')">Check</button>
     <div class="score-out" id="at6-out"></div>

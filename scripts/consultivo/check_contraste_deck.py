@@ -30,8 +30,9 @@ caminho -- ali a tarefa nascia com `display:none`, aqui ela nasce da cor do fund
 O QUE ELE MEDE
 --------------
 Tela a tela, DENTRO do deck aberto (as telas nascem em display:none; medir a pagina
-parada mede zero elementos e devolve verde falso). Para cada elemento com texto proprio
-numa tela `.slide-dark`/`.slide-open`:
+parada mede zero elementos e devolve verde falso), e com os blocos recolhiveis da tela JA
+ABERTOS -- o que a professora mostra com um clique na aula e tela como o resto. Para cada
+elemento com texto proprio numa tela `.slide-dark`/`.slide-open`:
 
     razao WCAG entre a cor computada do texto e o fundo EFETIVO
 
@@ -126,6 +127,30 @@ SONDA = r"""() => {
 }"""
 
 
+# OS BLOCOS QUE O PROFESSOR ABRE NA AULA TAMBEM SAO TELA (revisao de 03/09/2026)
+#
+# A sonda pula `display:none`, e esta certa: o que nunca aparece nao tem contraste a medir.
+# Mas parte do deck NASCE fechada e abre com um clique durante a aula -- o Replay, a nova
+# reserva, o apoio da tela 8. Para o gate, "fechado" e "inexistente" eram a mesma coisa: um
+# `.doc-brief` sem par escuro dentro de uma `.slide-dark` passou verde porque estava
+# recolhido, e so ia aparecer projetado, na aula, no momento em que a aluna precisasse dele.
+#
+# Entao a tela e medida com tudo o que ela pode mostrar aberto. E o mesmo criterio do resto:
+# medir o que a professora VE, e nao o que o arquivo tem.
+ABRE_RECOLHIDOS = """() => {
+  const t = document.querySelector('.slide.active');
+  if (!t) return 0;
+  let n = 0;
+  t.querySelectorAll('[onclick*="abrirBloco"]').forEach((b) => {
+    const m = /abrirBloco\('([^']+)'/.exec(b.getAttribute('onclick') || '');
+    if (!m) return;
+    const alvo = document.getElementById(m[1]);
+    if (alvo && (alvo.style.display === 'none' || !alvo.style.display)) { b.click(); n++; }
+  });
+  return n;
+}"""
+
+
 def carimbo(c):
     m = re.search(r'<meta\s+name="alumni-anatomia"\s+content="([^"]+)"', c[:4000])
     return m.group(1) if m else None
@@ -181,6 +206,8 @@ def mede(rels):
                     pg.wait_for_timeout(220)
                     visto = None
                     for _ in range(80):
+                        pg.evaluate(ABRE_RECOLHIDOS)
+                        pg.wait_for_timeout(90)
                         achados += pg.evaluate(SONDA)
                         telas += 1
                         atual = pg.evaluate(
@@ -282,6 +309,17 @@ def _selftest():
          planta('<p class="task-instr">Which two answers give the essential information?</p>',
                 ".slide-dark .task-instr,.slide-open .task-instr{color:#C6D4EA}"),
          None),
+        # O caso que so existe desde 03/09/2026: o defeito dentro de um bloco RECOLHIDO.
+        # Antes de `ABRE_RECOLHIDOS` a sonda pulava o `display:none` e devolvia verde — e
+        # era assim que uma peca sem par escuro chegava projetada na aula sem nunca ter sido
+        # medida. Se alguem tirar a abertura, este caso deixa de acusar e o selftest cai.
+        ("o defeito dentro do bloco que so abre no clique",
+         planta('<button class="verify-all-btn" onclick="abrirBloco(\'st52\',this)">Show</button>'
+                '<div id="st52" style="display:none">'
+                '<p class="task-instr">Which two answers give the essential information?</p>'
+                '</div>',
+                ".slide-dark .task-instr,.slide-open .task-instr{color:#33405E}"),
+         "task-instr"),
     ]
     tmpdir = os.path.join(RAIZ, "public", "professor", "_gate52_tmp")
     os.makedirs(tmpdir, exist_ok=True)
@@ -316,7 +354,9 @@ def _selftest():
     if falhou:
         print("SELFTEST FALHOU — a regra parou de morder, ou passou a morder demais.")
         return 1
-    print(f"SELFTEST OK — {len(casos)} casos: 3 ilegibilidades pegas, 1 cinza legitimo poupado.")
+    pegar = sum(1 for _, _, esperado in casos if esperado)
+    print(f"SELFTEST OK — {len(casos)} casos: {pegar} ilegibilidades pegas "
+          f"(uma delas dentro de bloco recolhido), {len(casos) - pegar} cinza legitimo poupado.")
     return 0
 
 

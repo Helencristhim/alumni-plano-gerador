@@ -850,6 +850,36 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
    nada muda, porque a regra so vale onde o inner ja centraliza. */
 .slide-open .slide-question{margin-left:auto;margin-right:auto}
+
+/* E O APOIO EM PORTUGUES TAMBEM (revisao de 03/09/2026, a mesma tela de novo).
+   A regra acima centrou a CAIXA da pergunta e parou ali. O `.slide-pt` tem `max-width:60ch`
+   e e ele proprio um bloco: dentro do subtitulo da tela de abertura a caixa saia com 437px
+   encostada na esquerda de um inner de 940 -- 503px de sobra de um lado so -- e o texto,
+   centralizado DENTRO dela, parecia desalinhado do ingles logo acima. Medido no navegador
+   na tela 1 da aula 1 da Vanessa, depois da correcao anterior: o mesmo defeito, na peca ao
+   lado, porque o conserto foi escrito para UM seletor e nao para a causa (bloco com
+   max-width dentro de um inner que centraliza).
+   Vale so onde o inner ja centraliza -- nas telas alinhadas a esquerda nada muda. */
+.slide-open .slide-pt{margin-left:auto;margin-right:auto}
+
+/* LISTA DE ESCOLHAS CURTAS: CADA UMA E UM BLOCO, E ELAS VAO LADO A LADO.
+   A `.qlist` e uma coluna, e para uma lista de PERGUNTAS isso e o certo: cada pergunta e uma
+   linha de leitura. Mas a mesma classe recebe as ESCOLHAS de um "quais destas?" -- e sete
+   escolhas de tres palavras empilhadas gastaram 522px de altura na tela 2 da aula 1 da
+   Vanessa (medido no navegador: 990px de conteudo num deck de 900, com duas escolhas abaixo
+   da dobra). Pedido da professora em 03/09/2026: "cada opcao um bloco sozinho, um ao lado do
+   outro na horizontal".
+   Quem poe a classe e o BUILDER, medindo os itens (`marca_qlist_de_escolhas`) -- nao o autor
+   do conteudo, que teria de lembrar. Uma lista de perguntas nunca a recebe.
+   O seletor e `.qlist.qlist-escolhas` (as duas classes) e nao `.qlist-escolhas`: a regra
+   base `.qlist{flex-direction:column}` esta MAIS ABAIXO no arquivo, e com a mesma
+   especificidade quem vem depois vence. Medido no navegador: com uma classe so, a lista
+   recebia o cartao e continuava empilhada. */
+.qlist.qlist-escolhas{flex-direction:row;flex-wrap:wrap;align-items:stretch;gap:var(--space-3)}
+.qlist.qlist-escolhas .q-item{flex:0 1 auto;max-width:100%;padding:var(--space-2h) var(--space-3h);
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:rgba(0,48,128,.05);
+  font-size:clamp(1.05rem,1.4vw,1.16rem)}
+.slide-dark .qlist.qlist-escolhas .q-item,.slide-open .qlist.qlist-escolhas .q-item{background:rgba(255,255,255,.06)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1267,6 +1297,11 @@ body.tg-guia > #tgGuia{display:block!important}
 .doc-para{font-size:.88rem;line-height:var(--lh-corpo);color:var(--text);
   margin-bottom:var(--space-3)}
 .doc-para:last-child{margin-bottom:0}
+.slide-dark .doc-brief,.slide-open .doc-brief{background:rgba(255,255,255,.06);
+  border-color:var(--d-border);border-left-color:var(--d-accent)}
+.slide-dark .doc-tit,.slide-open .doc-tit{color:var(--d-accent)}
+.slide-dark .doc-fonte,.slide-open .doc-fonte{color:var(--d-text-mid);border-bottom-color:var(--d-border)}
+.slide-dark .doc-para,.slide-open .doc-para{color:var(--d-text)}
 
 /* --- voltar ao topo ---
    Fecha a area, depois do ultimo conteudo e da ultima acao. Regua acima para separar do que
@@ -3095,7 +3130,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="section-header-row"><h4>Reading</h4></div>
     <p class="task-instr">Six minutes, with transcript and vocabulary, on explaining something technical to someone outside it.</p>
     <div class="res-card">
-      <h5>6 Minute English — with full transcript</h5>
+      <h5>6 Minute English &mdash; with full transcript</h5>
       <span class="res-src">BBC Learning English</span>
       <p>The format is two speakers, natural pace, and a transcript alongside. Useful as regular listening practice between lessons, at exactly the density you worked at today.</p>
       <a class="res-link" href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english_2023/ep-230406" target="_blank" rel="noopener">Open the episode &rarr;</a>
@@ -3517,7 +3552,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'cq10d')">Check</button>
     <div class="score-out" id="cq10d-out"></div>
     <div class="callout" id="cq10d-key" style="display:none">
-      <div class="callout-title">“Does that hold for…?” is the kind that gets answered</div>
+      <div class="callout-title">“Does that hold for&hellip;?” is the kind that gets answered</div>
       All three kinds are legitimate. But a question that points at what she said hands her something exact to respond to, and one that points at her makes her defend herself before she answers anything. Same doubt, different room.
     </div>
   </div>
