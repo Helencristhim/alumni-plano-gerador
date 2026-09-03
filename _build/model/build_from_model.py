@@ -1483,6 +1483,84 @@ def inject_gap_banks(slides):
     return ''.join(out)
 
 
+def read_preclass(content_dir, cfg):
+    """A UNICA porta de leitura do preclass.html — e por que ela existe.
+
+    O pre-class e lido em QUATRO lugares (dois no builder, dois no insert_hub), e cada um
+    tinha de lembrar de aplicar as mesmas transformacoes. O modo Pre-A1 nasceu assim: entrou
+    em dois dos quatro, e o hub saiu SEM o apoio enquanto o snippet saia COM — as duas
+    superficies do mesmo aluno divergindo em silencio.
+
+    Uma porta so: quem le, le transformado. Transformacao nova entra AQUI e chega nas quatro
+    de graca."""
+    caminho = os.path.join(content_dir, 'preclass.html')
+    if cfg.get('model') == 'kids' or not os.path.exists(caminho):
+        return ''
+    pre = read(caminho)
+    pre = inject_kids_game(pre, cfg)     # no-op fora do modelo kids
+    pre = preclass_pre_a1(pre, cfg)      # no-op fora de A0
+    return pre
+
+
+def preclass_pre_a1(pre, cfg):
+    """O apoio de Pre-A1 no PRE-CLASS. IDEMPOTENTE. So roda em material A0.
+
+    O PRE-CLASS E O UNICO MOMENTO EM QUE O ALUNO ESTA SOZINHO COM O MATERIAL, e e por isso
+    que a norma Pre-A1 (CEFR Companion Volume) manda o apoio cobrir ali a tarefa INTEIRA:
+    "Em trabalho autonomo de Pre- e Post-class, o suporte em portugues pode abranger todo o
+    conteudo necessario a compreensao e execucao da tarefa."
+
+    Sem isto, o A0 recebia a MESMA forma do A1 -- medido em 03/09/2026: 60 matching, 60 quiz,
+    60 lacunas, 40 cards de fala e 10 gravacoes livres, identico entre o Ricardo (A0) e a
+    Giovanna (A1), e com fatia de producao autonoma MAIOR que a do B1 de controle. A
+    professora dele reportou em TRES de cinco aulas que ele nao conseguiu fazer o pre-class.
+
+    Duas entregas, as duas mecanicas -- o autor nao precisa lembrar de nenhuma:
+
+      1. BANCO DE PALAVRAS no gap-fill. Digitar a palavra e recuperacao livre, que e
+         producao autonoma; escolher entre candidatas e reconhecimento, que e o que a faixa
+         sustenta. Mesmo argumento (e mesmo componente `.ic-bank`) do banco que a chefe pediu
+         para o in-class em 29/07 -- aqui vale MAIS, porque no in-class ha professor.
+      2. MODELO na producao livre. O think card abria com prompt aberto e nada mais. Com o
+         modelo escrito e falado ao lado, a resposta de UMA PALAVRA passa a ter de onde sair
+         -- e palavra solta e desempenho valido na faixa.
+
+    NAO mexe no comprimento dos alvos de fala: isso e conteudo, e quem cobra e o GATE 55.
+    Injetar frase curta que o autor nao escreveu seria inventar pedagogia."""
+    if nivel_cefr(cfg) != 'A0':
+        return pre
+
+    # ---- 1. banco de palavras no gap-fill
+    if 'pc-bank' not in pre:
+        respostas = re.findall(r'class="blank-input"[^>]*data-answer="([^"]+)"', pre)
+        if respostas:
+            # embaralho declarado (REGRA 24): em ordem, o exercicio vira copia de cima p/ baixo
+            ordem = respostas[1::2] + respostas[0::2]
+            bank = ''.join(f'<span class="phrase-en">{w}</span>' for w in ordem)
+            alvo = pre.find('<div class="fill-blank-item"')
+            if alvo >= 0:
+                caixa = ('<div class="phrase-list pc-bank" style="margin-bottom:1rem">'
+                         '<div class="phrase-row">' + bank + '</div></div>\n        ')
+                pre = pre[:alvo] + caixa + pre[alvo:]
+
+    # ---- 2. modelo na producao livre
+    if 'pc-modelo' not in pre:
+        m = re.search(r'(<div class="think-question">)(.*?)(</div>)', pre, re.S)
+        if m:
+            modelo = (cfg.get('lesson', {}) or {}).get('pre_a1_modelo')
+            if modelo:
+                bloco = ('\n        <div class="pc-modelo" style="margin:.6rem 0 0;padding:.7rem .9rem;'
+                         'background:var(--accent-dim);border-left:3px solid var(--accent);'
+                         'border-radius:6px;font-size:.86rem;line-height:1.5">'
+                         f'<strong>Modelo / Model:</strong> <span>{modelo}</span> '
+                         f'<button class="audio-btn" data-speak="{modelo}" '
+                         'onclick="speakText(this.dataset.speak,this)">Listen</button>'
+                         '<br><em style="font-size:.8rem;opacity:.85">Uma palavra j&aacute; vale. '
+                         'Voc&ecirc; pode repetir o modelo e trocar s&oacute; o que &eacute; seu.</em></div>')
+                pre = pre[:m.end(3)] + bloco + pre[m.end(3):]
+    return pre
+
+
 def inject_task_slides(slides):
     """Emite o slide de TAREFA antes de todo diálogo / leitura. IDEMPOTENTE.
 
@@ -2980,8 +3058,7 @@ def build_hub_new(cfg, content_dir, manifest):
     kids = cfg.get('model') == 'kids'
     post = kids_post_payload(cfg, content_dir, manifest)
     posts = [post] if post else []
-    preclass = '' if kids else read(os.path.join(content_dir, 'preclass.html'))
-    preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
+    preclass = read_preclass(content_dir, cfg)
     planning = read(hub_tab_path(cfg, content_dir, 'planning.html'))
     # ABAS DA ANATOMIA guided-discovery. Sao OPCIONAIS por arquivo: se o autor nao escreveu
     # evidencias.html/syllabus.html, o painel fica com o texto de esqueleto do shell em vez
@@ -3096,7 +3173,7 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries, manifest=None):
     pc_path = os.path.join(content_dir, 'preclass.html')
     pc_entries = {}
     if os.path.exists(pc_path) and cfg.get('model') != 'kids':
-        pc = read(pc_path)
+        pc = read_preclass(content_dir, cfg)
         pc_entries = assign_voices(extract_phrases(pc), prefix=f'pc{L["n"]}_', cfg=cfg)
         parts.append('<!-- 3. ACCORDION Pre-class (inserir após o ex-lesson anterior, prof E aluno) -->\n')
         # CARIMBO DE GERAÇÃO NO BLOCO, não no arquivo. O hub é antigo e o insert_hub só
