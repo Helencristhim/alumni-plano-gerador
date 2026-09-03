@@ -38,6 +38,7 @@ import json
 import os
 import re
 import sys
+from html import unescape
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SHELL = os.path.join(RAIZ, "_build", "model", "shells", "consultivo.html")
@@ -298,29 +299,45 @@ TRADUZ_REGISTRO = [
 # perde. Pedido da professora em 03/09/2026 ("o botao Reset my answers no final deve ter a
 # versao em portugues tambem"), estendido a caixa de confirmacao pelo mesmo motivo -- o
 # rotulo traduzido que abre um dialogo em ingles nao resolve nada.
+#
+# DUAS COISAS QUE ESTA LISTA JA ERROU, e por que elas nao sao detalhe (revisao de 03/09/2026)
+#
+# 1. O SEPARADOR IA COMO ENTIDADE. `&middot;` so vira "·" quando o navegador interpreta HTML.
+#    O titulo da caixa e o rotulo do botao dela sao escritos com `textContent` (`askOpen`:
+#    `askTitle.textContent=titulo`, `ok.textContent=rotulo`) -- e `textContent` nao
+#    interpreta nada: entra caractere por caractere. A aluna leu, na tela, "Reset Lesson 01
+#    answers? &middot; Limpar as respostas da aula 01?". O corpo da caixa vai por `innerHTML`
+#    e a mesma entidade ali aparecia certa: metade da caixa certa, metade com o codigo cru.
+#    Por isso o separador aqui e o CARACTERE "·", que funciona nos dois caminhos. Quem cobra
+#    isso e o GATE 55.
+#
+# 2. O PORTUGUES SAIU SEM ACENTO. "e so dela", "e afetado", "ficam como estao". Este arquivo
+#    e escrito sem acento de proposito -- e codigo, e comentario de codigo. O que ele EMITE
+#    nao e: e a frase que a aluna le. Ela e a razao de o material ser bilingue, e portugues
+#    sem acento e a lingua dela escrita errado na tela dela. Quem cobra isso e o GATE 55.
 TRADUZ_PRECLASS = [
     ('<span data-view="aluno">Reset my answers</span>',
-     '<span data-view="aluno">Reset my answers &middot; Limpar minhas respostas</span>', 1),
+     '<span data-view="aluno">Reset my answers \u00b7 Limpar minhas respostas</span>', 1),
     ("askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers?',",
      "askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers? "
-     "&middot; Limpar as respostas da aula '+('0'+n).slice(-2)+'?',", 1),
+     "\u00b7 Limpar as respostas da aula '+('0'+n).slice(-2)+'?',", 1),
     ("'<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+",
      "'<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+"
      "'<p lang=\"pt-BR\">Isto apaga <b>as suas respostas</b> do pre-class da aula '"
-     "+('0'+n).slice(-2)+', e so dela.</p>'+", 1),
+     "+('0'+n).slice(-2)+', e s\u00f3 dela.</p>'+", 1),
     ("'<div class=\"ask-keep\">Nothing your teacher wrote is affected, and the other "
      "lessons stay as they are.</div>',",
      "'<div class=\"ask-keep\">Nothing your teacher wrote is affected, and the other "
      "lessons stay as they are.<br><span lang=\"pt-BR\">Nada do que a professora "
-     "escreveu e afetado, e as outras aulas ficam como estao.</span></div>',", 1),
+     "escreveu \u00e9 afetado, e as outras aulas ficam como est\u00e3o.</span></div>',", 1),
     ("'Clear my answers',true,preResetGo);",
-     "'Clear my answers &middot; Limpar',true,preResetGo);", 1),
+     "'Clear my answers \u00b7 Limpar',true,preResetGo);", 1),
     # A ESCALA DE CONFIANCA da tela de fecho. Os itens medidos vem do `close.json` (o autor
     # escreve o apoio junto); os quatro ROTULOS da escala sao do shell, e sem isto a unica
     # pergunta da aula que e da ALUNA -- como ela se sente -- so tinha resposta em ingles.
     ("var CONF_LB=['Not yet','Getting there','Comfortable','Confident'];",
-     "var CONF_LB=['Not yet &middot; Ainda n\u00e3o','Getting there &middot; Chegando l\u00e1',"
-     "'Comfortable &middot; \u00c0 vontade','Confident &middot; Seguro'];", 1),
+     "var CONF_LB=['Not yet \u00b7 Ainda n\u00e3o','Getting there \u00b7 Chegando l\u00e1',"
+     "'Comfortable \u00b7 \u00c0 vontade','Confident \u00b7 Seguro'];", 1),
 ]
 
 
@@ -519,6 +536,47 @@ def blocos_da_aula(pasta):
     return json.load(open(caminho, encoding="utf-8")) if os.path.exists(caminho) else {}
 
 
+# A LISTA DE ESCOLHAS CURTAS VIRA GRADE, E QUEM DECIDE E A MEDIDA -- NAO O AUTOR.
+#
+# A `.qlist` serve a duas coisas diferentes com a mesma classe: uma lista de PERGUNTAS (cada
+# uma e uma linha de leitura, e a coluna esta certa) e a lista de ESCOLHAS de um "quais
+# destas?". Sete escolhas de tres palavras empilhadas gastaram 522px de altura na tela 2 da
+# aula 1 da Vanessa -- 990px de conteudo num deck de 900, com duas escolhas abaixo da dobra,
+# medido no navegador. Pedido da professora em 03/09/2026: cada opcao um bloco, lado a lado.
+#
+# O CRITERIO NAO E UM FLAG QUE ALGUEM MARCA. Regra que depende de o autor lembrar nao e
+# regra: a proxima aula com uma lista de escolhas nasceria empilhada de novo, e ninguem veria.
+# Aqui o builder MEDE o que ja esta escrito -- itens curtos, e muitos deles -- e marca.
+#
+# OS DOIS NUMEROS SAO MEDIDOS, NAO ESCOLHIDOS. Passei o repo inteiro (40 `.qlist` nos seis
+# materiais da anatomia mais o artefato) e a distribuicao do item mais longo de cada lista
+# tem um vale limpo: 18 (as escolhas da Vanessa), 23 (uma dupla de perguntas curtas), e
+# depois 32, 37, 39... Nada entre 24 e 31. O piso de QUATRO itens separa a lista de escolhas
+# da dupla de perguntas -- quem oferece alternativas oferece varias.
+LIM_ESCOLHA_CHARS = 24
+LIM_ESCOLHA_ITENS = 4
+RX_QLIST = re.compile(r'<div class="qlist(?![-\w])([^"]*)"([^>]*)>(.*?)</div>\s*</div>', re.S)
+
+
+def marca_qlist_de_escolhas(telas):
+    """Poe `qlist-escolhas` na `.qlist` cujos itens sao todos curtos e sao quatro ou mais.
+
+    O apoio em portugues (`.slide-pt`) nao entra na conta: ele e uma segunda linha por baixo,
+    e medir os dois juntos faria a mesma lista trocar de forma so por ser bilingue."""
+    def um(m):
+        resto, attrs, corpo = m.group(1), m.group(2), m.group(3)
+        itens = re.findall(r'<div class="q-item"[^>]*>(.*?)</div>', corpo, re.S)
+        textos = []
+        for it in itens:
+            it = re.sub(r'<span class="slide-pt">.*?</span>', '', it, flags=re.S)
+            textos.append(unescape(re.sub(r'<[^>]+>', '', it)).strip())
+        if len(textos) >= LIM_ESCOLHA_ITENS and all(
+                0 < len(t) <= LIM_ESCOLHA_CHARS for t in textos):
+            return f'<div class="qlist qlist-escolhas{resto}"{attrs}>{corpo}</div></div>'
+        return m.group(0)
+    return RX_QLIST.sub(um, telas)
+
+
 def aplica_guia_de_tela(telas, pasta, reg, n):
     """Troca o `data-teacher` de cada tela pelo guia DECLARADO em `guia_telas.json`.
 
@@ -633,6 +691,7 @@ def monta(cfg, base_frag):
         telas = expande_blocos(
             open(os.path.join(pasta, "slides.html"), encoding="utf-8").read().strip(),
             declarado[n], usado[n], f"aula {n} slides")
+        telas = marca_qlist_de_escolhas(telas)
         telas, erros_guia = aplica_guia_de_tela(telas, pasta, reg, n)
         erros += erros_guia
         slides.append(telas)

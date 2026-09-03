@@ -103,7 +103,16 @@ def esc(t):
     """Texto do autor -> HTML. As aspas e o travessao viram entidade, como no molde.
 
     O autor escreve `"assim"` e `--`; o molde usa `&ldquo;`/`&rdquo;` e `&mdash;`. Deixar
-    isso para quem escreve a aula e pedir para errar em metade dos itens."""
+    isso para quem escreve a aula e pedir para errar em metade dos itens.
+
+    A ENTIDADE QUE O AUTOR ESCREVEU E RESOLVIDA ANTES DO ESCAPE (03/09/2026). Sem isto, o
+    `&` de `&rarr;` virava `&amp;` e a seta chegava LITERAL na tela: "I am in Lisbon. &rarr;
+    negative" em cinco itens da aula 3 da Vanessa e seis da aula 3 do Caio, medido no
+    navegador pelo GATE 55. O autor escreveu o que escreve no resto do material (os campos de
+    prosa saem por `crua()`, onde a entidade vale) e este campo, que e texto, escapou por
+    cima. Resolver primeiro faz as duas convencoes darem no mesmo lugar -- e a linha seguinte
+    reescapa o que sobrou, entao um `&` solto continua virando `&amp;`."""
+    t = _html.unescape(t)
     t = _html.escape(t, quote=False)
     t = re.sub(r'"([^"]*)"', lambda m: "&ldquo;" + m.group(1) + "&rdquo;", t)
     t = t.replace("--", "&mdash;").replace("...", "&hellip;")
@@ -112,6 +121,7 @@ def esc(t):
     # reescreve.
     t = t.replace("'", "&rsquo;").replace("\u2019", "&rsquo;")
     t = t.replace("\u00b7", "&middot;").replace("\u2013", "&ndash;")
+    t = t.replace("\u2192", "&rarr;").replace("\u2014", "&mdash;").replace("\u2026", "&hellip;")
     # `**assim**` e `*assim*` viram <strong>/<em>. O autor nao escreve tag: escrever tag num
     # campo de texto e o caminho mais curto para um `<` solto quebrar a tela.
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)

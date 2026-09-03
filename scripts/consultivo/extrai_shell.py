@@ -558,7 +558,37 @@ body[data-view="professor"] #tab-preclass .score-out{display:none}"""),
    de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
    da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
    nada muda, porque a regra so vale onde o inner ja centraliza. */
-.slide-open .slide-question{margin-left:auto;margin-right:auto}"""),
+.slide-open .slide-question{margin-left:auto;margin-right:auto}
+
+/* E O APOIO EM PORTUGUES TAMBEM (revisao de 03/09/2026, a mesma tela de novo).
+   A regra acima centrou a CAIXA da pergunta e parou ali. O `.slide-pt` tem `max-width:60ch`
+   e e ele proprio um bloco: dentro do subtitulo da tela de abertura a caixa saia com 437px
+   encostada na esquerda de um inner de 940 -- 503px de sobra de um lado so -- e o texto,
+   centralizado DENTRO dela, parecia desalinhado do ingles logo acima. Medido no navegador
+   na tela 1 da aula 1 da Vanessa, depois da correcao anterior: o mesmo defeito, na peca ao
+   lado, porque o conserto foi escrito para UM seletor e nao para a causa (bloco com
+   max-width dentro de um inner que centraliza).
+   Vale so onde o inner ja centraliza -- nas telas alinhadas a esquerda nada muda. */
+.slide-open .slide-pt{margin-left:auto;margin-right:auto}
+
+/* LISTA DE ESCOLHAS CURTAS: CADA UMA E UM BLOCO, E ELAS VAO LADO A LADO.
+   A `.qlist` e uma coluna, e para uma lista de PERGUNTAS isso e o certo: cada pergunta e uma
+   linha de leitura. Mas a mesma classe recebe as ESCOLHAS de um "quais destas?" -- e sete
+   escolhas de tres palavras empilhadas gastaram 522px de altura na tela 2 da aula 1 da
+   Vanessa (medido no navegador: 990px de conteudo num deck de 900, com duas escolhas abaixo
+   da dobra). Pedido da professora em 03/09/2026: "cada opcao um bloco sozinho, um ao lado do
+   outro na horizontal".
+   Quem poe a classe e o BUILDER, medindo os itens (`marca_qlist_de_escolhas`) -- nao o autor
+   do conteudo, que teria de lembrar. Uma lista de perguntas nunca a recebe.
+   O seletor e `.qlist.qlist-escolhas` (as duas classes) e nao `.qlist-escolhas`: a regra
+   base `.qlist{flex-direction:column}` esta MAIS ABAIXO no arquivo, e com a mesma
+   especificidade quem vem depois vence. Medido no navegador: com uma classe so, a lista
+   recebia o cartao e continuava empilhada. */
+.qlist.qlist-escolhas{flex-direction:row;flex-wrap:wrap;align-items:stretch;gap:var(--space-3)}
+.qlist.qlist-escolhas .q-item{flex:0 1 auto;max-width:100%;padding:var(--space-2h) var(--space-3h);
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:rgba(0,48,128,.05);
+  font-size:clamp(1.05rem,1.4vw,1.16rem)}
+.slide-dark .qlist.qlist-escolhas .q-item,.slide-open .qlist.qlist-escolhas .q-item{background:rgba(255,255,255,.06)}"""),
 
  ("conferir-explica-mcheck",
   """function mCheck(btn,id){
@@ -844,6 +874,26 @@ function exRefaz(btn,id){
   """  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
      ja nao precisava dela. */
   var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');"""),
+
+ # ---- O DOCUMENTO NA TELA ESCURA (revisao de 03/09/2026)
+ #
+ # `.doc-brief` nasceu com `background:rgba(255,255,255,.62)` e sem par escuro, porque no
+ # artefato ele so aparece em tela clara. Posto numa `.slide-dark` -- a tela 8 da aula 1 da
+ # Vanessa, onde a reserva agora abre como apoio -- o fundo vira um cinza claro e o texto
+ # continua sendo o texto CLARO do slide escuro: claro sobre claro.
+ #
+ # E o GATE 52 nao veria: ele pula `display:none`, e este bloco NASCE fechado, para o
+ # professor abrir so se a aluna precisar. Por isso a correcao vem em par com a mudanca no
+ # gate, que passa a abrir os blocos recolhiveis antes de medir. Peca sem par escuro nao e
+ # peca de tela clara: e peca que ainda nao foi usada no escuro.
+ ("doc-brief-no-escuro",
+  """.doc-para:last-child{margin-bottom:0}""",
+  """.doc-para:last-child{margin-bottom:0}
+.slide-dark .doc-brief,.slide-open .doc-brief{background:rgba(255,255,255,.06);
+  border-color:var(--d-border);border-left-color:var(--d-accent)}
+.slide-dark .doc-tit,.slide-open .doc-tit{color:var(--d-accent)}
+.slide-dark .doc-fonte,.slide-open .doc-fonte{color:var(--d-text-mid);border-bottom-color:var(--d-border)}
+.slide-dark .doc-para,.slide-open .doc-para{color:var(--d-text)}"""),
 
  ("uma-aula-por-vez",
   """  _preAtual=CICLO.primeira;""",

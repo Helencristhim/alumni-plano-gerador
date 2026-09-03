@@ -2,7 +2,7 @@
     tema:'Your name on the booking',  temaPre:'Before you read the booking',
     canonico:'booking', statusKey:'af_l1_status',
     nav:['Lesson opening','The paper in your hand','Before you read','Read it once',
-         'Four things','Say the four','Say it without the paper','Your four sentences',
+         'Four things','One word, or a sentence','Say it without the paper','Your four sentences',
          'What just happened','Today and next'],
     stages:[
       {n:'Personalized lead-in',min:5},
