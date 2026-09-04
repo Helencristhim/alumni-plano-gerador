@@ -12,18 +12,30 @@
  * (o codigo dela esta inteiro no historico).
  *
  * ESTE ARQUIVO CONTINUA EXISTINDO porque os 153 hubs ja publicados o carregam via
- * <script src="/lib/controle-aulas.js">. Ele agora so carrega a tab irma "Resumos das
- * Aulas" — assim a tab nova chega em todos os hubs sem editar nenhum HTML de aluno
- * (REGRA 30 — o legado e intocavel). Nao remover este arquivo sem antes limpar as
- * tags <script> dos hubs.
+ * <script src="/lib/controle-aulas.js">. Ele agora so carrega as tabs irmas — assim
+ * uma tab nova chega em todos os hubs sem editar nenhum HTML de aluno (REGRA 30 — o
+ * legado e intocavel). Nao remover este arquivo sem antes limpar as tags <script>
+ * dos hubs.
+ *
+ * TABS CARREGADAS AQUI:
+ *   resumos-aula.js  — lista as aulas ja analisadas (le a tabela `analises`)
+ *   family-guide.js  — recado por aula para a familia (le /data/family-guide/{slug}.json)
+ *
+ * As duas se auto-desligam quando nao ha o que mostrar, entao carregar sempre e
+ * seguro: o family-guide, em particular, so injeta a tab se o JSON do aluno existir.
  */
 (function() {
   'use strict';
 
-  if (!window.__RESUMOS_AULA_LOADED && !document.querySelector('script[src="/lib/resumos-aula.js"]')) {
-    var resumosScript = document.createElement('script');
-    resumosScript.src = '/lib/resumos-aula.js';
-    document.body.appendChild(resumosScript);
+  carrega('/lib/resumos-aula.js', '__RESUMOS_AULA_LOADED');
+  carrega('/lib/family-guide.js', '__FAMILY_GUIDE_LOADED');
+
+  function carrega(src, flag) {
+    if (window[flag]) return;
+    if (document.querySelector('script[src="' + src + '"]')) return;
+    var s = document.createElement('script');
+    s.src = src;
+    document.body.appendChild(s);
   }
 
 })();
