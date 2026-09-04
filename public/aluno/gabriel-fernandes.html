@@ -567,6 +567,7 @@ body {
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('exercises')">Pre-class</button>
     <button class="tab-btn" onclick="switchTab('complementary')">Extras</button>
+    <button class="tab-btn" onclick="switchTab('family')">Family Guide</button>
   </div>
 </div>
 
@@ -2538,6 +2539,108 @@ body {
 </div>
 
 </div><!-- /tab-complementary -->
+
+<!-- ========== TAB: FAMILY GUIDE (gabriel-fernandes) ========== -->
+<style>
+#tab-family { --fg-accent: var(--accent, #003080); }
+#tab-family .fg-head { margin-bottom:1.4rem; }
+#tab-family .fg-title { font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:600;color:var(--text,#1a1a2e);line-height:1.3; }
+#tab-family .fg-sub { font-size:.88rem;line-height:1.55;color:var(--text-dim,#777);max-width:62ch;margin-top:.3rem; }
+#tab-family .fg-always { background:var(--bg-card,#fff);border:1px solid var(--border,#d4d4cc);border-left:4px solid var(--fg-accent);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1.1rem; }
+#tab-family .fg-always h4 { font-size:.95rem;font-weight:600;color:var(--text,#1a1a2e);margin:0 0 .7rem; }
+#tab-family .fg-always ol { margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.6rem; }
+#tab-family .fg-always li { font-size:.88rem;line-height:1.6;color:var(--text-mid,#4a4a5a); }
+#tab-family .fg-always strong { color:var(--text,#1a1a2e); }
+#tab-family .fg-rule { font-size:.85rem;line-height:1.6;color:var(--text-dim,#5c5c6c);border-left:2px solid var(--border,#d4d4cc);padding-left:1rem;margin:0 0 1.4rem;max-width:66ch; }
+#tab-family .fg-lesson { background:var(--bg-card,#fff);border:1px solid var(--border,#d4d4cc);border-radius:12px;margin-bottom:.7rem;overflow:hidden; }
+#tab-family .fg-summary { display:flex;align-items:center;gap:.9rem;padding:.95rem 1.2rem;cursor:pointer;list-style:none;min-height:44px; }
+#tab-family .fg-summary::-webkit-details-marker { display:none; }
+#tab-family .fg-summary:focus-visible { outline:3px solid var(--fg-accent);outline-offset:-3px; }
+#tab-family .fg-num { display:flex;align-items:center;justify-content:center;min-width:38px;height:38px;background:var(--fg-accent);color:#fff;border-radius:9px;font-weight:700;font-size:.95rem;flex-shrink:0; }
+#tab-family .fg-lt { flex:1;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.12rem;font-weight:600;color:var(--text,#1a1a2e);line-height:1.35; }
+#tab-family .fg-chev { color:var(--text-dim,#999);font-size:.8rem;transition:transform .2s; }
+#tab-family .fg-lesson[open] .fg-chev { transform:rotate(180deg); }
+#tab-family .fg-body { padding:0 1.2rem 1.2rem;border-top:1px solid var(--border-light,#eeeee8); }
+#tab-family .fg-row { display:grid;grid-template-columns:minmax(140px,190px) 1fr;gap:.4rem 1.2rem;padding:.85rem 0;border-bottom:1px solid var(--bg-elevated,#f2f2ec); }
+#tab-family .fg-row:last-of-type { border-bottom:none; }
+#tab-family .fg-label { font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim,#8a8a96);padding-top:.15rem; }
+#tab-family .fg-value { font-size:.89rem;line-height:1.65;color:var(--text-mid,#3a3a48); }
+#tab-family .fg-value em { color:var(--fg-accent);font-style:italic;font-weight:500; }
+#tab-family .fg-dinner { background:var(--bg-elevated,#f7f7f2);border:1px solid var(--border,#e6e6de);border-radius:10px;padding:.9rem 1.1rem;margin-top:.9rem; }
+#tab-family .fg-dl { font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-accent);margin-bottom:.4rem; }
+#tab-family .fg-den { font-family:'Cormorant Garamond',Georgia,serif;font-size:1.08rem;font-weight:600;color:var(--text,#1a1a2e);line-height:1.45; }
+#tab-family .fg-dpt { font-size:.84rem;line-height:1.55;color:var(--text-dim,#6a6a78);margin-top:.3rem; }
+#tab-family .fg-note { font-size:.86rem;line-height:1.6;color:var(--text-mid,#4a4a5a);margin-top:.9rem;padding-top:.8rem;border-top:1px dashed var(--border,#e0e0d8); }
+#tab-family .fg-note strong { color:var(--text,#1a1a2e); }
+#tab-family .fg-close { font-size:.86rem;line-height:1.6;color:var(--text-dim,#777);margin-top:1.2rem;max-width:66ch; }
+@media (max-width:640px) { #tab-family .fg-row { grid-template-columns:1fr;gap:.15rem; } }
+@media (prefers-reduced-motion:reduce) { #tab-family .fg-chev { transition:none; } }
+</style>
+<div class="tab-content" id="tab-family">
+  <div class="fg-head"><div class="fg-title">Family Guide</div><div class="fg-sub">Um resumo por aula para a família: o que ele estudou, o que já consegue fazer, e o que ajuda em casa. Escrito em português de propósito.</div></div>
+  <div class="fg-always"><h4>Três coisas que ajudam sempre</h4><ol>
+    <li><strong>Não cobre rapidez.</strong> Ele responde rápido, e é justamente aí que erra. A habilidade que estamos construindo é parar e conferir antes de entregar. Se ele demorar para responder, isso é o exercício funcionando, não travamento.</li>
+    <li><strong>Elogie o que ele corrigiu sozinho.</strong> Não o que ele acertou de primeira. Quando ele se ouve errando e se conserta no meio da frase, isso vale mais que a frase certa, e é exatamente o que o material treina em todo exercício.</li>
+    <li><strong>Se for comentar erros, comente dois.</strong> Nunca a lista inteira. Ele é duro consigo mesmo, e a lista completa custa a aula seguinte. Dois pontos por vez é o combinado com o professor também.</li>
+  </ol></div>
+  <p class="fg-rule">A tarefa de casa é sempre DIGITADA, nunca à mão, e sempre lida em voz alta antes de enviar. A leitura em voz alta é a tarefa; as frases são só o pretexto. Se ele ouvir um erro e consertar sozinho, a tarefa já cumpriu o objetivo.</p>
+  <details class="fg-lesson" open>
+    <summary class="fg-summary"><span class="fg-num">01</span><span class="fg-lt">The Dream</span><span class="fg-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="fg-body">
+      <div class="fg-row"><div class="fg-label">O que ele estudou</div><div class="fg-value">Por que Harvard, e o que exatamente ele faria lá. A aula partiu de um assunto que ele já domina para instalar uma estrutura de inglês que ele ainda não tinha.</div></div>
+      <div class="fg-row"><div class="fg-label">O inglês da aula</div><div class="fg-value">A forma de falar de algo que ainda não aconteceu: <em>If I got a place there, I would major in law</em>. Em português a gente diz "se eu entrasse, eu estudaria"; em inglês o verbo do "se" recua um tempo e o outro leva <em>would</em>.</div></div>
+      <div class="fg-row"><div class="fg-label">O que ele já consegue fazer</div><div class="fg-value">Ele fala de um futuro imaginário sem escorregar para o presente, e sabe quando a frase é imaginária e quando é real (o prazo de inscrição é real, e aí a forma muda).</div></div>
+      <div class="fg-row"><div class="fg-label">Tarefa de casa</div><div class="fg-value">Cinco frases hipotéticas sobre a própria candidatura, digitadas.</div></div>
+      <div class="fg-dinner"><div class="fg-dl">Para perguntar no jantar</div><div class="fg-den">&ldquo;If you got in, what would you study first?&rdquo;</div><div class="fg-dpt">Se você entrasse, o que estudaria primeiro?</div></div>
+      <div class="fg-note"><strong>Repare:</strong> Nesta aula ele descobriu que a barraca de bolo e a natação de rendimento CONTAM numa candidatura americana. Ele não sabia. Vale perguntar o que ele achou disso.</div>
+    </div>
+  </details>
+  <details class="fg-lesson">
+    <summary class="fg-summary"><span class="fg-num">02</span><span class="fg-lt">Inside the Cockpit</span><span class="fg-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="fg-body">
+      <div class="fg-row"><div class="fg-label">O que ele estudou</div><div class="fg-value">Como um voo é planejado, checado e liberado antes de alguém entrar no avião. O conteúdo é o hiperfoco dele, então a dificuldade ficou toda no inglês e nenhuma no assunto.</div></div>
+      <div class="fg-row"><div class="fg-label">O inglês da aula</div><div class="fg-value">A forma que descreve um procedimento sem dizer quem fez: <em>the route is filed, the crew is briefed, the flight was diverted</em>. É como manual e relatório são escritos em inglês.</div></div>
+      <div class="fg-row"><div class="fg-label">O que ele já consegue fazer</div><div class="fg-value">Ele descreve um procedimento inteiro em inglês sem trocar para "eu fiz, eles fizeram", que é o escorregão natural de quem fala português.</div></div>
+      <div class="fg-row"><div class="fg-label">Tarefa de casa</div><div class="fg-value">Descrever, nessa forma, o procedimento de um voo que ele mesmo planejou no Flight Simulator.</div></div>
+      <div class="fg-dinner"><div class="fg-dl">Para perguntar no jantar</div><div class="fg-den">&ldquo;How is a flight planned before anybody boards?&rdquo;</div><div class="fg-dpt">Como um voo é planejado antes de alguém embarcar?</div></div>
+      <div class="fg-note"><strong>Repare:</strong> Se ele falar muito mais do que a pergunta pedia, deixe. É o assunto dele, e falar demais sobre o que se domina é como se constrói fluência.</div>
+    </div>
+  </details>
+  <details class="fg-lesson">
+    <summary class="fg-summary"><span class="fg-num">03</span><span class="fg-lt">The Interview</span><span class="fg-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="fg-body">
+      <div class="fg-row"><div class="fg-label">O que ele estudou</div><div class="fg-value">A meia hora em que alguém decide se você é real. Entram aqui a capela no sábado e o trabalho voluntário, porque serviço à comunidade é exatamente o que uma admissão americana pergunta.</div></div>
+      <div class="fg-row"><div class="fg-label">O inglês da aula</div><div class="fg-value">O jeito formal e mais longo de perguntar: <em>Could you tell me where you studied?</em> em vez de <em>Where did you study?</em> É a distância que o inglês põe entre duas pessoas que não se conhecem.</div></div>
+      <div class="fg-row"><div class="fg-label">O que ele já consegue fazer</div><div class="fg-value">Ele faz perguntas educadas a um adulto desconhecido, em inglês, e sabe fazer perguntas de volta no fim de uma conversa formal.</div></div>
+      <div class="fg-row"><div class="fg-label">Tarefa de casa</div><div class="fg-value">Cinco perguntas indiretas que ele faria a um entrevistador.</div></div>
+      <div class="fg-dinner"><div class="fg-dl">Para perguntar no jantar</div><div class="fg-den">&ldquo;Could you tell me how you chose your job?&rdquo;</div><div class="fg-dpt">Peça que ele faça essa pergunta a você em inglês, e responda em inglês se conseguir.</div></div>
+      <div class="fg-note"><strong>Repare:</strong> A aula ensina, com todas as letras, que parar para pensar antes de responder é bom, e não sinal de que a pessoa não sabe. Se ele hesitar numa resposta, espere em silêncio. O silêncio é parte do treino.</div>
+    </div>
+  </details>
+  <details class="fg-lesson">
+    <summary class="fg-summary"><span class="fg-num">04</span><span class="fg-lt">The Cake Stand</span><span class="fg-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="fg-body">
+      <div class="fg-row"><div class="fg-label">O que ele estudou</div><div class="fg-value">A barraca de bolo dele: custo, lucro, cliente e a semana em que sobrou bolo. O material usa os números de uma feira de verdade, com dois sábados comparados.</div></div>
+      <div class="fg-row"><div class="fg-label">O inglês da aula</div><div class="fg-value">A oração que diz DE QUAL coisa você está falando, e as duas vírgulas que mudam o sentido. <em>The customers who come back</em> fala de alguns; <em>the customers, who come back,</em> fala de todos.</div></div>
+      <div class="fg-row"><div class="fg-label">O que ele já consegue fazer</div><div class="fg-value">Ele explica o próprio negócio em inglês separando o dinheiro que entrou do dinheiro que sobrou, que é uma distinção que muita gente adulta não faz.</div></div>
+      <div class="fg-row"><div class="fg-label">Tarefa de casa</div><div class="fg-value">Seis frases sobre o próprio negócio, três de cada tipo.</div></div>
+      <div class="fg-dinner"><div class="fg-dl">Para perguntar no jantar</div><div class="fg-den">&ldquo;Which customers matter most to you, and why?&rdquo;</div><div class="fg-dpt">Quais clientes são os que mais importam, e por quê?</div></div>
+      <div class="fg-note"><strong>Repare:</strong> Ele fez as contas de um sábado real nesta aula e chegou sozinho à conclusão de que vender mais não é ganhar mais. Se ele quiser refazer a planilha com os números atuais dele, vale muito mais que o exercício.</div>
+    </div>
+  </details>
+  <details class="fg-lesson">
+    <summary class="fg-summary"><span class="fg-num">05</span><span class="fg-lt">Your Personal Statement</span><span class="fg-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="fg-body">
+      <div class="fg-row"><div class="fg-label">O que ele estudou</div><div class="fg-value">Escrever sobre si mesmo. O bloco fecha exatamente onde ele pediu na primeira conversa: na escrita.</div></div>
+      <div class="fg-row"><div class="fg-label">O inglês da aula</div><div class="fg-value">Os dois passados do inglês e por que um texto sobre a própria vida precisa dos dois: a história está encerrada (<em>I lost money in March</em>) e o que ele entendeu não está (<em>I have counted every box since</em>).</div></div>
+      <div class="fg-row"><div class="fg-label">O que ele já consegue fazer</div><div class="fg-value">Ele escreveu um parágrafo sobre si mesmo em inglês e o releu em voz alta para achar os próprios erros. Essa releitura é a habilidade que o programa inteiro existiu para instalar.</div></div>
+      <div class="fg-row"><div class="fg-label">Tarefa de casa</div><div class="fg-value">O parágrafo de abertura do personal statement dele, digitado e lido em voz alta antes de enviar.</div></div>
+      <div class="fg-dinner"><div class="fg-dl">Para perguntar no jantar</div><div class="fg-den">&ldquo;Read me what you wrote, out loud.&rdquo;</div><div class="fg-dpt">Peça para ele ler em voz alta o que escreveu. Não peça para você mesma corrigir: peça para ele ouvir e dizer se mudaria alguma coisa.</div></div>
+      <div class="fg-note"><strong>Repare:</strong> O material entregou a ele um rascunho de personal statement montado só com coisas que ele mesmo contou nas cinco aulas. Nada foi inventado. Ele pode não gostar de partes dele, e discordar é o exercício.</div>
+    </div>
+  </details>
+  <p class="fg-close">Ao fim destas cinco aulas há um checkpoint de nível antes do bloco seguinte. O que vai ser medido não é o que ele acerta de primeira, e sim o que ele corrige sozinho.</p>
+</div><!-- /tab-family -->
 
 </div><!-- /container -->
 
