@@ -292,6 +292,24 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
 
+ # ---- O FOCO DO ROUND 2 SE COPIA SOZINHO (revisao de 04/09/2026)
+ #
+ # No framework de ESP a aula tem duas rodadas: a tela de feedback escolhe UM ponto, e a
+ # rodada seguinte roda em cima dele. Digitado duas vezes, ele diverge -- e quem le a
+ # segunda tela e a aluna, que ficaria com um foco diferente do que a professora anotou.
+ #
+ # `focoEco` espelha o campo do feedback no cartao da rodada seguinte enquanto se digita.
+ # Nao guarda nada: quem guarda e o `persSave` do proprio campo, quando ele existe.
+ ("round-2-foco-espelhado",
+  """function pwRestore(pares) {""",
+  """function focoEco(el, idDestino) {
+  var d = document.getElementById(idDestino); if (!d) return;
+  var v = (el.value || '').trim();
+  d.textContent = v;
+  d.setAttribute('data-vazio', v ? '0' : '1');
+}
+function pwRestore(pares) {"""),
+
  # ---- A ESCRITA DO POST-CLASS PRECISA DE UM "PRONTO" (revisao de 04/09/2026)
  #
  # O texto ja era salvo a cada tecla (`pwCount` chama `save`), e a aluna nao tinha como
