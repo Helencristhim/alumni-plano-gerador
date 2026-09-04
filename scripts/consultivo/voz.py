@@ -166,7 +166,7 @@ ACENTO = {
     "referencia": "referência", "pagina": "página", "publico": "público",
     "tecnica": "técnica", "logica": "lógica", "varias": "várias", "varios": "vários",
     "apos": "após", "obvio": "óbvio", "possivel": "possível", "impossivel": "impossível",
-    "pratica": "prática", "gramatica": "gramática", "especifica": "específica",
+    "gramatica": "gramática", "especifica": "específica",
     "especifico": "específico", "estrategia": "estratégia", "experiencia": "experiência",
     "evidencia": "evidência", "consequencia": "consequência", "frequencia": "frequência",
     "sequencia": "sequência", "emergencia": "emergência", "apresentacao": "apresentação",
@@ -184,6 +184,9 @@ ACENTO = {
     "gravacao": "gravação", "condicao": "condição", "classificacao": "classificação",
     "objecao": "objeção", "argumentacao": "argumentação",
     "rapido": "rápido", "rapida": "rápida", "musica": "música", "serie": "série",
+    "hospede": "hóspede", "hospedes": "hóspedes", "saida": "saída", "saidas": "saídas",
+    "incluido": "incluído", "incluida": "incluída", "incluidos": "incluídos",
+    "incluidas": "incluídas", "comparacao": "comparação", "comparacoes": "comparações",
 }
 
 assert not [k for k, v in ACENTO.items() if k == v], (
@@ -210,6 +213,43 @@ def acentos(c):
     for m in _RX_ACENTO.finditer(texto):
         p = m.group(1)
         achados.setdefault(p.lower(), ACENTO[p.lower()])
+    return achados
+
+
+# A SUPERFICIE DO HTML NAO ALCANCA O QUE A ALUNA LE NO PRE-CLASS
+#
+# `notas_de_tela` le `data-teacher` e `.apoio-pt`. O portugues do pre-class nao esta em
+# nenhum dos dois: as alternativas do `par` sao <button class="pair-opt"> (texto solto,
+# sem marcacao de lingua) e a nota da atividade e o answer key, um `.callout` escondido.
+# Foi por ai que "hospede", "dia de saida", "sala de reuniao" e "incluido" chegaram a
+# aula 1 da Vanessa e passaram por TODOS os gates -- inclusive o de acento.
+#
+# Ampliar o HTML nao resolve: o material publicado carrega o shell inteiro dentro, e o
+# codigo deste repo e escrito sem acento DE PROPOSITO. Varrer o HTML e escolher entre
+# perder o pre-class ou acusar cada comentario do shell.
+#
+# Entao a superficie certa nao e o HTML: e o FRAGMENTO AUTORAL -- os arquivos de
+# `_build/consultivo/{slug}/aula{n}/`, que sao exatamente o que o autor escreveu para
+# esta aula, sem uma linha de plataforma. Ali nao ha o que separar.
+#
+# Duas exclusoes, e so duas:
+#   - a CHAVE de um objeto JSON e identificador, nao prosa ("duvida", "opcoes_pt");
+#   - o valor do campo `id`, que tambem e identificador ("conteudo").
+_RX_CHAVE_JSON = re.compile(r'"[A-Za-z_][A-Za-z0-9_]*"\s*:')
+_RX_ID = re.compile(r'"id"\s*:\s*"[^"]*"')
+
+
+def acentos_do_autor(fonte, e_json):
+    """As palavras sem acento no que o AUTOR escreveu para a aula (um fragmento).
+
+    `e_json` diz se as chaves e o campo `id` devem sair antes da varredura."""
+    if e_json:
+        fonte = _RX_ID.sub("", fonte)
+        fonte = _RX_CHAVE_JSON.sub("", fonte)
+    achados = {}
+    for m in _RX_ACENTO.finditer(fonte):
+        p = m.group(1).lower()
+        achados.setdefault(p, ACENTO[p])
     return achados
 
 

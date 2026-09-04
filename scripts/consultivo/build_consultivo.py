@@ -680,6 +680,34 @@ def monta(cfg, base_frag):
     if faltando:
         return "", 0, ["fragmento(s) ausente(s) — nada foi escrito:\n" + "\n".join(faltando)]
 
+    # ---- o portugues do fragmento se escreve com acento
+    #
+    # A checagem de acento do `voz.confere` le o HTML, e ali ela so alcanca `data-teacher` e
+    # `.apoio-pt`. O portugues que a ALUNA le no pre-class fica de fora: as alternativas do
+    # `par` sao texto solto num <button>, e a nota da atividade e um callout escondido.
+    # Aqui a superficie e o proprio fragmento -- o que o autor escreveu, sem plataforma
+    # dentro -- e por isso alcanca os dois.
+    # No `--round-trip` o fragmento e EXTRAIDO do artefato do Marcos, escrito antes desta
+    # regra: cobrar acento dele seria cobrar que ele nao seja ele mesmo. Mesma saida que o
+    # `voz.confere` ja da ao ingles britanico (`de_artefato`). Material de ALUNO nao tem.
+    sem_acento = []
+    for n in (() if cfg.get("_artefato") else aulas):
+        pasta = os.path.join(base_frag, f"aula{n}")
+        for arq in sorted(os.listdir(pasta)):
+            caminho = os.path.join(pasta, arq)
+            if not os.path.isfile(caminho):
+                continue
+            falta = voz.acentos_do_autor(
+                open(caminho, encoding="utf-8").read(), arq.endswith(".json"))
+            if falta:
+                amostra = ", ".join(f"“{k}” → “{v}”" for k, v in list(falta.items())[:6])
+                sem_acento.append(
+                    f"    aula {n}, {arq}: {amostra}{' ...' if len(falta) > 6 else ''}")
+    if sem_acento:
+        erros.append("PORTUGUES SEM ACENTO no fragmento da aula:\n" + "\n".join(sem_acento) +
+                     "\n    O portugues do material — o do professor e o que a aluna le no "
+                     "pre-class — se escreve com acento.")
+
     declarado = {n: blocos_da_aula(os.path.join(base_frag, f"aula{n}")) for n in aulas}
     usado = {n: set() for n in aulas}
     for n in aulas:

@@ -941,6 +941,93 @@ function exRefaz(btn,id){
 .slide-dark .doc-fonte,.slide-open .doc-fonte{color:var(--d-text-mid);border-bottom-color:var(--d-border)}
 .slide-dark .doc-para,.slide-open .doc-para{color:var(--d-text)}"""),
 
+ # ---- O RESET DA AULA DESMARCA A AULA (revisao da professora, 04/09/2026)
+ #
+ #     "Ha uma regra para que ao dar 'reset lesson' no in-class, a marcacao de aula
+ #      finalizada e removida. Nao foi lida nos documentos ou nao foi implementada?"
+ #
+ # Nao estava em documento nenhum, e nao estava implementada: o `resetGo` devolvia os
+ # slides ao inicio e deixava `af_lN_status` valendo "Realizada" -- o cartao e o mapa do
+ # ciclo continuavam dizendo que a aula aconteceu, sobre um deck que acabara de voltar ao
+ # zero. Decisao do Dan em 04/09/2026: o Reset passa a desmarcar.
+ #
+ # O QUE ELE APAGA E O QUE ELE NAO APAGA. Sai o que descreve o ACONTECIMENTO da aula --
+ # status e data. Ficam a escala, os tres campos escritos e as duas observacoes que chegam
+ # a aluna: sao o julgamento do professor sobre o que ele viu, e reiniciar um deck nao
+ # desfaz o que ele observou. Para apagar isso continua havendo o "Limpar registro", que
+ # diz na propria caixa que apaga tudo.
+ #
+ # `avalPinta` repinta o cartao e `aposRegistro` o mapa do ciclo e o resumo do checkpoint:
+ # sem os dois, o dado sumia do armazenamento e a tela seguia mostrando "Realizada" ate a
+ # proxima recarga.
+ ("reset-desmarca-a-aula",
+  """  drop(keysOf(n));
+  for(i=0;i<s.length;i++){
+    el=s[i];
+    el.innerHTML=_snap[parseInt(el.getAttribute('data-snap'),10)];
+  }""",
+  """  drop(keysOf(n));
+  /* A aula deixa de estar realizada: o deck voltou ao inicio, e o cartao nao pode
+     continuar dizendo o contrario. So status e data -- a avaliacao e do professor. */
+  drop(['af_l'+n+'_status','af_l'+n+'_data']);
+  var campoSt=document.querySelector('[data-k="af_l'+n+'_status"]');
+  if(campoSt)campoSt.value='';
+  var campoDt=document.querySelector('[data-k="af_l'+n+'_data"]');
+  if(campoDt)campoDt.value='';
+  for(i=0;i<s.length;i++){
+    el=s[i];
+    el.innerHTML=_snap[parseInt(el.getAttribute('data-snap'),10)];
+  }"""),
+
+ ("reset-desmarca-a-aula-repinta",
+  """  cur=0; paint();
+}
+
+/* ---------------- finalizacao ---------------- */""",
+  """  cur=0; paint();
+  /* O armazenamento e a tela dizem a mesma coisa na mesma hora: o cartao (avalPinta) e o
+     mapa do ciclo com o resumo do checkpoint (aposRegistro). */
+  if(typeof avalPinta==='function')avalPinta(n);
+  if(typeof aposRegistro==='function')aposRegistro();
+}
+
+/* ---------------- finalizacao ---------------- */"""),
+
+ ("reset-aviso-diz-o-que-apaga",
+  """  itens+='<li>the timers and the position in the deck</li>';""",
+  """  itens+='<li>the timers and the position in the deck</li>';
+  /* A marcacao entra na LISTA do que sai, e nao na lista do que fica: quem le a caixa
+     tem de saber que o cartao volta a "Nao iniciada" antes de confirmar. */
+  if(load()['af_l'+n+'_status'])itens+='<li>the <b>completed</b> mark and the date on the lesson card</li>';"""),
+
+ ("reset-aviso-nao-promete-o-que-apaga",
+  r"""    '<div class="ask-keep">It does not delete: the post-lesson record on this card, the student\'s feedback, '+
+    'the checkpoint checklist, the post-class, the profile, the syllabus or the other lessons.</div>';""",
+  r"""    '<div class="ask-keep">It does not delete: the performance scale and the written record on this card, '+
+    'the student\'s feedback, the checkpoint checklist, the post-class, the profile, the syllabus '+
+    'or the other lessons.</div>';"""),
+
+ # ---- A LISTA DE FRASES DEPOIS DE OUTRO BLOCO (revisao da professora, 04/09/2026)
+ #
+ #     "Aula 4 - Slide 5: nao ha espaco entre o item 'a late check-out' e a frase
+ #      'sorry, again please?'"
+ #
+ # `.phrase-list` nasceu sem margem de topo: no artefato ela e sempre o primeiro elemento
+ # do bloco. Quando vem DEPOIS de uma lista, de um quadro de regra ou de uma tabela, ela
+ # encosta -- e a ultima linha do bloco de cima e a primeira frase da lista passam a ser
+ # lidas como uma coisa so.
+ #
+ # Ate agora o respiro era escrito A MAO, `style="margin-top:var(--space-4)"`, em algumas
+ # telas e esquecido em outras: 8 das 20 `.phrase-list` da anatomia tinham, 12 nao. Espaco
+ # que depende de alguem lembrar nao e espaco, e sorte. A regra usa o MESMO valor, entao
+ # onde o inline ja existe nada muda de tamanho -- ele so deixa de ser necessario.
+ ("phrase-list-respira-depois-de-outro-bloco",
+  """.phrase-list{display:flex;flex-direction:column;gap:var(--space-2)}""",
+  """.phrase-list{display:flex;flex-direction:column;gap:var(--space-2)}
+.qlist + .phrase-list,.rule-box + .phrase-list,.evi-list + .phrase-list,
+.tbl-wrap + .phrase-list,.doc-block + .phrase-list,
+.slide-lead + .phrase-list,.slide-question + .phrase-list{margin-top:var(--space-4)}"""),
+
  ("uma-aula-por-vez",
   """  _preAtual=CICLO.primeira;""",
   """  _preAtual=CICLO.primeira;

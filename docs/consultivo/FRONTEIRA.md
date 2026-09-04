@@ -75,6 +75,7 @@ o que quebra em qualquer navegador. Cada uma custou um incidente:
 | 29 · `check_recording_paths.py` | gravação do aluno sobrescrita pela do professor |
 | 30 · `check_score_align.mjs` | score marcando errado quem falou certo |
 | 8 · `check_legacy_baseline.py` | arquivo novo nasce com baseline vazio: tolerância zero, de graça |
+| 60 · `check_id_unico.py` | dois elementos com o mesmo `id` — o botão que troca de rótulo e não abre nada |
 
 E a infraestrutura inteira: Supabase, dashboard, senhas, `merge_aula.py`, CI, pipeline
 ElevenLabs com a credencial fora do repo.

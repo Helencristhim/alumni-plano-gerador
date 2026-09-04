@@ -2,7 +2,7 @@
     tema:'I am, you are',  temaPre:'Before you build any of it',
     canonico:'sentences', statusKey:'af_l3_status',
     nav:['Lesson opening','Say it once','Your own sentences','What changed',
-         'The form under it','Choose the form','Say it out loud','Six of your own',
+         'The form under it','Choose the form, then say it','Six of your own',
          'Say them together','What just happened','Today and next'],
     stages:[
       {n:'Communicative diagnostic',min:6},

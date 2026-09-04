@@ -170,6 +170,12 @@ A distinção é entre **etiqueta visual** e **rótulo funcional**: etiqueta de 
 
 •  **O reset é restrito à aula ativa** — nunca alcança as outras.
 
+•  **O reset DESMARCA a aula.** Reiniciar o deck apaga a marcação de realizada e a data no cartão: um deck que voltou ao início não pode continuar descrito como uma aula que aconteceu. Sai o que registra o **acontecimento** — status e data. Ficam a escala, os três campos escritos e as duas observações que chegam ao aluno: são o julgamento do professor sobre o que ele viu, e reiniciar um deck não desfaz o que ele observou. Para apagar isso continua havendo **Limpar registro**, que diz na própria caixa que apaga tudo.
+
+•  **A caixa de confirmação lista a marcação entre o que sai**, e só quando ela existe — o que a caixa promete preservar e o que ela apaga têm de ser o que ela faz.
+
+> Decisão do Dan em **04/09/2026**, sobre a revisão da professora: *"Há uma regra para que ao dar reset lesson no in-class, a marcação de aula finalizada é removida. Não foi lida nos documentos ou não foi implementada?"* — não estava escrita em documento nenhum e não estava implementada. Passa a ser regra.
+
 **8. Registro pós-aula**
 
 •  **Escala linguística de 1 a 5**, igual para os três critérios, guardando o **número**, não a palavra — sem ele não há média nem evolução.
@@ -469,7 +475,7 @@ Antes de entregar, o gerador roda e **reporta** com evidência, no vocabulário 
 | Etapas | oito etapas do framework no registro, na mesma ordem; nenhuma etapa fictícia; quantidade de slides variável |
 | Papel | a URL do aluno não recebe conteúdo, payload, estado ou recursos do professor |
 | Pre-class | gabarito fechado no início; ação do professor não altera resposta do aluno; os dois controles no fim |
-| Controles da aula | Reset e Finish presentes, com confirmação; conclusão só por Finish; reset restrito à aula |
+| Controles da aula | Reset e Finish presentes, com confirmação; conclusão só por Finish; reset restrito à aula **e desmarcando-a** |
 | Registro pós-aula | escala com número; engajamento fora da média; três campos; só dois compartilhados |
 | Player | dois controles; Play reinicia após Stop; um componente para todos |
 | Teclado | espaço aciona o controle em foco — **e avança o slide quando o foco está fora** |
