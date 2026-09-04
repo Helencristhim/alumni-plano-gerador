@@ -5099,6 +5099,18 @@ function pwClear(campos, idSaida) {
   var out = document.getElementById(idSaida); if (out) out.textContent = '0 words';
   var primeiro = document.getElementById(campos[0][0]); if (primeiro) primeiro.focus();
 }
+function pwOk(idTexto, chave, idAviso, btn) {
+  var el = document.getElementById(idTexto); if (!el) return;
+  save(chave, el.value);
+  save(chave + '_ok', el.value.trim() ? '1' : '');
+  var av = document.getElementById(idAviso);
+  if (av) {
+    av.textContent = el.value.trim()
+      ? (btn && btn.getAttribute('data-ok') || 'Saved')
+      : (btn && btn.getAttribute('data-vazio') || 'Nothing written yet');
+    av.style.display = 'block';
+  }
+}
 function pwRestore(pares) {
   var d = load();
   pares.forEach(function (p) {

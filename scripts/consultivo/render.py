@@ -99,6 +99,23 @@ def rot_redo():
     return "Redo / Refazer" if APOIO["bilingue"] else "Redo"
 
 
+def rot_confirm():
+    """O rotulo do botao que fecha a escrita do post-class.
+
+    Mesma razao do `rot_check`: em material bilingue a palavra vai nas duas linguas, porque
+    e a diferenca entre a aluna saber que o texto ficou guardado e nao saber."""
+    return "Confirm / Confirmar" if APOIO["bilingue"] else "Confirm"
+
+
+def rot_salvo():
+    return "Saved &middot; Salvo" if APOIO["bilingue"] else "Saved"
+
+
+def rot_vazio():
+    return ("Nothing written yet &middot; Nada escrito ainda" if APOIO["bilingue"]
+            else "Nothing written yet")
+
+
 def esc(t):
     """Texto do autor -> HTML. As aspas e o travessao viram entidade, como no molde.
 
@@ -755,14 +772,24 @@ def r_escrever(b, ident):
     aba e perde."""
     chave = b.get("chave") or f"post_{ident}_writing"
     rot = esc(b.get("rotulo") or "Your note")
+    # O CONFIRM VEM ANTES DO CLEAR, e nao ha "salvar" escondido atras do Clear: os dois
+    # botoes dizem o que fazem, e o da esquerda e o que a aluna quer na maioria das vezes.
+    # O aviso nasce escondido e so aparece depois do clique -- ou na volta, se ela ja tinha
+    # confirmado antes (o `pwOkRestore` roda no boot, ao lado do `pwRestore`).
     return (f'    <label class="mail-label" for="{ident}-body">{rot}</label>\n'
             f'    <textarea class="writebox" id="{ident}-body" style="min-height:170px" '
             f'placeholder="" oninput="pwCount(\'{ident}-body\',\'{ident}-count\','
             f'\'{chave}\')"></textarea>\n'
             f'    <div class="wc"><span id="{ident}-count">0 words</span></div>\n'
-            f'    <button class="verify-all-btn ghost" onclick="pwClear('
+            f'    <div class="btn-bar" style="justify-content:flex-start">\n'
+            f'      <button class="verify-all-btn" data-ok="{rot_salvo()}" '
+            f'data-vazio="{rot_vazio()}" onclick="pwOk(\'{ident}-body\',\'{chave}\','
+            f'\'{ident}-ok\',this)">{rot_confirm()}</button>\n'
+            f'      <button class="verify-all-btn ghost" onclick="pwClear('
             f'[[\'{ident}-body\',\'{chave}\']],\'{ident}-count\')">'
-            f'Clear and start again</button>')
+            f'Clear and start again</button>\n'
+            f'    </div>\n'
+            f'    <div class="score-out" id="{ident}-ok" style="display:none"></div>')
 
 
 def apoio_pt(texto, ident):
