@@ -292,6 +292,34 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
 
+ # ---- A ESCRITA DO POST-CLASS PRECISA DE UM "PRONTO" (revisao de 04/09/2026)
+ #
+ # O texto ja era salvo a cada tecla (`pwCount` chama `save`), e a aluna nao tinha como
+ # saber disso: a unica acao visivel embaixo da caixa era "Clear and start again" -- um
+ # botao que APAGA. Escrever sem nenhum sinal de que ficou guardado e escrever sem saber se
+ # valeu, e num material em que ela ja abandonou um curso por achar que o problema era ela,
+ # a diferenca nao e cosmetica.
+ #
+ # O Confirm nao inventa persistencia nova: ele salva o que ja seria salvo e DIZ que salvou.
+ # Fica ao lado do Clear, que continua sendo a saida para recomecar. O rotulo vem do
+ # EMISSOR (`render.rot_confirm`), porque so ele sabe se o material e bilingue -- o mesmo
+ # caminho do `data-redo` do botao de conferir.
+ ("post-class-escrita-confirm",
+  """function pwRestore(pares) {""",
+  """function pwOk(idTexto, chave, idAviso, btn) {
+  var el = document.getElementById(idTexto); if (!el) return;
+  save(chave, el.value);
+  save(chave + '_ok', el.value.trim() ? '1' : '');
+  var av = document.getElementById(idAviso);
+  if (av) {
+    av.textContent = el.value.trim()
+      ? (btn && btn.getAttribute('data-ok') || 'Saved')
+      : (btn && btn.getAttribute('data-vazio') || 'Nothing written yet');
+    av.style.display = 'block';
+  }
+}
+function pwRestore(pares) {"""),
+
  # ---- O MATERIAL NAO E MAIS PROTOTIPO (revisao de 02/09/2026)
  #
  # O pre-class abria com "Prototype audio: the voices in this version are temporary." Era

@@ -2,7 +2,7 @@
     tema:'At the front desk',   temaPre:'Before you time any of it',
     canonico:'desk', statusKey:'af_l4_status',
     nav:['Lesson opening','The arrival','Try it once','What comes first',
-         'Four moves','Micropractice','Round one','Feedback',
+         'Four moves','Micropractice','Round one','What just happened',
          'Round two','Today and next'],
     stages:[
       {n:'Real-world objective',min:5},

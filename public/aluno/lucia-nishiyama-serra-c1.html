@@ -2170,7 +2170,11 @@ document.body.setAttribute('data-view','aluno');
     <label class="mail-label" for="pw3-body">Your note</label>
     <textarea class="writebox" id="pw3-body" style="min-height:170px" placeholder="" oninput="pwCount('pw3-body','pw3-count','post_pw3_writing')"></textarea>
     <div class="wc"><span id="pw3-count">0 words</span></div>
-    <button class="verify-all-btn ghost" onclick="pwClear([['pw3-body','post_pw3_writing']],'pw3-count')">Clear and start again</button>
+    <div class="btn-bar" style="justify-content:flex-start">
+      <button class="verify-all-btn" data-ok="Saved" data-vazio="Nothing written yet" onclick="pwOk('pw3-body','post_pw3_writing','pw3-ok',this)">Confirm</button>
+      <button class="verify-all-btn ghost" onclick="pwClear([['pw3-body','post_pw3_writing']],'pw3-count')">Clear and start again</button>
+    </div>
+    <div class="score-out" id="pw3-ok" style="display:none"></div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">If you want more</p>
@@ -2277,7 +2281,11 @@ document.body.setAttribute('data-view','aluno');
     <label class="mail-label" for="pw4-body">Your note</label>
     <textarea class="writebox" id="pw4-body" style="min-height:170px" placeholder="" oninput="pwCount('pw4-body','pw4-count','post_pw4_writing')"></textarea>
     <div class="wc"><span id="pw4-count">0 words</span></div>
-    <button class="verify-all-btn ghost" onclick="pwClear([['pw4-body','post_pw4_writing']],'pw4-count')">Clear and start again</button>
+    <div class="btn-bar" style="justify-content:flex-start">
+      <button class="verify-all-btn" data-ok="Saved" data-vazio="Nothing written yet" onclick="pwOk('pw4-body','post_pw4_writing','pw4-ok',this)">Confirm</button>
+      <button class="verify-all-btn ghost" onclick="pwClear([['pw4-body','post_pw4_writing']],'pw4-count')">Clear and start again</button>
+    </div>
+    <div class="score-out" id="pw4-ok" style="display:none"></div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">If you want more</p>
@@ -2377,7 +2385,11 @@ document.body.setAttribute('data-view','aluno');
     <label class="mail-label" for="pw5-body">Your note</label>
     <textarea class="writebox" id="pw5-body" style="min-height:170px" placeholder="" oninput="pwCount('pw5-body','pw5-count','post_pw5_writing')"></textarea>
     <div class="wc"><span id="pw5-count">0 words</span></div>
-    <button class="verify-all-btn ghost" onclick="pwClear([['pw5-body','post_pw5_writing']],'pw5-count')">Clear and start again</button>
+    <div class="btn-bar" style="justify-content:flex-start">
+      <button class="verify-all-btn" data-ok="Saved" data-vazio="Nothing written yet" onclick="pwOk('pw5-body','post_pw5_writing','pw5-ok',this)">Confirm</button>
+      <button class="verify-all-btn ghost" onclick="pwClear([['pw5-body','post_pw5_writing']],'pw5-count')">Clear and start again</button>
+    </div>
+    <div class="score-out" id="pw5-ok" style="display:none"></div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">If you want more</p>
@@ -2470,7 +2482,11 @@ document.body.setAttribute('data-view','aluno');
     <label class="mail-label" for="pw6-body">Your note</label>
     <textarea class="writebox" id="pw6-body" style="min-height:170px" placeholder="" oninput="pwCount('pw6-body','pw6-count','post_pw6_writing')"></textarea>
     <div class="wc"><span id="pw6-count">0 words</span></div>
-    <button class="verify-all-btn ghost" onclick="pwClear([['pw6-body','post_pw6_writing']],'pw6-count')">Clear and start again</button>
+    <div class="btn-bar" style="justify-content:flex-start">
+      <button class="verify-all-btn" data-ok="Saved" data-vazio="Nothing written yet" onclick="pwOk('pw6-body','post_pw6_writing','pw6-ok',this)">Confirm</button>
+      <button class="verify-all-btn ghost" onclick="pwClear([['pw6-body','post_pw6_writing']],'pw6-count')">Clear and start again</button>
+    </div>
+    <div class="score-out" id="pw6-ok" style="display:none"></div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">If you want more</p>
@@ -3555,6 +3571,18 @@ function pwClear(campos, idSaida) {
   });
   var out = document.getElementById(idSaida); if (out) out.textContent = '0 words';
   var primeiro = document.getElementById(campos[0][0]); if (primeiro) primeiro.focus();
+}
+function pwOk(idTexto, chave, idAviso, btn) {
+  var el = document.getElementById(idTexto); if (!el) return;
+  save(chave, el.value);
+  save(chave + '_ok', el.value.trim() ? '1' : '');
+  var av = document.getElementById(idAviso);
+  if (av) {
+    av.textContent = el.value.trim()
+      ? (btn && btn.getAttribute('data-ok') || 'Saved')
+      : (btn && btn.getAttribute('data-vazio') || 'Nothing written yet');
+    av.style.display = 'block';
+  }
 }
 function pwRestore(pares) {
   var d = load();
