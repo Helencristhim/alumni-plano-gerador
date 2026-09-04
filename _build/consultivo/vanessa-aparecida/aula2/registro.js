@@ -3,7 +3,7 @@
     canonico:'desk', statusKey:'af_l2_status',
     nav:['Lesson opening','At the desk','Before you listen','Listen once',
          'Listen again','When you do not understand','Say it back','Your turn at the desk',
-         'A little faster','Today and next'],
+         'What just happened','Today and next'],
     stages:[
       {n:'Context + lead-in',min:5},
       {n:'Prediction',min:4},
