@@ -19,9 +19,9 @@
     '<strong>The form slips when the subject changes</strong> (<em>I am</em> &rarr; <em>she is</em>). That is expected, and it is what the retask is for.<br><br>'+
     '<strong>She will want the rule early.</strong> Hold it until screen 5. The whole design of this lesson is that the rule arrives as a name for something she can already do.<br><br>'+
     '<strong>Do not add vocabulary.</strong> Everything today comes from lessons 1 and 2.',
-  scaffolding:'The six sentences from lessons 1 and 2 stay on screen through screens 3 and 4. The table appears on screen 5 and, from screen 8 on, it lives behind a <em>Show the forms</em> button &mdash; open it if she needs it, and keep it closed for the first attempt on screen 9.<br><br>'+
+  scaffolding:'The six sentences from lessons 1 and 2 stay on screen through screens 3 and 4. The table appears on screen 5 and, from screen 7 on, it lives behind a <em>Show the forms</em> button &mdash; open it if she needs it, and keep it closed for the first attempt on screen 8.<br><br>'+
     'Support is the frame and the word when she is stuck. <strong>What is not supported is which six sentences she chooses to say</strong> &mdash; that is hers.',
-  feedback:'One point on screen 10, written in the feedback board with her, then the retask. Praise the whole sentence, not the correct word.<br><br>'+
+  feedback:'One point on screen 9, written in the feedback board with her, then the retask. Praise the whole sentence, not the correct word.<br><br>'+
     '<strong>Say the two counts out loud</strong>, using the numbers you recorded: how many she completed accurately in the supported practice, and how many in the independent task. Do not use a number you did not record.',
   evidence:'<ul>'+
     '<li>Accurate completions in the supported practice against the independent task &mdash; first measure of form in the cycle.</li>'+

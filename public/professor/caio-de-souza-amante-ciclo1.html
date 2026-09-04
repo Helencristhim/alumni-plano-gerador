@@ -499,6 +499,9 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .timer-note{font-size:.75rem;color:rgba(255,255,255,.6);margin-left:auto}
 
 .phrase-list{display:flex;flex-direction:column;gap:var(--space-2)}
+.qlist + .phrase-list,.rule-box + .phrase-list,.evi-list + .phrase-list,
+.tbl-wrap + .phrase-list,.doc-block + .phrase-list,
+.slide-lead + .phrase-list,.slide-question + .phrase-list{margin-top:var(--space-4)}
 .phrase-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2h) var(--space-3h);background:rgba(255,255,255,.5);border:1px solid rgba(201,211,228,.5);border-radius:8px;flex-wrap:wrap}
 .phrase-row.cond-row{border-style:dashed;background:rgba(255,255,255,.3)}
 .phrase-row.cond-row .cond-tag{margin-bottom:0}
@@ -5576,9 +5579,13 @@ function resetAsk(){
   if(sujas) itens+='<li>the state of <b>'+sujas+'</b> of '+s.length+' slides — selections, corrections, revealed blocks and open transcripts</li>';
   if(fecho) itens+='<li><b>'+fecho+'</b> '+(fecho>1?'items ticked':'item ticked')+' in the lesson closing</li>';
   itens+='<li>the timers and the position in the deck</li>';
+  /* A marcacao entra na LISTA do que sai, e nao na lista do que fica: quem le a caixa
+     tem de saber que o cartao volta a "Nao iniciada" antes de confirmar. */
+  if(load()['af_l'+n+'_status'])itens+='<li>the <b>completed</b> mark and the date on the lesson card</li>';
   var corpo='<p>This deletes, <b>from Lesson '+('0'+n).slice(-2)+' only</b>:</p><ul>'+itens+'</ul>'+
-    '<div class="ask-keep">It does not delete: the post-lesson record on this card, the student\'s feedback, '+
-    'the checkpoint checklist, the post-class, the profile, the syllabus or the other lessons.</div>';
+    '<div class="ask-keep">It does not delete: the performance scale and the written record on this card, '+
+    'the student\'s feedback, the checkpoint checklist, the post-class, the profile, the syllabus '+
+    'or the other lessons.</div>';
   askOpen('Reset Lesson '+('0'+n).slice(-2)+'?',corpo,'Delete and reset',true,resetGo);
 }
 function resetGo(){
@@ -5596,6 +5603,13 @@ function resetGo(){
     }
   }
   drop(keysOf(n));
+  /* A aula deixa de estar realizada: o deck voltou ao inicio, e o cartao nao pode
+     continuar dizendo o contrario. So status e data -- a avaliacao e do professor. */
+  drop(['af_l'+n+'_status','af_l'+n+'_data']);
+  var campoSt=document.querySelector('[data-k="af_l'+n+'_status"]');
+  if(campoSt)campoSt.value='';
+  var campoDt=document.querySelector('[data-k="af_l'+n+'_data"]');
+  if(campoDt)campoDt.value='';
   for(i=0;i<s.length;i++){
     el=s[i];
     el.innerHTML=_snap[parseInt(el.getAttribute('data-snap'),10)];
@@ -5611,6 +5625,10 @@ function resetGo(){
     if((sl.getAttribute('data-lesson')||'1')===String(n))b.f();
   });
   cur=0; paint();
+  /* O armazenamento e a tela dizem a mesma coisa na mesma hora: o cartao (avalPinta) e o
+     mapa do ciclo com o resumo do checkpoint (aposRegistro). */
+  if(typeof avalPinta==='function')avalPinta(n);
+  if(typeof aposRegistro==='function')aposRegistro();
 }
 
 /* ---------------- finalizacao ---------------- */
