@@ -99,6 +99,17 @@ PACOTE = {
     # A04 e A05 entraram no pacote em 03 e 05/09/2026 (Relatorio de Alteracoes Normativas,
     # secoes 9 e 29). O pacote passou de 14 para 16 documentos normativos, e o A02 §13.3 vale
     # para eles como para os demais: sem o arquivo no lote, nao ha conformidade integral.
+    # O catalogo NAO e documento normativo -- o relatorio o classifica como documentacao
+    # de apoio. Entra no pacote medido porque e a fonte dos IDs que os gates citam: quando
+    # o GATE 61 diz PRO-006, e daqui que o codigo vem. Perder este arquivo deixaria as
+    # mensagens dos gates apontando para um catalogo que ninguem tem.
+    "catalogo-erros-auditor": [
+        "Erros catalogados | **85**",
+        "Transcript liberado cedo",
+        "Sorting não embaralhado",
+        "Contagem divergente",
+        "A distribuição entre 1 e 2 permanece **pendente**",
+    ],
     "A04-referencial-cefr": [
         # CEFR-LVL-000 e a regra que muda a ORDEM da geracao: o A04 vem antes do 00.
         "carregado, lido e aplicado antes do Documento 00",
@@ -164,7 +175,13 @@ PACOTE = {
 
 # Cabecalho obrigatorio: o .md declara de onde veio. Sem isso, ele vira texto orfao que
 # alguem edita achando que e a fonte -- e a partir dali o Drive e o repo divergem calados.
-CABECALHO = "Documento normativo importado do Drive"
+# O cabecalho de origem tem DUAS formas legitimas, porque o pacote medido tem duas
+# naturezas. Os 16 documentos sao normativos; o catalogo de erros do auditor e
+# documentacao de APOIO -- e o proprio relatorio da escola que o classifica assim. Exigir
+# a palavra "normativo" nele obrigaria a mentir sobre o estatuto do arquivo para passar
+# num gate, que e exatamente o tipo de conserto cosmetico que o P2 §3 manda reprovar.
+CABECALHOS = ("Documento normativo importado do Drive",
+              "Documentacao de apoio importada do Drive")
 
 MIN_BYTES = 4000  # nenhum documento do pacote e menor que isto; truncagem cai aqui
 
@@ -179,7 +196,7 @@ def verifica(diretorio):
         txt = open(caminho, encoding="utf-8").read()
         if len(txt) < MIN_BYTES:
             erros.append(f"{nome}.md: {len(txt)} bytes — abaixo do minimo. Conversao truncada?")
-        if CABECALHO not in txt:
+        if not any(c in txt for c in CABECALHOS):
             erros.append(f"{nome}.md: sem o cabecalho de origem. De onde ele veio?")
         baixo = txt.lower()
         for a in ancoras:
@@ -199,7 +216,7 @@ def _selftest():
     try:
         for nome, ancoras in PACOTE.items():
             with open(os.path.join(base, nome + ".md"), "w", encoding="utf-8") as fh:
-                fh.write(CABECALHO + "\n" + "x" * MIN_BYTES + "\n" + "\n".join(ancoras))
+                fh.write(CABECALHOS[0] + "\n" + "x" * MIN_BYTES + "\n" + "\n".join(ancoras))
         open(os.path.join(base, "README.md"), "w").write("indice")
         if verifica(base):
             print("FALHA: pacote integro reprovou.")
@@ -215,7 +232,7 @@ def _selftest():
         # 2 — truncado
         d2 = os.path.join(base, "_b")
         shutil.copytree(base, d2, ignore=shutil.ignore_patterns("_*"))
-        open(os.path.join(d2, "P3-matriz-de-conformidade.md"), "w").write(CABECALHO)
+        open(os.path.join(d2, "P3-matriz-de-conformidade.md"), "w").write(CABECALHOS[0])
         casos.append(("documento truncado", d2, "abaixo do minimo"))
         # 3 — sem cabecalho de origem
         d3 = os.path.join(base, "_c")
