@@ -981,6 +981,8 @@ def seccao(b, i, vocab=None):
 
     nu = b.get("nu")
     partes = [] if nu else ['  <div class="exercise-section">']
+    # Os componentes que a ABERTURA ja emitiu. Ver "UM COMPONENTE, NUNCA DOIS", abaixo.
+    ja_na_abertura = set()
     if b.get("titulo"):
         # O post-class NAO numera as seccoes ("Reading", "Listen & Watch"); o pre-class sim
         # ("3 · What the sentence is doing"). Quem decide e a presenca do `n`.
@@ -1061,6 +1063,7 @@ def seccao(b, i, vocab=None):
             itens = "".join(f'\n      <li>{x}</li>' for x in item["lista"])
             partes.append(f'    <ul style="{item.get("estilo", "")}">{itens}\n    </ul>')
         elif "gravador" in item:
+            ja_na_abertura.add("gravar")
             # O ID APARECE OITO VEZES em seis elementos: o botao de gravar, o de parar, o
             # cronometro, o player, o painel de apagar e a mensagem de erro. E a cadeia mais
             # longa do molde, e cada elo que divergir quebra outra coisa: o Stop nao para, o
@@ -1144,6 +1147,7 @@ def seccao(b, i, vocab=None):
             # e a aluna perder o que escreveu ao recarregar.
             e = item["escrita"]
             i0, k0 = e["id"], e["chave"]
+            ja_na_abertura.add("escrever")
             partes.append(
                 f'    <label class="mail-label" for="{i0}-subject">'
                 f'{esc(e.get("rotulo_assunto", "Subject"))}</label>\n'
@@ -1155,10 +1159,23 @@ def seccao(b, i, vocab=None):
                 f'{e.get("altura", "170px")}" placeholder="" '
                 f'oninput="pwCount(\'{i0}-body\',\'{i0}-count\',\'{k0}_writing\')"></textarea>\n'
                 f'    <div class="wc"><span id="{i0}-count">0 words</span></div>\n'
-                f'    <button class="verify-all-btn ghost" onclick="pwClear(['
+                # ---- O CONFIRM TAMBEM AQUI (09/09/2026)
+                #
+                # A revisao da aula 3 da Vanessa (#2530): "a unica acao embaixo da caixa era
+                # 'Clear and start again', um botao que APAGA". O texto ja era salvo a cada
+                # tecla e a aluna nao tinha como saber. O conserto entrou no `r_escrever` e
+                # NAO neste ramo -- o formulario declarado dentro da `abertura`. Medido:
+                # quatro caixas do Luiz e quatro da Stephanie seguiam com o botao que apaga
+                # como unica acao, meses depois.
+                f'    <div class="btn-bar" style="justify-content:flex-start">\n'
+                f'      <button class="verify-all-btn" data-ok="{rot_salvo()}" '
+                f'data-vazio="{rot_vazio()}" onclick="pwOk(\'{i0}-body\','
+                f'\'{k0}_writing\',\'{i0}-ok\',this)">{rot_confirm()}</button>\n'
+                f'      <button class="verify-all-btn ghost" onclick="pwClear(['
                 f'[\'{i0}-subject\',\'{k0}_subject\'],[\'{i0}-body\',\'{k0}_writing\']],'
                 f'\'{i0}-count\')">{esc(e.get("rotulo_limpar", "Clear and start again"))}'
-                f'</button>')
+                f'</button>\n    </div>\n'
+                f'    <div class="score-out" id="{i0}-ok" style="display:none"></div>')
         elif "titulo" in item and "texto" in item:
             # FORMA ANTIGA, de antes de a abertura ganhar chave de tipo: `{titulo, texto}`
             # sem etiqueta era sempre o documento. Continua lida porque ja ha declaracao
@@ -1173,7 +1190,23 @@ def seccao(b, i, vocab=None):
     if pt_texto:
         partes.append(apoio_pt(crua(pt_texto), f"{ident}-pt"))
     if kind is not None:
-        if kind == "lacuna":
+        # ---- UM COMPONENTE, NUNCA DOIS (09/09/2026)
+        #
+        # O bloco cuja ABERTURA ja declara o componente (`escrita`, `gravador`) o emitia
+        # DUAS vezes: uma na abertura, com os rotulos e a altura que o autor escolheu, e
+        # outra logo abaixo, a padrao do `RENDER[kind]`.
+        #
+        # Medido: 18 blocos em tres materiais -- 7 caixas de escrita e 11 gravadores. E os
+        # dois nascem com O MESMO id, porque o componente pendura os sufixos no id do
+        # bloco. `getElementById` devolve o primeiro, entao **o segundo e INERTE**: a aluna
+        # aperta Record e nada acontece, ou escreve numa caixa que nunca salva. Nada disso
+        # da erro em lugar nenhum -- e o mesmo modo de falha dos 324 botoes mortos do
+        # imersivo, e estava vivo no proprio MOLDE.
+        #
+        # Fica o DECLARADO, que e o que o autor configurou.
+        if kind in ja_na_abertura:
+            pass
+        elif kind == "lacuna":
             partes.append(RENDER[kind](b, ident, vocab))
         else:
             partes.append(RENDER[kind](b, ident))

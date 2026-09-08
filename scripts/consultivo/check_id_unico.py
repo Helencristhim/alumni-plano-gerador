@@ -72,12 +72,16 @@ VERDE, VERMELHO, AMARELO, ZERA = "\033[32m", "\033[31m", "\033[33m", "\033[0m"
 
 # O componente emitido duas vezes (ver acima). Prefixo do id -> por que ele esta aqui.
 # Cada entrada some quando o material for corrigido; nenhuma entra sem PR proprio.
-PENDENTES = {
-    "lucia-nishiyama-serra-c1": ("rec3", "rec4", "rec5", "rec6"),
-    "luiz-bressane-ciclo1": ("rec10", "rec11", "rec12"),
-    "stephanie-vicente": ("rec1", "rec2", "rec3", "rec4",
-                          "pw1", "pw2", "pw3", "pw4"),
-}
+# VAZIO desde 09/09/2026. A divida nao foi perdoada: a CAUSA foi consertada.
+#
+# O bloco cuja abertura ja declarava o componente (`escrita`, `gravador`) o emitia duas
+# vezes -- uma pela abertura, outra pelo `RENDER[kind]` -- e os dois nasciam com o mesmo
+# id, porque o componente pendura os sufixos no id do bloco. `getElementById` devolvia o
+# primeiro e o SEGUNDO ficava inerte: apertar Record nao fazia nada, escrever na caixa nao
+# salvava, e nada disso dava erro em lugar nenhum. Eram 18 blocos em tres materiais, o
+# MOLDE entre eles. O emissor passou a emitir um so (`ja_na_abertura`, em render.py), e os
+# 132 ids repetidos sairam junto.
+PENDENTES = {}
 # Os sufixos que o gravador e a caixa de escrita penduram no id do bloco.
 SUFIXOS = ("-start", "-stop", "-time", "-player", "-done", "-msg", "-body", "-count")
 
@@ -150,12 +154,23 @@ def selftest():
         falhas.append("confundiu string de JS com atributo")
     if duplicados('<div class="x" data-k="y" id="a"></div><span id="a"></span>') != {"a": 2}:
         falhas.append("nao achou o id depois de outros atributos")
-    if not tolerado("stephanie-vicente", "pw1-body"):
-        falhas.append("nao reconheceu a duplicata declarada em PENDENTES")
-    if tolerado("stephanie-vicente", "conteudo-pt"):
-        falhas.append("tolerou um id que nao e do componente pendente")
-    if tolerado("vanessa-aparecida-ciclo1", "rec1-start"):
-        falhas.append("aplicou a pendencia de um material a outro")
+    # O MECANISMO da excecao, com uma pendencia de MENTIRA. Ate 09/09/2026 estes tres
+    # casos liam a PENDENTES de verdade -- e no dia em que ela esvaziou (a causa foi
+    # consertada, ver o cabecalho) o selftest passou a reprovar por um motivo que nao era
+    # defeito nenhum. Teste de mecanismo se faz com fixture, nao com o estado do repo.
+    global PENDENTES
+    real, PENDENTES = PENDENTES, {"material-de-teste": ("pw1",)}
+    try:
+        if not tolerado("material-de-teste", "pw1-body"):
+            falhas.append("nao reconheceu a duplicata declarada em PENDENTES")
+        if tolerado("material-de-teste", "conteudo-pt"):
+            falhas.append("tolerou um id que nao e do componente pendente")
+        if tolerado("outro-material", "pw1-body"):
+            falhas.append("aplicou a pendencia de um material a outro")
+    finally:
+        PENDENTES = real
+    if PENDENTES:
+        print(f"  {len(PENDENTES)} material(is) ainda com pendencia declarada.")
     if falhas:
         for f in falhas:
             print(f"{VERMELHO}selftest FALHOU{ZERA}: {f}", file=sys.stderr)
