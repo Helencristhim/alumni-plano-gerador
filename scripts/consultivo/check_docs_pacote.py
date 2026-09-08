@@ -55,7 +55,9 @@ PACOTE = {
         # 24/08/2026: a regra das etapas MUDOU de conteudo, e a ancora antiga caiu -- foi
         # este gate que avisou. A nova diz o oposto da anterior, e por isso a ancora nova
         # nao e "a frase parecida": e a frase que a regra passou a usar.
-        "Cada um dos quatro frameworks possui oito etapas pedagógicas normativas",
+        # 05/09/2026: a regra ganhou "exatamente" e um paragrafo sobre os 55 minutos. A
+        # ancora nova e a frase NOVA -- nao a parecida (ver o cabecalho deste arquivo).
+        "Cada um dos quatro frameworks possui exatamente oito etapas pedagógicas normativas",
         "não integra o arquivo, o HTML, o payload, o estado",
         "Acompanhamento docente",
         "requisito de plataforma",
@@ -93,6 +95,24 @@ PACOTE = {
         "NÃO VERIFICADO",
         "PROFESSOR_URL",
         "ALUNO_URL",
+    ],
+    # A04 e A05 entraram no pacote em 03 e 05/09/2026 (Relatorio de Alteracoes Normativas,
+    # secoes 9 e 29). O pacote passou de 14 para 16 documentos normativos, e o A02 §13.3 vale
+    # para eles como para os demais: sem o arquivo no lote, nao ha conformidade integral.
+    "A04-referencial-cefr": [
+        # CEFR-LVL-000 e a regra que muda a ORDEM da geracao: o A04 vem antes do 00.
+        "carregado, lido e aplicado antes do Documento 00",
+        "Pre-A1 não é \"zero inglês\"",
+        "A1+ e C1+ são nomenclaturas Alumni",
+        "ALU-CAL",
+    ],
+    "A05-linguagem-instrucional-pedagogica": [
+        # §10.2: o adendo PROIBE gate por lista de palavras. E a razao de os GATES 61-63
+        # contarem estrutura, nunca vocabulario.
+        "rejeita esse detector lexical simplista",
+        "A forma verbal de uma regra interna nunca é transferida mecanicamente",
+        "Procedimento editorial obrigatório",
+        "Make the student",
     ],
     "P1-camada-funcional-html": [
         "Visão professor",

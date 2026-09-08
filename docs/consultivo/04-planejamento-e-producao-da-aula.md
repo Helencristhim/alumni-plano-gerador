@@ -1,32 +1,36 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `04_Planejamento_e_Producao_da_Aula.docx`
-> Drive ID: `1Uwgl1mvwHBtA9MxpvDR91LTt_u2ixib2`
-> Modificado no Drive: 2026-08-25
-> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/04-planejamento-e-producao-da-aula.md`
-> A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
+> Drive ID: `1_HRQxvJlOmNVB0zqVkQcaqpfzMwklUUM`
+> Modificado no Drive: 2026-09-05
+> Reimportar: conector do Drive (`read_file_content` com o fileId acima). Os BYTES do .docx nao
+> chegam integros por este caminho — em 08/09/2026 o round-trip corrompeu o zip em 2 de 3
+> tentativas (CRC invalido) —, entao a importacao usa o texto renderizado pelo conector, e nao
+> o `docx_to_md.py`.
+> A fonte e o .docx no Drive. Divergencia entre este arquivo e o Drive se resolve reimportando,
+> nunca editando o .md.
 
 ## 04 · PLANEJAMENTO E PRODUÇÃO DA AULA
 
-**Núcleo pedagógico — aulas individuais de inglês, A1–C1, ciclo de 20 aulas** Documento normativo · independente de plataforma, de meio de entrega e de aluno
+Núcleo pedagógico — aulas individuais de inglês, A1–C1, ciclo de 20 aulas Documento normativo · independente de plataforma, de meio de entrega e de aluno
 
-**Finalidade.** Definir como uma linha do syllabus vira material: a especificação que antecede a produção, o registro único que impede divergência, as regras de cada uma das três camadas, as duas superfícies de leitura, e o que bloqueia a entrega.
+Finalidade. Definir como uma linha do syllabus vira material: a especificação que antecede a produção, o registro único que impede divergência, as regras de cada uma das três camadas, as duas superfícies de leitura, e o que bloqueia a entrega.
 
-### 1. A aula tem três camadas
+## 1. A aula tem três camadas
 
 | Camada | Função | Duração | Estatuto |
-|---|---|---|---|
-| **Pre-class** | Reduzir barreiras de entrada e preparar operações da aula | 15–20 min | Preparatório; o in-class não depende dele |
-| **In-class** | A aula: etapas previstas pelo framework e pela rota aplicável, produção, feedback e decisão de continuidade | 55 min + 5 de margem | Obrigatório |
-| **Post-class** | Ampliar contato com a língua depois da aula | Livre | **Opcional e não avaliativo** |
+| :-: | :-: | :-: | :-: |
+| Pre-class | Reduzir barreiras de entrada e preparar operações da aula | 15–20 min | Preparatório; o in-class não depende dele |
+| In-class | A aula: etapas previstas pelo framework e pela rota aplicável, produção, feedback e decisão de continuidade | 55 min + 5 de margem | Obrigatório |
+| Post-class | Ampliar contato com a língua depois da aula | Livre | Opcional e não avaliativo |
 
-A relação entre as três é assimétrica de propósito. O pre-class **prepara sem resolver**; o in-class **é autônomo**; o post-class **não é continuação obrigatória de nada**.
+A relação entre as três é assimétrica de propósito. O pre-class prepara sem resolver; o in-class é autônomo; o post-class não é continuação obrigatória de nada.
 
-### 2. O registro único da aula
+## 2. O registro único da aula
 
-Este é o contrato de dado do sistema, e a única garantia real contra divergência: **não ter a** **segunda versão**. Pre-class, in-class, post-class e a linha do syllabus bebem do mesmo registro.
+Este é o contrato de dado do sistema, e a única garantia real contra divergência: não ter a segunda versão. Pre-class, in-class, post-class e a linha do syllabus bebem do mesmo registro.
 
 | Campo | Conteúdo |
-|---|---|
+| :-: | :-: |
 | Identificador | Chave única da aula |
 | Número · bloco · framework | Posição no ciclo e na distribuição personalizada |
 | Tema | Assunto da aula |
@@ -47,25 +51,29 @@ Este é o contrato de dado do sistema, e a única garantia real contra divergên
 | Status | Não iniciada · em andamento · realizada |
 | Relação com as aulas anteriores e seguintes | Continuidade e dependência |
 
-**Regras do registro:**
+Regras do registro:
 
-- Uma alteração no registro **não exige copiar a informação** para várias seções.
-- O registro **não é exibido como metadado** em nenhuma superfície.
-- O sistema **não cria conteúdo** para preencher campo que a aula não precisa: campo sem objeto se declara vazio, não se simula.
-- Se algum material passar a repetir um valor do registro, a duplicata precisa ser **ligada** ao registro e a coincidência precisa ser verificada — duas cópias divergem, é uma questão de tempo.
-- Uma fonte única para gabarito e correção é **preferível como solução técnica**, mas não é requisito pedagógico. Representações separadas são permitidas quando necessárias; é obrigatória a ausência de divergência entre correção, answer key, Teacher’s Guide e versão da atividade.
+Uma alteração no registro não exige copiar a informação para várias seções.
+
+O registro não é exibido como metadado em nenhuma superfície.
+
+O sistema não cria conteúdo para preencher campo que a aula não precisa: campo sem objeto se declara vazio, não se simula.
+
+Se algum material passar a repetir um valor do registro, a duplicata precisa ser ligada ao registro e a coincidência precisa ser verificada — duas cópias divergem, é uma questão de tempo.
+
+Uma fonte única para gabarito e correção é preferível como solução técnica, mas não é requisito pedagógico. Representações separadas são permitidas quando necessárias; é obrigatória a ausência de divergência entre correção, answer key, Teacher’s Guide e versão da atividade.
 
 Regra de avaliação. O planejamento consome o modelo vigente do perfil e do syllabus; não cria um modelo próprio. Ausência de escolha explícita significa Acompanhamento docente. Teste formal só aparece quando Avaliação formal com teste estiver registrada.
 
-### 3. A especificação pedagógica vem antes do material
+## 3. A especificação pedagógica vem antes do material
 
 Nenhuma aula é produzida sem esta ficha. Ela é interna e nunca aparece em superfície alguma.
 
 | Campo | Pergunta de controle |
-|---|---|
+| :-: | :-: |
 | Necessidade prioritária | Qual necessidade do perfil esta aula atende? |
 | Framework | Por que este framework é o mais adequado? |
-| **Operação nova** | O que o aluno fará que não repete a aula anterior? |
+| Operação nova | O que o aluno fará que não repete a aula anterior? |
 | Origem da necessidade | Perfil, evidência de aula, evento futuro ou hipótese diagnóstica? |
 | Conteúdo recuperado | O que será retomado sem reapresentação extensa? |
 | Conteúdo excluído | O que pertence a outro framework ou já está consolidado? |
@@ -78,108 +86,121 @@ Nenhuma aula é produzida sem esta ficha. Ela é interna e nunca aparece em supe
 | Next-step options | Qual continuidade poderá ser escolhida pela evidência: retask, task repetition, extensão ou new task/transfer; o que será comparado? |
 | Relação com o ciclo | O que recupera de trás e o que prepara adiante |
 
-**Gate.** A aula não é gerada se a especificação repetir substancialmente outra aula do mesmo bloco. O momento de descobrir isso é aqui, não depois de o material existir.
+Gate. A aula não é gerada se a especificação repetir substancialmente outra aula do mesmo bloco. O momento de descobrir isso é aqui, não depois de o material existir.
 
-#### 3.1 Ordem de produção
+### 3.1 Ordem de produção
 
-- Validar a suficiência dos dados de entrada.
-- Produzir a especificação pedagógica.
-- Aplicar **somente** o framework pertinente.
-- Escolher conteúdo, fontes e mecânicas.
-- Redigir a arquitetura pedagógica **e só depois** o material final.
-- Executar as validações — pedagógica, linguística, factual, técnica.
-- Entregar apenas quando as checagens estiverem comprovadas.
+Validar a suficiência dos dados de entrada.
 
-### 4. Pre-class
+Produzir a especificação pedagógica.
 
-#### 4.1 Função e limite
+Aplicar somente o framework pertinente.
 
-**Reduzir barreiras de entrada, criar familiaridade com o contexto e preparar as operações que a** **aula exigirá.** O pre-class não substitui explicação, interação, feedback nem prática acompanhada.
+Escolher conteúdo, fontes e mecânicas.
+
+Redigir a arquitetura pedagógica e só depois o material final.
+
+Executar as validações — pedagógica, linguística, factual, técnica.
+
+Entregar apenas quando as checagens estiverem comprovadas.
+
+## 4. Pre-class
+
+### 4.1 Função e limite
+
+Reduzir barreiras de entrada, criar familiaridade com o contexto e preparar as operações que a aula exigirá. O pre-class não substitui explicação, interação, feedback nem prática acompanhada.
 
 Duas autonomias precisam valer ao mesmo tempo:
 
-- **O pre-class roda sem o professor** — nenhuma atividade depende de correção posterior ou de conteúdo inacessível.
-- **O in-class roda sem o pre-class** — a retomada inicial pode aproveitar o preparo, mas nunca depender dele.
+O pre-class roda sem o professor — nenhuma atividade depende de correção posterior ou de conteúdo inacessível.
 
-#### 4.2 A regra estrutural
+O in-class roda sem o pre-class — a retomada inicial pode aproveitar o preparo, mas nunca depender dele.
 
-**Exatamente seis atividades reais, entre 15 e 20 minutos**, contando leitura de instrução, reprodução de mídia, resposta e feedback.
+### 4.2 A regra estrutural
 
-A quantidade é fixa como parâmetro operacional. **Função, ordem, operação e mecânica variam** por framework, nível, aluno e relação com a aula. **Nenhuma posição numérica tem função permanente**: apresentação lexical não mora na atividade 2, consolidação não mora na 3.
+Exatamente seis atividades reais, entre 15 e 20 minutos, contando leitura de instrução, reprodução de mídia, resposta e feedback.
 
-#### 4.3 O que conta como atividade real
+A quantidade é fixa como parâmetro operacional. Função, ordem, operação e mecânica variam por framework, nível, aluno e relação com a aula. Nenhuma posição numérica tem função permanente: apresentação lexical não mora na atividade 2, consolidação não mora na 3.
+
+### 4.3 O que conta como atividade real
 
 | Conta | Não conta isoladamente |
-|---|---|
+| :-: | :-: |
 | Uma ação com objetivo, instrução, conteúdo, resposta e conclusão observável | Título, transição, ou explicação passiva sem operação |
 | Uma operação cognitiva nova, ou reutilização funcional que acrescenta processamento | O mesmo conjunto de perguntas reapresentado em outro formato |
 | Um novo uso coerente do conteúdo: inferir, classificar, localizar evidência, comparar, decidir, aplicar | Dividir artificialmente uma atividade em duas para chegar a seis |
-|  | Feedback exibido depois de outra tarefa |
-|  | A mesma busca factual repetida em áudio e depois em texto |
+| Feedback exibido depois de outra tarefa |  |
+| A mesma busca factual repetida em áudio e depois em texto |  |
 
-#### 4.4 O núcleo protegido do in-class
+### 4.4 O núcleo protegido do in-class
 
-Estas coisas **não acontecem no pre-class**:
+Estas coisas não acontecem no pre-class:
 
-- produção oral extensa;
-- a discussão ou o role-play principal;
-- feedback corretivo personalizado;
-- a descoberta decisiva que sustenta a aula;
-- o repertório completo de functional language;
-- a análise crítica, negociação ou tomada de decisão central;
-- a prática livre da estrutura-alvo.
+produção oral extensa;
 
-E, transversalmente: **o pre-class não ensina a linguagem que será diagnosticada** na aula.
+a discussão ou o role-play principal;
 
-##### A linha que separa preparar de resolver
+feedback corretivo personalizado;
 
-A proteção é frequentemente mal lida em Grammar, onde o pre-class **pode** trabalhar observação e o in-class **precisa** diagnosticar. As duas coisas convivem, e a fronteira é esta:
+a descoberta decisiva que sustenta a aula;
 
-| O pre-class **pode** | O pre-class **não pode** |
-|---|---|
+o repertório completo de functional language;
+
+a análise crítica, negociação ou tomada de decisão central;
+
+a prática livre da estrutura-alvo.
+
+E, transversalmente: o pre-class não ensina a linguagem que será diagnosticada na aula.
+
+A linha que separa preparar de resolver
+
+A proteção é frequentemente mal lida em Grammar, onde o pre-class pode trabalhar observação e o in-class precisa diagnosticar. As duas coisas convivem, e a fronteira é esta:
+
+| O pre-class pode | O pre-class não pode |
+| :-: | :-: |
 | Preparar o aluno para observar a linguagem | Formular a regra em definitivo |
 | Noticing preliminar — perceber que há um padrão | Clarificar o sistema por completo |
 | Familiarizar com o contexto e com a evidência | Praticar o suficiente para o desempenho inicial deixar de revelar a lacuna |
 | Uma síntese curta, provisória, do que foi observado | Substituir a etapa de descoberta da aula |
 
-**O teste é o diagnóstico.** Se, depois do pre-class, a primeira tentativa do aluno na aula já não mostra onde está a dificuldade, o pre-class resolveu o que devia apenas preparar — e a aula perdeu o instrumento com que decide o que ensinar.
+O teste é o diagnóstico. Se, depois do pre-class, a primeira tentativa do aluno na aula já não mostra onde está a dificuldade, o pre-class resolveu o que devia apenas preparar — e a aula perdeu o instrumento com que decide o que ensinar.
 
-Vale igualmente para os outros frameworks: o noticing preliminar é bem-vindo em qualquer um; a **conclusão** pertence à aula.
+Vale igualmente para os outros frameworks: o noticing preliminar é bem-vindo em qualquer um; a conclusão pertence à aula.
 
-#### 4.5 Idioma de apoio e quantidade de escuta
+### 4.5 Idioma de apoio e quantidade de escuta
 
 Duas regras que dependem do nível e do framework:
 
 | Regra | Norma |
-|---|---|
-| **Idioma de apoio** | Instrução ao aluno em inglês em todos os níveis. **A1 e A2 admitem apoio complementar em português**, breve e restrito ao necessário para garantir autonomia. B1 a C1 ficam em inglês, salvo necessidade registrada. O apoio nunca substitui o contato com o inglês. |
-| **Quantidade de escuta** | **Listening admite até duas escutas** no pre-class, com operações diferentes entre elas. Os demais frameworks: **zero ou uma**. Uma terceira recuperação do mesmo áudio para completar a contagem de seis é proibida. |
+| :-: | :-: |
+| Idioma de apoio | Instrução ao aluno em inglês em todos os níveis. Para A0/Pre-A1, aplicar o regime específico do A03: no trabalho autônomo, o apoio em português pode abranger o conteúdo necessário à execução quando esse inglês não for a competência-alvo; no In-class, pode aparecer seletivamente e de forma visualmente secundária quando necessário. A1/A2 mantêm apoio complementar segundo o A03. B1–C1 ficam em inglês, salvo necessidade registrada. O apoio nunca revela a resposta nem substitui a evidência-alvo. |
+| Quantidade de escuta | Listening admite até duas escutas no pre-class, com operações diferentes entre elas. Os demais frameworks: zero ou uma. Uma terceira recuperação do mesmo áudio para completar a contagem de seis é proibida. |
 
-Quando o perfil do aluno proíbe apoio em português, **o perfil vence** — restrição de aluno tem precedência sobre diretriz de curso.
+Quando o perfil do aluno proíbe apoio em português, o perfil vence — restrição de aluno tem precedência sobre diretriz de curso.
 
-#### 4.6 Léxico
+### 4.6 Léxico
 
-Uma ou duas atividades trabalham léxico, e **somente o necessário** — o que bloqueia a compreensão ou a execução. Cada item prioritário recebe significado contextual, exemplo e, quando útil, apoio sonoro, visual, collocation ou contraste. O léxico apresentado é **reutilizado em ao menos uma** **atividade posterior**; caso contrário é lista, não preparação.
+Uma ou duas atividades trabalham léxico, e somente o necessário — o que bloqueia a compreensão ou a execução. Cada item prioritário recebe significado contextual, exemplo e, quando útil, apoio sonoro, visual, collocation ou contraste. O léxico apresentado é reutilizado em ao menos uma atividade posterior; caso contrário é lista, não preparação.
 
 Não pré-ensinar palavras que o nível permite inferir com segurança.
 
-#### 4.7 Funções por framework
+### 4.7 Funções por framework
 
 Estas funções aparecem distribuídas nas seis atividades, combinadas e ordenadas livremente.
 
 | Framework | Funções que devem aparecer |
-|---|---|
-| **Reading** | Orientação e previsão · preparação lexical · leitura global · leitura focalizada · noticing funcional (opcional) · ponte para a fala |
-| **Listening** | Orientação e previsão · preparação lexical · primeira escuta **sem transcrição** · segunda escuta com operação diferente · percepção sonora (opcional) · ponte para a reação |
-| **Grammar** | Orientação comunicativa · contexto e léxico de suporte · input contextualizado · **noticing preliminar** · **síntese curta e provisória** do que foi observado · ponte para a tentativa diagnóstica |
-| **ESP** | Orientação realista · léxico técnico e situacional · artefato · processamento orientado à tarefa · preview funcional ou microdecisão · ponte para a simulação |
+| :-: | :-: |
+| Reading | Orientação e previsão · preparação lexical · leitura global · leitura focalizada · noticing funcional (opcional) · ponte para a fala |
+| Listening | Orientação e previsão · preparação lexical · primeira escuta sem transcrição · segunda escuta com operação diferente · percepção sonora (opcional) · ponte para a reação |
+| Grammar | Orientação comunicativa · contexto e léxico de suporte · input contextualizado · noticing preliminar · síntese curta e provisória do que foi observado · ponte para a tentativa diagnóstica |
+| Personalized Real-World English | Orientação realista · léxico técnico e situacional · artefato · processamento orientado à tarefa · preview funcional ou microdecisão · ponte para a simulação |
 
-#### 4.8 Extensão do input por nível
+### 4.8 Extensão do input por nível
 
-Faixas do pre-class. O quadro completo — todos os parâmetros de cada framework em cada nível — está no documento **06**.
+Faixas do pre-class. A atribuição de faixa e a calibração linguístico-comunicativa remetem ao A04. Os parâmetros operacionais deste documento e do Documento 06 são calibrações Alumni e não constituem descritores CEFR.
 
 | Nível | Reading | Listening |
-|---|---|---|
+| :-: | :-: | :-: |
 | A1 | 50–100 palavras · 4–6 itens lexicais | 20–45 s · dois falantes claros |
 | A2 | 90–160 palavras · 5–7 itens | 30–60 s · problema e resposta identificáveis |
 | B1 | 150–260 palavras · 5–8 itens | 45–90 s · justificativas e follow-up |
@@ -188,25 +209,34 @@ Faixas do pre-class. O quadro completo — todos os parâmetros de cada framewor
 
 Parâmetros para faixas “+”. Os parâmetros do nível seguinte não são aplicados automaticamente. Um parâmetro pode aproximar-se ou, quando sustentado pelo perfil, coincidir isoladamente com o nível seguinte, desde que os demais eixos permaneçam controlados. Considerar duração, densidade lexical, velocidade, previsibilidade, novidade, número de falantes, segmentação, quantidade de escutas, apoio visual e disponibilidade posterior de transcript. Não aumentar simultaneamente duração, densidade, novidade e imprevisibilidade. Quando um parâmetro coincidir com o teto do nível seguinte, registrar justificativa baseada no perfil e na configuração da tarefa, não na simples existência daquele teto.
 
-**Princípio de progressão.** A complexidade cresce pela profundidade do processamento, menor previsibilidade, menos apoio e mais autonomia — **nunca** pelo aumento do número de atividades, do tamanho das instruções ou das listas lexicais.
+Princípio de progressão. A complexidade cresce pela profundidade do processamento, menor previsibilidade, menos apoio e mais autonomia — nunca pelo aumento do número de atividades, do tamanho das instruções ou das listas lexicais.
 
-#### 4.9 Bloqueios do pre-class
+### 4.9 Bloqueios do pre-class
 
-- Seis questionários de compreensão em sequência.
-- A mesma localização literal repetida em formatos diferentes.
-- Uma terceira recuperação do mesmo conteúdo só para completar a contagem.
-- Transcrição antes da primeira escuta.
-- A segunda escuta repetindo as perguntas da primeira.
-- Começar por nomenclatura e regra abstrata sem contexto comunicativo.
-- A sequência fixa contexto → vocabulário → regra → lacuna → lacuna → frase.
-- Escolher o artefato antes de definir a tarefa e o resultado (ESP).
-- Ensinar terminologia como lista isolada (ESP).
-- Miniaturizar em nível inicial uma situação concebida para nível avançado.
+Seis questionários de compreensão em sequência.
 
-#### 4.10 Instrução e feedback
+A mesma localização literal repetida em formatos diferentes.
+
+Uma terceira recuperação do mesmo conteúdo só para completar a contagem.
+
+Transcrição antes da primeira escuta.
+
+A segunda escuta repetindo as perguntas da primeira.
+
+Começar por nomenclatura e regra abstrata sem contexto comunicativo.
+
+A sequência fixa contexto → vocabulário → regra → lacuna → lacuna → frase.
+
+Escolher o artefato antes de definir a tarefa e o resultado (Personalized Real-World English).
+
+Ensinar terminologia como lista isolada (Personalized Real-World English).
+
+Miniaturizar em nível inicial uma situação concebida para nível avançado.
+
+### 4.10 Instrução e feedback
 
 | Elemento | Diretriz |
-|---|---|
+| :-: | :-: |
 | Instrução | Um verbo de ação claro, conteúdo identificável e condição de resposta |
 | Apoio à instrução | Só o necessário — número de opções, possibilidade de repetir, uso de evidência. Não duplicar a instrução |
 | Idioma | Instruções ao aluno em inglês, com complexidade sintática ajustada ao nível e sem infantilizar adultos |
@@ -214,47 +244,51 @@ Parâmetros para faixas “+”. Os parâmetros do nível seguinte não são apl
 | Resposta aberta | Usar quando não exigir correção humana para completar o percurso; oferecer modelo ou critério de autoavaliação |
 | Acessibilidade | Não depender apenas de cor; texto alternativo funcional; navegação e contraste legíveis |
 
-#### 4.11 A camada do professor no pre-class
+### 4.11 A camada do professor no pre-class
 
 Para cada atividade, o professor dispõe de: resposta esperada · alternativas aceitáveis · rationale breve · transcrição quando houver áudio · pontos que podem gerar dúvida · relação com o in-class quando pedagogicamente necessária.
 
-O professor encontra as respostas **sem precisar executar os exercícios**. O aluno não vê nada disso antes da própria tentativa.
+O professor encontra as respostas sem precisar executar os exercícios. O aluno não vê nada disso antes da própria tentativa.
 
-### 5. In-class
+## 5. In-class
 
-A arquitetura está no documento **03**. Aqui ficam as regras de produção que dela decorrem.
+A arquitetura está no documento 03. Aqui ficam as regras de produção que dela decorrem.
 
-#### 5.1 Regras da produção principal
+### 5.1 Regras da produção principal
 
-- **Uma** produção principal por aula. As atividades anteriores a alimentam.
-- Objeções e mudanças de condição permanecem escalas da mesma task somente quando não alteram materialmente a decisão, o interlocutor, a consequência ou a organização do cenário; caso contrário, constituem new task/transfer.
-- O feedback é **emergente**: um ponto forte e um ou dois pontos de maior impacto, tirados da formulação real do aluno.
-- Quando necessário, o retask retoma somente a operação ou o trecho que se beneficia de um ajuste observado e é escolhido depois do feedback por critério verificável. Se não houver necessidade, selecionar outra continuidade sem criar falha artificial.
-- O fechamento é obrigatório e distingue quatro coisas: o que foi realizado, a percepção de confiança, a evidência de aprendizagem e o plano de transferência.
+Uma produção principal por aula. As atividades anteriores a alimentam.
 
-#### 5.1.1 Targeted Model/Input com operação do aluno
+Objeções e mudanças de condição permanecem escalas da mesma task somente quando não alteram materialmente a decisão, o interlocutor, a consequência ou a organização do cenário; caso contrário, constituem new task/transfer.
+
+O feedback é emergente: um ponto forte e um ou dois pontos de maior impacto, tirados da formulação real do aluno.
+
+Quando necessário, o retask retoma somente a operação ou o trecho que se beneficia de um ajuste observado e é escolhido depois do feedback por critério verificável. Se não houver necessidade, selecionar outra continuidade sem criar falha artificial.
+
+O fechamento é obrigatório e distingue quatro coisas: o que foi realizado, a percepção de confiança, a evidência de aprendizagem e o plano de transferência.
+
+5.1.1 Targeted Model/Input com operação do aluno
 
 O modelo ou input direcionado deve responder a uma operação observável do aluno, e não funcionar como exposição passiva. Planejar hipótese ou brainstorming, seleção, comparação, localização de componentes ou avaliação de efeito antes ou durante o contato com o modelo. Quando houver repertório prévio, preferir: hipótese breve → modelo → identificação de componentes → language bank → aplicação curta.
 
-#### 5.1.2 Feedback sem falha presumida
+5.1.2 Feedback sem falha presumida
 
 O feedback começa pelas evidências da task. Registrar o que funcionou, o que se manteve sob pressão, o que mudou e, conforme necessário, um foco de desenvolvimento ou uma força a preservar. Não pré-preencher campos como “The transition that failed” nem criar erro para justificar a etapa seguinte.
 
 O retask é condicional e exige necessidade observada. Se os critérios já foram atendidos, usar a continuidade prevista para extensão, challenge ou nova task. O Teacher’s Guide deve distinguir retask, task repetition e new task e declarar o que será comparado.
 
-#### 5.1.3 Estímulos em prática menos controlada
+5.1.3 Estímulos em prática menos controlada
 
 Quando a atividade depender de situações, mudanças ou complicações específicas, cada estímulo deve permanecer estável e identificável na tela compartilhada, salvo quando a ausência fizer parte funcional de uma tarefa auditiva ou de imprevisibilidade validada. Cada estímulo explicita o que mudou, quem está envolvido, a condição ou consequência e a decisão ou produção solicitada. O professor pode apresentá-los um por vez, mas não deve inventá-los durante a aula quando comparação, consistência ou registro de evidência dependerem deles.
 
-#### 5.1.4 Nova variável e preservação do cenário-base
+5.1.4 Nova variável e preservação do cenário-base
 
 A segunda task deve declarar estado original, mudança, razão, consequência, diferença entre aceitar e recusar e elementos que permanecem válidos. Ancorar relações como “earlier”, “later” e “change the order” em itens, horários ou posições concretas. Quando houver decisão do aluno, manter o artefato original visível e apresentar a solicitação em card separado, sem antecipar a versão revisada.
 
-#### 5.1.5 Possible Answers em prática menos controlada
+5.1.5 Possible Answers em prática menos controlada
 
 Atividades menos controladas não exigem gabarito único, mas o Teacher’s Guide oferece Possible Answers quando o professor puder precisar de apoio para modelar, esclarecer ou destravar a produção. As respostas correspondem individualmente a cada estímulo, preservam a função comunicativa, são identificadas como apoio e admitem outras respostas coerentes; nunca são apresentadas como script obrigatório.
 
-#### 5.1.6 Escolha e rotação da produção comunicativa
+5.1.6 Escolha e rotação da produção comunicativa
 
 O planejamento justifica a mecânica da produção principal por sua relação com o framework, a operação comunicativa, o interlocutor funcional, o produto, a evidência e a posição no bloco. A prioridade de Speaking ou Interaction aumenta a frequência da oralidade e da interação; não transforma role-play, simulação ou professor–aluno em formato padrão.
 
@@ -262,13 +296,19 @@ Antes de aprovar a aula, comparar sua produção principal com as demais aulas d
 
 Role-play ou simulação exige papéis, interlocutores, objetivos e consequências constitutivos da tarefa. Repetir a mecânica somente quando operação, condição, produto ou evidência mudarem materialmente. Mudar tema ou vocabulário, mantendo a mesma dinâmica e o mesmo produto, não é variação suficiente.
 
-#### 5.2 O quadro de feedback
+5.1.7 Terminologia de unidades e estados
+
+Usar slide para uma unidade numerada ou identificável do percurso In-class, tanto na tela compartilhada quanto no Teacher’s Guide. Referências como next slide, second-listening slide, input slide, preparation slide e Slide 4 designam partes do deck.
+
+Usar screen somente para uma visão, interface ou estado que não corresponda necessariamente a um slide, como teacher view, consultation screen, login screen ou um estado funcional específico de listening. First-listening screen só é adequado quando nomeia esse estado; quando designa a unidade do deck usada para a primeira escuta, usar first-listening slide. Validar o referente real e não substituir automaticamente todas as ocorrências de screen.
+
+### 5.2 O quadro de feedback
 
 | Campo | Uso |
-|---|---|
+| :-: | :-: |
 | What worked | Uma estratégia, escolha linguística ou efeito comunicativo bem-sucedido |
 | Keep developing | O ponto de maior impacto para clareza, precisão ou interação |
-| First version | A formulação **realmente produzida** pelo aluno |
+| First version | A formulação realmente produzida pelo aluno |
 | Clearer version | Reformulação coconstruída, preservando a intenção original |
 | Effect check | Pergunta curta sobre o que ficou mais claro ou mais eficaz |
 
@@ -276,57 +316,63 @@ O quadro de condução começa vazio e é preenchido durante a aula. Nunca vem p
 
 Se a dificuldade impedir a tarefa: pausar brevemente, apoiar e retomar do ponto necessário. Reiniciar tudo só quando for realmente útil.
 
-#### 5.3 O fechamento registra, não confere
+### 5.3 O fechamento registra, não confere
 
-O fechamento **não pressupõe percurso completo**. A formulação importa: *“**reveja o que você* *trabalhou hoje**”* é verdadeira tanto no percurso completo quanto no parcial; *“**marque o que* *cobrimos**”* transforma percurso parcial em sensação de falha.
+O fechamento não pressupõe percurso completo. A formulação importa: “reveja o que você trabalhou hoje” é verdadeira tanto no percurso completo quanto no parcial; “marque o que cobrimos” transforma percurso parcial em sensação de falha.
 
-**Concluir a aula nunca depende** de checklist preenchido, de todas as unidades terem sido percorridas, de todas as respostas estarem preenchidas, nem do feedback estar completo. Concluir não atribui nota nem percentual.
+Concluir a aula nunca depende de checklist preenchido, de todas as unidades terem sido percorridas, de todas as respostas estarem preenchidas, nem do feedback estar completo. Concluir não atribui nota nem percentual.
 
-#### 5.4 Escrita do aluno durante a aula
+### 5.4 Escrita do aluno durante a aula
 
 Não há atividade de escrita extensa do aluno durante o in-class. A superfície da aula é conduzida pelo professor; a produção escrita, quando pedida, pertence ao pre-class ou ao post-class.
 
-### 6. Post-class
+## 6. Post-class
 
-#### 6.1 Definição
+### 6.1 Definição
 
-**Um acervo complementar, autêntico, personalizado, opcional e não avaliativo.** Ele amplia o contato com a língua depois da aula — sem funcionar como tarefa de casa, continuação obrigatória ou requisito de progressão.
+Um acervo complementar, autêntico, personalizado, opcional e não avaliativo. Ele amplia o contato com a língua depois da aula — sem funcionar como tarefa de casa, continuação obrigatória ou requisito de progressão.
 
-**Princípio de autonomia.** Não realizar qualquer item **não configura falta, pendência nem** **evidência de baixo desempenho.** Nada de nota, pontuação, prazo, badge, checklist obrigatório, trava de navegação ou confirmação de conclusão.
+Princípio de autonomia. Não realizar qualquer item não configura falta, pendência nem evidência de baixo desempenho. Nada de nota, pontuação, prazo, badge, checklist obrigatório, trava de navegação ou confirmação de conclusão.
 
-#### 6.2 O que o post-class não é
+### 6.2 O que o post-class não é
 
-- Tarefa obrigatória ou avaliativa.
-- Prova de compreensão, retenção ou desempenho.
-- Nova sequência de reading ou listening com exercícios.
-- Repetição do pre-class ou do in-class.
-- Condição para concluir a aula ou liberar conteúdo.
-- Fonte de conteúdo essencial para a aula seguinte.
-- Atividade que dependa de correção ou acompanhamento obrigatório do professor.
+Tarefa obrigatória ou avaliativa.
 
-#### 6.3 Os cinco componentes funcionais
+Prova de compreensão, retenção ou desempenho.
 
-O post-class é um **banco de sugestões**, não uma sequência fixa. O que é normativo são os componentes que precisam estar **disponíveis** — não a forma como se organizam.
+Nova sequência de reading ou listening com exercícios.
+
+Repetição do pre-class ou do in-class.
+
+Condição para concluir a aula ou liberar conteúdo.
+
+Fonte de conteúdo essencial para a aula seguinte.
+
+Atividade que dependa de correção ou acompanhamento obrigatório do professor.
+
+### 6.3 Os cinco componentes funcionais
+
+O post-class é um banco de sugestões, não uma sequência fixa. O que é normativo são os componentes que precisam estar disponíveis — não a forma como se organizam.
 
 | Componente | Função | Natureza |
-|---|---|---|
-| **Speaking** | Uma proposta de produção oral ligada ao objetivo comunicativo | Prática opcional |
-| **Writing** | Uma proposta de produção escrita breve e funcional | Prática opcional |
-| **Reading** | Curadoria de leituras externas autênticas | Acervo; sem exercício |
-| **Listening / watching** | Curadoria de áudio ou vídeo externo autêntico | Acervo; sem exercício |
-| **Apoio linguístico** | Referência ao foco trabalhado, com fonte externa confiável | Consulta; sem exercício |
+| :-: | :-: | :-: |
+| Speaking | Uma proposta de produção oral ligada ao objetivo comunicativo | Prática opcional |
+| Writing | Uma proposta de produção escrita breve e funcional | Prática opcional |
+| Reading | Curadoria de leituras externas autênticas | Acervo; sem exercício |
+| Listening / watching | Curadoria de áudio ou vídeo externo autêntico | Acervo; sem exercício |
+| Apoio linguístico | Referência ao foco trabalhado, com fonte externa confiável | Consulta; sem exercício |
 
-**Uma contextualização ou retomada da aula pode ser incluída quando acrescentar valor** — situar o acervo, lembrar o foco. Ela **não é componente obrigatório**: uma aula cujo post-class dispensa recapitulação não está incompleta.
+Uma contextualização ou retomada da aula pode ser incluída quando acrescentar valor — situar o acervo, lembrar o foco. Ela não é componente obrigatório: uma aula cujo post-class dispensa recapitulação não está incompleta.
 
-**A organização pertence ao meio.** Blocos, páginas, cartões, seções, ordem de apresentação — nada disso é regra pedagógica. O que o núcleo exige é que os cinco componentes estejam disponíveis, que o aluno não precise segui-los em ordem nem consumir tudo, e que **prática opcional** fique distinguível de **recurso para explorar**.
+A organização pertence ao meio. Blocos, páginas, cartões, seções, ordem de apresentação — nada disso é regra pedagógica. O que o núcleo exige é que os cinco componentes estejam disponíveis, que o aluno não precise segui-los em ordem nem consumir tudo, e que prática opcional fique distinguível de recurso para explorar.
 
-#### 6.4 Regras de conteúdo
+### 6.4 Regras de conteúdo
 
-**Retomada da aula, quando houver** — curta e autossuficiente: tema, objetivo comunicativo em linguagem acessível, functional language ou estrutura central, vocabulário essencial, dois ou três exemplos contextualizados. **Sem quiz, sem perguntas de revisão, sem resumo extenso.**
+Retomada da aula, quando houver — curta e autossuficiente: tema, objetivo comunicativo em linguagem acessível, functional language ou estrutura central, vocabulário essencial, dois ou três exemplos contextualizados. Sem quiz, sem perguntas de revisão, sem resumo extenso.
 
-**Speaking e writing** — cada um traz contexto completo (compreensível sem acesso à aula), propósito, destinatário quando aplicável, dois a quatro pontos de orientação, apoio linguístico que **não é roteiro pronto**, e extensão sugerida por nível. A opcionalidade é explícita na formulação.
+Speaking e writing — cada um traz contexto completo (compreensível sem acesso à aula), propósito, destinatário quando aplicável, dois a quatro pontos de orientação, apoio linguístico que não é roteiro pronto, e extensão sugerida por nível. A opcionalidade é explícita na formulação.
 
-**Independência.** As duas propostas podem citar o acervo como inspiração, mas **nunca podem** **exigir** que o aluno leia, assista ou ouça algo para conseguir realizá-las.
+Independência. As duas propostas podem citar o acervo como inspiração, mas nunca podem exigir que o aluno leia, assista ou ouça algo para conseguir realizá-las.
 
 Reading e listening / watching — material externo, real e originalmente publicado em inglês. Reading oferece uma experiência de leitura por meio de texto discursivamente desenvolvido, ampliando contexto, perspectiva ou repertório comunicativo, profissional ou temático. Pode abordar estratégias comunicativas, escolhas linguísticas e exemplos de uso sem deixar de ser Reading. Listening / watching oferece exposição auditiva ou audiovisual. O sistema não fabrica texto, áudio ou vídeo e os apresenta como autênticos. O acervo não leva atividade: nada de perguntas, lacunas, verdadeiro ou falso, busca de vocabulário, resumo, anotação ou qualquer evidência de consumo.
 
@@ -336,48 +382,53 @@ Classificação funcional. Reading e Language Reference podem abordar o mesmo te
 
 Redundância funcional. Há redundância somente quando os componentes reproduzem substancialmente o mesmo conteúdo, no mesmo enquadramento e para a mesma operação, sem acrescentar desenvolvimento discursivo, nova fonte, nova modalidade, organização de consulta ou possibilidade de uso. Um artigo comunicativo ou profissional pode ser Reading mesmo quando ensina estratégias e linguagem; uma referência organizada em torno de regras, padrões e exercícios pertence a Language Reference.
 
-#### 6.5 Extensão por nível
+### 6.5 Extensão por nível
 
 | Nível | Speaking | Writing | Curadoria prioritária |
-|---|---|---|---|
+| :-: | :-: | :-: | :-: |
 | A1 | 30–45 s · situação concreta · 3–5 apoios | 3–5 frases · modelo parcial | Textos muito curtos, vídeos breves e visuais, fala clara |
 | A2 | 45–60 s · relato ou escolha simples | 5–7 frases · frames e conectores | Textos curtos e segmentados, situações familiares |
 | B1 | 1–1,5 min · opinião, explicação, narrativa | 60–90 palavras · apoio por função | Artigos acessíveis, entrevistas curtas, podcasts segmentados |
 | B2 | 1,5–2 min · posição justificada, recomendação | 80–130 palavras · apoio seletivo | Notícias, análises, perspectivas divergentes |
 | C1 | 2–3 min · nuance, síntese, argumentação | 100–160 palavras · precisão, tom, organização | Opinião, entrevistas longas com recorte, conteúdo especializado |
 
-#### 6.6 Curadoria: as duas camadas do metadado
+### 6.6 Curadoria: as duas camadas do metadado
 
-Esta distinção evita um conflito recorrente. **Verificar não é exibir.**
+Esta distinção evita um conflito recorrente. Verificar não é exibir.
 
 | Camada | O que carrega |
-|---|---|
-| **Curadoria (interna, obrigatória)** | Título original · fonte, autor ou canal · link direto verificado · gênero e formato · duração total · trecho recomendado com minutagem · relação com a aula · nível estimado · tempo de leitura · data · legenda ou transcrição · condição de acesso · data da verificação |
-| **Exibição (mínima)** | Título · fonte ou canal · link direto · descrição breve · duração, quando útil |
+| :-: | :-: |
+| Curadoria (interna, obrigatória) | Título original · fonte, autor ou canal · link direto verificado · gênero e formato · duração total · trecho recomendado com minutagem · relação com a aula · nível estimado · tempo de leitura · data · legenda ou transcrição · condição de acesso · data da verificação |
+| Exibição (mínima) | Título · fonte ou canal · link direto · descrição breve · duração, quando útil |
 
-O metadado de curadoria **prova que o recurso foi verificado** e alimenta o controle de repetição. Ele **não vira etiqueta** para o aluno: nível estimado, tempo de leitura, data, sotaque e detalhe de legenda ficam fora da superfície. Nunca exibir validação, auditoria ou selo de conferência.
+O metadado de curadoria prova que o recurso foi verificado e alimenta o controle de repetição. Ele não vira etiqueta para o aluno: nível estimado, tempo de leitura, data, sotaque e detalhe de legenda ficam fora da superfície. Nunca exibir validação, auditoria ou selo de conferência.
 
-#### 6.7 Verificação de fontes
+### 6.7 Verificação de fontes
 
-- Abrir o link e confirmar que o recurso existe.
-- Conferir que título e fonte correspondem ao item descrito.
-- Identificar restrição de acesso, região, cadastro ou remoção.
-- Confirmar duração e a minutagem do trecho recomendado.
-- Confirmar se legenda ou transcrição realmente existem.
-- **Não inventar** sotaque, nível, data, duração ou qualquer metadado não verificável.
+Abrir o link e confirmar que o recurso existe.
 
-**Hierarquia:** priorizar a publicação original — veículo, canal, organização, autor. Usar agregador apenas quando for o local oficial. Evitar cópias, reuploads, páginas espelho, resultados de busca, links encurtados e páginas iniciais genéricas.
+Conferir que título e fonte correspondem ao item descrito.
 
-**Falha bloqueante.** Recurso que não pode ser verificado **não entra**. Substitui-se por outro validado; nunca se preenche campo por inferência apresentada como fato. **Conseguir abrir é** **condição para incluir, não razão para incluir** — e impossibilidade de conferir não é o mesmo que link quebrado.
+Identificar restrição de acesso, região, cadastro ou remoção.
 
-#### 6.8 Não repetição
+Confirmar duração e a minutagem do trecho recomendado.
+
+Confirmar se legenda ou transcrição realmente existem.
+
+Não inventar sotaque, nível, data, duração ou qualquer metadado não verificável.
+
+Hierarquia: priorizar a publicação original — veículo, canal, organização, autor. Usar agregador apenas quando for o local oficial. Evitar cópias, reuploads, páginas espelho, resultados de busca, links encurtados e páginas iniciais genéricas.
+
+Falha bloqueante. Recurso que não pode ser verificado não entra. Substitui-se por outro validado; nunca se preenche campo por inferência apresentada como fato. Conseguir abrir é condição para incluir, não razão para incluir — e impossibilidade de conferir não é o mesmo que link quebrado.
+
+### 6.8 Não repetição
 
 Não repetir a mesma mídia no ciclo · evitar o mesmo veículo ou canal em aulas consecutivas · variar gêneros, vozes, registros e variedades do inglês · não repetir a situação comunicativa do in-class apenas trocando nomes · não duplicar material do pre-class · registrar cada recurso no histórico do ciclo.
 
-#### 6.9 Tom
+### 6.9 Tom
 
 | Adequado | Evitar |
-|---|---|
+| :-: | :-: |
 | Explore these resources if you would like to learn more about today’s topic. | Read the article and answer the questions. |
 | If you would like to practice speaking, record a short response. | Record your answer to complete the lesson. |
 | Choose anything that interests you and return whenever you like. | Complete all resources before the next class. |
@@ -385,188 +436,211 @@ Não repetir a mesma mídia no ciclo · evitar o mesmo veículo ou canal em aula
 
 Nenhum controle usa verbo de obrigação ou de conclusão.
 
-### 7. As duas superfícies
+## 7. As duas superfícies
 
 Todo material tem dois leitores com direitos diferentes — e uma terceira camada que nenhum dos dois lê. A separação vale em qualquer meio.
 
-#### 7.1 O que cada superfície contém
+### 7.1 O que cada superfície contém
 
-|  | Aluno | Professor |
-|---|---|---|
-| **Vê** | Planejamento (só o bloco liberado) · Pre-class · Feedback compartilhável · Post-class | Perfil · Planejamento completo · Pre-class com gabarito · In-class · Post-class · Estado pedagógico do ciclo |
-| **Nunca vê** | In-class · notas do professor · gabaritos reservados · hipóteses diagnósticas · estado pedagógico interno · instrumentos de checkpoint · regras de geração · justificativas de framework · controles administrativos | — |
+| Aluno | Professor |  |
+| :-: | :-: | :-: |
+| Vê | Planejamento (só o bloco liberado) · Pre-class · Feedback compartilhável · Post-class | Perfil · Planejamento completo · Pre-class com gabarito · In-class · Post-class · Estado pedagógico do ciclo |
+| Nunca vê | In-class · notas do professor · gabaritos reservados · hipóteses diagnósticas · estado pedagógico interno · instrumentos de checkpoint · regras de geração · justificativas de framework · controles administrativos | — |
 
-#### 7.1.1 As três camadas, e o que cada uma admite
+7.1.1 As três camadas, e o que cada uma admite
 
 | Camada | Pode conter | Não deve conter |
-|---|---|---|
-| **Superfície do aluno** | Contexto, tarefa, input, opções, apoio, modelos, status de conteúdo extra | Código interno, hipótese diagnóstica, cronômetro sem função, rubrica oculta, lógica de geração |
-| **Material de condução do professor** | Finalidade, condução, apoio condicional, resposta esperada, evidência a observar, critério de transição | Ordem dramatizada, proibição rígida, conclusão diagnóstica antecipada, contagem arbitrária |
-| **Registro interno da aula** | Função, evidência, mecânica, grau de controle, tempo, status, relação com a tarefa e com o ciclo | Texto antigo que contradiga o material produzido; causa não sustentada por evidência |
+| :-: | :-: | :-: |
+| Superfície do aluno | Contexto, tarefa, input, opções, apoio, modelos, status de conteúdo extra | Código interno, hipótese diagnóstica, cronômetro sem função, rubrica oculta, lógica de geração |
+| Material de condução do professor | Finalidade, condução, apoio condicional, resposta esperada, evidência a observar, critério de transição | Ordem dramatizada, proibição rígida, conclusão diagnóstica antecipada, contagem arbitrária |
+| Registro interno da aula | Função, evidência, mecânica, grau de controle, tempo, status, relação com a tarefa e com o ciclo | Texto antigo que contradiga o material produzido; causa não sustentada por evidência |
 
-O registro interno é a terceira camada: alimenta as outras duas e **não é exibido a ninguém**. Quando ele diverge do material, é o material que está certo e o registro que envelheceu — ou o inverso; o que não pode é a divergência sobreviver.
+O registro interno é a terceira camada: alimenta as outras duas e não é exibido a ninguém. Quando ele diverge do material, é o material que está certo e o registro que envelheceu — ou o inverso; o que não pode é a divergência sobreviver.
 
-#### 7.2 O feedback que chega ao aluno
+### 7.2 O feedback que chega ao aluno
 
 O registro pós-aula do professor tem doze campos: data de realização · status · desempenho observado · realização concreta · ponto prioritário de desenvolvimento · linguagem introduzida ou retomada · linguagem ainda apoiada · dificuldade ou necessidade emergente · apoio utilizado · resultado do retask, quando realizado · implicação para a aula seguinte · observação compartilhável.
 
-O registro interno pode conter todas as evidências e decisões pedagógicas necessárias ao acompanhamento. **Somente dois campos são compartilhados com o aluno: What worked e Keep** **developing.** Linguagem a retomar e próximo foco permanecem incorporados ao registro interno ou são sintetizados dentro desses dois campos, sem gerar campos adicionais na superfície do aluno. Nunca chegam ao aluno: evidência diagnóstica interna, hipótese sobre causa de dificuldade ou decisão sobre reconfiguração do syllabus.
+Uniformidade sem metalinguagem na interface
 
-#### 7.3 O que nenhuma superfície contém
+Os critérios de Desempenho usam a mesma escala nas quatro aulas do bloco para permitir comparação e consolidação coerentes. Essa uniformidade deve ser implementada no componente e validada em QA, mas não anunciada ao professor por observações editoriais ou metalinguísticas na interface. Expressões como “— mesma escala nas quatro aulas do bloco” não acompanham o título, a descrição nem os critérios visíveis.
 
-- Diretriz de produção, metadado do sistema, auditoria, histórico de revisão.
-- Justificativa editorial ou explicação do desenho da atividade.
-- Explicação sobre o framework, sobre a quantidade de atividades ou sobre a distribuição de tempo.
-- Instrução dirigida a revisor; comentário sobre alterações anteriores.
-- Metalinguagem que anuncie o que será encontrado ou desenvolvido depois.
-- Rubrica oculta, código interno, timer sem função.
+O registro interno pode conter todas as evidências e decisões pedagógicas necessárias ao acompanhamento. Somente dois campos são compartilhados com o aluno: What worked e Keep developing. Linguagem a retomar e próximo foco permanecem incorporados ao registro interno ou são sintetizados dentro desses dois campos, sem gerar campos adicionais na superfície do aluno. Nunca chegam ao aluno: evidência diagnóstica interna, hipótese sobre causa de dificuldade ou decisão sobre reconfiguração do syllabus.
+
+### 7.3 O que nenhuma superfície contém
+
+Diretriz de produção, metadado do sistema, auditoria, histórico de revisão.
+
+Justificativa editorial ou explicação do desenho da atividade.
+
+Explicação sobre o framework, sobre a quantidade de atividades ou sobre a distribuição de tempo.
+
+Instrução dirigida a revisor; comentário sobre alterações anteriores.
+
+Metalinguagem que anuncie o que será encontrado ou desenvolvido depois.
+
+Rubrica oculta, código interno, timer sem função.
 
 Comentários internos, de código ou de registro técnico descrevem somente o estado vigente, a razão funcional necessária para sua manutenção e, quando indispensável, a fonte normativa atual. Não narram versões anteriores, tentativas, feedbacks, bugs já corrigidos nem a sequência histórica que levou à solução. É permitido registrar, por exemplo, que a ordem mistura categorias para não revelar o gabarito; é proibido narrar como a ordem aparecia antes ou qual feedback motivou a correção.
 
-### 8. O material de condução do professor
+## 8. O material de condução do professor
 
-São **duas peças**, e confundi-las é o erro que faz uma delas não existir:
+São duas peças, e confundi-las é o erro que faz uma delas não existir:
 
 | Peça | O que é | Alcance |
-|---|---|---|
-| **Teacher’s Guide** | A **entrega pedagógica completa** da aula: identidade, objetivos, preparação, procedimento estágio a estágio, foco linguístico, dificuldades previstas, evidência a registrar e gabarito | A aula inteira |
-| **Teacher’s Note** | A orientação pontual de uma atividade: o que fazer ali, o que esperar, o que observar | Uma atividade |
+| :-: | :-: | :-: |
+| Teacher’s Guide | A entrega pedagógica completa da aula: identidade, objetivos, preparação, procedimento estágio a estágio, foco linguístico, dificuldades previstas, evidência a registrar e gabarito | A aula inteira |
+| Teacher’s Note | A orientação pontual de uma atividade: o que fazer ali, o que esperar, o que observar | Uma atividade |
 
-**O guia é obrigatório e as notas não o substituem.** As notas locais acompanham cada atividade por conveniência de condução; o guia é o documento que permite a um professor **preparar e** **conduzir a aula inteira** — inclusive um professor que não a produziu. Uma aula entregue só com notas locais está incompleta.
+O guia é obrigatório e as notas não o substituem. As notas locais acompanham cada atividade por conveniência de condução; o guia reúne as informações necessárias para um professor preparar e conduzir a aula inteira, sem obrigar que todas sejam exibidas simultaneamente — inclusive um professor que não a produziu. Uma aula entregue só com notas locais está incompleta.
 
-O guia é escrito **em inglês** e é **independente do meio de entrega**. Como ele é apresentado — documento, caderno, painel, ficha — é decisão da plataforma, não deste núcleo.
+O guia é escrito em inglês e é independente do meio de entrega. Como ele é apresentado — documento, caderno, painel, ficha — é decisão da plataforma, não deste núcleo.
 
-#### 8.1 A composição do Teacher’s Guide
+### 8.1 A composição do Teacher’s Guide
+
+Organização de consulta. O Teacher’s Guide externo é uma ferramenta de uso durante a condução. Ao abrir uma aula, apresenta primeiro um cabeçalho compacto com número e título da aula, slide ativo, etapa e minutagem; logo abaixo, mostra imediatamente a orientação operacional do slide ativo.
+
+As informações gerais que já aparecem em Estrutura e preparação não formam um preâmbulo extenso e permanentemente aberto. Para consulta independente, são reunidas uma única vez em Lesson overview, inicialmente recolhido. Esse overview pode sintetizar objetivo, produto comunicativo, critérios de sucesso, preparação, percurso e foco linguístico.
+
+Os catorze campos abaixo definem o conjunto informacional do guia, não uma sequência visual fixa. Answer Key, Possible Answers, apoio, decisões de condução e evidências específicas permanecem junto ao slide ou à atividade correspondente. Estrutura e preparação, Lesson overview e demais reapresentações derivam da mesma fonte editável.
 
 | Campo | Conteúdo |
-|---|---|
-| **Lesson identity** | Número, bloco, framework, nível, tema e modelo de avaliação vigente |
-| **Goals** | O objetivo comunicativo e os objetivos específicos da aula |
-| **Communicative product** | A performance observável que encerra a aula |
-| **Success criteria** | Dois a quatro comportamentos observáveis |
-| **Teacher preparation** | O que precisa estar pronto, lido, testado ou impresso antes da aula |
-| **Lesson overview** | A aula em uma tabela: as etapas previstas, sua função e seu tempo de referência |
-| **Stage-by-stage procedure** | O detalhamento de cada etapa — ver §8.2 |
-| **Language focus** | Functional language, vocabulário e, quando houver, o foco estrutural |
-| **Anticipated difficulties** | O que provavelmente será difícil, e por quê |
-| **Scaffolding and challenge** | O apoio disponível se a dificuldade aparecer; a extensão se não aparecer |
-| Feedback and next-step decision | Como o feedback será construído e como a evidência determinará retask, repetition, extensão ou new task |
-| **Evidence to record** | O que esta aula precisa produzir para o acompanhamento do ciclo e, quando aplicável, para o teste formal ou instrumento de consolidação |
-| **Pre/post-class connection** | O que o pre-class preparou e o que o post-class oferece |
-| **Answer key / possible answers** | Gabarito e respostas aceitáveis, quando a atividade os tiver |
+| :-: | :-: |
+| Lesson identity | Fonte da identificação; no guia externo, aparece como cabeçalho compacto com aula, slide ativo, etapa e minutagem |
+| Goals | Objetivo comunicativo e objetivos específicos; síntese no Lesson overview recolhido |
+| Communicative product | Performance observável que encerra a aula; síntese no Lesson overview recolhido |
+| Success criteria | Dois a quatro comportamentos observáveis; síntese no Lesson overview recolhido e uso contextual quando necessário |
+| Teacher preparation | O que precisa estar pronto antes da aula; fonte comum com Estrutura e preparação e síntese no Lesson overview |
+| Lesson overview | Visão geral única e inicialmente recolhida: objetivo, produto, critérios, preparação, etapas, funções, tempo e foco linguístico |
+| Stage-by-stage procedure | Conteúdo prioritário do guia externo: orientação do slide ativo, exibida imediatamente após o cabeçalho compacto — ver §8.2 |
+| Language focus | Functional language, vocabulário e foco estrutural; visão geral recolhida ou contexto do slide correspondente |
+| Anticipated difficulties | Dificuldades plausíveis e apoio relacionado; junto ao slide em que são operacionalmente relevantes |
+| Scaffolding and challenge | Apoio e extensão condicionais; junto ao slide ou atividade correspondente |
+| Feedback and next-step decision | Decisão baseada em evidência; junto ao estágio de feedback e continuidade |
+| Evidence to record | Evidência necessária ao ciclo e à avaliação; junto ao ponto de observação ou registro correspondente |
+| Pre/post-class connection | Relação funcional com pre/post-class; no overview somente quando necessária à preparação |
+| Answer key / possible answers | Gabarito e respostas aceitáveis junto ao slide ou à atividade correspondente, não no preâmbulo geral |
 
-#### 8.2 O procedimento, estágio a estágio
+### 8.2 O procedimento, estágio a estágio
 
 Para cada etapa prevista, incluir somente os campos aplicáveis à condução e à evidência daquela etapa. Campos condicionais não aparecem vazios, com “N/A” nem preenchidos por repetição do conteúdo projetado:
 
 | Campo | Conteúdo |
-|---|---|
-| **Goal** | A finalidade da etapa, começando por infinitivo |
-| **Interaction** | Quem fala com quem, e em que arranjo |
-| **Steps** | A sequência de condução |
-| **Exact prompt** | Formulação literal somente quando o professor precisa dizer algo que não está integralmente projetado ou quando alterações na formulação mudariam a tarefa, a evidência esperada ou o papel do professor. Se o prompt operacional completo já estiver na tela, não o repetir no guia. |
-| **Expected / possible answers** | A resposta esperada e as alternativas aceitáveis |
-| **Conditional support** | O apoio a oferecer **se** a dificuldade prevista ocorrer |
-| **Challenge** | O que propor se o aluno resolver antes do previsto |
-| **Monitoring** | O que observar enquanto o aluno trabalha |
-| **Evidence to record** | O que desta etapa entra no registro do ciclo |
-| **Transition** | O critério para avançar, e como a passagem é feita |
+| :-: | :-: |
+| Goal | A finalidade da etapa, começando por infinitivo |
+| Interaction | Quem fala com quem, e em que arranjo |
+| Steps | A sequência de condução |
+| Exact prompt | Formulação literal somente quando o professor precisa dizer algo que não está integralmente projetado ou quando alterações na formulação mudariam a tarefa, a evidência esperada ou o papel do professor. Se o prompt operacional completo já estiver na tela, não o repetir no guia. |
+| Expected / possible answers | A resposta esperada e as alternativas aceitáveis |
+| Conditional support | O apoio a oferecer se a dificuldade prevista ocorrer |
+| Challenge | O que propor se o aluno resolver antes do previsto |
+| Monitoring | O que observar enquanto o aluno trabalha |
+| Evidence to record | O que desta etapa entra no registro do ciclo |
+| Transition | O critério para avançar, e como a passagem é feita |
 
-**Conditional support e Challenge são um par.** Um guia que só prevê a dificuldade deixa o professor sem resposta quando o aluno vai bem — e é aí que a aula perde a etapa mais produtiva.
+Conditional support e Challenge são um par. Um guia que só prevê a dificuldade deixa o professor sem resposta quando o aluno vai bem — e é aí que a aula perde a etapa mais produtiva.
 
-#### 8.3 Anatomia da nota local
+### 8.3 Anatomia da nota local
 
-Toda nota traz, na ordem, e **em inglês**:
+Toda nota traz, na ordem, e em inglês:
 
 | Campo | Conteúdo |
-|---|---|
-| **Goal** | A finalidade da atividade, começando por infinitivo |
-| **Run it** | A sequência de condução |
-| **Expected** | A resposta ou as respostas possíveis |
-| **If needed** | Apoio condicional |
-| **Watch for** | A evidência a observar |
-| **Move on when** | O critério para avançar |
-| **Optional** | Atividade complementar da mesma etapa, quando houver |
+| :-: | :-: |
+| Goal | A finalidade da atividade, começando por infinitivo |
+| Run it | A sequência de condução |
+| Expected | A resposta ou as respostas possíveis |
+| If needed | Apoio condicional |
+| Watch for | A evidência a observar |
+| Move on when | O critério para avançar |
+| Optional | Atividade complementar da mesma etapa, quando houver |
 
 Rótulos terminam em dois-pontos. O título da nota não leva ponto final. Grafia americana; decimal com ponto.
 
-#### 8.4 O que a nota não carrega
+### 8.4 O que a nota não carrega
 
-- Justificativa editorial ou explicação de decisão de desenho — isso vive no registro de revisão.
-- Histórico de feedback ou comentário sobre revisões.
-- Frases prontas de transição; roteiro extenso de fala do professor.
-- Instrução para ler integralmente o material em voz alta.
-- Teoria que não ajuda na condução.
-- Conclusão diagnóstica antecipada.
-- Conteúdo de **outra** atividade.
+Justificativa editorial ou explicação de decisão de desenho — isso vive no registro de revisão.
 
-#### 8.5 Três regras que evitam erro de conteúdo
+Histórico de feedback ou comentário sobre revisões.
 
-- **Antes de escrever a nota, ler o gabarito que a atividade já tem.** Nota que contradiz o próprio gabarito é o defeito mais comum e o menos visível.
-- A atividade complementar indicada na nota **é opcional**, roda só se houver tempo ou necessidade observada, e **nunca substitui** a função essencial que ela apenas complementa.
-- **A nota conduz a atividade que está na sua unidade.** Quando uma atividade muda de lugar, a orientação dela muda junto.
+Frases prontas de transição; roteiro extenso de fala do professor.
 
-#### 8.6 Comentário de atividade ≠ nota do professor
+Instrução para ler integralmente o material em voz alta.
 
-O comentário que o aluno lê depois de responder é **feedback da atividade**: fica na superfície do aluno, em inglês, e não migra para o material do professor.
+Teoria que não ajuda na condução.
 
-### 9. Tom e linguagem
+Conclusão diagnóstica antecipada.
+
+Conteúdo de outra atividade.
+
+### 8.5 Três regras que evitam erro de conteúdo
+
+Antes de escrever a nota, ler o gabarito que a atividade já tem. Nota que contradiz o próprio gabarito é o defeito mais comum e o menos visível.
+
+A atividade complementar indicada na nota é opcional, roda só se houver tempo ou necessidade observada, e nunca substitui a função essencial que ela apenas complementa.
+
+A nota conduz a atividade que está na sua unidade. Quando uma atividade muda de lugar, a orientação dela muda junto.
+
+### 8.6 Comentário de atividade ≠ nota do professor
+
+O comentário que o aluno lê depois de responder é feedback da atividade: fica na superfície do aluno, em inglês, e não migra para o material do professor.
+
+## 9. Tom e linguagem
 
 | Para o aluno | Para o professor |
-|---|---|
+| :-: | :-: |
 | Adulto, direto, claro, respeitoso, orientado à ação | Operacional, claro, escaneável |
 | Desafiador sem linguagem ameaçadora | Centrado em objetivo, condução, apoio e evidência |
 | Apoio disponível sem infantilização | Distingue apoio condicional de procedimento obrigatório |
 | Cenários realistas, declarados fictícios quando inventados | Aceita resposta plausível e registra evidência |
 | Sem explicar a engenharia da atividade, sem antecipar respostas, sem hipótese sobre o desempenho | Sem frase de transição decorativa, sem justificativa editorial, sem metalinguagem |
 
-#### 9.1 A regra da instrução
+### 9.1 A regra da instrução
 
-**Toda instrução indica a ação, o objeto da ação e o resultado esperado.**
+Toda instrução indica a ação, o objeto da ação e o resultado esperado.
 
 | Adequado | Evitar |
-|---|---|
+| :-: | :-: |
 | Listen and identify why the speakers are meeting. | This listening prepares you for the type of interaction you will work with in class. |
 | Match each role to its responsibility. | The same words, a different case. |
 | Choose the meaning that best fits each expression. | You will meet that use in class. |
 
-#### 9.2 Tom probabilístico
+### 9.2 Tom probabilístico
 
 Quando o efeito não é universal, a formulação é condicional. Impacto verbal nunca substitui precisão pedagógica.
 
 | Evitar | Preferir |
-|---|---|
+| :-: | :-: |
 | Não ajude. Deixe o silêncio existir. | Convide a tentativa; ofereça apoio focalizado se a dificuldade impedir a continuidade. |
 | Use uma holding phrase toda vez. | Use a expressão quando ela ajudar a organizar a resposta ou manter o turno. |
 | Você não precisa de mais palavras. | Estas expressões podem ajudar nesta parte da tarefa. |
 | Este erro causa X. | Esta formulação pode levar o interlocutor a interpretar X. |
 
-#### 9.3 O verbo promete comportamento
+### 9.3 O verbo promete comportamento
 
-O rótulo de um controle descreve exatamente o que ele faz. Um controle que apenas **revela** comentários não pode prometer que **corrige** — *“**veja os comentários**”*, nunca *“**corrija e veja os* *comentários**”*. O aluno lê o verbo como contrato.
+O rótulo de um controle descreve exatamente o que ele faz. Um controle que apenas revela comentários não pode prometer que corrige — “veja os comentários”, nunca “corrija e veja os comentários”. O aluno lê o verbo como contrato.
 
-#### 9.4 Não explicar a atividade, e não tranquilizar de antemão
+### 9.4 Não explicar a atividade, e não tranquilizar de antemão
 
 Duas formas do mesmo excesso. A primeira é conhecida: o material não explica ao aluno por que a atividade foi desenhada assim. A segunda é mais sutil e passa por gentileza.
 
 | Evitar | Preferir |
-|---|---|
-| *Your own reading, today. There is no right answer here.* + a pergunta | Só a pergunta |
-| *Este exercício vai preparar você para o que virá na aula.* | A instrução da tarefa |
-| *Não se preocupe se achar difícil.* | Silêncio — ou apoio real, se a dificuldade for prevista |
+| :-: | :-: |
+| Your own reading, today. There is no right answer here. + a pergunta | Só a pergunta |
+| Este exercício vai preparar você para o que virá na aula. | A instrução da tarefa |
+| Não se preocupe se achar difícil. | Silêncio — ou apoio real, se a dificuldade for prevista |
 
-**Tranquilizar antes de a dificuldade existir anuncia que ela existe.** Uma pergunta aberta *é* aberta; dizer que não há resposta certa é comentar o desenho da atividade, não conduzi-la. Se a instrução precisa de uma frase de conforto para não intimidar, o problema está na instrução.
+Tranquilizar antes de a dificuldade existir anuncia que ela existe. Uma pergunta aberta é aberta; dizer que não há resposta certa é comentar o desenho da atividade, não conduzi-la. Se a instrução precisa de uma frase de conforto para não intimidar, o problema está na instrução.
 
-E vale a formulação geral, que cobre os dois casos: **nada de linguagem metadidática, defensiva ou** **editorial dirigida ao aluno.**
+E vale a formulação geral, que cobre os dois casos: nada de linguagem metadidática, defensiva ou editorial dirigida ao aluno.
 
-#### 9.5 A camada muda o estatuto da mesma frase
+### 9.5 A camada muda o estatuto da mesma frase
 
-Este é o teste que resolve a maioria das dúvidas de tom. *“**There is no right answer here**”* é imprópria na superfície do aluno — comenta a atividade — e **apropriada** na nota do professor, onde é orientação de condução: diz a quem conduz que não deve corrigir a resposta.
+Este é o teste que resolve a maioria das dúvidas de tom. “There is no right answer here” é imprópria na superfície do aluno — comenta a atividade — e apropriada na nota do professor, onde é orientação de condução: diz a quem conduz que não deve corrigir a resposta.
 
-**A mesma frase não tem um único estatuto.** Antes de cortar uma formulação por tom, verificar em que camada ela está:
+A mesma frase não tem um único estatuto. Antes de cortar uma formulação por tom, verificar em que camada ela está:
 
 | A frase está em… | Ela é… |
-|---|---|
+| :-: | :-: |
 | Instrução ao aluno | Comando: ação, objeto, resultado. Nada além |
 | Comentário que o aluno lê depois de responder | Feedback da atividade — explica a resposta, não o desenho |
 | Nota do professor | Orientação de condução — pode dizer o que não fazer, o que aceitar, onde não corrigir |
@@ -574,47 +648,64 @@ Este é o teste que resolve a maioria das dúvidas de tom. *“**There is no rig
 
 Uma varredura de tom que não distingue camadas corta orientação legítima do professor junto com metalinguagem exposta ao aluno.
 
-#### 9.6 Variedade linguística — American English
+### 9.6 Variedade linguística — American English
 
-**American English é o padrão transversal de produção.** A regra vale para todo conteúdo produzido ou editado: Student Material, prompts, subprompts, feedback, language support, Teacher’s Notes, Teacher’s Guide, answer keys, possible answers, transcrições, scripts de áudio e rótulos pedagógicos.
+American English é o padrão transversal de produção. A regra vale para todo conteúdo produzido ou editado: Student Material, prompts, subprompts, feedback, language support, Teacher’s Notes, Teacher’s Guide, answer keys, possible answers, transcrições, scripts de áudio e rótulos pedagógicos.
 
-- Aplicar ortografia, vocabulário, pontuação, números e datas segundo convenções americanas.
-- Usar ponto decimal em conteúdo em inglês.
-- Manter coerência interna — por exemplo: *organize, behavior, center, color* e *practice* como substantivo e verbo — salvo quando outra forma for objeto explícito de análise.
-- Fontes externas autênticas preservam sua variedade original. Não alterar citações, transcrições fiéis nem a fala da fonte para forçar o padrão americano.
-- Quando outra variedade for pedagogicamente relevante, identificá-la como variação do input, não como padrão de produção do curso.
-- Não misturar convenções americanas e britânicas sem objetivo pedagógico declarado.
+Aplicar ortografia, vocabulário, pontuação, números e datas segundo convenções americanas.
 
-### 10. Fontes, factualidade e privacidade
+Usar ponto decimal em conteúdo em inglês.
 
-- Preferir fonte autêntica quando ela agregar valor real à operação da aula.
-- Verificar existência, autoria, data, trecho e estatuto documental. **Verificar existência não é** **verificar a natureza do conteúdo**: se é conversa ou montagem, entrevista ou leitura, é onde a inferência se disfarça de fato.
-- Cada resposta-modelo é sustentada **pelo material apresentado ao aluno**. Nenhum gabarito afirma mais do que a evidência disponível.
-- Distinguir fato, inferência e simulação — e marcar cada um.
-- Não confundir anúncio, proposta, confirmação, entrada em vigor e resultado posterior.
-- **Não chamar de real ou autêntico** material escrito para a aula. Usar *sample*, *adapted* ou *fictional* conforme a origem.
-- Material real é **anonimizado**: nomes, empresas, valores e dados sensíveis são removidos ou substituídos. Casos compostos ou fictícios são alternativas válidas.
-- Áudio principal usa arquivo estável. Síntese variável serve apenas como recurso declarado de contingência, nunca como material final.
-- Registrar fonte, adaptação, licença ou autoria interna na camada apropriada.
+Manter coerência interna — por exemplo: organize, behavior, center, color e practice como substantivo e verbo — salvo quando outra forma for objeto explícito de análise.
 
-**Se uma afirmação precisa de nota de rodapé para não enganar, o problema é a afirmação.**
+Fontes externas autênticas preservam sua variedade original. Não alterar citações, transcrições fiéis nem a fala da fonte para forçar o padrão americano.
 
-### 11. Registro e persistência
+Quando outra variedade for pedagogicamente relevante, identificá-la como variação do input, não como padrão de produção do curso.
 
-- Informar quando um registro pode desaparecer.
-- **Só prometer salvamento quando houver integração confirmada.** Enquanto não houver, o que precisa persistir tem de ser transcrito, e o material diz isso.
-- Autoavaliação registra percepção; não comprova aprendizagem, e é tratada em separado dela.
-- A governança aceita somente dois modelos: avaliação formal com teste ou acompanhamento docente. Tarefa integrada, simulação, apresentação, portfólio, demonstração de desempenho e produção final são instrumentos possíveis do acompanhamento docente, não modelos adicionais.
-- Teste formal e instrumento de consolidação complementam as evidências; nenhum deles substitui o acompanhamento nem determina sozinho a progressão.
+Não misturar convenções americanas e britânicas sem objetivo pedagógico declarado.
 
-### 12. Gate de aprovação
+## 10. Fontes, factualidade e privacidade
 
-**“****Aplicado****”** **só pode ser declarado após verificação literal no material final.** Falha parcial aparece como parcial; item não verificado aparece como pendente. **Quem produz não pode** **certificar a própria intenção como resultado.**
+Preferir fonte autêntica quando ela agregar valor real à operação da aula.
 
-#### 12.1 Camadas de validação
+Verificar existência, autoria, data, trecho e estatuto documental. Verificar existência não é verificar a natureza do conteúdo: se é conversa ou montagem, entrevista ou leitura, é onde a inferência se disfarça de fato.
+
+Cada resposta-modelo é sustentada pelo material apresentado ao aluno. Nenhum gabarito afirma mais do que a evidência disponível.
+
+Distinguir fato, inferência e simulação — e marcar cada um.
+
+Não confundir anúncio, proposta, confirmação, entrada em vigor e resultado posterior.
+
+Não chamar de real ou autêntico material escrito para a aula. Usar sample, adapted ou fictional conforme a origem.
+
+Material real é anonimizado: nomes, empresas, valores e dados sensíveis são removidos ou substituídos. Casos compostos ou fictícios são alternativas válidas.
+
+Áudio principal usa arquivo estável. Síntese variável serve apenas como recurso declarado de contingência, nunca como material final.
+
+Registrar fonte, adaptação, licença ou autoria interna na camada apropriada.
+
+Se uma afirmação precisa de nota de rodapé para não enganar, o problema é a afirmação.
+
+## 11. Registro e persistência
+
+Informar quando um registro pode desaparecer.
+
+Só prometer salvamento quando houver integração confirmada. Enquanto não houver, o que precisa persistir tem de ser transcrito, e o material diz isso.
+
+Autoavaliação registra percepção; não comprova aprendizagem, e é tratada em separado dela.
+
+A governança aceita somente dois modelos: avaliação formal com teste ou acompanhamento docente. Tarefa integrada, simulação, apresentação, portfólio, demonstração de desempenho e produção final são instrumentos possíveis do acompanhamento docente, não modelos adicionais.
+
+Teste formal e instrumento de consolidação complementam as evidências; nenhum deles substitui o acompanhamento nem determina sozinho a progressão.
+
+## 12. Gate de aprovação
+
+“Aplicado” só pode ser declarado após verificação literal no material final. Falha parcial aparece como parcial; item não verificado aparece como pendente. Quem produz não pode certificar a própria intenção como resultado.
+
+### 12.1 Camadas de validação
 
 | Camada | Checagens mínimas |
-|---|---|
+| :-: | :-: |
 | Entrada e perfil | Campos completos; hipóteses marcadas; restrições respeitadas |
 | Framework | As oito etapas normativas estão presentes na ordem definida; funções, produto e fronteira preservados; distribuição em slides coerente |
 | Avaliação | Um dos dois modelos está registrado; teste formal ou eventual instrumento está corretamente subordinado ao acompanhamento e à validação final do professor |
@@ -623,27 +714,89 @@ Uma varredura de tom que não distingue camadas corta orientação legítima do 
 | Linguagem | Correção, naturalidade, adequação ao nível, coerência entre modelo e gabarito |
 | Variedade linguística | American English consistente em todo conteúdo produzido; variedade original preservada em fontes autênticas |
 | Factual | Fonte, data, evidência, temporalidade, inferências marcadas |
-| Coerência interna | Instrução, nota do professor, gabarito e papel do professor exigem **as mesmas ações** |
+| Coerência interna | Instrução, nota do professor, gabarito e papel do professor exigem as mesmas ações |
 | Tempo | O essencial soma 55 minutos e as decomposições fecham |
 | Camadas | Pre-class, in-class, post-class e syllabus descrevem a mesma aula |
 | Resíduo | Nenhum fragmento de versão anterior sobrevive em qualquer parte do material |
 
-#### 12.2 Quando parar em vez de entregar
+### 12.2 Quando parar em vez de entregar
 
-- O framework é incompatível com o objetivo e não houve autorização para mudá-lo.
-- Falta dado que altera materialmente a personalização ou a avaliação.
-- Uma fonte obrigatória está inacessível ou não sustenta o gabarito.
-- Há conflito entre normas sem precedência clara. **Declarar o conflito; nunca escolher em** **silêncio.**
-- Não é possível verificar o material produzido.
+O framework é incompatível com o objetivo e não houve autorização para mudá-lo.
 
-### 13. Checklist bloqueante de entrega
+Falta dado que altera materialmente a personalização ou a avaliação.
+
+Uma fonte obrigatória está inacessível ou não sustenta o gabarito.
+
+Há conflito entre normas sem precedência clara. Declarar o conflito; nunca escolher em silêncio.
+
+Não é possível verificar o material produzido.
+
+## 13. Checklist bloqueante de entrega
 
 Não entregar se alguma resposta for “não”.
 
-☐ A entrega final inclui uma URL do professor e uma URL do aluno? ☐ A URL do professor contém a visão docente e a prévia da visão do aluno? ☐ A URL do aluno contém exclusivamente conteúdo discente, sem conteúdo docente no HTML, payload, estado ou recursos? ☐ O pre-class tem exatamente seis atividades reais, somando 15–20 minutos? ☐ O pre-class preserva o núcleo protegido, e o in-class roda sem ele? ☐ Nenhuma minutagem por atividade aparece na superfície do aluno? ☐ A metalinguagem de produção foi removida de todas as superfícies? ☐ A aula tem Teacher’s Guide completo, em inglês, com os catorze campos de §8.1? ☐ O procedimento cobre as oito etapas normativas, cada uma com os dez campos de §8.2? ☐ Cada etapa declara apoio condicional e desafio — e não só o apoio? ☐ As notas locais acompanham as atividades sem substituir o guia? ☐ A superfície do aluno está livre de frase que explique o desenho da atividade ou tranquilize antes da dificuldade? ☐ As oito etapas e suas funções estão presentes na ordem definida, sem confundir etapa com slide? ☐ Um dos dois modelos de avaliação está registrado, sem tratar teste, instrumento de consolidação ou autoavaliação como decisão isolada? ☐ O percurso essencial soma 55 minutos, com 5 de margem? ☐ Atividades condicionais, de extensão e opcionais começam recolhidas, sem unidade própria? ☐ Concluir a aula independe de checklist, de percurso completo e de respostas preenchidas? ☐ O que limpa o progresso de uma aula preserva feedback permanente e estado do ciclo? ☐ O feedback permanente está junto do acesso de cada aula, e não dentro do material da aula? ☐ O estado pedagógico do ciclo está em área exclusiva do professor? ☐ O post-class disponibiliza os cinco componentes funcionais, sem metadado novo e sem qualquer obrigatoriedade? ☐ Todo recurso externo foi aberto e verificado na fonte original? ☐ Pre-class, in-class, post-class e syllabus continuam alinhados pelo registro único? ☐ A correção apresentada ao aluno, o answer key e as orientações do Teacher’s Guide são coerentes entre si e pertencem à mesma versão da atividade? ☐ Nenhum campo foi preenchido com conteúdo inventado? ☐ Cada afirmação de “aplicado” tem evidência localizável no material final?
+☐ A entrega final inclui uma URL do professor e uma URL do aluno? ☐ A URL do professor contém a visão docente e a prévia da visão do aluno? ☐ A URL do aluno contém exclusivamente conteúdo discente, sem conteúdo docente no HTML, payload, estado ou recursos? ☐ O pre-class tem exatamente seis atividades reais, somando 15–20 minutos? ☐ O pre-class preserva o núcleo protegido, e o in-class roda sem ele? ☐ Nenhuma minutagem por atividade aparece na superfície do aluno? ☐ A metalinguagem de produção foi removida de todas as superfícies? ☐ A aula tem Teacher’s Guide completo em inglês, organizado conforme §8.1: cabeçalho compacto, orientação do slide imediatamente acessível, Lesson overview recolhido e campos contextuais junto à atividade? ☐ O procedimento cobre as oito etapas normativas, cada uma com os dez campos de §8.2? ☐ Cada etapa declara apoio condicional e desafio — e não só o apoio? ☐ As notas locais acompanham as atividades sem substituir o guia? ☐ A superfície do aluno está livre de frase que explique o desenho da atividade ou tranquilize antes da dificuldade? ☐ As oito etapas e suas funções estão presentes na ordem definida, sem confundir etapa com slide? ☐ Um dos dois modelos de avaliação está registrado, sem tratar teste, instrumento de consolidação ou autoavaliação como decisão isolada? ☐ O percurso essencial soma 55 minutos, com 5 de margem? ☐ Atividades condicionais, de extensão e opcionais começam recolhidas, sem unidade própria? ☐ Concluir a aula independe de checklist, de percurso completo e de respostas preenchidas? ☐ O que limpa o progresso de uma aula preserva feedback permanente e estado do ciclo? ☐ O feedback permanente está junto do acesso de cada aula, e não dentro do material da aula? ☐ O estado pedagógico do ciclo está em área exclusiva do professor? ☐ O post-class disponibiliza os cinco componentes funcionais, sem metadado novo e sem qualquer obrigatoriedade? ☐ Todo recurso externo foi aberto e verificado na fonte original? ☐ Pre-class, in-class, post-class e syllabus continuam alinhados pelo registro único? ☐ A correção apresentada ao aluno, o answer key e as orientações do Teacher’s Guide são coerentes entre si e pertencem à mesma versão da atividade? ☐ Nenhum campo foi preenchido com conteúdo inventado? ☐ Cada afirmação de “aplicado” tem evidência localizável no material final?
 
-### Documentos relacionados
+## 14. Atualização normativa de produção — 02/09/2026
 
-- **02 · Syllabus do Ciclo** — a linha que esta aula realiza.
-- **03 · Estrutura dos Frameworks** — as funções pedagógicas, a progressão e as etapas previstas.
-- **05 · Ciclo de Evolução** — o que o feedback desta aula alimenta.
+### 14.1 Lesson overview do Teacher’s Guide externo
+
+Cada aula possui exatamente um Lesson overview. Ele aparece somente no primeiro slide do Teacher’s Guide externo, começa recolhido, não se abre automaticamente, não reaparece nem é recriado nos demais slides e preserva o estado escolhido pelo professor ao sair e voltar ao primeiro slide. Fora do primeiro slide, não deixa margem, borda, título nem espaço reservado.
+
+No primeiro slide, entre o cabeçalho compacto e a orientação operacional, admite-se somente o controle recolhido do Lesson overview. Nos demais slides, a orientação operacional vem imediatamente após o cabeçalho. Não existe seção independente conteúdo geral residual não autorizado nem bloco equivalente com outro nome.
+
+O overview contém somente cinco seções: Lesson at a glance; Outcome and success; Before the lesson; Essential pathway; Language and connections. Lesson at a glance situa aula, ciclo, framework, nível, modalidade e duração. Outcome and success sintetiza objetivo, produto, critérios observáveis e contribuição indispensável ao bloco. Before the lesson reúne apenas ações realmente anteriores ao início. Essential pathway lista as oito etapas, suas minutagens, o total essencial e a margem operacional. Language and connections sintetiza funções centrais, poucas formas representativas, foco indispensável de gramática ou pronúncia e conexões essenciais com Pre-class e Post-class.
+
+Não pertencem ao overview: justificativas extensas, explicações normativas, instruções de slide, inventário linguístico completo, Answer Key, Possible Answers, transcript, apoio ou challenge específico, listas completas de evidência e decisões dependentes da produção. A concisão é avaliada por função, ausência de duplicação e consulta rápida; referências aproximadas de extensão são editoriais, nunca limiares bloqueantes.
+
+Outcome and success deriva dos campos canônicos e não cria fonte editável paralela. Informações dependentes de evidência futura não aparecem como conclusão: devem ser registradas como Point to confirm, ou equivalente didático, e encaminhadas ao feedback, registro pós-aula, estado pedagógico, checkpoint ou slide final pertinente.
+
+Conteúdo sem âncora não autoriza inventar etapa ou slide. Cada segmento recebe destino explícito, síntese em campo canônico, decisão de duplicidade ou não aplicabilidade justificada. A redistribuição só termina quando se comprova que o conteúdo saiu do local incorreto e chegou, sem perda ou duplicação, ao ponto de uso.
+
+### 14.2 Answer Key do Pre-class
+
+O Answer Key do Pre-class é fonte de consulta da atividade assíncrona. Pode conter respostas, respostas possíveis registráveis, explicação proporcional, rationale de distratores e referência ao trecho que sustenta a resposta. Não contém comando oral, condução docente, repetição obrigatória no In-class, justificativa de produção, promessa de reapresentação em slide ou instrução para o professor solicitar novamente a resposta. A conexão com o In-class pertence à preparação, ao overview quando indispensável ou ao slide em que será operacionalizada.
+
+### 14.3 Closing sem checklist obrigatório
+
+Remover dos closings a instrução O fechamento pode apoiar retrospectiva, conversa final, registro do que apareceu, autoavaliação e referência docente, sem transformar o resumo em checklist obrigatório ou presumir que todos os itens devem ser marcados. A formulação varia conforme a operação e pode ser omitida quando a finalidade estiver clara. Preservar confiança percebida, reflexão, ocasião de uso futuro e distinção entre percepção e desempenho.
+
+### 14.4 Confirmação da produção escrita no Post-class
+
+Toda produção escrita aberta do Post-class com campo editável apresenta botão explícito Confirm response. O botão fica junto ao campo e desabilitado enquanto vazio; registra e persiste texto e estado, sem corrigir, avaliar, pontuar, comparar com modelo, impedir edição posterior ou transformar o Post-class em avaliação.
+
+Após confirmação, exibir Response confirmed. sem depender somente de cor. Edição posterior muda o estado para Changes not yet confirmed.; nova confirmação registra a versão atual; reset remove texto e confirmação; recarregamento restaura ambos. As chaves são separadas por aluno, aula e atividade. A visão do professor é somente consulta e não confirma pelo aluno. A regra não se aplica a leitura, listening, escolha objetiva, atividade sem escrita ou gravação oral.
+
+Documentos relacionados
+
+02 · Syllabus do Ciclo — a linha que esta aula realiza.
+
+03 · Estrutura dos Frameworks — as funções pedagógicas, a progressão e as etapas previstas.
+
+05 · Ciclo de Evolução — o que o feedback desta aula alimenta.
+
+  
+
+## 12. Produção e scaffolding para A0/Pre-A1
+
+Atualização normativa · 03 de setembro de 2026
+
+O planejamento recebe do A04 a faixa e a calibração linguístico-comunicativa. Para A0/Pre-A1, linguagem, apoio, tarefa e produção esperada devem permitir ação comunicativa real sem presumir repertório A1. Não miniaturizar mecanicamente uma tarefa avançada e chamá-la de Pre-A1.
+
+### 12.1 Trabalho autônomo
+
+Pre-class e Post-class devem fornecer contexto completo, instrução operacional acessível e apoio funcional em português conforme o regime específico do A03. O inglês original permanece disponível. O apoio pode abranger instruções e conteúdo necessário quando esse inglês não for a competência-alvo, mas não pode revelar resposta, eliminar contraste nem substituir a evidência.
+
+### 12.2 In-class
+
+Preservar o contato com o inglês e prever mediação oral contingente. O apoio escrito em português pode aparecer seletivamente e de forma visualmente secundária quando necessário para orientar a tarefa, combinado a modelagem, exemplos, repetição e apoio visual; não deve virar tradução integral automática nem roteiro completo para reprodução.
+
+### 12.3 Proveniência e assimetria
+
+Calibrar compreensão e produção separadamente quando o perfil for assimétrico.
+
+Remeter ao A04 para justificar faixa, atividade, competência e demanda linguístico-comunicativa.
+
+Identificar extensões, durações, densidade, velocidade e quantidades como ALU-CAL.
+
+Não presumir que português, produção curta ou áudio lento determinem o nível.

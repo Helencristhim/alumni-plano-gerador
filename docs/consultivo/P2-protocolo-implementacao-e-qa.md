@@ -1,201 +1,229 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P2_Protocolo_de_Implementacao_e_QA.docx`
-> Drive ID: `1WHBj3B9l4z-WI3HDzo0fvHsFpm1obH4b`
-> Modificado no Drive: 2026-08-25
-> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P2-protocolo-implementacao-e-qa.md`
-> A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
+> Drive ID: `10XRJok65pymkCUnyRQtGqE8psaMY-9U6`
+> Modificado no Drive: 2026-09-05
+> Reimportar: conector do Drive (`read_file_content` com o fileId acima). Os BYTES do .docx nao
+> chegam integros por este caminho — em 08/09/2026 o round-trip corrompeu o zip em 2 de 3
+> tentativas (CRC invalido) —, entao a importacao usa o texto renderizado pelo conector, e nao
+> o `docx_to_md.py`.
+> A fonte e o .docx no Drive. Divergencia entre este arquivo e o Drive se resolve reimportando,
+> nunca editando o .md.
 
-**P2 · PROTOCOLO DE IMPLEMENTAÇÃO E QA**
+## P2 · PROTOCOLO DE IMPLEMENTAÇÃO E QA
 
-**Como produzir e como provar — Private Class Alumni Black**
+Como produzir e como provar — Private Class Alumni Black
 
-**Série P — plataforma.** Companheiro do **P1**, que especifica o produto, e do **P3**, que reúne a matriz de conformidade e especifica os requisitos da suíte executável. Este especifica o **processo**: como mexer no arquivo sem destruí-lo, e como provar que a validação valida.
+**Série P — plataforma.** Companheiro do P1, que especifica o produto, e do P3, que reúne a matriz de conformidade e especifica os requisitos da suíte executável. Este especifica o processo: como mexer no arquivo sem destruí-lo, e como provar que a validação valida.
 
-**Para quem é.** Para quem **implementa** e para quem **escreve ou mantém as checagens**. O gerador que produz a aula não precisa dele para decidir o que entregar — precisa dele para não quebrar o que já está entregue. Manter isto separado do P1 é deliberado: misturado, faz o gerador priorizar engenharia interna em vez da entrega.
+**Para quem é.** Para quem implementa e para quem escreve ou mantém as checagens. O gerador que produz a aula não precisa dele para decidir o que entregar — precisa dele para não quebrar o que já está entregue. Manter isto separado do P1 é deliberado: misturado, faz o gerador priorizar engenharia interna em vez da entrega.
 
-**Origem.** Cada regra abaixo custou pelo menos uma rodada de produção real. Elas vêm **com o motivo**: regra sem motivo é otimizada para fora pelo próximo editor.
+**Origem.** Cada regra abaixo custou pelo menos uma rodada de produção real. Elas vêm com o motivo: regra sem motivo é otimizada para fora pelo próximo editor.
 
-**1. Antes de tocar no arquivo**
+### 1. Antes de tocar no arquivo
 
-1.  **Ao modificar um arquivo existente, faça backup antes da primeira alteração. Numa geração nova, registre a versão inicial produzida antes da primeira rodada de correções.** Tirar o backup depois da primeira edição já produziu backup que continha o defeito — e o script de refazer inseriu um bloco duplicado.
+1. Ao modificar um arquivo existente, faça backup antes da primeira alteração. Numa geração nova, registre a versão inicial produzida antes da primeira rodada de correções. Tirar o backup depois da primeira edição já produziu backup que continha o defeito — e o script de refazer inseriu um bloco duplicado.
+2. Nunca regravar HTML lido com leitura que assume a codificação do sistema. Ler UTF-8 sem BOM como ANSI e regravar grava o mojibake como texto e corrompe o arquivo inteiro em silêncio. Leia sempre declarando UTF-8. É reversível — reencodar e decodificar desfaz o passo —, e a prova é o diff contra o backup.
+3. Recompor o arquivo UMA vez só, conferindo a estrutura antes de gravar. Duas recomposições cortam em índices da versão antiga e destroem o arquivo.
 
-2.  **Nunca regravar HTML lido com leitura que assume a codificação do sistema.** Ler UTF-8 sem BOM como ANSI e regravar grava o mojibake **como texto** e corrompe o arquivo inteiro em silêncio. Leia sempre declarando UTF-8. *É reversível — reencodar e decodificar desfaz o passo —, e a prova é o diff contra o backup.*
+**3.1 Produção final em dois builds.** Gerar o build do professor e o build do aluno a partir da mesma versão pedagógica, com empacotamento separado. O professor recebe a visão docente e a prévia discente; o aluno recebe somente componentes, dados, estado e recursos discentes.
 
-3.  **Recompor o arquivo UMA vez só**, conferindo a estrutura antes de gravar. Duas recomposições cortam em índices da versão antiga e destroem o arquivo.
+**3.2 Isolamento verificável.** Inspecionar o HTML, JavaScript, payload, armazenamento, comentários, source maps e requisições do build do aluno. A ocorrência de Teacher's Guide, gabarito reservado, hipótese pedagógica, registro interno, controle administrativo ou rota de elevação de papel reprova a publicação. Na visão docente, renderizar respostas registradas em componentes estáticos equivalentes, sem manter botões, campos, selects, checkboxes, radios ou cards arrastáveis como controles desabilitados. Preservar visualmente resposta marcada, ausência de resposta e estado de correção pertinente, sem permitir alteração.
 
-3.1 Produção final em dois builds. Gerar o build do professor e o build do aluno a partir da mesma versão pedagógica, com empacotamento separado. O professor recebe a visão docente e a prévia discente; o aluno recebe somente componentes, dados, estado e recursos discentes.
+**3.3 Publicação.** Validar duas URLs oficiais distintas. Parâmetro de query, hash, localStorage, alteração de atributo ou chamada direta não pode transformar a URL do aluno em visão docente.
 
-3.2 Isolamento verificável. Inspecionar o HTML, JavaScript, payload, armazenamento, comentários, source maps e requisições do build do aluno. A ocorrência de Teacher’s Guide, gabarito reservado, hipótese pedagógica, registro interno, controle administrativo ou rota de elevação de papel reprova a publicação. Na visão docente, renderizar respostas registradas em componentes estáticos equivalentes, sem manter botões, campos, selects, checkboxes, radios ou cards arrastáveis como controles desabilitados. Preservar visualmente resposta marcada, ausência de resposta e estado de correção pertinente, sem permitir alteração.
+### 2. Ao mudar qualquer coisa
 
-3.3 Publicação. Validar duas URLs oficiais distintas. Parâmetro de query, hash, localStorage, alteração de atributo ou chamada direta não pode transformar a URL do aluno em visão docente.
-
-**2. Ao mudar qualquer coisa**
-
-4.  **Corrigir N ocorrências não é varrer.** Varra por padrão, sobre o arquivo inteiro, e **leia cada ocorrência no contexto** — nem toda coincidência é resíduo.
-
-5.  **Rótulo se renomeia; identificador, não.** Identificadores governam armazenamento e roteamento: trocá-los junto com o texto quebra a separação por papel em silêncio.
-
-6.  **Resíduo de rótulo antigo se procura NA INTERFACE, e com caixa** — comentário de código não é interface, e comparação sem caixa acusa o inocente.
-
-7.  **Ao trocar a cor de um componente, varra o CSS inteiro** por outras regras que alcancem o mesmo seletor, e confira a cor **computada** no navegador. *"A cor existe no sistema" não é "a cor certa chegou ao elemento"* — regra antiga que sobrevive mais abaixo vence por cascata.
-
-8.  **Traduzir sem reauditar a afirmação** carrega junto o que a frase afirmava, inclusive o que já era falso. Nenhuma checagem pega isso: elas garantem a língua, não a verdade.
-
-9.  **<strong>** **que ABRE um parágrafo é rótulo; no meio, é ênfase.** Não os trate igual.
-
+4. Corrigir N ocorrências não é varrer. Varra por padrão, sobre o arquivo inteiro, e leia cada ocorrência no contexto — nem toda coincidência é resíduo.
+5. Rótulo se renomeia; identificador, não. Identificadores governam armazenamento e roteamento: trocá-los junto com o texto quebra a separação por papel em silêncio.
+6. Resíduo de rótulo antigo se procura NA INTERFACE, e com caixa — comentário de código não é interface, e comparação sem caixa acusa o inocente.
+7. Ao trocar a cor de um componente, varra o CSS inteiro por outras regras que alcancem o mesmo seletor, e confira a cor computada no navegador. "A cor existe no sistema" não é "a cor certa chegou ao elemento" — regra antiga que sobrevive mais abaixo vence por cascata.
+8. Traduzir sem reauditar a afirmação carrega junto o que a frase afirmava, inclusive o que já era falso. Nenhuma checagem pega isso: elas garantem a língua, não a verdade.
+9. `<strong>` que ABRE um parágrafo é rótulo; no meio, é ênfase. Não os trate igual.
 10. Comentário de código com dado é segunda fonte. Deve descrever somente o estado vigente, a razão funcional necessária para sua manutenção e, quando indispensável, a fonte normativa atual. Não narrar versões anteriores, tentativas, feedbacks, bugs corrigidos ou a sequência histórica da solução. Conferir todo comentário funcional contra o registro e o comportamento vigente.
+11. Texto de apoio que CITA um rótulo é segunda cópia do rótulo. Renomeie o controle e a orientação passa a mandar procurar um botão que não existe com aquele nome — e nada acusa, porque as duas frases continuam gramaticais. A checagem confere a citação contra o rótulo VISÍVEL, nunca contra um texto escrito nela própria: escrito nela, ela vira a terceira cópia.
 
-11.  **Texto de apoio que CITA um rótulo é segunda cópia do rótulo.** Renomeie o controle e a orientação passa a mandar procurar um botão que não existe com aquele nome — e nada acusa, porque as duas frases continuam gramaticais. **A checagem confere a citação contra o rótulo VISÍVEL**, nunca contra um texto escrito nela própria: escrito nela, ela vira a terceira cópia.
+### 3. Ao escrever ou manter as checagens
 
-**3. Ao escrever ou manter as checagens**
-
-12.  **Toda checagem se prova contra um caso negativo, ou não vale.** Checagem que nunca falhou não está conferindo nada.
-
-13.  **Checagem que não falha, só não faz nada.** A variante mais silenciosa: **remover o elemento que ela examinava** faz a checagem passar sem conferir. **Ao mudar a FORMA de cumprir um requisito, reaponte a checagem para o REQUISITO, não para a forma antiga.**
-
-14.  **Regra certa + checagem certa + objeto fora do escopo = requisito não cumprido, e ninguém vê.** Ao herdar uma regra, confira se ela alcança **todos** os objetos que a regra descreve.
-
-15.  **A menção não é a expressão.** Corpo que "cita" um nome aprova mutação que o torna inalcançável. **E o nome citado no próprio comentário satisfaz a checagem** — exija a **forma**, não a palavra.
-
-16.  **Varredura que devolve zero precisa de canário.** Plante um elemento deliberadamente errado e exija que ele seja pego. **E canário que vaza reprova o inocente:** marque-o e exclua-o da consulta de alvos.
-
+12. Toda checagem se prova contra um caso negativo, ou não vale. Checagem que nunca falhou não está conferindo nada.
+13. Checagem que não falha, só não faz nada. A variante mais silenciosa: remover o elemento que ela examinava faz a checagem passar sem conferir. Ao mudar a FORMA de cumprir um requisito, reaponte a checagem para o REQUISITO, não para a forma antiga.
+14. Regra certa + checagem certa + objeto fora do escopo = requisito não cumprido, e ninguém vê. Ao herdar uma regra, confira se ela alcança todos os objetos que a regra descreve.
+15. A menção não é a expressão. Corpo que "cita" um nome aprova mutação que o torna inalcançável. E o nome citado no próprio comentário satisfaz a checagem — exija a forma, não a palavra.
+16. Varredura que devolve zero precisa de canário. Plante um elemento deliberadamente errado e exija que ele seja pego. E canário que vaza reprova o inocente: marque-o e exclua-o da consulta de alvos.
 17. Checagens distinguem constantes pedagógicas de quantidades de interface. Para etapas, N = 8 por regra do Documento 03; para slides, telas e componentes, N deriva dos blocos existentes. Nunca converter oito etapas em oito slides.
+18. Comparação com `<=` não prova soma. Declarar menos que o orçamento passa em silêncio: imprima o vão entre declarado e previsto, ou o que sumiu não deixa rastro.
+19. Exceção a uma regra é NOMEADA e SINGULAR. Quem foge da regra entra numa lista com o motivo; a própria exceção se confere, para não ficar obsoleta em silêncio quando o objeto voltar ao padrão. E exceção que ninguém reconfere deixa de ser exceção e vira permissão: uma checagem que espera uma ocorrência do que a regra proíbe imprime o defeito como resultado normal, rodada após rodada. Ao herdar uma exceção, pergunte primeiro se o motivo dela ainda existe — no caso que originou esta regra, o código já cumpria o requisito por outro caminho e a exceção era puro resíduo.
+20. Varredura de grafia se faz por CLASSE DE SUFIXO, nunca por lista de palavras — lista é a ocorrência apontada com outro nome. A classe traz falso positivo: vire allowlist com justificativa, faça o padrão casar palavra de prosa, não identificador, e alcance o JavaScript, não só o markup.
+21. A rodada COMPLETA é o que pega âncora vencida em suíte alheia. Mudar o alvo de uma função deixa negativos de outras prioridades apontando para a forma anterior — e eles não reprovam, devolvem "não aplicado", que parece defeito do alvo. E não se mede sobre alvo em movimento: rodada que continua enquanto o código é editado lê versões diferentes da árvore.
+22. Negativo que não remove nada não prova ausência, e negativo que muta um prefixo deixa intacto o que vem depois.
+23. Negativo aposentado se aposenta COM o motivo escrito. Teste sem objeto é ruído com aparência de cobertura. Quando um mecanismo sai, seus negativos saem junto — e os requisitos que eles cobriam reaparecem na forma nova.
 
-18.  **Comparação com** **<=** **não prova soma.** Declarar menos que o orçamento passa em silêncio: imprima o **vão** entre declarado e previsto, ou o que sumiu não deixa rastro.
+#### 3.1 O que checagem estática nunca vê
 
-19.  **Exceção a uma regra é NOMEADA e SINGULAR.** Quem foge da regra entra numa lista com o motivo; a própria exceção se confere, para não ficar obsoleta em silêncio quando o objeto voltar ao padrão. **E exceção que ninguém reconfere deixa de ser exceção e vira permissão:** uma checagem que *espera* uma ocorrência do que a regra proíbe imprime o defeito como resultado normal, rodada após rodada. Ao herdar uma exceção, pergunte primeiro se o motivo dela ainda existe — no caso que originou esta regra, o código já cumpria o requisito por outro caminho e a exceção era puro resíduo.
+Nenhuma varredura de texto detecta um erro de execução. Todo identificador existe, toda função existe, todo seletor casa — e a página quebra ao abrir. Uma suíte inteiramente estática pode passar com centenas de casos sobre um artefato cujo boot morre na primeira linha.
 
-20.  **Varredura de grafia se faz por CLASSE DE SUFIXO, nunca por lista de palavras** — lista é a ocorrência apontada com outro nome. A classe traz falso positivo: vire **allowlist com justificativa**, faça o padrão casar **palavra de prosa, não identificador**, e **alcance o JavaScript**, não só o markup.
+24. Depois de renomear, ABRA A PÁGINA e leia o console. Renome não é substituição de texto: a mesma propriedade se acessa em formas diferentes — `d.x`, `obj().x`, `a['x']` —, e a varredura que troca uma não vê as outras. O que sobra vira `undefined` em tempo de execução.
+25. Uma exceção no boot não fica onde nasceu. Ela aborta o restante do manipulador: uma função que morre no início derruba tudo o que viria depois dela, inclusive construtores de outros componentes. O sintoma aparece longe da causa — no caso que originou esta regra, o defeito estava no preenchimento do pre-class e o que sumiu foi o transporte de áudio de todo o material. Ao investigar um componente ausente, procure primeiro um erro anterior.
+26. Se o meio de publicação não deixa inspecionar, sirva o arquivo localmente. `file://` costuma estar bloqueado para automação, e o artefato publicado roda em origem isolada — nenhum dos dois permite ler o DOM. Um servidor mínimo sobre o próprio arquivo resolve, e é o que torna a exigência do P3 executável.
+27. Ao exercitar áudio, silencie a saída sem trocar o caminho: basta zerar o volume do utterance dentro do próprio `speak`. Simular o mecanismo testaria o simulador.
 
-21.  **A rodada COMPLETA é o que pega âncora vencida em suíte alheia.** Mudar o alvo de uma função deixa negativos de **outras** prioridades apontando para a forma anterior — e eles não reprovam, devolvem "não aplicado", que parece defeito do alvo. **E não se mede sobre alvo em movimento:** rodada que continua enquanto o código é editado lê versões diferentes da árvore.
+#### 3.2 Produção e validação dos áudios oficiais
 
-22.  **Negativo que não remove nada não prova ausência**, e negativo que muta um prefixo deixa intacto o que vem depois.
-
-23.  **Negativo aposentado se aposenta COM o motivo escrito.** Teste sem objeto é ruído com aparência de cobertura. Quando um mecanismo sai, seus negativos saem junto — e os requisitos que eles cobriam reaparecem na forma nova.
-
-**3.1 O que checagem estática nunca vê**
-
-**Nenhuma varredura de texto detecta um erro de execução.** Todo identificador existe, toda função existe, todo seletor casa — e a página quebra ao abrir. Uma suíte inteiramente estática pode passar com **centenas de casos** sobre um artefato cujo *boot* morre na primeira linha.
-
-24.  **Depois de renomear, ABRA A PÁGINA e leia o console.** Renome não é substituição de texto: a mesma propriedade se acessa em **formas diferentes** — d.x, obj().x, a['x'] —, e a varredura que troca uma não vê as outras. O que sobra vira undefined em tempo de execução.
-
-25.  **Uma exceção no boot não fica onde nasceu.** Ela aborta o restante do manipulador: uma função que morre no início derruba **tudo o que viria depois dela**, inclusive construtores de outros componentes. O sintoma aparece longe da causa — no caso que originou esta regra, o defeito estava no preenchimento do pre-class e o que sumiu foi o **transporte de áudio de todo o material**. Ao investigar um componente ausente, **procure primeiro um erro anterior**.
-
-26.  **Se o meio de publicação não deixa inspecionar, sirva o arquivo localmente.** file:// costuma estar bloqueado para automação, e o artefato publicado roda em **origem isolada** — nenhum dos dois permite ler o DOM. Um servidor mínimo sobre o próprio arquivo resolve, e é o que torna a exigência do P3 executável.
-
-27.  **Ao exercitar áudio, silencie a saída sem trocar o caminho:** basta zerar o volume do *utterance* dentro do próprio speak. Simular o mecanismo testaria o simulador.
-
-**3.2 Produção e validação dos áudios oficiais**
-
-O pipeline recebe o modo de entrega como entrada obrigatória antes de gerar o build. A validação deriva o modo efetivamente entregue pelos recursos e mecanismos presentes e o compara com a entrada declarada. Em protótipo, pode usar síntese do navegador, declarada uma única vez na primeira área autônoma da visão do aluno que contenha áudio; não repetir o aviso no Teacher’s Guide, nos cartões de preparação ou nas notas de slide. Em produção final, gerar os arquivos pela API da ElevenLabs conforme o Anexo P-A e remover integralmente qualquer caminho de síntese no cliente.
+O pipeline recebe o modo de entrega como entrada obrigatória antes de gerar o build. A validação deriva o modo efetivamente entregue pelos recursos e mecanismos presentes e o compara com a entrada declarada. Em protótipo, pode usar síntese do navegador, declarada uma única vez na primeira área autônoma da visão do aluno que contenha áudio; não repetir o aviso no Teacher's Guide, nos cartões de preparação ou nas notas de slide. Em produção final, gerar os arquivos pela API da ElevenLabs conforme o Anexo P-A e remover integralmente qualquer caminho de síntese no cliente.
 
 Sequência obrigatória: congelar o transcript aprovado; selecionar categoria e voz no manifesto validado; pré-processar sem alterar o conteúdo pedagógico; chamar a API no ambiente seguro; armazenar o arquivo; registrar transcript, versão, modelo, Voice ID, parâmetros, duração e checksum; ouvir e aprovar; associar o arquivo ao player; gerar o build; validar a fonte e o build.
 
-Segurança bloqueante: a chave da ElevenLabs permanece em secret manager ou variável protegida do pipeline. É proibido incluí-la no repositório, prompt, HTML, JavaScript, source map, log público, relatório distribuído ou chamada do navegador. Qualquer exposição reprova a publicação e exige revogação e rotação da credencial.
+**Segurança bloqueante:** a chave da ElevenLabs permanece em secret manager ou variável protegida do pipeline. É proibido incluí-la no repositório, prompt, HTML, JavaScript, source map, log público, relatório distribuído ou chamada do navegador. Qualquer exposição reprova a publicação e exige revogação e rotação da credencial.
 
-Validação mínima: nenhum speechSynthesis, SpeechSynthesisUtterance ou chamada autenticada à ElevenLabs no build; todos os players resolvem arquivos existentes; transcript e mídia pertencem à mesma versão; vozes e parâmetros conferem com o manifesto; diálogos preservam personagens distinguíveis; não há cortes, ruídos, respirações artificiais, pronúncia inadequada ou velocidade incompatível com o nível.
+**Validação mínima:** nenhum `speechSynthesis`, `SpeechSynthesisUtterance` ou chamada autenticada à ElevenLabs no build; todos os players resolvem arquivos existentes; transcript e mídia pertencem à mesma versão; vozes e parâmetros conferem com o manifesto; diálogos preservam personagens distinguíveis; não há cortes, ruídos, respirações artificiais, pronúncia inadequada ou velocidade incompatível com o nível.
 
 Uma alteração de transcript, modelo, Voice ID, parâmetro ou arquivo invalida a aprovação anterior. Regenerar apenas o item afetado é permitido quando o manifesto registra a nova versão e a suíte confirma que nenhuma associação vizinha foi alterada.
 
-**3.3 Conferência visual das perguntas projetadas**
+#### 3.3 Conferência visual das perguntas projetadas
 
-Validar no navegador e por regressão visual, usando as fontes efetivamente disponíveis no build: pergunta principal curta e longa; lista de perguntas; quiz projetado; fundos claro, escuro e de abertura; larguras desktop e responsivas.
+Usar o **Kit de Layout Alumni Black** incluído no pacote como oráculo visual. A QA compara o resultado renderizado, os tokens declarados e os estilos computados; não aprova por semelhança subjetiva nem por mera presença de variáveis CSS.
 
-A conferência compara estilo computado e resultado visual: família pertencente ao sistema e ativo efetivamente disponível no build; pergunta principal em família display, itálico moderado e peso visual intermediário; corpo maior que o texto corrente e menor que o título; largura controlada; quebra sem corte ou overflow; contraste sobre o fundo composto; caixa normal em perguntas longas; alinhamento à esquerda como padrão; centralização somente em pergunta curta e tela dedicada. Peso médio é função perceptiva, não obrigação de valor CSS específico; document.fonts.check() isoladamente não comprova o carregamento da fonte pretendida.
+Validar, em desktop e larguras responsivas, ao menos: página osso e cartões claros; capa Onyx/Grafite; deck escuro; hierarquia página/cartão/recuo/controle; lockup completo na capa e símbolo na barra; paleta de texto e acentos; modalidades e status; escalas de espaço, raio e elevação; pisos tipográficos; tracking; foco; movimento reduzido; tabelas e grades responsivas.
 
-Casos negativos obrigatórios: carregar uma terceira família; depender de Google Fonts; remover a família display da pergunta principal; diferenciar apenas por tamanho; aplicar caixa alta a pergunta longa; centralizar pergunta longa ou acompanhada de outros focos; igualar .slide-question, .q-item e .slide .quiz-question; produzir contraste insuficiente em fundo claro ou escuro; causar linha órfã, corte ou overflow.
+**Fontes.** Confirmar os papéis display, interface, question e marca. Jost, Inter, Cormorant e Poppins só passam quando carregados como ativos locais licenciados; sem ativos, conferir os fallbacks declarados. Reprovar requisição a Google Fonts ou a qualquer host tipográfico, fonte prometida mas ausente, itálico sintético da pergunta ou uso da fonte de marca no conteúdo.
 
-**4. Ao medir no navegador**
+**Perguntas.** Comparar pergunta principal curta e longa, lista orientadora, quiz projetado, pergunta de formulário e pergunta na abertura. Conferir Cormorant/serif fallback no componente interno, itálico, escala, `max-width`, contraste, caixa normal, alinhamento e distinção entre componentes. Na abertura, exigir tratamento de subtítulo, sem destaque de pergunta interna.
 
-28.  **Teste de teclado exige o CONTROLE POSITIVO na mesma rodada.** "Não aconteceu" é o mesmo resultado de uma guarda que funciona e de um manipulador morto. Prove primeiro que a tecla chega.
+**Cores e superfícies.** Medir contraste no fundo composto; conferir que `#B8860B` não seja usado como texto pequeno sobre fundo claro; distinguir hairline decorativo de limite funcional; validar a alternância de profundidade e impedir borda dura aplicada como substituta generalizada de elevação.
 
-29.  **Medir com a aba fora de foco mede o temporizador, não a página** — o navegador limita setTimeout a ~1/s, e cada passo parece custar quase um segundo.
+**Cascata.** Para cada token ou seletor alterado, varrer regras posteriores, pseudoestados, media queries e estilos inline. Comparar o valor computado com o Kit; token correto que não alcança o elemento é falha.
 
-30.  **Neutralizar a animação faz parte da medição, não a falsifica.** Elemento que entra a partir de opacidade zero devolve contraste falso se medido antes de assentar. O estado que vale é o assentado.
+**Regressões negativas obrigatórias:** restaurar paleta anterior; usar Alumni by Better no lockup Black; inserir grade decorativa ou múltiplas luzes na capa; quebrar a zona de proteção; usar ouro original como texto pequeno claro; trocar cores de modalidade/status; remover recuo entre cartão e controle; usar raio fora da escala sem exceção; introduzir distância estrutural fora da escala; reduzir texto abaixo do piso; depender de webfont; aplicar pergunta interna à abertura; igualar componentes de pergunta; remover reduced-motion; criar overflow, sobreposição ou corte.
 
-31.  **getComputedStyle** **e** **getBoundingClientRect** **em elemento oculto mentem** — devolvem zeros e valores próprios. Meça só o que tem caixa.
+#### 3.4 Conferência editorial de slide e screen
 
-32.  **textContent** **concatena filhos ocultos e vizinhos.** Medir folha a folha, ou separar.
+Revisar todas as ocorrências visíveis de slide e screen conforme o referente. Unidades numeradas, sequenciais ou identificáveis do In-class são slides; visões, interfaces, modos e estados técnicos que não correspondam necessariamente a uma unidade do deck podem ser screens.
 
-33.  **Contraste se mede sobre a superfície composta e com a opacidade herdada acumulada.**
+Confirmar Slide N, next slide, second-listening slide, input slide e preparation slide quando a instrução aponta para o deck. First-listening screen só passa quando nomeia um estado real da experiência auditiva; se apontar para a unidade do deck, exigir first-listening slide.
 
-**5. Teacher's Guide separado — implementação e validação em dois ambientes**
+A QA é contextual: não aplicar busca e substituição global e não alterar classes, atributos ou identificadores técnicos válidos, como `.screen`, apenas por sua forma lexical. Registrar o referente verificado quando a ocorrência puder admitir mais de uma leitura.
 
-A regra do produto está no P1 §15.1. Aqui está **como implementar e como provar**.
+### 4. Ao medir no navegador
 
-**Implementação.** Rota ou parâmetro **derivados da URL corrente** — ?mode=teacher-guide&lesson={id}. **Nenhum domínio, URL oficial, endereço de teste ou URL de artefato escrito à mão no código.** Cada card do In-class transmite o identificador da sua aula; a janela do guia **interpreta**, **confere se a aula existe** e abre direto no guia correspondente. O guia interno se **preserva** até que a abertura separada seja validada na URL oficial.
+28. Teste de teclado exige o CONTROLE POSITIVO na mesma rodada. "Não aconteceu" é o mesmo resultado de uma guarda que funciona e de um manipulador morto. Prove primeiro que a tecla chega.
+29. Medir com a aba fora de foco mede o temporizador, não a página — o navegador limita `setTimeout` a ~1/s, e cada passo parece custar quase um segundo.
+30. Neutralizar a animação faz parte da medição, não a falsifica. Elemento que entra a partir de opacidade zero devolve contraste falso se medido antes de assentar. O estado que vale é o assentado.
+31. `getComputedStyle` e `getBoundingClientRect` em elemento oculto mentem — devolvem zeros e valores próprios. Meça só o que tem caixa.
+32. `textContent` concatena filhos ocultos e vizinhos. Medir folha a folha, ou separar.
+33. Contraste se mede sobre a superfície composta e com a opacidade herdada acumulada.
 
-**A validação ocorre em DOIS ambientes, e um não substitui o outro:**
+### 5. Teacher's Guide separado — implementação e validação em dois ambientes
 
-| **Ambiente** | **O que se prova ali** |
-|---|---|
-| **Artefato de revisão** | presença dos botões, associação card↔aula, construção da rota, detecção do bloqueio e comportamento do *fallback*. O bloqueio de pop-up pelo sandbox do host se registra como **limitação do ambiente**, nunca como defeito do HTML |
-| **Ambiente oficial** | abertura efetiva em janela ou aba, aula correta, independência entre as janelas, isolamento entre materiais e compatibilidade com os navegadores suportados |
+A regra do produto está no P1 §15.1. Aqui está como implementar e como provar.
 
-34.  **A abertura bloqueada é DETECTADA, nunca silenciosa.** O código lê o retorno nulo (ou equivalente), dá aviso breve e mantém o acesso ao guia interno. **Aviso que afirma ter aberto a janela quando ela não abriu é pior que a falha**, porque encerra a investigação.
+**Implementação.** Rota ou parâmetro derivados da URL corrente — `?mode=teacher-guide&lesson={id}`. Nenhum domínio, URL oficial, endereço de teste ou URL de artefato escrito à mão no código. Cada card do In-class transmite o identificador da sua aula; a janela do guia interpreta, confere se a aula existe e abre direto no guia correspondente. O guia interno se preserva até que a abertura separada seja validada na URL oficial.
 
-35.  **Validar a abertura simultânea de DOIS materiais e de DUAS aulas.** É o único teste que expõe o nome de janela mal formado: sozinho, qualquer nome funciona. O nome tem de **impedir que o guia de um artefato reutilize ou substitua a janela pertencente a outro** — e não pode carregar nome literal nem dado pessoal do aluno (P1 §15.1).
+**Composição do modo teacher-guide.** A renderização deve separar header compacto, lesson overview recolhível e conteúdo do slide ativo. A mudança de slide atualiza a orientação operacional sem recriar nem abrir o overview. O foco inicial e a ordem de leitura alcançam a orientação do slide sem atravessar o conteúdo geral.
 
-36.  **Registro obrigatório do teste no ambiente oficial:** ambiente e URL testados · navegador e versão · aula ou conjunto de aulas verificado · resultado da abertura · resultado da independência entre as janelas · falhas e *fallback* observado. Sem esse registro, o requisito fica **NÃO VERIFICADO** — e "NÃO VERIFICADO" é resposta legítima; "PASSOU" sem evidência não é.
+**QA obrigatório.** Testar abertura direta em pelo menos dois slides: confirmar cabeçalho correto, orientação correspondente imediatamente visível, overview fechado, ausência de bloco geral extenso antes da orientação e associação contextual de Answer Key/Possible Answers. Abrir e fechar o overview não altera slide, respostas nem estado da janela principal. Comparar seus dados com Estrutura e preparação para detectar divergência ou fonte editável duplicada.
 
-**6. Anexo — armadilhas de PowerShell**
+A validação ocorre em DOIS ambientes, e um não substitui o outro:
+
+| Ambiente | O que se prova ali |
+| :-: | :-: |
+| Artefato de revisão | presença dos botões, associação card↔aula, construção da rota, detecção do bloqueio e comportamento do fallback. O bloqueio de pop-up pelo sandbox do host se registra como limitação do ambiente, nunca como defeito do HTML |
+| Ambiente oficial | abertura efetiva em janela ou aba, aula correta, independência entre as janelas, isolamento entre materiais e compatibilidade com os navegadores suportados |
+
+34. A abertura bloqueada é DETECTADA, nunca silenciosa. O código lê o retorno nulo (ou equivalente), dá aviso breve e mantém o acesso ao guia interno. Aviso que afirma ter aberto a janela quando ela não abriu é pior que a falha, porque encerra a investigação.
+35. Validar a abertura simultânea de DOIS materiais e de DUAS aulas. É o único teste que expõe o nome de janela mal formado: sozinho, qualquer nome funciona. O nome tem de impedir que o guia de um artefato reutilize ou substitua a janela pertencente a outro — e não pode carregar nome literal nem dado pessoal do aluno (P1 §15.1).
+36. Registro obrigatório do teste no ambiente oficial: ambiente e URL testados · navegador e versão · aula ou conjunto de aulas verificado · resultado da abertura · resultado da independência entre as janelas · falhas e fallback observado. Sem esse registro, o requisito fica NÃO VERIFICADO — e "NÃO VERIFICADO" é resposta legítima; "PASSOU" sem evidência não é.
+
+### 6. Anexo — armadilhas de PowerShell
 
 Válido apenas para quem escreve as checagens neste ambiente.
 
-•  **+** **dentro de** **@()**: a vírgula fecha o elemento antes da soma, o array se parte e os campos trocam de lugar. **Monte a string ANTES do array.** Mordeu sete vezes.
+- `+` dentro de `@()`: a vírgula fecha o elemento antes da soma, o array se parte e os campos trocam de lugar. Monte a string ANTES do array. Mordeu sete vezes.
+- `-eq`/`-ne` e chave de `@{}` são case-INSENSITIVE. Onde a caixa importa, `-ceq`/`-cne`; e `@{'Practise'=…;'practise'=…}` é erro de chave duplicada.
+- Variável de quebra de linha não declarada some em silêncio: `'a' + $null + 'b'` vira `'ab'`, e o caso devolve "não aplicado".
+- `\"` não escapa em aspas duplas — a aspa fecha a string e o script inteiro deixa de compilar. Use aspas simples.
+- Âncora incompleta casa dentro de outro nome: `function paint` casa `paintX`; `.classe{` casa `.outra.classe{`; e a vírgula é caractere de seletor — `.a{` casa dentro de `.b,.a{`.
+- Janela de tamanho fixo é âncora que expira sozinha: extrair `{0,320}` do corpo de uma função e procurar ali dentro reprova no dia em que alguém acrescentar um comentário. Recorte a unidade inteira — o requisito é "passa pelo transporte único", não "passa nos primeiros 320 caracteres".
+- Varredura de proibição se faz sobre CÓDIGO, não sobre menção: o comentário que explica a regra cita o que ela proíbe, e contá-lo reprova justamente quem documentou.
+- Mensagem de aprovação e de reprovação não podem compartilhar a frase que o teste procura — o negativo casa a linha de sucesso e reporta falha onde não há. Procure o marcador de falha.
+- Padrão que exige adjacência quebra quando entra um atributo: sempre `[^>]*`.
+- Nunca extrair bloco com `[\s\S]*?` até `</div>` — para no primeiro filho fechado.
+- Balanço global de tags não detecta nada (dois erros simétricos somam zero): confira dentro de cada tela. E tag escrita num comentário entra no balanço.
+- `.Replace(string,[char])` escolhe a sobrecarga errada — converta para `[string]`.
+- O porter escapa não-ASCII: normalize antes de comparar, nos dois sentidos — passar na fonte e falhar no build, e o inverso.
+- Apóstrofo tipográfico é delimitador no PS 5.1: texto editorial vai por arquivo, nunca inline.
+- Script sem BOM é lido como ANSI: mantenha o script ASCII e monte caractere acentuado por `[char]`.
 
-•  **-eq****/****-ne** **e chave de** **@{}** **são case-INSENSITIVE.** Onde a caixa importa, -ceq/-cne; e @{'Practise'=…;'practise'=…} é erro de chave duplicada.
+### 7. Antes de publicar
 
-•  **Variável de quebra de linha não declarada some em silêncio:** 'a' + $null + 'b' vira 'ab', e o caso devolve "não aplicado".
+37. Rodar o validador na FONTE e no BUILD. O porter transforma o arquivo, e checagem já passou num e falhou no outro.
+38. Provar o superset: extraia os fragmentos substantivos do que está publicado e liste os que sumiram na versão nova. A lista tem de bater, item a item, com as mudanças deliberadas.
+39. Rodada completa das suítes, sobre árvore parada, depois da última edição de código.
+40. Depois de publicar, conferir marcadores no que está no ar — não no que se acabou de gerar.
+41. A abertura separada do Teacher's Guide é requisito BLOQUEANTE para a publicação definitiva no ambiente oficial. No protótipo ou artefato de revisão sujeito a sandbox, admite-se aprovação condicional quando a implementação, o endereçamento e o fallback estiverem corretos e a limitação externa estiver documentada. Aprovação baseada só no artefato restrito não conta como publicação aprovada.
 
-•  **\"** **não escapa em aspas duplas** — a aspa fecha a string e o script inteiro deixa de compilar. Use aspas simples.
+### 3.1 (adição) QA consolidada do Lesson overview
 
-•  **Âncora incompleta casa dentro de outro nome:** function paint casa paintX; .classe{ casa .outra.classe{; e **a vírgula é caractere de seletor** — .a{ casa dentro de .b,.a{.
+Verificar por aula: exatamente um overview; presença somente no primeiro slide; estado inicial recolhido; persistência ao sair e voltar; ausência de recriação, reabertura automática, espaço residual ou bloco concorrente; exatamente cinco seções autorizadas; ausência de conteúdo geral residual não autorizado; conteúdo geral restrito à função de cada seção; corpo regular e destaque pontual; botão Close overview and start procedure plenamente operável e acessível.
 
-•  **Janela de tamanho fixo é âncora que expira sozinha:** extrair {0,320} do corpo de uma função e procurar ali dentro reprova no dia em que alguém acrescentar um comentário. **Recorte a unidade inteira** — o requisito é "passa pelo transporte único", não "passa nos primeiros 320 caracteres".
+Comprovar que Outcome and success deriva dos campos canônicos e concorda com Estrutura e preparação. Informação futura deve ser Point to confirm e chegar ao destino correto. Segmento sem âncora exige decisão rastreável. Toda redistribuição prova simultaneamente saída do local incorreto e chegada ao ponto de uso, sem perda, duplicação ou quebra de fonte única.
 
-•  **Varredura de proibição se faz sobre CÓDIGO, não sobre menção:** o comentário que explica a regra cita o que ela proíbe, e contá-lo reprova justamente quem documentou.
+### 3.2 (adição) Integridade, detecção e deduplicação
 
-•  **Mensagem de aprovação e de reprovação não podem compartilhar a frase que o teste procura** — o negativo casa a linha de sucesso e reporta falha onde não há. Procure o **marcador de falha**.
+PRO-002 considera conteúdo, superfície, papel, estado e momento. Diferenciar ajuda discente pré-resposta, explicação discente pós-resposta, Answer Key docente, rationale docente e conteúdo docente indevidamente exposto. Localização textual isolada não comprova falha.
 
-•  **Padrão que exige adjacência quebra** quando entra um atributo: sempre [^>]*.
+Reprovar correções que apenas renomeiem, ocultem, suprimam, removam marcadores ou movam informação para local inacessível. Zero correspondências não comprova conformidade. Deduplicação exige leitura, função, ocorrência equivalente, comparação semântica, registro da decisão e confirmação de acesso; métricas lexicais servem apenas para localizar candidatos.
 
-•  **Nunca extrair bloco com** **[\s\S]*?** **até** **</div>** — para no primeiro filho fechado.
+### 3.3 (adição) QA de Pre-class, Post-class e closing
 
-•  **Balanço global de tags não detecta nada** (dois erros simétricos somam zero): confira **dentro de cada tela**. E **tag escrita num comentário entra no balanço**.
+Avaliar apoio em português proporcional ao nível e à carga, não por mínimo isolado. Verificar Answer Key assíncrono sem condução oral; ausência de *Tick the ones you did*; e ciclo completo de Confirm response — vazio, confirmação, edição posterior, reconfirmação, recarregamento, reset, separação de chaves, consulta docente e ausência de avaliação automática.
 
-•  **.Replace(string,[char])** escolhe a sobrecarga errada — converta para [string].
+### 3.4 (adição) Limitação do ambiente e janela externa
 
-•  **O porter escapa não-ASCII**: normalize antes de comparar, **nos dois sentidos** — passar na fonte e falhar no build, e o inverso.
+Quando a janela externa não abrir, distinguir URL, aula/slide, gesto do usuário, nome de janela, fallback e bloqueio exclusivo do host ou navegador. Limitação exclusiva do ambiente é runtime não executado ou limitado: não reprova estruturalmente o HTML, não autoriza aprovação funcional plena e mantém a publicação dependente da URL oficial.
 
-•  **Apóstrofo tipográfico é delimitador** no PS 5.1: texto editorial vai por arquivo, nunca inline.
-
-•  **Script sem BOM é lido como ANSI:** mantenha o script ASCII e monte caractere acentuado por [char].
-
-**7. Antes de publicar**
-
-37.  **Rodar o validador na FONTE e no BUILD.** O porter transforma o arquivo, e checagem já passou num e falhou no outro.
-
-38.  **Provar o superset:** extraia os fragmentos substantivos do que está publicado e liste os que **sumiram** na versão nova. A lista tem de bater, item a item, com as mudanças deliberadas.
-
-39.  **Rodada completa das suítes, sobre árvore parada**, depois da última edição de código.
-
-40.  **Depois de publicar, conferir marcadores no que está no ar** — não no que se acabou de gerar.
-
-41.  **A abertura separada do Teacher's Guide é requisito BLOQUEANTE para a publicação definitiva no ambiente oficial.** No protótipo ou artefato de revisão sujeito a sandbox, admite-se **aprovação condicional** quando a implementação, o endereçamento e o *fallback* estiverem corretos e a limitação externa estiver documentada. **Aprovação baseada só no artefato restrito não conta como publicação aprovada.**
-
-## 4. QA adicional de estado, composição e contagem
+### 4. (adição) QA adicional de estado, composição e contagem
 
 Executar a atividade nos estados inicial, antes da tentativa, após seleção, após correção e após reset. Em cada estado, comparar os verbos da instrução com os controles realmente disponíveis.
 
+#### 4.1 Escala uniforme sem texto metalinguístico
+
+Comparar o componente de Desempenho nas quatro aulas do bloco e confirmar que escala, valores, descritores, persistência e interpretação são os mesmos. Em seguida, inspecionar o texto renderizado e reprovar observações editoriais ou metalinguísticas que anunciem a uniformidade, inclusive "mesma escala nas quatro aulas do bloco" ou equivalente. A ausência da nota visível não dispensa a prova estrutural da uniformidade.
+
 Em contrastes auditivos, conferir visualmente que rótulo semântico, player e seleção pertencem ao mesmo card; que o transcript não antecipa a escolha; e que a revelação posterior usa os mesmos rótulos e conteúdo da mídia.
 
-Comparar quantidades e termos declarados no título, prompt, Teacher’s Guide, Answer Key, dados da atividade e critério de conclusão. A conferência deve usar a composição renderizada em todas as larguras suportadas, não apenas a presença no DOM.
+Comparar quantidades e termos declarados no título, prompt, Teacher's Guide, Answer Key, dados da atividade e critério de conclusão. A conferência deve usar a composição renderizada em todas as larguras suportadas, não apenas a presença no DOM.
 
-Reprovar reveal quando todos os itens já estiverem visíveis ou read quando o conteúdo ainda estiver fechado.
+#### 4.2 Contraste e diferenciação dos componentes interativos
 
-Reprovar player distante da alternativa, seleção ambígua ou referência posicional redundante.
+No navegador, identificar qual característica visual permite reconhecer cada botão, campo, card selecionável, acordeão, controle de áudio e demais componentes interativos. Medir essa característica contra as cores adjacentes no fundo efetivamente composto. Quando a borda for o único limite necessário, exigir razão mínima de 3:1; quando preenchimento, forma, ícone ou outro indicador conforme já identificar o componente, não reprovar apenas uma borda decorativa de menor contraste.
 
-Reprovar transcript disponível antes da tentativa em listening contrast.
+Executar a conferência nos estados padrão, foco, seleção, expansão, revelação, resposta correta, resposta incorreta e desabilitado, em superfícies claras e escuras e nas larguras suportadas. Verificar que o estado seja perceptível sem depender de mudança sutil de cor e registrar qual indicador adicional ou reforçado comunica a alteração.
 
-Reprovar qualquer contagem ou nomenclatura divergente entre as camadas.
+Testar teclado e toque sem hover antes de testar hover. Hover pode reforçar o estado, mas a interação e sua identificação não podem desaparecer quando hover não existe. Incluir canário de baixo contraste e caso em que a borda decorativa é dispensável porque outro indicador conforme identifica o componente.
+
+- Reprovar `reveal` quando todos os itens já estiverem visíveis ou `read` quando o conteúdo ainda estiver fechado.
+- Reprovar player distante da alternativa, seleção ambígua ou referência posicional redundante.
+- Reprovar transcript disponível antes da tentativa em listening contrast.
+- Reprovar qualquer contagem ou nomenclatura divergente entre as camadas.
+
+#### 4.3 QA de Check, Redo e Reset lesson
+
+Executar cada atividade verificável nos estados inicial, preenchido, verificado, reiniciado e recarregado. Antes da verificação, exigir Check. Depois da verificação, quando o acionamento seguinte reiniciar a tentativa, exigir Redo no texto visível e no nome acessível. Acionar Redo e comprovar que somente a atividade correspondente é limpa, a devolutiva é ocultada, o controle retorna a Check e as demais atividades permanecem intactas.
+
+Executar Reset lesson com estado distribuído por vários slides, atividade corrigida, feedback revelado e aula marcada como finalizada. A confirmação deve enumerar escopo apagado e preservado. Confirmar deve limpar integralmente o In-class da aula ativa, retornar ao primeiro slide, remover conclusão e derivados e persistir a remoção. Cancelar deve manter comparação byte/estado equivalente ao estado anterior.
+
+Após cada operação, recarregar a página e comparar armazenamento, DOM, rótulos acessíveis e fontes derivadas. Verificar isolamento por aluno, aula, atividade, superfície e papel. Inserir sentinelas em Pre-class, Post-class, registro pós-aula, Estado pedagógico do ciclo, outra aula e outro papel; todas devem sobreviver ao Reset lesson.
+
+**Reprovar:** Check que executa reset; Redo que limpa outra atividade; label visível divergente do nome acessível; recarga que restaura correção ou conclusão; reset parcial do slide atual; conclusão residual; cancelamento com efeito colateral; lista de chaves incompleta; exclusão de dados fora do In-class ativo.
+
+### 8. QA editorial da linguagem instrucional — A05
+
+Executar uma passagem editorial específica depois que o comportamento e o conteúdo pedagógico estiverem estabilizados e antes do build final. A passagem aplica o A05 ao Teacher's Guide, às instruções do aluno e aos textos operacionais da interface.
+
+- classificar a superfície e o interlocutor antes de revisar a frase;
+- comparar a formulação publicada com a regra responsável e confirmar que ação, condição, sequência, apoio, evidência, produto e bloqueio foram preservados;
+- revisar no contexto da tela, do slide ou da atividade, e não em lista de strings isoladas;
+- substituir linguagem mecânica ou punitiva por orientação educacional natural sem transformar obrigação em sugestão opcional;
+- confirmar que imperativos convencionais do aluno continuam claros, concisos e executáveis;
+- registrar como falha qualquer regra interna, justificativa de produção ou instrução inexistente que sobreviva no material publicado.
+
+**Automação.** Detectores lexicais podem localizar candidatos para revisão, mas não decidem conformidade sozinhos. A aprovação exige análise contextual; o validador deve possuir casos positivos e negativos para evitar tanto linguagem autoritária quanto a remoção indevida de uma restrição necessária.
