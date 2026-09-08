@@ -42,6 +42,16 @@ Stephanie Vicente (`1wm4SHeDi56QF3CRS06lLQpW8wXshj17J`), entregue pelo Dan em 24
 | A02 | [Safeguards de instrução, atividades e áudio](A02-safeguards-instrucao-atividades-audio.md) | tempo só no guia · subprompt com função real · embaralhamento · referência posicional · player separado | `1jY0HC2k_QNrTGdPDkJsIQLtqX-2TPdqU` | 21/08/2026 |
 | P-A | [Padrão de Produção de Áudios com ElevenLabs](ANEXO-P-A-audios-elevenlabs.md) | `eleven_v3`, categorias, manifesto de mídia, QA auditivo, segurança da credencial | `19WfmAGOzP1nD62dtXs88yozAZdVh6lRd` | 20/08/2026 |
 
+## Documentação de apoio (não normativa)
+
+| Arquivo | O que é | Drive ID | Modificado |
+|---|---|---|---|
+| [Catálogo de erros do auditor](catalogo-erros-auditor.md) | 85 modos de falha (57 BLOCKER, 28 MAJOR), com manifestação auditável e origem. É de onde vêm os IDs que os gates citam — PRO-006, REG-001, PRO-009 | `1wyvs0gsGxHwkHQnoKbrehMBUkDkwg97e` | **04/09/2026** |
+
+> O relatório de alterações normativas classifica o catálogo como documentação de apoio,
+> não como documento normativo. Ele entra no pacote medido pelo GATE 34 porque, sem ele, a
+> mensagem de um gate aponta para um código que ninguém tem como consultar.
+
 ## Precedência (00 §4) — quando duas instruções colidirem
 
 1. decisão explícita do operador para o caso
