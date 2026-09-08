@@ -55,9 +55,33 @@ ANATOMIA = "consultivo"
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"
 
 PROIBIDO = ["speechSynthesis", "SpeechSynthesisUtterance", "webkitSpeechRecognition"]
-# nomes comerciais de voz do sistema (Anexo P-A §4)
-NOMES_COMERCIAIS = ["Microsoft Aria", "Microsoft Jenny", "Microsoft Zira", "Microsoft Guy",
-                    "Microsoft David", "Google US English", "Samantha", "Alex", "Daniel"]
+
+# ---- NOMES COMERCIAIS DE VOZ (Anexo P-A §4), EM DUAS CLASSES
+#
+# Ate 09/09/2026 os nove nomes eram uma lista so, procurada no documento INTEIRO. Isso
+# reprovou o material do Caio por um recurso do acervo: a talk "How to ask for more", de
+# **Alex** Carter. O gate leu o nome de uma pessoa como uma escolha de voz do sistema.
+#
+# A divisao nao e cosmetica, e o que separa as duas evidencias:
+#
+#   MARCA   "Microsoft Aria", "Google US English" -- ninguem escreve isso em prosa. Uma
+#           ocorrencia, em qualquer lugar, e escolha de voz.
+#   NOME    "Alex", "Samantha", "Daniel" -- sao nomes proprios comuns. A ocorrencia so
+#           prova alguma coisa PERTO de uma selecao de voz; solta, e uma pessoa.
+#
+# E a mesma licao que o gate de idioma ja pagou: procurar a palavra no documento inteiro
+# ve estrutura onde so ha texto.
+MARCAS_DE_VOZ = ["Microsoft Aria", "Microsoft Jenny", "Microsoft Zira", "Microsoft Guy",
+                 "Microsoft David", "Google US English"]
+NOMES_DE_VOZ = ["Samantha", "Alex", "Daniel"]
+
+# O contexto em que um primeiro nome deixa de ser pessoa e vira parametro.
+# As formas em que uma voz e de fato escolhida: a lista de vozes, o utterance, a lingua, e
+# o `.name ===` com que se peneira `getVoices()` -- que e como o defeito original era escrito.
+CONTEXTO_DE_VOZ = re.compile(
+    r"(?:voices?|vozes|getVoices|SpeechSynthesis|utter|\.lang\b|voz\s*[:=]"
+    r"|\.name\s*[=!]{2,3})", re.I)
+JANELA = 80
 
 
 _NO_GIT = None
@@ -144,7 +168,13 @@ def confere(caminho):
                          f"arquivos aprovados.")
 
     # 2 · voz por nome comercial
-    achados = [n for n in NOMES_COMERCIAIS if n in codigo]
+    achados = [n for n in MARCAS_DE_VOZ if n in codigo]
+    for nome in NOMES_DE_VOZ:
+        for m in re.finditer(r"\b" + re.escape(nome) + r"\b", codigo):
+            volta = codigo[max(0, m.start() - JANELA):m.end() + JANELA]
+            if CONTEXTO_DE_VOZ.search(volta):
+                achados.append(nome)
+                break
     if achados:
         erros.append(f"VOZ POR NOME COMERCIAL (Anexo P-A §4): {achados}. Nome comercial de "
                      f"voz nao substitui Voice ID — a voz se decide na geracao, no pipeline.")
@@ -230,6 +260,16 @@ def _selftest():
          "nao existem no disco"),
         ("a proibicao CITADA em comentario — nao pode reprovar",
          lambda s: s.replace("</body>", "<script>/* speechSynthesis e proibido aqui */</script></body>", 1),
+         None),
+        # ---- as duas classes de nome (09/09/2026)
+        ("primeiro nome ESCOLHENDO voz — continua reprovando",
+         lambda s: s.replace("var AUD_EL=null;",
+                             "var AUD_EL=null;var v=vozes.find(x=>x.name==='Alex');", 1),
+         "NOME COMERCIAL"),
+        ("primeiro nome numa PESSOA do acervo — nao pode reprovar",
+         lambda s: s.replace("</body>",
+                             '<div class="res-card"><h5>How to ask for more</h5>'
+                             '<span class="res-src">TED &middot; Alex Carter</span></div></body>', 1),
          None),
     ]
     falhou = False
