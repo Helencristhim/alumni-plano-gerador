@@ -1,4 +1,4 @@
-{n:12,bloco:1,mod:'ESP',cod:'E1',fwNome:'ESP — Real World',
+{n:12,bloco:1,mod:'Real-World',cod:'E1',fwNome:'Personalized Real-World English',
     tema:'Three minutes, one objection',  temaPre:'Before you explain any of it',
     canonico:'case', statusKey:'af_l12_status',
     nav:['Lesson opening','What she does not know','How it sounds','What she needs first',

@@ -52,17 +52,21 @@ Tambem nao mede o texto que gera audio: `abertura[].audio.texto` alimenta o `say
 tela. O pre-class da aula 2 da Stephanie TEM a fala escrita nessa chave -- e a aluna nunca
 a le, ela a escuta ali mesmo.
 
-PENDENTES (declarados, nao consertados aqui)
----------------------------------------------
-Duas aulas de outros alunos chegam com o transcript no pre-class, mesmo defeito da Vanessa:
+O QUE JA FOI CONSERTADO POR CAUSA DELE
+--------------------------------------
+Ao nascer, o gate encontrou duas aulas com o transcript no pre-class: a aula 2 do Caio (doc
+"The call -- transcript", 4 de 4 falas) e a aula 10 da Joice ("The two introductions --
+transcript", 2 de 2). As duas foram reescritas no mesmo PR, com autorizacao do Dan: a
+operacao de cada atividade ficou, o conteudo do audio saiu.
 
-    caio-de-souza-amante/aula2   doc "The call -- transcript", 4 de 4 falas
-    joice-lopes-leite/aula10     doc "The two introductions -- transcript", 2 de 2 falas
+  Caio a2  o `classificar` passou a distinguir figure/condition/opinion/decision em linhas
+           de OUTRO negocio, e o `escolha` seguinte deixou de cobrar o conteudo da call
+           para cobrar QUANDO vale interromper.
+  Joice a10 o `classificar` passou a identificar as quatro pecas que TODA apresentacao tem,
+           com falas de outras pessoas, e o `escolha` seguinte virou a decisao de que
+           pergunta e segura fazer.
 
-Nao estao consertados porque decidir o que a atividade passa a ser e conteudo de material
-que este PR nao foi pedido para reescrever (REGRA 31) -- a correcao equivalente na Vanessa
-custou tres atividades refeitas. Ficam declarados abaixo, com o caso e a razao, do jeito que
-o Dan fixou em 03/09/2026 (excecao em codigo, nao em JSON). A lista so pode CAIR.
+Nao ha lista de excecao: a partir daqui, audio inteiro no pre-class reprova.
 
 ESCOPO: os fragmentos autorais, `_build/consultivo/{slug}/aula{n}/`. E ali que o defeito e
 escrito -- a mesma superficie que o #2544 escolheu para a acentuacao.
@@ -94,14 +98,9 @@ MIN_PALAVRAS = 4
 # Quantas falas ja sao "o audio inteiro" quando o audio e longo.
 TETO_ABSOLUTO = 3
 
-PENDENTES = {
-    # aula                         -> por que ainda esta assim
-    "caio-de-souza-amante/aula2":
-        "doc 'The call -- transcript' no pre-class, 4 de 4 falas. Reescrever a atividade e "
-        "conteudo de aluno fora do escopo deste PR (REGRA 31).",
-    "joice-lopes-leite/aula10":
-        "doc 'The two introductions -- transcript' no pre-class, 2 de 2 falas. Mesma razao.",
-}
+# Sem excecao. As duas que existiam foram consertadas (ver o cabecalho); no Black a
+# excecao se escreve em codigo, com o caso e a razao, e nao ha caso.
+PENDENTES = {}
 
 
 def normal(t):

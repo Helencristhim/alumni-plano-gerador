@@ -1,4 +1,4 @@
-{n:4,bloco:1,mod:'ESP',cod:'E1',fwNome:'ESP — Real World',
+{n:4,bloco:1,mod:'Real-World',cod:'E1',fwNome:'Personalized Real-World English',
     tema:'Three minutes with the buyer',  temaPre:'Before you time any of it',
     canonico:'brief', statusKey:'af_l4_status',
     nav:['Lesson opening','The meeting','Try it once','What they came for',

@@ -1,4 +1,4 @@
-{n:4,bloco:1,mod:'ESP',cod:'E1',fwNome:'Personalized Real-World English',
+{n:4,bloco:1,mod:'Real-World',cod:'E1',fwNome:'Personalized Real-World English',
     tema:'The feedback you have to give',   temaPre:'Before you sit down with him',
     canonico:'syllabus', statusKey:'af_l4_status',
     nav:['Lesson opening','What you have to do','Say it now','How someone else says it',

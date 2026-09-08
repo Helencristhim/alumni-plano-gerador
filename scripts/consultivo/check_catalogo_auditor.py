@@ -4,9 +4,15 @@
 
 DE ONDE ISTO VEM
 ----------------
-Do `catalogo_erros_recorrentes_auditor_private_black.xlsx` (25/08/2026): 72 modos de falha
-consolidados dos 14 documentos normativos e das falhas COMPROVADAS em Erica, Marcos,
-Marlene e Stephanie.
+Do catalogo de erros recorrentes do auditor. A versao vigente e a de 04/09/2026, com 85
+modos de falha (57 BLOCKER, 28 MAJOR), consolidados dos documentos normativos e das falhas
+COMPROVADAS em Erica, Marcos, Marlene e Stephanie. Ela esta no repo, importada do Drive:
+`docs/consultivo/catalogo-erros-auditor.md`, e o GATE 34 a mede junto com o pacote.
+
+A versao anterior, de 25/08, tinha 72. Os treze que entraram desde entao nao criaram
+codigo novo: REG-004 e REG-005 foram AMPLIADOS para cobrir Check/Redo e o escopo do Reset
+lesson, e INT-018 para cobrir a nota metalinguistica sobre a escala. O catalogo mesmo diz
+que as contagens permaneceram 85 sem novos IDs.
 
 A coluna "Deteccao recomendada" do catalogo classifica 29 itens como "Semantico". Ela e uma
 SUGESTAO, nao um limite -- varios desses tem manifestacao observavel se a pergunta for
@@ -48,7 +54,13 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 ANATOMIA = "consultivo"
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"
 
-MODALIDADES = ["Reading", "Listening", "Grammar", "ESP"]
+# A etiqueta curta de cada modalidade, como o `registro.js` a escreve e a tela a mostra.
+# "Real-World" substituiu "ESP" em 08/09/2026: o Relatorio de Alteracoes Normativas
+# (02/09, ajuste 22) deu ao quarto framework o nome exclusivo Personalized Real-World
+# English e proibiu a sigla na tela. A checagem foi reapontada para o REQUISITO -- as
+# quatro modalidades no bloco 1 --, nao para a forma antiga de nomear uma delas (P2 §13).
+# Quem barra a volta da sigla e o GATE 64.
+MODALIDADES = ["Reading", "Listening", "Grammar", "Real-World"]
 POSTCLASS_MINIMO = ["Reading", "Listen", "Speak", "Write"]
 # marcadores de processo interno que nao podem chegar ao aluno (INT-018)
 INTERNOS = [r"\bhip[oó]tese\b", r"\ba validar\b", r"\bgerador\b", r"\bTODO\b", r"\bFIXME\b",
@@ -582,7 +594,7 @@ def _selftest():
         ("ANA-003 ciclo com 12 aulas", limpo_p,
          lambda s: re.sub(r"(var CICLO=\{[^}]*aulas:)\d+", r"\g<1>12", s, count=1), "ANA-003"),
         ("ANA-004 bloco 1 sem ESP", limpo_p,
-         lambda s: s.replace("mod:'ESP'", "mod:'Reading'", 1), "ANA-004"),
+         lambda s: s.replace("mod:'Real-World'", "mod:'Reading'", 1), "ANA-004"),
         ("REG-002 personagem do elenco que nao aparece", limpo_p,
          lambda s: s.replace('{n:"Rachel",g:"f"}', '{n:"Zoraide",g:"f"}', 1), "REG-002"),
         ("INT-018 metadado interno na tela do ALUNO", limpo_a,
@@ -592,7 +604,7 @@ def _selftest():
          # NAO tira "Acompanhamento docente": sem modelo declarado a ANA-002 dispara e
          # retorna antes, e a AUT-003 nunca seria exercitada. A mutacao tem de isolar o
          # defeito que ela quer provar.
-         lambda s: s.replace("mod:'ESP'", "mod:'Teste'", 1), "AUT-003"),
+         lambda s: s.replace("mod:'Real-World'", "mod:'Teste'", 1), "AUT-003"),
         ("ANA-002 nenhum modelo declarado", limpo_p,
          lambda s: s.replace("Acompanhamento docente", "—"), "ANA-002"),
         ("ANA-015 mesmo link duas vezes no post-class", limpo_p,

@@ -209,7 +209,7 @@ def _corrida(vals):
     return fora or [0]
 
 
-def embaralha(seq, semente, chave=None):
+def embaralha(seq, semente, chave=None, recusa=None):
     """A ordem que o ALUNO ve, decidida por codigo -- nunca pela ordem em que o autor digitou.
 
     PRO-009 do catalogo do auditor ("Sorting nao embaralhado", MAJOR): itens que aparecem
@@ -238,6 +238,12 @@ def embaralha(seq, semente, chave=None):
         if fora == list(seq):
             continue
         if chave is not None and _previsivel(fora, chave):
+            continue
+        # `recusa` e a condicao que so quem chama sabe enunciar. No `classificar` e a
+        # quarta forma do PRO-009 que o GATE 41 mede e a `_previsivel` nao ve: a resposta
+        # de N itens cair na LETRA DA PROPRIA POSICAO (item 1 -> A, item 3 -> C...). Com
+        # opcao repetida isso acontece por acaso, e foi o que pegou o `cl10p` da Joice.
+        if recusa is not None and recusa(fora):
             continue
         return fora
     # Sequencia de itens todos iguais: nao ha ordem diferente a devolver, e nao ha
@@ -326,7 +332,12 @@ def r_classificar(b, ident):
     linhas = []
     # A ORDEM DOS ITENS E DO EMISSOR (PRO-009) -- ver embaralha(). Declarados agrupados pela
     # resposta, eles se resolvem pela posicao: as duas primeiras sao A, as duas ultimas B.
-    for it in embaralha(b["itens"], ident, chave=lambda i: i["ok"]):
+    def _na_propria_posicao(candidato):
+        return sum(1 for i, it in enumerate(candidato)
+                   if i < len(LETRAS) and idx.get(it.get("ok")) == LETRAS[i]) >= 3
+
+    for it in embaralha(b["itens"], ident, chave=lambda i: i["ok"],
+                        recusa=_na_propria_posicao):
         if it["ok"] not in idx:
             raise SystemExit(f'{ident}: a resposta {it["ok"]!r} nao esta entre as opcoes '
                              f'{ops}. O autor escreve o TEXTO da opcao certa.')
