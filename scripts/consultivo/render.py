@@ -727,7 +727,26 @@ def _campo(texto, chave, titulo):
     return saida
 
 
-def nota_de_tela(dados, titulo):
+def rotulo_de_tempo(minutos, etapa_min):
+    """O orcamento de tempo da tela, na UNICA grafia que existe.
+
+    O NUMERO e do autor; a GRAFIA e daqui. Ate 08/09/2026 o `min` do `guia_telas.json` era
+    prosa livre, e as 240 telas dos seis materiais escreviam a mesma coisa de quarenta
+    maneiras: "7 min", "7", "3 of 5", "3 of the 5 min", "2 min", "opening of the 6 min",
+    "rest of the 4 min", "within the 8 min", "what is left". Cinquenta e duas delas nao
+    diziam um tempo em forma nenhuma -- e a nota de conducao abria sem orcamento, que e
+    justamente o que o Doc 04 §8.2 manda ela ter, e o que a P8 tirou da barra de etapas
+    PORQUE o professor ja teria aqui.
+
+    Prosa livre num campo que so pode conter um numero e um convite a quarenta grafias. O
+    autor escreve o inteiro; o resto e derivado -- inclusive o total da etapa, que vem de
+    `registro.js` e nunca e redigitado aqui."""
+    if etapa_min and minutos != etapa_min:
+        return f"{minutos} of the {etapa_min} min"
+    return f"{minutos} min"
+
+
+def nota_de_tela(dados, titulo, etapa_min=None):
     """Os campos do guia (04 §8.2), para o atributo `data-teacher` de uma tela.
 
     Devolve HTML com aspas SIMPLES em volta de nada: o texto inteiro vai dentro de um
@@ -756,7 +775,20 @@ def nota_de_tela(dados, titulo):
             f"guia da tela {titulo!r}: {onde} manda o professor dizer algo que nao esta na "
             f"tela, e nao ha `exact`. Escreva a frase -- quem da a aula nao pode ter de "
             f"inventar na hora a formulacao que voce ja tinha na cabeca (04 \u00a78.2).")
-    cab = titulo + (f" ({dados['min']})" if dados.get("min") else "")
+    # O orcamento de tempo NAO e opcional: a nota que abre sem ele e a nota que o
+    # normativo descreve com ele. Antes daqui o `if dados.get("min")` deixava a tela sem
+    # tempo passar calada -- e passou, em 52 telas.
+    minutos = dados.get("min")
+    if not isinstance(minutos, int) or isinstance(minutos, bool) or minutos < 1:
+        raise SystemExit(
+            f"guia da tela {titulo!r}: `min` = {minutos!r}. O orcamento de tempo da tela e um "
+            f"INTEIRO de minutos, nao prosa -- a grafia ('3 min', '3 of the 5 min') e emitida "
+            f"por `rotulo_de_tempo`, e o total da etapa sai do `registro.js`.")
+    if etapa_min and minutos > etapa_min:
+        raise SystemExit(
+            f"guia da tela {titulo!r}: {minutos} min numa etapa de {etapa_min}. A tela nao "
+            f"cabe na propria etapa.")
+    cab = f"{titulo} ({rotulo_de_tempo(minutos, etapa_min)})"
     partes = [f"<strong>{esc(cab)}</strong>"]
     for chave, rotulo in CAMPOS_TELA:
         if chave in CAMPOS_CONDICIONAIS and chave not in dados:

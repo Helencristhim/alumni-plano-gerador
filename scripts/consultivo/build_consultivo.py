@@ -674,6 +674,35 @@ def aplica_guia_de_tela(telas, pasta, reg, n):
         erros.append(f"aula {n}: o guia_telas.json declara {len(guia)} tela(s) e a aula tem "
                      f"{len(achadas)} com nota. O guia e por TELA — uma entrada para cada.")
         return telas, erros
+    # ---- O ORCAMENTO DE TEMPO DA TELA SAI DA ETAPA, E FECHA COM ELA
+    #
+    # O total de minutos de cada etapa ja existe, uma vez, em `registro.js` (`stages`) -- e
+    # e de la que o GATE 37 tira a soma que fecha o percurso do contrato. A tela declara
+    # SO a sua fatia; o total nunca e redigitado no guia, e a grafia e emitida.
+    #
+    # A P8 tirou a minutagem da barra de etapas ("tempo na tela projetada e info tecnica")
+    # dizendo que quem conduz ja tem os minutos NA NOTA. Isso so e verdade se a nota os
+    # tiver -- e por isso a soma e cobrada aqui, na emissao, e nao depois.
+    orcamentos = [int(x) for x in re.findall(r"min:\s*(\d+)", reg)]
+    etapa_da_tela = [int(x) for x in re.findall(r'data-stage="(\d+)"', telas)]
+    if len(etapa_da_tela) != len(achadas):
+        erros.append(f"aula {n}: {len(achadas)} tela(s) com nota e {len(etapa_da_tela)} com "
+                     f"data-stage. Sem o par nao da para dizer de que etapa sai o tempo.")
+        return telas, erros
+    soma = {}
+    for i, et in enumerate(etapa_da_tela, 1):
+        dados = guia.get(str(i)) or {}
+        if isinstance(dados.get("min"), int):
+            soma[et] = soma.get(et, 0) + dados["min"]
+    for et, total in sorted(soma.items()):
+        alvo = orcamentos[et - 1] if et <= len(orcamentos) else None
+        if alvo is not None and total != alvo:
+            erros.append(f"aula {n}: as telas da etapa {et} somam {total} min e a etapa "
+                         f"declara {alvo} no registro.js. O percurso que a nota mostra nao "
+                         f"e o que o contrato reconhece.")
+    if erros:
+        return telas, erros
+
     saida, fim = [], 0
     for i, m in enumerate(achadas, 1):
         dados = guia.get(str(i))
@@ -681,8 +710,10 @@ def aplica_guia_de_tela(telas, pasta, reg, n):
             erros.append(f"aula {n}: o guia_telas.json nao tem a tela {i}.")
             return telas, erros
         titulo = nomes[i - 1] if i <= len(nomes) else f"Slide {i}"
+        et = etapa_da_tela[i - 1]
+        etapa_min = orcamentos[et - 1] if et <= len(orcamentos) else None
         saida.append(telas[fim:m.start()])
-        saida.append(' data-teacher="' + render.nota_de_tela(dados, titulo) + '"')
+        saida.append(' data-teacher="' + render.nota_de_tela(dados, titulo, etapa_min) + '"')
         fim = m.end()
     saida.append(telas[fim:])
     return "".join(saida), erros

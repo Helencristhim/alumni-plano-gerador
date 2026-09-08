@@ -49,6 +49,15 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ---- O ESCOPO FOI REAPONTADO (08/09/2026)
+#
+# Este gate nasceu medindo `-aulaN.html` + `<meta name="alumni-framework">`. Nenhum arquivo
+# publicado carrega esse meta: o gate imprimia `0 aula(s)` e um AVISO no CI desde que
+# nasceu. A anatomia das quatro modalidades que foi AO AR e a `consultivo`, com outro
+# carimbo e outro nome de arquivo. O seletor mudou de lugar -- a REGRA nao mudou.
+# Ver `scripts/anatomia_quatro_modalidades.py`.
+from anatomia_quatro_modalidades import no_escopo  # noqa: E402
+
 ANATOMIA_GD = ('reading-into-speaking', 'listening-into-interaction',
                'grammar-for-communication', 'esp-real-world')
 
@@ -87,13 +96,11 @@ def verifica(paths):
     fails, checados = [], 0
     for p in paths:
         base = os.path.basename(p)
-        if not re.search(r'-aula\d+\.html$', base):
-            continue
         if os.sep + 'aluno' + os.sep in p:
             continue  # o espelho do aluno nao tem nota, por desenho
         with open(p, encoding='utf-8', errors='replace') as fh:
             h = fh.read()
-        if framework_de(h) not in ANATOMIA_GD:
+        if not no_escopo(p, h):
             continue
         checados += 1
         rel = os.path.relpath(p, RAIZ)
@@ -172,7 +179,7 @@ def _sem_objeto(n_medidos):
         try:
             with open(_f, encoding="utf-8", errors="replace") as _fh:
                 if 'content="consultivo"' in _fh.read(4000):
-                    print("  AVISO — SEM OBJETO: este gate mede a forma guided-discovery e nao"
+                    print("  AVISO — SEM OBJETO: este gate mede a forma das quatro modalidades e nao"
                           " ha nenhuma aula dela no repo. O material da anatomia nova"
                           " (consultivo) NAO e coberto por ele. Reaponte-o para o"
                           " requisito, ou aposente-o com o motivo escrito (P2 §13/§23).")
@@ -190,9 +197,9 @@ def main():
     for f in fails:
         print(f'  FAIL  {f}')
     if fails:
-        print(f'\n{len(fails)} problema(s) em {checados} aula(s) guided-discovery.')
+        print(f'\n{len(fails)} problema(s) em {checados} material(is) das quatro modalidades.')
         return 1
-    print(f'OK — {checados} aula(s) guided-discovery: nota em toda tela, com tempo, sem '
+    print(f'OK — {checados} material(is) das quatro modalidades: nota em toda tela, com tempo, sem '
           f'comando gritado.')
     _sem_objeto(checados)
     return 0
