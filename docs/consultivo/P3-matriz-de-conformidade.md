@@ -1,369 +1,439 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P3_Matriz_de_Conformidade_e_Especificacao_da_Suite.docx`
-> Drive ID: `10Cv9RpQW2c-_zWktQiXdOZsAqVlCUp0q`
-> Modificado no Drive: 2026-08-25
-> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P3-matriz-de-conformidade.md`
-> A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
+> Drive ID: `11Y13A2YzFgex1Trts8EOAreOcBXYrwpC`
+> Modificado no Drive: 2026-09-05
+> Reimportar: conector do Drive (`read_file_content` com o fileId acima). Os BYTES do .docx nao
+> chegam integros por este caminho — em 08/09/2026 o round-trip corrompeu o zip em 2 de 3
+> tentativas (CRC invalido) —, entao a importacao usa o texto renderizado pelo conector, e nao
+> o `docx_to_md.py`.
+> A fonte e o .docx no Drive. Divergencia entre este arquivo e o Drive se resolve reimportando,
+> nunca editando o .md.
 
-**P3 · MATRIZ DE CONFORMIDADE E ESPECIFICAÇÃO DA SUÍTE EXECUTÁVEL**
+## P3 · MATRIZ DE CONFORMIDADE E ESPECIFICAÇÃO DA SUÍTE EXECUTÁVEL
 
-**Como provar, requisito a requisito — Private Class Alumni Black**
+Como provar, requisito a requisito — Private Class Alumni Black
 
-**O que este arquivo é, e o que ele não é.** Ele especifica a **matriz normativa** e os **requisitos da suíte executável**. **A implementação dos testes é entrega técnica separada e não está contida aqui.** Consultar esta especificação **não é** executar a suíte: nenhum resultado pode ser declarado a partir da leitura deste documento.
+**O que este arquivo é, e o que ele não é.** Ele especifica a matriz normativa e os requisitos da suíte executável. A implementação dos testes é entrega técnica separada e não está contida aqui. Consultar esta especificação não é executar a suíte: nenhum resultado pode ser declarado a partir da leitura deste documento.
 
-**Série P — plataforma.** Terceiro documento da série: **P1** é o contrato funcional (o *quê*), **P2** é o protocolo de implementação e QA (o *como se mexe e como se prova*), e **P3** é a **matriz** que transforma cada requisito do P1 em prova objetiva — positiva e negativa.
+**Série P — plataforma.** Terceiro documento da série: P1 é o contrato funcional (o quê), P2 é o protocolo de implementação e QA (o como se mexe e como se prova), e P3 é a matriz que transforma cada requisito do P1 em prova objetiva — positiva e negativa.
 
-**O que ainda não existe.** Código executável · catálogo individual de casos com identificadores · automação no navegador · *fixtures* · comandos de execução · relatório gerado automaticamente.
+**O que ainda não existe.** Código executável · catálogo individual de casos com identificadores · automação no navegador · fixtures · comandos de execução · relatório gerado automaticamente.
 
-**Sobre as checagens já existentes.** O conjunto acumulado num material específico é **base de migração, não a suíte**: é majoritariamente **estático**, foi construído em torno de **um** material, não executa todos os fluxos no navegador, **não é parametrizado para qualquer aluno** e não comprova os recursos que dependem do ambiente oficial. Aproveitá-lo é certo; **reconhecê-lo como a suíte final não**.
+**Sobre as checagens já existentes.** O conjunto acumulado num material específico é base de migração, não a suíte: é majoritariamente estático, foi construído em torno de um material, não executa todos os fluxos no navegador, não é parametrizado para qualquer aluno e não comprova os recursos que dependem do ambiente oficial. Aproveitá-lo é certo; reconhecê-lo como a suíte final não.
 
-**O P3 não cria regra.** Não cria regra pedagógica, editorial, visual nem funcional. Se um teste daqui exige algo que o P1 não pede, **o teste está errado** — não o material. Regra nova entra pelo P1, e só então ganha teste aqui.
+**O P3 não cria regra.** Não cria regra pedagógica, editorial, visual nem funcional. Se um teste daqui exige algo que o P1 não pede, o teste está errado — não o material. Regra nova entra pelo P1, e só então ganha teste aqui.
 
-**Uma consequência que é o ponto.** A conformidade **não é a presença de texto, seletor ou função no código**. Sempre que o requisito envolver **interação, estado, visibilidade ou comportamento por perfil**, a prova é **executar o fluxo no navegador**. Buscar a string Finish lesson no arquivo prova que a palavra existe; não prova que o botão conclui a aula.
+**Uma consequência que é o ponto.** A conformidade não é a presença de texto, seletor ou função no código. Sempre que o requisito envolver interação, estado, visibilidade ou comportamento por perfil, a prova é executar o fluxo no navegador. Buscar a string `Finish lesson` no arquivo prova que a palavra existe; não prova que o botão conclui a aula.
 
-**Cada teste declara seis campos.** Teste sem eles não entra na suíte:
+Cada teste declara seis campos. Teste sem eles não entra na suíte:
 
-| **Campo** | **Por que existe** |
-|---|---|
-| **Requisito de origem no P1** | teste órfão vira regra clandestina, e ninguém sabe se pode removê-lo |
-| **Condição verificada** | a afirmação que está sendo testada, em uma frase |
-| **Evidência positiva esperada** | o que se observa quando está certo |
-| **Mutação / caso negativo** | o defeito deliberado que o teste **tem** de pegar |
-| **Ambiente de execução** | onde ele vale — e onde ele não pode concluir |
-| **Classificação** | **bloqueante · condicional · informativo** |
+| Campo | Por que existe |
+| :-: | :-: |
+| Requisito de origem no P1 | teste órfão vira regra clandestina, e ninguém sabe se pode removê-lo |
+| Condição verificada | a afirmação que está sendo testada, em uma frase |
+| Evidência positiva esperada | o que se observa quando está certo |
+| Mutação / caso negativo | o defeito deliberado que o teste tem de pegar |
+| Ambiente de execução | onde ele vale — e onde ele não pode concluir |
+| Classificação | bloqueante · condicional · informativo |
 
-**1. Perfil de capacidades do ambiente — antes de qualquer teste funcional**
+### 1. Perfil de capacidades do ambiente — antes de qualquer teste funcional
 
-A suíte **primeiro descobre onde está rodando**. Sem isso, toda falha fica ambígua entre defeito do material e restrição do host — e a ambiguidade sempre se resolve a favor de quem escreveu o código.
+A suíte primeiro descobre onde está rodando. Sem isso, toda falha fica ambígua entre defeito do material e restrição do host — e a ambiguidade sempre se resolve a favor de quem escreveu o código.
 
 Capacidades a identificar: execução de JavaScript · persistência local · reprodução de áudio · permissão para abrir nova janela ou aba · restrições de sandbox · compartilhamento ou isolamento de estado · suporte aos recursos que o produto exige.
 
-| **Ambiente** | **O que ele pode concluir** |
-|---|---|
-| **Artefato de revisão** | sujeito a restrição externa do host — bloqueio de pop-up, entre outras |
-| **Ambiente oficial do produto** | é onde as funcionalidades definitivas se validam |
-| **Modo local de desenvolvimento** | serve ao diagnóstico; **não substitui** a validação no publicado |
+| Ambiente | O que ele pode concluir |
+| :-: | :-: |
+| Artefato de revisão | sujeito a restrição externa do host — bloqueio de pop-up, entre outras |
+| Ambiente oficial do produto | é onde as funcionalidades definitivas se validam |
+| Modo local de desenvolvimento | serve ao diagnóstico; não substitui a validação no publicado |
 
-**Limitação externa detectada é registrada COMO limitação do ambiente.** Não se oculta, não se converte automaticamente em defeito do HTML, e **não serve para declarar aprovada** uma funcionalidade que não chegou a ser testada.
+Limitação externa detectada é registrada COMO limitação do ambiente. Não se oculta, não se converte automaticamente em defeito do HTML, e não serve para declarar aprovada uma funcionalidade que não chegou a ser testada.
 
-**1.1 Carga limpa — a primeira prova de todas**
+#### 1.1 Carga limpa — a primeira prova de todas
 
-**Antes de qualquer verificação de conteúdo, a página abre e o console fica limpo.** Este teste custa segundos e vale mais que centenas de checagens de texto, porque é o único que enxerga a classe de defeito que nenhuma delas alcança.
+Antes de qualquer verificação de conteúdo, a página abre e o console fica limpo. Este teste custa segundos e vale mais que centenas de checagens de texto, porque é o único que enxerga a classe de defeito que nenhuma delas alcança.
 
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
-| Carga | **zero erro e zero exceção** no console, nas duas visões |
-| Construtores | cada componente que se monta por script **existe no DOM depois da carga** — contado, não presumido |
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
+| Carga | zero erro e zero exceção no console, nas duas visões |
+| Construtores | cada componente que se monta por script existe no DOM depois da carga — contado, não presumido |
 | Cobertura | a contagem de componentes construídos bate com a de gatilhos presentes no markup |
 
-**Por que esta seção abre o documento.** Uma exceção no boot **aborta o resto do manipulador**: o sintoma aparece longe da causa. No caso que originou esta regra, um acesso de propriedade sobrevivente a um renome derrubava o preenchimento do pre-class — e o que **sumiu** foi o transporte de áudio de **todo** o material, em pre-class e in-class. O texto estava inteiro: a função existia, o identificador existia, e 435 casos negativos estáticos passaram.
+**Por que esta seção abre o documento.** Uma exceção no boot aborta o resto do manipulador: o sintoma aparece longe da causa. No caso que originou esta regra, um acesso de propriedade sobrevivente a um renome derrubava o preenchimento do pre-class — e o que sumiu foi o transporte de áudio de todo o material, em pre-class e in-class. O texto estava inteiro: a função existia, o identificador existia, e 435 casos negativos estáticos passaram.
 
-**Mutações obrigatórias:** introduzir um erro em qualquer função do boot e confirmar que a suíte reprova **por não haver componente construído**, e não apenas por haver erro no console — as duas evidências são distintas, e a segunda sem a primeira deixa passar um construtor que falha em silêncio.
+**Mutações obrigatórias:** introduzir um erro em qualquer função do boot e confirmar que a suíte reprova por não haver componente construído, e não apenas por haver erro no console — as duas evidências são distintas, e a segunda sem a primeira deixa passar um construtor que falha em silêncio.
 
-**2. Integridade estrutural**
+### 2. Integridade estrutural
 
-Verificar: existência das visões e seções obrigatórias · associação correta entre ciclo, aulas, cards e conteúdos · correspondência entre identificadores, botões e painéis · **ausência de id duplicado** · validade de HTML, CSS e JavaScript · ausência de referência quebrada · ausência de controle sem função · **nenhum conteúdo obrigatório acessível só por mecanismo bloqueado** · **nenhuma URL absoluta de teste ou domínio fixado no código** · isolamento entre materiais, ciclos e alunos.
+Verificar: existência das visões e seções obrigatórias · associação correta entre ciclo, aulas, cards e conteúdos · correspondência entre identificadores, botões e painéis · ausência de id duplicado · validade de HTML, CSS e JavaScript · ausência de referência quebrada · ausência de controle sem função · nenhum conteúdo obrigatório acessível só por mecanismo bloqueado · nenhuma URL absoluta de teste ou domínio fixado no código · isolamento entre materiais, ciclos e alunos.
 
-**Mutações que a suíte tem de pegar:** alterar um identificador · remover uma seção obrigatória · fazer dois botões apontarem para o mesmo conteúdo.
+Mutações que a suíte tem de pegar: alterar um identificador · remover uma seção obrigatória · fazer dois botões apontarem para o mesmo conteúdo.
 
-**2.1 Oito etapas normativas e slides variáveis**
+#### 2.1 Oito etapas normativas e slides variáveis
 
-Origem: Documento 03 e P1 §4. Cada framework possui oito etapas normativas em ordem definida. O HTML deve representar as oito, mas não pode converter essa constante pedagógica em oito slides, uma etapa por slide ou quantidade fixa de unidades de apresentação.
+Origem: Documento 03 e P1 §4. Cada framework possui oito etapas normativas em ordem definida. O HTML deve representar as oito, mas **não pode converter essa constante pedagógica em oito slides**, uma etapa por slide ou quantidade fixa de unidades de apresentação.
 
-**O teste precisa de aulas com distribuições DIFERENTES das mesmas oito etapas: quantidade distinta de slides, etapa distribuída em mais de um slide e slide que reúne etapas. A constante testada é oito etapas; a variável testada é a representação em unidades.**
+O teste precisa de aulas com distribuições DIFERENTES das mesmas oito etapas: quantidade distinta de slides, etapa distribuída em mais de um slide e slide que reúne etapas. A constante testada é oito etapas; a variável testada é a representação em unidades.
 
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
 | Variedade | o conjunto inclui oito etapas distribuídas em quantidades diferentes de slides |
 | Correspondência | oito etapas do framework = oito etapas do registro = etapas navegáveis, item a item e na mesma ordem |
-| Combinação | duas etapas que compartilham uma tela aparecem **uma vez cada**, sem duplicata artificial para "fechar a conta" |
+| Combinação | duas etapas que compartilham uma tela aparecem uma vez cada, sem duplicata artificial para "fechar a conta" |
 | Omissão | nenhuma das oito etapas pode ser omitida; slide pode ser omitido ou combinado sem alterar a arquitetura |
-| Ausência de contagem | **nenhuma quantidade fixa de slides; oito é exigido somente para etapas pedagógicas** |
+| Ausência de contagem | nenhuma quantidade fixa de slides; oito é exigido somente para etapas pedagógicas |
 
-**Mutações obrigatórias:**
+Mutações obrigatórias:
 
-• remover uma das oito etapas ou acrescentar uma nona e confirmar que a suíte reprova;
+- remover uma das oito etapas ou acrescentar uma nona e confirmar que a suíte reprova;
+- fixar oito slides, ou forçar uma etapa por slide, e confirmar que a suíte reprova;
+- reunir duas etapas em um slide e confirmar que ambas permanecem identificadas sem duplicata artificial;
+- distribuir uma etapa em mais de um slide e confirmar que ela continua sendo uma única etapa;
+- reordenar duas etapas e confirmar reprovação pela ordem incorreta.
 
-• fixar oito slides, ou forçar uma etapa por slide, e confirmar que a suíte reprova;
+A checagem deve exigir literalmente oito etapas porque essa é a arquitetura normativa. Ela não pode exigir oito slides. Etapas são comparadas por nome, função e ordem; slides são derivados da distribuição declarada.
 
-• reunir duas etapas em um slide e confirmar que ambas permanecem identificadas sem duplicata artificial;
+A prova usa registros de oito etapas com diferentes distribuições em slides. Deve reprovar sete ou nove etapas, ordem alterada, etapa fictícia, etapa ausente e oito slides codificados como obrigação. Rótulos e barras de progresso podem exibir oito etapas quando se referirem à arquitetura pedagógica, mas não podem chamar slides de etapas nem pressupor igualdade entre as duas contagens.
 
-• distribuir uma etapa em mais de um slide e confirmar que ela continua sendo uma única etapa; • reordenar duas etapas e confirmar reprovação pela ordem incorreta.
+#### 2.2 Modo de entrega declarado na interface
 
-**A checagem deve exigir literalmente oito etapas porque essa é a arquitetura normativa. Ela não pode exigir oito slides. Etapas são comparadas por nome, função e ordem; slides são derivados da distribuição declarada.**
+Origem: P1 §0 e §17. O modo é entrada obrigatória do pipeline; a suíte deriva o modo efetivamente entregue pelos recursos e mecanismos do build e verifica se corresponde à entrada declarada. No modo protótipo, o material declara uma única vez, na primeira área autônoma da visão do aluno que contenha áudio, que o áudio não é final. O aviso não aparece no Teacher's Guide, nos cartões de preparação nem nas notas de slide.
 
-**A prova usa registros de oito etapas com diferentes distribuições em slides. Deve reprovar sete ou nove etapas, ordem alterada, etapa fictícia, etapa ausente e oito slides codificados como obrigação. Rótulos e barras de progresso podem exibir oito etapas quando se referirem à arquitetura pedagógica, mas não podem chamar slides de etapas nem pressupor igualdade entre as duas contagens.**
-
-**2.2 Modo de entrega declarado na interface**
-
-Origem: P1 §0 e §17. O modo é entrada obrigatória do pipeline; a suíte deriva o modo efetivamente entregue pelos recursos e mecanismos do build e verifica se corresponde à entrada declarada. No modo protótipo, o material declara uma única vez, na primeira área autônoma da visão do aluno que contenha áudio, que o áudio não é final. O aviso não aparece no Teacher’s Guide, nos cartões de preparação nem nas notas de slide.
-
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
 | Existência | o aviso existe quando o áudio é de síntese do navegador |
-| Unicidade | aparece **uma vez**, não a cada player |
-| Linguagem | fala da **consequência** — a voz é provisória — e **não nomeia tecnologia** nem navegador |
+| Unicidade | aparece uma vez, não a cada player |
+| Linguagem | fala da consequência — a voz é provisória — e não nomeia tecnologia nem navegador |
 | Língua | o trecho declara a própria língua, para o leitor de tela |
-| Lugar | onde a pessoa **encontra** o áudio, não no conteúdo projetado durante a aula |
+| Lugar | onde a pessoa encontra o áudio, não no conteúdo projetado durante a aula |
 
 Para fins de QA, o modo efetivo se deriva e não se aceita apenas por declaração. Síntese do navegador caracteriza protótipo; áudio definitivo sem caminho de síntese caracteriza produção final. A checagem deve detectar declaração incompatível com o build, aviso ausente, aviso duplicado ou aviso colocado em superfície docente proibida.
 
-Mutações obrigatórias: remover o aviso · duplicá-lo · colocá-lo somente ou também no Teacher’s Guide · movê-lo para área docente · trocar a consequência por tecnologia (“as vozes do navegador”) · retirar a marca de língua · declarar produção final mantendo síntese do navegador.
+Mutações obrigatórias: remover o aviso · duplicá-lo · colocá-lo somente ou também no Teacher's Guide · movê-lo para área docente · trocar a consequência por tecnologia ("as vozes do navegador") · retirar a marca de língua · declarar produção final mantendo síntese do navegador.
 
-**2.3 Origem, segurança e correspondência dos áudios**
+#### 2.3 Origem, segurança e correspondência dos áudios
 
 Origem: P1 §0.1 e Anexo P-A. A suíte trata o áudio oficial como artefato produzido previamente pelo pipeline ElevenLabs, nunca como fala sintetizada no navegador.
 
-No build de produção final, verificar por exclusão: ausência de Web Speech API, speechSynthesis, SpeechSynthesisUtterance, endpoints autenticados da ElevenLabs, API keys, tokens ou fallback para síntese local. A simples existência de arquivos de áudio não aprova a origem.
+No build de produção final, verificar por exclusão: ausência de Web Speech API, `speechSynthesis`, `SpeechSynthesisUtterance`, endpoints autenticados da ElevenLabs, API keys, tokens ou fallback para síntese local. A simples existência de arquivos de áudio não aprova a origem.
 
 Verificar pelo manifesto: cada arquivo possui transcript e versão aprovados, categoria funcional, modelo, Voice ID, parâmetros, duração e checksum; o arquivo existente confere com o checksum; o player aponta para esse arquivo; o transcript exibido é o mesmo que originou a geração.
 
 Executar todos os players no build, não uma amostra: carregar, reproduzir, pausar, retomar, parar e reiniciar. Confirmar ausência de requisição de síntese ou geração em tempo de execução e registrar falhas de mídia sem fallback silencioso.
 
-Mutações obrigatórias: inserir SpeechSynthesisUtterance; adicionar fallback por speechSynthesis; expor uma chave falsa no JavaScript; trocar o arquivo de dois transcripts; alterar o transcript sem regenerar; modificar o checksum; substituir um Voice ID no manifesto; remover um arquivo; fazer o player chamar a API no cliente. Cada mutação deve reprovar pela causa correspondente.
+Mutações obrigatórias: inserir `SpeechSynthesisUtterance`; adicionar fallback por `speechSynthesis`; expor uma chave falsa no JavaScript; trocar o arquivo de dois transcripts; alterar o transcript sem regenerar; modificar o checksum; substituir um Voice ID no manifesto; remover um arquivo; fazer o player chamar a API no cliente. Cada mutação deve reprovar pela causa correspondente.
 
 Classificação: síntese no cliente, credencial exposta, mídia ausente ou divergência transcript–arquivo são falhas bloqueantes na produção final. No protótipo, a síntese provisória é permitida somente com o aviso único previsto no P1.
 
-**3. Duas URLs e isolamento da entrega do aluno**
+### 3. Duas URLs e isolamento da entrega do aluno
 
 Na produção final, os testes executam duas URLs oficiais e inspecionam separadamente seus builds. A URL do professor contém a visão docente e a prévia discente; a URL do aluno contém exclusivamente a visão discente.
 
-• conteúdo exclusivo do professor não existe no HTML, JavaScript, payload, estado, comentários, source maps ou recursos carregados pela URL do aluno;
+- conteúdo exclusivo do professor não existe no HTML, JavaScript, payload, estado, comentários, source maps ou recursos carregados pela URL do aluno;
+- Teacher's Guide, gabaritos reservados, hipóteses pedagógicas, registro pós-aula e controles administrativos existem somente no build do professor;
+- ação do professor não aparece como ação concluída pelo aluno;
+- a resposta registrada do aluno aparece ao professor em representação estática equivalente, sem permanecer como botão, campo, select, checkbox, radio, área arrastável ou outro controle interativo/desabilitado;
+- a representação estática distingue resposta registrada, ausência de resposta e, quando aplicável, estado de correção, sem permitir alteração; mutações que removam a resposta junto com o controle ou mantenham controle desabilitado devem reprovar;
+- controle do aluno não se confunde com controle administrativo;
+- alternar professor ↔ prévia do aluno na URL docente não apaga respostas nem altera indevidamente o estado da aula;
+- a URL do aluno não possui alternador, rota de professor ou elevação de papel por query, hash, armazenamento, atributo ou chamada direta.
 
-• Teacher’s Guide, gabaritos reservados, hipóteses pedagógicas, registro pós-aula e controles administrativos existem somente no build do professor;
+display:none não é separação. Remover o alternador também não basta. A suíte deve procurar conteúdo e caminhos docentes nos bytes e nas requisições do build do aluno; qualquer ocorrência funcional reprova a publicação.
 
-•  **ação do professor não aparece como ação concluída pelo aluno**;
+#### 3.0 Migração de espaços de estado
 
-• a resposta registrada do aluno aparece ao professor em representação estática equivalente, sem permanecer como botão, campo, select, checkbox, radio, área arrastável ou outro controle interativo/desabilitado;
+Origem: P1 §5. Migração é o código que ninguém vê rodar — ela acontece uma vez, na primeira abertura, e o que ela erra some antes de alguém procurar.
 
-• a representação estática distingue resposta registrada, ausência de resposta e, quando aplicável, estado de correção, sem permitir alteração; mutações que removam a resposta junto com o controle ou mantenham controle desabilitado devem reprovar;
-
-•  controle do aluno **não se confunde** com controle administrativo;
-
-• alternar professor ↔ prévia do aluno na URL docente não apaga respostas nem altera indevidamente o estado da aula;
-
-• a URL do aluno não possui alternador, rota de professor ou elevação de papel por query, hash, armazenamento, atributo ou chamada direta.
-
-**display:none não é separação. Remover o alternador também não basta. A suíte deve procurar conteúdo e caminhos docentes nos bytes e nas requisições do build do aluno; qualquer ocorrência funcional reprova a publicação.**
-
-**3.0 Migração de espaços de estado**
-
-Origem: P1 §5. Migração é o código que **ninguém vê rodar** — ela acontece uma vez, na primeira abertura, e o que ela erra some antes de alguém procurar.
-
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
-| Cada formato já existente | um bucket de **cada** convenção anterior migra **sem perder chave** |
-| Formato corrente | bucket já na convenção nova passa **intacto** |
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
+| Cada formato já existente | um bucket de cada convenção anterior migra sem perder chave |
+| Formato corrente | bucket já na convenção nova passa intacto |
 | Vazio | bucket ausente ou ilegível resulta nos espaços vazios, sem exceção |
-| Sem resíduo | o que fica gravado **não conserva** os nomes antigos |
+| Sem resíduo | o que fica gravado não conserva os nomes antigos |
 | Ordem | renomear antes de classificar (P1 §5) |
 
-**Mutações obrigatórias:** inverter a ordem das migrações · remover a migração de renome · fazer a classificação rodar sobre um bucket já classificado.
+Mutações obrigatórias: inverter a ordem das migrações · remover a migração de renome · fazer a classificação rodar sobre um bucket já classificado.
 
-**A migração se testa fora do navegador.** As funções de armazenamento se extraem e rodam contra buckets montados à mão — é a única forma de exercitar um formato que **já não existe** em nenhuma máquina de teste.
+A migração se testa fora do navegador. As funções de armazenamento se extraem e rodam contra buckets montados à mão — é a única forma de exercitar um formato que já não existe em nenhuma máquina de teste.
 
-**3.1 Os dois campos compartilhados**
+#### 3.1 Os dois campos compartilhados
 
-Origem: P1 §8. **What worked** **e** **Keep developing** **são os únicos campos que chegam ao aluno.** A checagem que confirma que os dois estão lá **não é** a checagem que reprova um terceiro: a primeira passa com dez campos na tela. É preciso a segunda, e ela se faz por **exclusão**, não por presença.
+Origem: P1 §8. What worked e Keep developing são os únicos campos que chegam ao aluno. A checagem que confirma que os dois estão lá não é a checagem que reprova um terceiro: a primeira passa com dez campos na tela. É preciso a segunda, e ela se faz **por exclusão**, não por presença.
 
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
 | Presença | os dois campos aparecem na aba Feedback da visão do aluno |
-| **Exclusividade** | **nenhum outro campo** do registro pós-aula aparece ali — a contagem de campos na aba é **exatamente dois** |
-| Restrição | escala, engajamento, evidência observável, ponto prioritário e próxima ação permanecem **restritos ao professor**, no armazenamento e na árvore acessível |
+| Exclusividade | nenhum outro campo do registro pós-aula aparece ali — a contagem de campos na aba é exatamente dois |
+| Restrição | escala, engajamento, evidência observável, ponto prioritário e próxima ação permanecem restritos ao professor, no armazenamento e na árvore acessível |
 | Troca de visão | na URL docente, alternar professor → prévia do aluno → professor não expõe registro interno na prévia; na URL do aluno não existe troca de visão |
 
-**Mutações obrigatórias:**
+Mutações obrigatórias:
 
-•  **expor um terceiro campo** ao aluno — Language to revisit, Next focus ou outro — e confirmar que a suíte reprova **por ele existir**, não por faltar algum dos dois;
+- expor um terceiro campo ao aluno — Language to revisit, Next focus ou outro — e confirmar que a suíte reprova por ele existir, não por faltar algum dos dois;
+- compartilhar um campo numérico da escala, que é o vazamento mais provável, porque não parece texto de feedback;
+- fazer a troca de visão repintar um campo do professor na superfície do aluno.
 
-•  **compartilhar um campo numérico** da escala, que é o vazamento mais provável, porque não parece texto de feedback;
+**Por que a exclusividade tem de ser contada.** Um terceiro campo não quebra nada: a aba abre, os dois campos certos continuam lá, e a tela parece correta. O defeito é o que a mais apareceu, e só uma verificação por exclusão o encontra.
 
-•  **fazer a troca de visão repintar** um campo do professor na superfície do aluno.
+### 4. Estados e transições
 
-**Por que a exclusividade tem de ser contada.** Um terceiro campo não quebra nada: a aba abre, os dois campos certos continuam lá, e a tela parece correta. O defeito é o que **a mais** apareceu, e só uma verificação por exclusão o encontra.
+Testar inicial, intermediário e final de cada componente: aula não realizada / realizada · conteúdo recolhido / expandido · resposta não preenchida / preenchida / conferida / redefinida · áudio parado / tocando / pausado / retomado / encerrado · card selecionado / movido / devolvido no sorting · aula iniciada / concluída / redefinida · registro pós-aula não salvo / salvo / redefinido.
 
-**4. Estados e transições**
+Cada teste verifica a mudança visual E o estado funcional. Trocar o rótulo do botão sem mudar o comportamento falha. É a forma mais barata de parecer conforme.
 
-Testar **inicial, intermediário e final** de cada componente: aula não realizada / realizada · conteúdo recolhido / expandido · resposta não preenchida / preenchida / conferida / redefinida · áudio parado / tocando / pausado / retomado / encerrado · card selecionado / movido / devolvido no sorting · aula iniciada / concluída / redefinida · registro pós-aula não salvo / salvo / redefinido.
+### 5. Componentes interativos — em todas as ocorrências
 
-**Cada teste verifica a mudança visual E o estado funcional.** Trocar o rótulo do botão sem mudar o comportamento **falha**. É a forma mais barata de parecer conforme.
+A suíte testa cada mecânica compartilhada em todas as suas ocorrências, nunca num slide de amostra. Componente compartilhado que se testa uma vez só é como checagem que nunca falhou: não está conferindo nada.
 
-**5. Componentes interativos — em todas as ocorrências**
+Mínimo: expansores de conteúdo extra ou opcional · mostrar e fechar gabarito · reset de respostas · botões de conclusão e redefinição · players de áudio · sorting por arrastar e por clicar · campos do registro pós-aula · navegação entre slides · controles do Teacher's Guide · alternância de visão · cards e mapa de aulas.
 
-A suíte testa cada mecânica compartilhada **em todas as suas ocorrências, nunca num slide de amostra**. Componente compartilhado que se testa uma vez só é como checagem que nunca falhou: não está conferindo nada.
+E confirmar que a expansão abre para baixo e preserva a posição do usuário — sem saltar ao topo.
 
-Mínimo: expansores de conteúdo extra ou opcional · mostrar e fechar gabarito · reset de respostas · botões de conclusão e redefinição · players de áudio · sorting por arrastar **e** por clicar · campos do registro pós-aula · navegação entre slides · controles do Teacher's Guide · alternância de visão · cards e mapa de aulas.
+Painéis do card de aula (P1 §9.1), cada um exercitado no navegador, não lido no arquivo:
 
-**E confirmar que a expansão abre para baixo e preserva a posição do usuário** — sem saltar ao topo.
-
-**Painéis do card de aula** (P1 §9.1), cada um exercitado no navegador, não lido no arquivo:
-
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
 | Ordem | consulta de preparação · abrir a aula · abrir o guia · registro pós-aula |
-| Rótulo | **não muda** ao abrir — nada de *Ocultar X* |
-| Substituição | abrir um painel **fecha o outro do mesmo card** |
-| Recolhimento | clicar de novo no mesmo botão **recolhe** |
-| Grupo | o acordeão é **do card**, não da página: o painel de outra aula continua aberto |
-| Estado | aria-expanded correto no botão que abriu **e** no irmão que fechou |
-| Posição | expandir **não** leva a tela ao topo do conteúdo aberto |
+| Rótulo | não muda ao abrir — nada de Ocultar X |
+| Substituição | abrir um painel fecha o outro do mesmo card |
+| Recolhimento | clicar de novo no mesmo botão recolhe |
+| Grupo | o acordeão é do card, não da página: o painel de outra aula continua aberto |
+| Estado | `aria-expanded` correto no botão que abriu e no irmão que fechou |
+| Posição | expandir não leva a tela ao topo do conteúdo aberto |
 
-**Mutações obrigatórias:** devolver a troca de rótulo · impedir o fechamento do irmão · travar a alternância, de modo que o segundo clique não recolha · remover a atualização do aria-expanded · **deixar o irmão fechado com** **aria-expanded="true"** · estender o grupo do acordeão à página inteira · remover um dos quatro controles do card.
+Mutações obrigatórias: devolver a troca de rótulo · impedir o fechamento do irmão · travar a alternância, de modo que o segundo clique não recolha · remover a atualização do `aria-expanded` · deixar o irmão fechado com `aria-expanded="true"` · estender o grupo do acordeão à página inteira · remover um dos quatro controles do card.
 
-**A que mais engana é a do irmão.** Ela não muda nada na tela: o painel fecha, o rótulo está certo, e só o leitor de tela recebe a informação errada. Sem caso negativo, passa para sempre.
+A que mais engana é a do irmão. Ela não muda nada na tela: o painel fecha, o rótulo está certo, e só o leitor de tela recebe a informação errada. Sem caso negativo, passa para sempre.
 
-**6. Player de áudio**
+### 6. Player de áudio
 
-Para **cada** áudio existente no pre-class e no in-class — todos, sem amostragem:
+Para cada áudio existente no pre-class e no in-class — todos, sem amostragem:
 
-um único botão combinado **Play/Pause** · um botão separado **Stop** · os dois **lado a lado** · Play vira Pause durante a reprodução · a pausa **não reinicia** · a retomada parte do ponto pausado · Stop interrompe e volta ao início · Play depois de Stop começa do zero · **nenhum terceiro botão redundante** de Pause ou Resume · funcionamento independente quando há mais de um áudio no mesmo slide.
+um único botão combinado Play/Pause · um botão separado Stop · os dois lado a lado · Play vira Pause durante a reprodução · a pausa não reinicia · a retomada parte do ponto pausado · Stop interrompe e volta ao início · Play depois de Stop começa do zero · nenhum terceiro botão redundante de Pause ou Resume · funcionamento independente quando há mais de um áudio no mesmo slide.
 
-**Caso negativo obrigatório:** introduzir **três** botões — Play, Pause/Resume e Stop — e confirmar que a inconsistência é detectada.
+Caso negativo obrigatório: introduzir três botões — Play, Pause/Resume e Stop — e confirmar que a inconsistência é detectada.
 
-**7. Conteúdo extra e opcional**
+### 7. Conteúdo extra e opcional
 
-Todo conteúdo **extra, opcional, follow-up ou extensão** começa **recolhido**, atrás de expansor (P1 §4).
+Todo conteúdo extra, opcional, follow-up ou extensão começa recolhido, atrás de expansor (P1 §4).
 
-Detectar: conteúdo opcional exibido direto na tela · rótulo Optional separado indevidamente da ação Optional follow-up · expansor que muda a posição da página de forma abrupta · **conteúdo essencial colocado por engano dentro de área opcional** · estado expandido que sobrepõe elementos ou os joga fora da área visível.
+Detectar: conteúdo opcional exibido direto na tela · rótulo `Optional` separado indevidamente da ação `Optional follow-up` · expansor que muda a posição da página de forma abrupta · conteúdo essencial colocado por engano dentro de área opcional · estado expandido que sobrepõe elementos ou os joga fora da área visível.
 
-**8. Correção, gabaritos e respostas esperadas**
+### 8. Correção, gabaritos e respostas esperadas
 
-Origem: P1 §18. A coerência se verifica **por tipo de tarefa**, não por regra única.
+Origem: P1 §18. A coerência se verifica por tipo de tarefa, não por regra única.
 
-**Pre-class:** atividade autocorrigida usa referência de resposta coerente · o feedback imediato e o gabarito do professor **não divergem** · o reset do aluno e o controle de fechar gabarito aparecem **depois** de todo o conteúdo, nunca antes dos exercícios · o professor consulta o gabarito e **não apaga a resposta do aluno** por um controle ambíguo.
+**Pre-class:** atividade autocorrigida usa referência de resposta coerente · o feedback imediato e o gabarito do professor não divergem · o reset do aluno e o controle de fechar gabarito aparecem depois de todo o conteúdo, nunca antes dos exercícios · o professor consulta o gabarito e não apaga a resposta do aluno por um controle ambíguo.
 
-**In-class:** resposta esperada, critério de aceite, alternativa possível e orientação de condução ficam **no Teacher's Guide** · a tela compartilhada **não revela antes da tentativa** · atividade fechada pode usar Check · referência ou comparação usa See ou Compare, **nunca** **Check** · guided discovery pode revelar One possible answer depois da tentativa · discussão, simulação, role-play e produção aberta **não recebem resposta única artificial**.
+**In-class:** resposta esperada, critério de aceite, alternativa possível e orientação de condução ficam no Teacher's Guide · a tela compartilhada não revela antes da tentativa · atividade fechada pode usar Check · referência ou comparação usa See ou Compare, nunca Check · guided discovery pode revelar One possible answer depois da tentativa · discussão, simulação, role-play e produção aberta não recebem resposta única artificial.
 
-Exact prompt no Teacher’s Guide: o campo é condicional. Deve aparecer somente quando o professor precisa dizer formulação não integralmente projetada ou quando sua alteração mudaria tarefa, evidência ou papel docente. Reprovar repetição do prompt completo da tela, campo vazio, “N/A”, ausência quando a formulação específica é necessária e “Exact prompt” residual após mudança da mecânica.
+**Exact prompt no Teacher's Guide:** o campo é condicional. Deve aparecer somente quando o professor precisa dizer formulação não integralmente projetada ou quando sua alteração mudaria tarefa, evidência ou papel docente. Reprovar repetição do prompt completo da tela, campo vazio, "N/A", ausência quando a formulação específica é necessária e "Exact prompt" residual após mudança da mecânica.
 
-**Post-class:** atividade fechada ou autocorrigida segue a mesma coerência; atividade aberta **não se converte** em exercício de resposta única para facilitar a automação.
+**Post-class:** atividade fechada ou autocorrigida segue a mesma coerência; atividade aberta não se converte em exercício de resposta única para facilitar a automação.
 
-**A fonte única de respostas é a implementação preferencial. O requisito BLOQUEANTE é a ausência de divergência perceptível entre correção, gabarito e feedback.** O teste compara **o que cada visão apresenta**, não a forma como o dado foi guardado.
+A fonte única de respostas é a implementação preferencial. O requisito BLOQUEANTE é a ausência de divergência perceptível entre correção, gabarito e feedback. O teste compara o que cada visão apresenta, não a forma como o dado foi guardado.
 
-**Caso negativo obrigatório:** inserir divergência deliberada entre correção e answer key.
+Caso negativo obrigatório: inserir divergência deliberada entre correção e answer key.
 
-**9. Teacher's Guide em janela ou aba separada**
+### 9. Teacher's Guide em janela ou aba separada
 
 Origem: P1 §15.1; protocolo dos dois ambientes: P2 §5.
 
-A rota deriva da URL corrente — ?mode=teacher-guide&lesson={id}. **Nenhum domínio, URL oficial, URL de teste ou endereço de artefato escrito à mão no código.**
+A rota deriva da URL corrente — `?mode=teacher-guide&lesson={id}`. Nenhum domínio, URL oficial, URL de teste ou endereço de artefato escrito à mão no código.
 
-| **Verificação** | **Resultado obrigatório** |
-|---|---|
-| Disponibilidade | o botão aparece em **todos** os cards de In-class da visão professor |
-| Restrição por perfil | o botão **não** aparece na visão do aluno |
-| Associação | cada card abre o guia **da sua** aula |
-| Entrada | o guia abre direto no início da aula selecionada |
-| Conteúdo | a janela apresenta **somente** o guia e sua navegação |
-| Identificação | a aula aberta está claramente identificada |
+A entrada do guia deve abrir no slide solicitado, com cabeçalho compacto e orientação operacional imediatamente acessível. Lesson overview aparece uma única vez, inicialmente recolhido, e não volta a abrir automaticamente durante a navegação. Informações gerais não podem formar um preâmbulo extenso antes de cada slide.
+
+A suíte compara Lesson overview e Estrutura e preparação, exige fonte editável única e verifica que Answer Key, Possible Answers, apoios, decisões e evidências específicas estejam associados à atividade correspondente.
+
+| Verificação | Resultado obrigatório |
+| :-: | :-: |
+| Disponibilidade | o botão aparece em todos os cards de In-class da visão professor |
+| Restrição por perfil | o botão não aparece na visão do aluno |
+| Associação | cada card abre o guia da sua aula |
+| Entrada | o guia abre diretamente na aula e no slide solicitados; a orientação operacional é alcançada sem atravessar conteúdo geral |
+| Conteúdo | cabeçalho compacto; orientação do slide ativa; Lesson overview único e recolhido; campos contextuais junto à atividade; sem preâmbulo extenso repetido |
+| Identificação | cabeçalho identifica claramente aula, título, slide ativo, etapa e minutagem |
 | Independência | navegar no guia não altera slide, visão, resposta ou estado da janela principal |
 | Endereçamento | a rota vem da URL corrente e não depende de domínio fixo |
-| Isolamento | materiais, ciclos e alunos diferentes **não compartilham estado** |
-| Nome da janela | deriva dos identificadores do **artefato** e da **aula**; sem dado pessoal; sem constante comum a todos os materiais |
-| Posição | o botão fica **ao lado** do controle que abre a aula — as duas ações de entrar, antes dos controles de consulta |
-| Rótulo | o verbo está na língua da superfície do professor (P1 §16); só o nome próprio do componente fica em inglês, **marcado com** **lang**; e o rótulo é **um só item de layout**, para o gap do botão não entrar no meio da frase |
-| Fonte do rótulo | os cards trazem **o mesmo** rótulo entre si, e o texto de apoio dentro da aula **cita o rótulo visível** — não um texto escrito à parte |
+| Isolamento | materiais, ciclos e alunos diferentes não compartilham estado |
+| Nome da janela | deriva dos identificadores do artefato e da aula; sem dado pessoal; sem constante comum a todos os materiais |
+| Posição | o botão fica ao lado do controle que abre a aula — as duas ações de entrar, antes dos controles de consulta |
+| Rótulo | o verbo está na língua da superfície do professor (P1 §16); só o nome próprio do componente fica em inglês, marcado com `lang`; e o rótulo é um só item de layout, para o gap do botão não entrar no meio da frase |
+| Fonte do rótulo | os cards trazem o mesmo rótulo entre si, e o texto de apoio dentro da aula cita o rótulo visível — não um texto escrito à parte |
 | Fallback | bloqueio → aviso breve, e o guia interno continua disponível |
-| Ambiente oficial | a abertura efetiva se comprova **na URL real do produto** |
+| Ambiente oficial | a abertura efetiva se comprova na URL real do produto |
 | Regressão | o guia interno continua funcional enquanto for a alternativa |
 
-**A suíte detecta e bloqueia:** todos os cards abrindo o mesmo guia · guia aberto na aula errada · botão exposto ao aluno · URL absoluta gravada no HTML · navegação no guia alterando a janela principal · chave genérica de armazenamento misturando materiais · **falha silenciosa quando** **window.open()** **devolve** **null** · aviso afirmando que o guia abriu quando não abriu · remoção do guia interno antes da validação oficial · **aprovação baseada só no artefato em iframe restrito** · fluxo manual de sincronização entre abas tratado como solução definitiva.
+A suíte detecta e bloqueia: todos os cards abrindo o mesmo guia · guia aberto na aula errada · botão exposto ao aluno · URL absoluta gravada no HTML · navegação no guia alterando a janela principal · chave genérica de armazenamento misturando materiais · falha silenciosa quando `window.open()` devolve `null` · aviso afirmando que o guia abriu quando não abriu · remoção do guia interno antes da validação oficial · aprovação baseada só no artefato em iframe restrito · fluxo manual de sincronização entre abas tratado como solução definitiva · guia abrindo antes da orientação em bloco geral extenso · overview aberto por padrão · repetição do overview a cada slide · orientação do slide abaixo de um preâmbulo fixo · dados divergentes entre overview e Estrutura e preparação · Answer Key ou Possible Answers deslocados para um bloco geral.
 
-**A ausência de** **allow-popups** **no artefato de revisão é limitação do host.** Ali a suíte valida o botão, a construção da rota, a associação da aula, a detecção do bloqueio e o *fallback* — e **não pode declarar comprovada a abertura externa**.
+A ausência de `allow-popups` no artefato de revisão é limitação do host. Ali a suíte valida o botão, a construção da rota, a associação da aula, a detecção do bloqueio e o fallback — e não pode declarar comprovada a abertura externa.
 
-Classificação: **condicional** no protótipo, quando implementação e *fallback* estiverem corretos e o host bloquear pop-up; **bloqueante** na publicação definitiva, até validar na URL oficial e nos navegadores suportados.
+Classificação: condicional no protótipo, quando implementação e fallback estiverem corretos e o host bloquear pop-up; bloqueante na publicação definitiva, até validar na URL oficial e nos navegadores suportados.
 
-**10. Conteúdo editorial e linguagem de interface**
+### 10. Conteúdo editorial e linguagem de interface
 
 Procurar: linguagem de decisão de produção · explicação sobre implementação, armazenamento ou cálculo interno · justificativa dirigida ao gerador · nota sobre limitação que não diz respeito a quem usa · instrução de QA deixada em tela · histórico de revisão em comentário de código · mistura indevida de português e inglês · grafia britânica em material definido em American English · erro de digitação e rótulo inconsistente · Markdown literal ou quebrado · título truncado ou quebrado por erro de layout. Comentários técnicos são permitidos somente quando descrevem o estado vigente, a razão funcional necessária ou, quando indispensável, a fonte normativa atual; narrativa de versões anteriores, tentativas, feedbacks ou bugs já corrigidos reprova.
 
-**Lista expansível de expressões proibidas + lista controlada de exceções.** E **a palavra isolada não autoriza correção automática sem análise de contexto** — citação literal de fonte autêntica preserva a grafia original (P1 §16), e corrigi-la é destruir o objeto da aula.
+Lista expansível de expressões proibidas + lista controlada de exceções. E a palavra isolada não autoriza correção automática sem análise de contexto — citação literal de fonte autêntica preserva a grafia original (P1 §16), e corrigi-la é destruir o objeto da aula.
 
-**11. Sistema visual, tipografia e espaçamento**
+#### 10.1 Terminologia contextual de slide e screen
 
-Por análise do DOM, estilo computado e regressão visual: tokens aprovados da identidade Alumni by Better · preservação da identidade premium/black · ausência de ativo tipográfico externo · família computada e ativo efetivamente disponível no build · pergunta principal na família display do sistema, em itálico moderado e peso visual intermediário · tamanho maior que o corpo e menor que o título · listas e quiz projetado na mesma família de referência, preservando componentes distintos · contraste mínimo aplicável sobre fundos claros, escuros e compostos · largura controlada · quebra de linha sem corte, overflow ou linha órfã crítica · caixa normal em perguntas longas · alinhamento à esquerda como padrão · centralização restrita a pergunta curta que seja o único foco da tela · espaçamento entre pergunta, texto, cards e controles · responsividade nas larguras previstas. Peso médio é função perceptiva e não exige um valor CSS específico; document.fonts.check() isoladamente não aprova a fonte.
+A suíte verifica o referente, não a palavra isolada. Deve exigir slide para unidades numeradas ou identificáveis do deck In-class e admitir screen somente para visões, interfaces, modos ou estados técnicos que não correspondam necessariamente a um slide.
 
-Mutações obrigatórias: restaurar Google Fonts como dependência estrutural; declarar família indisponível; fazer document.fonts.check() passar sem o ativo pretendido; trocar a pergunta principal para a fonte de interface; introduzir terceira família; remover itálico ou a hierarquia perceptiva de peso; exigir diferença numérica de peso inexistente na família; igualar os três componentes; aplicar caixa alta a pergunta longa; centralizar pergunta longa; remover max-width; reduzir contraste em um dos fundos; forçar quebra ou overflow. A suíte precisa reprovar cada mutação pela propriedade correspondente.
+Casos positivos obrigatórios: Slide N; next slide; second-listening slide; input slide; preparation slide; first-listening screen quando houver estado funcional próprio; e identificador técnico `.screen` usado para estrutura ou estado da interface.
 
-**Contraste se mede sobre o fundo efetivamente composto, transparências incluídas — e a rotina traz canário conhecido**, para provar que consegue detectar uma falha real. Varredura que devolve zero sem canário não provou nada (P2 §3).
+Mutações obrigatórias: trocar Slide 4 por Screen 4 e confirmar reprovação; trocar next slide por next screen no Teacher's Guide e confirmar reprovação; usar second-listening screen, input screen ou preparation screen para uma unidade do deck e confirmar reprovação; preservar first-listening screen quando o teste comprovar que se trata de estado da interface; e substituir indiscriminadamente uma classe técnica `.screen` por `.slide`, confirmando que a suíte não exige essa alteração.
 
-Regressão visual abrange: as duas visões · todas as abas · fundos claros e escuros · conteúdo recolhido e expandido · estados dos players · formulários e campos de feedback · os tamanhos de tela suportados.
+A checagem não executa substituição automática. Ocorrências semanticamente ambíguas são encaminhadas à revisão editorial com o contexto suficiente para identificar o referente.
 
-**12. Acessibilidade**
+### 11. Sistema visual, tipografia e espaçamento
 
-Navegação completa por teclado · foco visível · ordem lógica de tabulação · nome acessível em todo botão · aria-expanded atualizado · associação entre rótulo e campo · identificação de imagens e composições visuais · contraste · **nada identificado só por cor** · **equivalência funcional entre arrastar e clicar no sorting** · ocultação acessível do conteúdo do professor · anúncio adequado de mensagem de erro e de *fallback*.
+A suíte usa o **Kit de Layout Alumni Black** incluído no pacote como fixture/oráculo visual versionado. Prova por DOM, estilo computado, carregamento de ativos e regressão renderizada; similaridade subjetiva ou existência nominal de token não aprova.
 
-**O sorting funciona pelos dois caminhos:** arrastar o card até a coluna, **e** selecionar o card e depois a coluna de destino (P1 §12).
+Cobertura obrigatória: paletas clara e escura; cores semânticas, de modalidade e de status; hierarquia página/cartão/recuo/controle; hairline versus limite funcional; lockup da capa, símbolo da barra e zona de proteção; capa com uma origem de luz e grão incorporado; tipografia por função; pesos, alturas de linha, tracking e pisos; escala espacial; raios; elevação; perguntas internas e de abertura; grades/tabelas responsivas; deck escuro; foco e reduced-motion.
 
-**13. Referências compartilhadas e prevenção de divergência**
+**Tipografia.** Validar os tokens display, interface, question e marca e o papel de cada um. Jost, Inter, Cormorant e Poppins só são aceitos como ativos locais licenciados; a ausência deles aciona os fallbacks declarados. Reprovar qualquer requisição tipográfica externa, ativo ausente mascarado por `document.fonts.check()`, itálico sintético ou fonte de marca aplicada ao conteúdo.
 
-Os componentes compartilhados se testam **como unidades reutilizáveis**. Correção aplicada ao player, ao expansor, ao sorting, ao registro pós-aula, à pergunta ou ao Teacher's Guide **reflete-se em todas as aulas e materiais que usam o mesmo componente**.
+**Perguntas.** Casos positivos incluem pergunta curta e longa, lista orientadora, quiz, formulário e abertura. Pergunta interna usa question, itálico real, peso visual intermediário, escala entre corpo e título, largura controlada, caixa normal e alinhamento adequado; componentes permanecem distintos. Pergunta de abertura segue o subtítulo e não herda o tratamento interno.
 
-Quando dois materiais usam a mesma regra funcional — por exemplo dois alunos do mesmo produto —, a suíte compara **os resultados esperados**, sem exigir igualdade literal de conteúdo ou de CSS onde a variação de perfil, nível ou identidade for legítima.
+Contraste se mede sobre o fundo composto, transparências incluídas, com canário conhecido. `#B8860B` não passa como texto pequeno sobre página clara; pode passar como filete, borda, ícone ou contorno quando seu papel e contraste forem conformes. A suíte distingue separação decorativa de limite essencial.
 
-**Toda divergência entre materiais está prevista por uma regra, justificada pelo perfil ou pelo desenho pedagógico, e documentada como exceção — nomeada e singular (****P2 §3****). Diferença acidental falha.**
+Regressão visual abrange os dois builds e suas superfícies autorizadas, todas as abas, capa, consulta, deck, estados recolhido/expandido, players, formulários, feedback, tabelas, grids e larguras suportadas. Compara também pseudoestados e media queries.
 
-**14. Testes negativos e mutações**
+Mutações obrigatórias: restaurar paleta ou marca anterior; introduzir Google Fonts/host externo; declarar fonte ausente; usar fonte de marca no corpo; remover question ou seu itálico real; aplicar o estilo interno à pergunta da abertura; igualar `.slide-question`, `.q-item` e `.slide .quiz-question`; usar ouro inadequado como texto; emprestar cor semântica a modalidade/status; remover recuo ou elevação; substituir cartões por bordas duras; usar espaço/raio fora da escala; cair abaixo do piso; quebrar zona de proteção; inserir grade ou múltiplas luzes; ignorar reduced-motion; causar corte, overflow ou sobreposição. Cada mutação deve falhar pelo requisito correspondente.
 
-**Cada requisito crítico tem pelo menos um caso negativo.** A suíte altera de propósito uma condição válida e comprova que o erro é detectado.
+#### 11.1 Contraste não textual e estados interativos
 
-Exemplos: expor conteúdo do professor ao aluno · trocar o guia associado a dois cards · remover o Stop de um player · recriar três controles de áudio · deixar conteúdo opcional aberto · introduzir cor sem token · reduzir contraste · inserir grafia britânica · mover o reset para o topo do pre-class · criar resposta diferente no gabarito · fixar uma URL de teste · substituir o nome dinâmico por um literal · quebrar o alinhamento do campo central · remover a alternativa por clique do sorting · **separar** **Optional** **de** **Optional follow-up** em etiqueta e botão · **fixar o número de etapas** ou **acrescentar etapa fictícia** (§2.1) · **expor um terceiro campo ao aluno** na aba Feedback (§3.1) · **alternar a forma de um identificador técnico** — ALUNA por ALUNO, prof por professor.
+A suíte identifica, para cada componente interativo, o indicador visual necessário ao seu reconhecimento e mede seu contraste contra as cores adjacentes no fundo efetivamente composto. O resultado obrigatório é razão mínima de 3:1 para esse indicador. Se a borda for o único limite reconhecível, ela deve atingir 3:1; se outro indicador conforme já identificar inequivocamente o componente, a borda decorativa não é reprovada isoladamente.
 
-**Mutações obrigatórias do nome da janela do Teacher's Guide** — nenhuma delas se detecta com um material aberto sozinho:
+Casos positivos obrigatórios: componente identificado por borda conforme; componente identificado por preenchimento, forma ou ícone conforme com borda decorativa mais sutil; foco visível; seleção, expansão, revelação, resposta correta, resposta incorreta e estado desabilitado distinguíveis; operação completa por teclado e toque sem depender de hover.
 
-•  substituir o identificador dinâmico da janela por um **nome literal do aluno**;
+Mutações obrigatórias: reduzir abaixo de 3:1 a borda que seja o único indicador do componente; remover o indicador conforme e deixar apenas borda decorativa insuficiente; comunicar foco ou seleção somente por alteração sutil de cor; remover o foco visível; tornar a revelação perceptível apenas por cor; e tornar a interação identificável ou acionável somente por hover. A suíte deve reprovar cada mutação.
 
-•  usar **o mesmo nome de janela para dois materiais**;
+A prova não exige um segundo indicador fixo nem 3:1 de toda borda. Ela exige percepção inequívoca do componente e de seus estados, com contraste e redundância visual adequados ao papel efetivo de cada elemento.
 
-•  usar **nome ou sobrenome do aluno como identificador técnico**;
+### 12. Acessibilidade
 
-•  **introduzir deliberadamente uma colisão de nomes de janela, abrir dois materiais e confirmar que a suíte DETECTA** quando o guia de um material substitui indevidamente o guia do outro.
+Navegação completa por teclado · foco visível · ordem lógica de tabulação · nome acessível em todo botão · `aria-expanded` atualizado · associação entre rótulo e campo · identificação de imagens e composições visuais · contraste · nada identificado só por cor · equivalência funcional entre arrastar e clicar no sorting · ocultação acessível do conteúdo do professor · anúncio adequado de mensagem de erro e de fallback.
 
-**Mutações obrigatórias do rótulo do botão do guia:**
+O sorting funciona pelos dois caminhos: arrastar o card até a coluna, e selecionar o card e depois a coluna de destino (P1 §12).
 
-•  **passar o rótulo do card para a língua do deck**, contrariando o P1 §16;
+### 13. Referências compartilhadas e prevenção de divergência
 
-•  **remover a marca** **lang** do nome próprio em inglês;
+Os componentes compartilhados se testam como unidades reutilizáveis. Correção aplicada ao player, ao expansor, ao sorting, ao registro pós-aula, à pergunta ou ao Teacher's Guide reflete-se em todas as aulas e materiais que usam o mesmo componente.
 
-•  **dar a um card um rótulo diferente** dos demais;
+#### Mutação obrigatória — escala do registro pós-aula
 
-•  **fazer o texto de apoio citar um rótulo que o botão não tem** — a segunda cópia divergindo, que é como a orientação passa a mandar procurar um botão inexistente;
+Alterar valor, descritor ou interpretação da escala de Desempenho em apenas uma aula do bloco deve fazer a suíte reprovar. Inserir na interface a observação "mesma escala nas quatro aulas do bloco", ou formulação metalinguística equivalente, também deve reprovar. Restaurar a escala uniforme e remover a nota deve devolver o caso ao estado aprovado. A cobertura exige as duas metades: uniformidade implementada e metalinguagem ausente.
 
-•  **mover o botão para o fim da barra de controles**, separando-o do controle que abre a aula;
+Quando dois materiais usam a mesma regra funcional — por exemplo dois alunos do mesmo produto —, a suíte compara os resultados esperados, sem exigir igualdade literal de conteúdo ou de CSS onde a variação de perfil, nível ou identidade for legítima.
 
-•  **partir o rótulo em dois itens de layout**, devolvendo o espaço duplo que o gap do botão produz.
+Toda divergência entre materiais está prevista por uma regra, justificada pelo perfil ou pelo desenho pedagógico, e documentada como exceção — nomeada e singular (P2 §3). Diferença acidental falha.
 
-**Suíte que aprova tanto a implementação correta quanto a mutação defeituosa não é válida.** É a mesma lei do P2 §3: checagem que não falha só não faz nada — e a variante mais silenciosa é a mutação que **remove** o elemento examinado.
+### 14. Testes negativos e mutações
 
-**15. Evidências e relatório**
+Cada requisito crítico tem pelo menos um caso negativo. A suíte altera de propósito uma condição válida e comprova que o erro é detectado.
 
-O relatório traz: versão do material · versão dos documentos normativos · data e ambiente do teste · navegador e versão · testes executados · resultados positivos · falhas · limitações externas · evidência visual ou registro do navegador · **requisitos não testáveis naquele ambiente** · decisão.
+Exemplos: expor conteúdo do professor ao aluno · trocar o guia associado a dois cards · remover o Stop de um player · recriar três controles de áudio · deixar conteúdo opcional aberto · introduzir cor sem token · reduzir contraste · inserir grafia britânica · mover o reset para o topo do pre-class · criar resposta diferente no gabarito · fixar uma URL de teste · substituir o nome dinâmico por um literal · quebrar o alinhamento do campo central · remover a alternativa por clique do sorting · separar `Optional` de `Optional follow-up` em etiqueta e botão · fixar oito slides ou forçar uma etapa por slide (§2.1) · expor um terceiro campo ao aluno na aba Feedback (§3.1) · alternar a forma de um identificador técnico — `ALUNA` por `ALUNO`, `prof` por `professor`.
 
-**"Zero falhas" só vale quando:** os testes positivos foram executados · os casos negativos correspondentes foram **detectados** · os estados interativos foram exercitados · as limitações do ambiente foram declaradas · **nenhum requisito dependente da plataforma foi apresentado como comprovado sem teste no ambiente oficial**.
+Mutações obrigatórias do nome da janela do Teacher's Guide — nenhuma delas se detecta com um material aberto sozinho:
 
-Vocabulário do resultado, do 06 §4: **PASSOU · PARCIAL · FALHOU · NÃO VERIFICADO**. *"NÃO VERIFICADO" é resposta legítima; "PASSOU" sem evidência não é.*
+- substituir o identificador dinâmico da janela por um nome literal do aluno;
+- usar o mesmo nome de janela para dois materiais;
+- usar nome ou sobrenome do aluno como identificador técnico;
+- introduzir deliberadamente uma colisão de nomes de janela, abrir dois materiais e confirmar que a suíte DETECTA quando o guia de um material substitui indevidamente o guia do outro.
 
-**16. Gates de aprovação**
+Mutações obrigatórias do rótulo do botão do guia:
 
-| **Resultado** | **Condição** |
-|---|---|
-| **Aprovado** | todos os requisitos bloqueantes comprovados nos ambientes aplicáveis |
-| **Aprovado condicionalmente** | a implementação está correta, mas uma capacidade **externa** não pode ser comprovada no artefato restrito; o *fallback* funciona e a pendência está registrada |
-| **Reprovado** | falha funcional · exposição entre perfis · inconsistência pedagógica · falha silenciosa · perda de dados · inacessibilidade crítica · requisito bloqueante não atendido no ambiente oficial |
+- passar o rótulo do card para a língua do deck, contrariando o P1 §16;
+- remover a marca `lang` do nome próprio em inglês;
+- dar a um card um rótulo diferente dos demais;
+- fazer o texto de apoio citar um rótulo que o botão não tem — a segunda cópia divergindo, que é como a orientação passa a mandar procurar um botão inexistente;
+- mover o botão para o fim da barra de controles, separando-o do controle que abre a aula;
+- partir o rótulo em dois itens de layout, devolvendo o espaço duplo que o gap do botão produz.
 
-**No caso do Teacher's Guide:** o protótipo recebe **aprovação condicional** se o host impedir pop-up. A publicação definitiva só se aprova depois que a abertura do guia correspondente for testada com sucesso **na URL oficial do material**.
+Suíte que aprova tanto a implementação correta quanto a mutação defeituosa não é válida. É a mesma lei do P2 §3: checagem que não falha só não faz nada — e a variante mais silenciosa é a mutação que remove o elemento examinado.
 
-## 5.8 Estado operacional, listening contrast e contagem
+### 15. Evidências e relatório
 
-A suíte deve provar a correspondência entre instrução e estado interativo, a associação visual de cada alternativa auditiva e a revelação posterior do transcript. Deve também comparar programaticamente as quantidades e nomenclaturas entre registro, tela, Teacher’s Guide, Answer Key e condição de conclusão.
+O relatório traz: versão do material · versão dos documentos normativos · data e ambiente do teste · navegador e versão · testes executados · resultados positivos · falhas · limitações externas · evidência visual ou registro do navegador · requisitos não testáveis naquele ambiente · decisão.
 
-Caso positivo: controles e verbos compatíveis em todos os estados da atividade.
+"Zero falhas" só vale quando: os testes positivos foram executados · os casos negativos correspondentes foram detectados · os estados interativos foram exercitados · as limitações do ambiente foram declaradas · nenhum requisito dependente da plataforma foi apresentado como comprovado sem teste no ambiente oficial.
 
-Mutação negativa: trocar present por reveal quando todos os cards já estão abertos; a suíte reprova.
+Vocabulário do resultado, do 06 §4: PASSOU · PARCIAL · FALHOU · NÃO VERIFICADO. "NÃO VERIFICADO" é resposta legítima; "PASSOU" sem evidência não é.
 
-Mutação negativa: afastar o player de Version B ou associá-lo à seleção de Version A; a suíte reprova.
+### 16. Gates de aprovação
 
-Mutação negativa: tornar o transcript visível antes da tentativa; a suíte reprova.
+| Resultado | Condição |
+| :-: | :-: |
+| Aprovado | todos os requisitos bloqueantes comprovados nos ambientes aplicáveis |
+| Aprovado condicionalmente | a implementação está correta, mas uma capacidade externa não pode ser comprovada no artefato restrito; o fallback funciona e a pendência está registrada |
+| Reprovado | falha funcional · exposição entre perfis · inconsistência pedagógica · falha silenciosa · perda de dados · inacessibilidade crítica · requisito bloqueante não atendido no ambiente oficial |
 
-Mutação negativa: declarar quatro funções quando o registro contém cinco, ou alterar o nome de uma versão em somente uma camada; a suíte reprova.
+No caso do Teacher's Guide: o protótipo recebe aprovação condicional se o host impedir pop-up. A publicação definitiva só se aprova depois que a abertura do guia correspondente for testada com sucesso na URL oficial do material.
+
+### 5.7 Cobertura consolidada — atualização de 02/09/2026
+
+Toda regra somente é declarada coberta após mutação específica, reprovação pelo motivo correto, restauração e aprovação do caso positivo. O relatório distingue verificação implementada, mutação executada, mutação detectada, caso positivo executado e cobertura plenamente comprovada.
+
+Adicionar mutações do Teacher's Guide para: overview fora do primeiro slide; aberto por padrão; reaberto na navegação; espaço residual; quantidade diferente de cinco seções; conteúdo geral residual não autorizado ou equivalente; conteúdo específico depositado no overview; corpo inteiro em negrito; `opacity`; vazamento tipográfico ao procedimento; botão ausente/inoperante; navegação que altera a janela principal; outcome independente; divergência entre overview e Estrutura e preparação; remoção sem destino e saída sem chegada.
+
+Adicionar mutações para: PRO-002 em superfícies e momentos distintos; supressão, ocultação e renomeação para escapar do detector; deduplicação indevida por limiar lexical; fonte multilíngue divergente; apoio A0/Pre-A1 ausente ou excessivo em relação à competência-alvo; restrições A1/A2 aplicadas automaticamente a Pre-A1; apoio A1/A2 insuficiente apesar do mínimo; condução oral no Answer Key assíncrono; falhas de persistência do Confirm response; e ocorrência residual da nomenclatura anterior do quarto framework.
+
+#### 5.7.1 Relatório derivado do estado atual
+
+Pendências, recomendações, contagens, BLOCKERs, próxima ação, `ARTIFACT_AUDIT_STATUS`, `RELEASE_STATUS` e código de saída derivam da mesma fonte e do estado final da rodada. Regra aprovada desaparece das pendências e não conserva recomendação residual; pode constar apenas como correção confirmada ou regressão preservada.
+
+Distinguir conformidade observada do artefato, cobertura comprovada, verificações não executadas, limitações do ambiente e pendências da publicação. Ausência de teste não é aprovação nem defeito automático. Não usar APROVADO COM RESSALVAS quando existir BLOCKER reprovado, não executado, em revisão ou sem cobertura obrigatória.
+
+Códigos de saída permanecem pendentes quanto à distribuição dos valores 1 e 2. Testar somente o consenso atual: 0 exclusivamente liberado; reprovação e erro diferentes de zero; relatório preservado; runners e wrappers propagam o código real. Não declarar o contrato plenamente validado até decisão formal.
+
+### 5.8 Estado operacional, listening contrast e contagem
+
+A suíte deve provar a correspondência entre instrução e estado interativo, a associação visual de cada alternativa auditiva e a revelação posterior do transcript. Deve também comparar programaticamente as quantidades e nomenclaturas entre registro, tela, Teacher's Guide, Answer Key e condição de conclusão.
+
+- Caso positivo: controles e verbos compatíveis em todos os estados da atividade.
+- Mutação negativa: trocar `present` por `reveal` quando todos os cards já estão abertos; a suíte reprova.
+- Mutação negativa: afastar o player de Version B ou associá-lo à seleção de Version A; a suíte reprova.
+- Mutação negativa: tornar o transcript visível antes da tentativa; a suíte reprova.
+- Mutação negativa: declarar quatro funções quando o registro contém cinco, ou alterar o nome de uma versão em somente uma camada; a suíte reprova.
+
+### 5.9 Check, Redo e Reset lesson — testes bloqueantes
+
+A suíte deve provar a máquina de estados completa de cada atividade verificável e o isolamento do Reset lesson. Trocar apenas o rótulo não aprova o componente: ação, estado persistido, nome acessível e efeitos colaterais também são verificados.
+
+- **Caso positivo Check → Redo:** preencher, verificar, confirmar correção e devolutiva, observar Check mudar para Redo, recarregar e confirmar coerência do estado verificado.
+- **Caso positivo Redo → Check:** acionar Redo, confirmar limpeza somente da atividade, ocultação da devolutiva, retorno a Check e preservação das demais atividades após recarga.
+- **Mutação negativa:** manter Check quando o segundo acionamento executa reset; reprovar por rótulo e nome acessível enganosos.
+- **Mutação negativa:** alterar para Redo sem mudar a ação, ou mudar somente o texto visível sem o nome acessível; reprovar.
+- **Caso positivo Reset lesson:** preparar estado em vários slides, marcar a aula como finalizada, confirmar o reset e comprovar primeiro slide, In-class limpo, conclusão removida, derivados atualizados e persistência após recarga.
+- **Caso positivo de cancelamento:** cancelar a confirmação e comprovar ausência total de alteração.
+- **Mutações negativas:** limpar apenas o slide atual; manter status de conclusão; restaurar dados após recarga; deixar chave residual; apagar Pre-class, Post-class, registro pós-aula, Estado pedagógico do ciclo, outra aula ou dados de outro papel.
+
+Classificação: rótulo incompatível com a ação, reset incompleto, reaparecimento após recarga, ausência de confirmação atômica ou violação de isolamento reprovam a entrega. A cobertura só é comprovada quando cada mutação falha pelo motivo correto, o caso positivo é restaurado e os efeitos preservados são inspecionados.
+
+### 19. Conformidade com o A05 — linguagem instrucional pedagógica
+
+A suíte transforma o A05 em prova contextual. Deve comparar a regra responsável, a superfície publicada e a ação realmente disponível, sem usar ocorrência lexical isolada como resultado final.
+
+#### 19.1 Casos positivos obrigatórios
+
+- Teacher's Guide com orientação facilitadora, precisa e operacional, preservando uma condição obrigatória;
+- imperativo convencional dirigido ao aluno para ação executável, como "Match the sentences." ou "Listen again.";
+- restrição necessária que mantém "Do not" ou equivalente sem soar como regra interna transferida mecanicamente;
+- reformulação que preserva ação, condição, sequência, apoio, evidência, produto e critério de avanço.
+
+#### 19.2 Mutações obrigatórias
+
+- copiar para Run it uma proibição interna absoluta e confirmar reprovação contextual;
+- substituir orientação facilitadora por "Make the student..." sem necessidade e confirmar reprovação;
+- suavizar uma obrigação até torná-la opcional e confirmar reprovação;
+- usar "if needed" em ação que deve ocorrer sempre e confirmar reprovação;
+- inserir regra interna, justificativa do gerador ou decisão de implementação no texto publicado e confirmar reprovação;
+- reprovar automaticamente toda ocorrência de "Do not" e confirmar que a suíte **rejeita** o detector lexical simplista;
+- preservar "Do not" em restrição necessária e confirmar aprovação contextual.
+
+#### 19.3 Resultado bloqueante
+
+Falha quando a linguagem publicada altera a regra, instrui ação inexistente, expõe conteúdo interno, trata professor ou aluno de modo mecânico/punitivo ou produz uma sequência incompatível com linguagem educacional profissional. Falha também quando a validação aprova ou reprova exclusivamente por palavra isolada.
