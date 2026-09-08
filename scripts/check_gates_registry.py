@@ -37,6 +37,9 @@ O QUE ELE REPROVA
   4. gate de anatomia/sequencia com escopo "repo"
   5. escopo por framework citando id que nao existe em public/data/frameworks.json
   6. tipo fora da lista de tipos declarada no proprio registro
+  7. gate numerado no registro que NENHUM workflow do CI invoca (achado em 09/09/2026:
+     eram SETE, entre eles os quatro gates de conteudo do consultivo, que nunca rodaram
+     num PR). Declarado e existir nao bastam: o que barra e estar LIGADO.
 
 USO:
     python3 scripts/check_gates_registry.py             # confere
@@ -95,6 +98,15 @@ def gates_no_disco():
     return achados
 
 
+def workflows():
+    """O texto de todos os workflows do CI, concatenado. E onde um gate vira obrigatorio."""
+    import glob as _glob
+    pasta = os.path.join(RAIZ, ".github", "workflows")
+    return "".join(open(p, encoding="utf-8", errors="replace").read()
+                   for p in sorted(_glob.glob(os.path.join(pasta, "*.yml"))
+                                   + _glob.glob(os.path.join(pasta, "*.yaml"))))
+
+
 def verifica(reg, ids_framework, disco):
     erros = []
     tipos_validos = set(reg["_tipos"])
@@ -131,6 +143,27 @@ def verifica(reg, ids_framework, disco):
                 f"GATE {n} reivindicado por {len(donos)} gates: {', '.join(sorted(donos))}. "
                 f"Numero duplicado faz o CI mentir sobre o que passou."
             )
+
+    # 7 — gate numerado que NAO e invocado por workflow nenhum
+    #
+    # Achado em 09/09/2026: SETE gates estavam no registro, no disco, com selftest, e
+    # nunca tinham rodado num PR -- os quatro de conteudo do consultivo (61-64) nasceram
+    # sem o passo no CI, e mais dois (4 e 57) estavam assim ha mais tempo. Eles rodavam
+    # na mao, verdes, e nao barraram um PR sequer.
+    #
+    # Este arquivo ja cobrava "declarado" (regra 1) e "existe" (regra 2). Faltava a
+    # terceira, que e a unica que importa para o CI: LIGADO. Gate que nao roda nao e
+    # gate -- e pior que gate ausente, porque o registro afirma que a pergunta esta sendo
+    # feita.
+    passos = workflows()
+    for nome, meta in sorted(entradas.items()):
+        if meta.get("gate") is None:
+            continue          # ferramenta declarada sem numero: nao promete rodar
+        if nome not in passos:
+            erros.append(
+                f"GATE {meta['gate']} ({nome}) esta no registro e NAO e invocado em "
+                f".github/workflows/. Gate que nao roda nao barra nada — e o registro "
+                f"afirma que ele barra.")
 
     for nome, meta in entradas.items():
         tipo = meta.get("tipo")
@@ -198,6 +231,13 @@ def selftest():
     del d["gates"]["check_ppp_lesson.py"]
     casos.append(("gate nao registrado", d, "NAO esta em scripts/gates.json"))
 
+    # Regra 7: um gate com numero que nenhum workflow chama. O mutante e um NOME que
+    # existe no disco (senao a regra 2 dispara antes) e que o CI nao invoca.
+    d = copy.deepcopy(reg)
+    orfao = next(n for n in gates_no_disco() if n not in workflows())
+    d["gates"][orfao] = {"gate": 999, "tipo": "processo", "escopo": "repo"}
+    casos.append(("gate numerado que o CI nao chama", d, "NAO e invocado em"))
+
     falhou = False
     for rotulo, mutante, esperado in casos:
         erros = verifica(mutante, ids, disco)
@@ -209,7 +249,7 @@ def selftest():
     if falhou:
         print("\nSELFTEST FALHOU — o meta-gate parou de morder.")
         return 1
-    print("\nSELFTEST OK — os 5 defeitos sao pegos.")
+    print(f"\nSELFTEST OK — os {len(casos)} defeitos sao pegos.")
     return 0
 
 
