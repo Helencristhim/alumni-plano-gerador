@@ -104,6 +104,25 @@ def confere(caminho, slug_bilingue):
         return None
     slug = re.sub(r"-c(?:iclo)?\d+$", "", re.sub(r"\.html$", "", os.path.basename(caminho)))
     if slug not in slug_bilingue:
+        # ---- O LADO QUE FALTAVA: apoio SEM promessa (09/09/2026)
+        #
+        # Ate aqui o gate so olhava para quem PROMETEU. Material que nao promete nao era
+        # medido -- "nao ha promessa a cobrar" -- e por isso portugues item a item podia
+        # entrar num material que nao declara o modo, e passar.
+        #
+        # Foi o que aconteceu com a Joice: consertando dois blocos dela eu copiei a forma
+        # da Vanessa e trouxe `ptt` junto. Ficaram DOZE itens com portugues, de 161. Ela e
+        # A1, entao a REGRA 13 permite portugues -- o problema nao e a lingua, e o apoio
+        # PELA METADE: ela ve traducao em dois blocos e em nenhum outro, e aprende que a
+        # ausencia significa alguma coisa. E o modo e DECLARADO no config, nunca deduzido
+        # do nivel nem herdado de um copiar-colar.
+        orfaos = len(re.findall(r'class="item-why item-pt"', c))
+        if orfaos:
+            return [f"{orfaos} item(ns) com apoio em portugues (`item-pt`) e o config de "
+                    f"{slug!r} NAO declara `apoio.bilingue`. Ou o modo se declara (e o "
+                    f"apoio passa a valer para o material inteiro), ou o portugues sai: "
+                    f"apoio em dois blocos e ausente nos outros ensina que a ausencia "
+                    f"quer dizer alguma coisa."]
         return None
     fora = []
 
@@ -204,6 +223,23 @@ def selftest():
         falhas.append("o `par` (vocabulario) entrou na cobranca, e ele e a excecao")
     if exercicios("<button onclick=\"czCheck(this,'cz1')\">x</button>") != [("cz1", "czCheck")]:
         falhas.append("nao viu o gap-fill")
+
+    # ---- o lado novo: apoio SEM promessa (09/09/2026)
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        def material(corpo, nome="zz-ciclo1.html"):
+            q = os.path.join(d, nome)
+            open(q, "w", encoding="utf-8").write(cab + corpo)
+            return q
+        COM_PT = '<div class="item-why item-pt" lang="pt-BR">Eu sou a Ana.</div>'
+        if not confere(material(COM_PT), set()):
+            falhas.append("nao viu apoio em portugues num material que nao declara o modo")
+        if confere(material("<div>so ingles</div>"), set()):
+            falhas.append("acusou material sem portugues nenhum")
+        # quem DECLARA nao cai nesta regra: cai nas outras tres, que ja existiam
+        r = confere(material(COM_PT, "zz-ciclo1.html"), {"zz"})
+        if r and any("NAO declara" in x for x in r):
+            falhas.append("aplicou a regra do apoio-sem-promessa a quem promete")
     if falhas:
         print(VERMELHO + "selftest FALHOU" + ZERA)
         for f in falhas:
