@@ -1,4 +1,4 @@
-{n:6,bloco:1,mod:'ESP',cod:'E1',fwNome:'ESP — Real World',
+{n:6,bloco:1,mod:'Real-World',cod:'E1',fwNome:'Personalized Real-World English',
     tema:'Forty-five seconds',       temaPre:'Before you time any of it',
     canonico:'case', statusKey:'af_l6_status',
     nav:['Lesson opening','The task','Try it once','How it sounds',

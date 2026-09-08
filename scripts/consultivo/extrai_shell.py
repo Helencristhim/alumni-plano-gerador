@@ -292,6 +292,37 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
 
+ # ---- O QUARTO FRAMEWORK PERDE A SIGLA (norma de 02/09/2026)
+ #
+ # Relatorio de Alteracoes Normativas, ajuste 22: o quarto framework tinha "nomes hibridos
+ # e sigla" e passa a ter nome exclusivo -- Personalized Real-World English. A secao 5 e
+ # bloqueante: "ocorrencia residual da sigla ou de forma hibrida do quarto framework
+ # reprova o novo material".
+ #
+ # Os fragmentos de cada aluno foram corrigidos no mesmo PR. Estas quatro ocorrencias sao
+ # do SHELL, e por isso vem para ca: uma delas e PROSA VISIVEL na tabela do planejamento
+ # ("aquela posicao vira Listening ou ESP"), e as outras tres sao comentarios que nomeiam
+ # um rotulo que deixou de existir -- o P2 §10 chama isso de segunda fonte e manda
+ # descrever so o estado vigente.
+ #
+ # O identificador tecnico continua: `mod-esp`, `--mod-esp` e o id `esp-real-world` do
+ # gates.json nao sao lidos por ninguem na tela, e o proprio 06 os preserva.
+ ("quarto-framework-sem-sigla-prosa",
+  """se confirma como Grammar; se não, aquela posição vira Listening ou ESP.</td></tr>""",
+  """se confirma como Grammar; se não, aquela posição vira Listening ou Personalized Real-World English.</td></tr>"""),
+
+ ("quarto-framework-sem-sigla-comentario-cor",
+  """(distingue a modalidade ESP no syllabus)""",
+  """(distingue a modalidade Real-World no syllabus)"""),
+
+ ("quarto-framework-sem-sigla-comentario-fwlabel",
+  """function fwLabel(n){ var L=LESSONS[n]; return L.mod+' / '+L.cod; }   /* ESP / E1 */""",
+  """function fwLabel(n){ var L=LESSONS[n]; return L.mod+' / '+L.cod; }   /* Real-World / E1 */"""),
+
+ ("quarto-framework-sem-sigla-comentario-fwtag",
+  """function fwTag(n){   var L=LESSONS[n]; return L.mod+' · '+L.cod; }   /* ESP · E1 */""",
+  """function fwTag(n){   var L=LESSONS[n]; return L.mod+' · '+L.cod; }   /* Real-World · E1 */"""),
+
  # ---- O FOCO DO ROUND 2 SE COPIA SOZINHO (revisao de 04/09/2026)
  #
  # No framework de ESP a aula tem duas rodadas: a tela de feedback escolhe UM ponto, e a

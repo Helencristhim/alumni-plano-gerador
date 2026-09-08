@@ -1,4 +1,4 @@
-{n:12,bloco:1,mod:'ESP',cod:'E1',fwNome:'ESP — Real World',
+{n:12,bloco:1,mod:'Real-World',cod:'E1',fwNome:'Personalized Real-World English',
     tema:'Your first two minutes',   temaPre:'Before you time any of it',
     canonico:'room', statusKey:'af_l12_status',
     nav:['Lesson opening','The room','Try it once','What they say first',
