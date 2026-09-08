@@ -593,6 +593,15 @@ jobs:
       - name: "GATE 65 — selftest: prova que o gate do painel docente ainda morde"
         run: python3 scripts/consultivo/check_painel_docente.py --selftest
 
+      - name: "GATE 66 — selftest: prova que o gate do recurso ainda morde"
+        run: python3 scripts/consultivo/check_recurso_e_um_item.py --selftest
+
+      - name: "GATE 66 — o recurso abre no material, não no canal / na série / na home"
+        # 30 links mandavam o aluno para uma porta em vez do material — 7 canais do YouTube,
+        # 2 home pages, e hubs de série. Um cartão que promete "escute as duas maneiras de
+        # pedir para repetir" e leva a um canal com mil vídeos não é recurso, é tarefa a mais.
+        run: python3 scripts/consultivo/check_recurso_e_um_item.py
+
       - name: "GATE 65 — o painel do professor fala SOBRE o aluno, nunca COM ele"
         # 61 campos em quatro alunos diziam "Você não precisa entender tudo" num painel
         # que o aluno não vê. A revisão da professora já tinha consertado isso na Vanessa
