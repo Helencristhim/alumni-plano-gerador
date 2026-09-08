@@ -47,6 +47,7 @@ declarando um exercicio existente e comparando os bytes (`--prova`), em vez de c
 que produziu o inventario falso que o GATE 20 teve de consertar.
 """
 import html as _html
+import random
 import re
 
 LETRAS = "ABCDEFGHIJ"
@@ -173,6 +174,77 @@ AUXILIARES = {
 }
 
 
+def _previsivel(seq, chave):
+    """A chave se acerta pela POSICAO, sem ler o item?
+
+    As tres condicoes sao as do GATE 41 (`check_catalogo_auditor.r_resposta_previsivel`,
+    PRO-009), escritas aqui para que o sorteio NAO PRODUZA o que aquele gate barra: foi o
+    que aconteceu na primeira versao, que so evitava "igual ao declarado" e devolveu
+    A B A A A B em duas aulas. Mais a quarta, que e a deste emissor: agrupado (AABB).
+
+    Quem julga continua sendo o GATE 41. Aqui a lista existe para o sorteio saber o que
+    recusar."""
+    vals = [chave(x) for x in seq]
+    if len(vals) < 3:
+        return False
+    cats = set(vals)
+    if vals == sorted(vals) and len(cats) == len(vals):
+        return True                                    # permutacao identidade: A B C D
+    if len(cats) <= 2 and all(a != b for a, b in zip(vals, vals[1:])):
+        return True                                    # alternancia perfeita: A B A B
+    if len(cats) <= 2 and max(_corrida(vals)) > 2:
+        return True                                    # tres seguidas da mesma categoria
+    corridas = sum(1 for i, v in enumerate(vals) if i == 0 or vals[i - 1] != v)
+    if len(cats) > 1 and all(vals.count(c) >= 2 for c in cats) and corridas == len(cats):
+        return True                                    # agrupado: A A B B
+    return False
+
+
+def _corrida(vals):
+    """O tamanho de cada sequencia de valores iguais e seguidos."""
+    fora, atual = [], 0
+    for i, v in enumerate(vals):
+        atual = atual + 1 if i and vals[i - 1] == v else 1
+        fora.append(atual)
+    return fora or [0]
+
+
+def embaralha(seq, semente, chave=None):
+    """A ordem que o ALUNO ve, decidida por codigo -- nunca pela ordem em que o autor digitou.
+
+    PRO-009 do catalogo do auditor ("Sorting nao embaralhado", MAJOR): itens que aparecem
+    agrupados pela categoria ou na ordem da resposta tornam a classificacao previsivel. Foi
+    medido nas 24 aulas do consultivo: DOZE bancos de gap-fill listavam as palavras na ordem
+    exata das lacunas -- a aluna preenche 1->1, 2->2 sem ler -- e dois `classificar` traziam
+    os itens agrupados dois a dois pela resposta.
+
+    Nao ha aqui nenhum pedido para o autor "lembrar de embaralhar". A REGRA 24 ja existia no
+    documento do imersivo e mesmo assim os doze nasceram: regra que depende de memoria e
+    sorte. Quem embaralha e o emissor, e por isso a ordem certa deixa de ser uma escolha.
+
+    A semente e o `ident` do bloco: a ordem e ESTAVEL entre builds (o mesmo material sai
+    identico byte a byte, senao o GATE 50 acusaria divergencia a cada reconstrucao) e
+    diferente entre blocos. Com dois ou mais itens, o resultado nunca e a ordem original --
+    embaralhar e devolver o mesmo seria o defeito com outro nome."""
+    if len(seq) < 2:
+        return list(seq)
+    r = random.Random(semente)
+    for _ in range(200):
+        fora = list(seq)
+        r.shuffle(fora)
+        # "Diferente da ordem declarada" nao basta: com 4 itens em 2 categorias, AABB tem
+        # um irmao BBAA que tambem se resolve pela posicao, e A B A A A B cai na regra do
+        # GATE 41. Com `chave`, o sorteio recusa toda ordem previsivel -- ver _previsivel().
+        if fora == list(seq):
+            continue
+        if chave is not None and _previsivel(fora, chave):
+            continue
+        return fora
+    # Sequencia de itens todos iguais: nao ha ordem diferente a devolver, e nao ha
+    # previsibilidade a desfazer.
+    return list(seq)
+
+
 def forma_verbal(resposta):
     """A lacuna cobra a FORMA de um verbo?
 
@@ -252,7 +324,9 @@ def r_classificar(b, ident):
     ops = b["opcoes"]
     idx = {o: LETRAS[i] for i, o in enumerate(ops)}
     linhas = []
-    for it in b["itens"]:
+    # A ORDEM DOS ITENS E DO EMISSOR (PRO-009) -- ver embaralha(). Declarados agrupados pela
+    # resposta, eles se resolvem pela posicao: as duas primeiras sao A, as duas ultimas B.
+    for it in embaralha(b["itens"], ident, chave=lambda i: i["ok"]):
         if it["ok"] not in idx:
             raise SystemExit(f'{ident}: a resposta {it["ok"]!r} nao esta entre as opcoes '
                              f'{ops}. O autor escreve o TEXTO da opcao certa.')
@@ -477,7 +551,9 @@ def r_lacuna(b, ident, vocab=None):
     # sobreposicao, banco que aparece depois nao ajuda a fazer -- ajuda a conferir.
     banco_box = ""
     if b.get("banco"):
-        palavras = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
+        # Mesma razao do `classificar`: banco na ordem das lacunas e gabarito por posicao.
+        palavras = " &middot; ".join(f"<em>{esc(x)}</em>"
+                                     for x in embaralha(b["banco"], ident + "-banco"))
         rot = esc(b.get("rotulo_banco", "Use:")).rstrip(":")
         banco_box = (f'    <div class="word-bank">'
                      f'<span class="wb-rot">{rot}</span> {palavras}</div>\n')
