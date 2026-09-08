@@ -33,11 +33,13 @@ USO:
     python3 scripts/consultivo/build_consultivo.py _build/consultivo/{slug}/config.json
     python3 scripts/consultivo/build_consultivo.py --round-trip
 """
+import html as _html
 import importlib.util
 import json
 import os
 import re
 import sys
+import unicodedata
 from html import unescape
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -488,6 +490,70 @@ def expande_blocos(fragmento, decl, usadas, rotulo):
 # traducao ("guest -> hospede / hotel"). Uma segunda traducao por baixo entregaria a resposta
 # antes da escolha, que e o oposto do que o modo existe para fazer.
 _PEDEM_ITEM = {"escolha", "completar", "lacuna", "classificar"}
+
+
+KIND_EXERCICIO = ("escolha", "par", "completar", "classificar", "lacuna", "gravar",
+                  "escrever")
+ENUNCIADO_DA_TELA = ("slide-question", "task-instr", "subprompt", "slide-lead")
+
+# Uma fala precisa deste tanto de palavras para contar. Abaixo disso ("Thank you.") a
+# coincidencia diz mais sobre a lingua do que sobre o material.
+_MIN_PALAVRAS_DA_FALA = 4
+_FALAS_QUE_JA_SAO_O_AUDIO = 3
+# O que NAO e tela do pre-class: apoio em portugues, painel do professor, e o texto que so
+# existe para virar MP3 (`audio.texto` alimenta o `sayAs`, nao a tela).
+_FORA_DA_TELA = ("nota", "nota_pt", "rationale", "rationale_pt", "pt", "ptt", "audio")
+
+
+def _so_letras(t):
+    t = re.sub(r"<[^>]+>", " ", str(t))
+    t = _html.unescape(t)
+    t = unicodedata.normalize("NFKD", t)
+    t = "".join(c for c in t if not unicodedata.combining(c))
+    return re.sub(r" +", " ", re.sub(r"[^a-z0-9' ]", " ", t.lower())).strip()
+
+
+def _textos_de_tela(o, acc):
+    if isinstance(o, str):
+        acc.append(o)
+    elif isinstance(o, dict):
+        for k, v in o.items():
+            if k not in _FORA_DA_TELA:
+                _textos_de_tela(v, acc)
+    elif isinstance(o, list):
+        for v in o:
+            _textos_de_tela(v, acc)
+
+
+def falta_escuta_por_entregar(n, pasta, declarado_da_aula):
+    """O pre-class carrega o audio INTEIRO da aula? (PRO-006, BLOCKER.)
+
+    O `talk.json` e a fonte: sao as falas que viram MP3 e que a aluna ouve na aula. Se
+    todas elas ja estao escritas nas seccoes que o `preclass.html` injeta, o exercicio de
+    listening virou conferencia de leitura -- outra habilidade."""
+    talk = os.path.join(pasta, "talk.json")
+    pre = os.path.join(pasta, "preclass.html")
+    if not (os.path.exists(talk) and os.path.exists(pre)):
+        return []
+    with open(talk, encoding="utf-8") as fh:
+        dados = json.load(fh)
+    falas = [_so_letras(x.get("t", "")) for x in dados if isinstance(x, dict)]
+    falas = [f for f in falas if len(f.split()) >= _MIN_PALAVRAS_DA_FALA]
+    if len(falas) < 2:
+        return []
+    with open(pre, encoding="utf-8") as fh:
+        secs = set(re.findall(r"<!--BLOCOS:([a-z0-9]+)-->", fh.read()))
+    acc = []
+    for sec in secs:
+        _textos_de_tela(declarado_da_aula.get(sec), acc)
+    tela = _so_letras(" ".join(acc))
+    dentro = [f for f in falas if f in tela]
+    if len(dentro) == len(falas) or len(dentro) >= _FALAS_QUE_JA_SAO_O_AUDIO:
+        return [f"aula {n}: o pre-class carrega {len(dentro)} das {len(falas)} falas do "
+                f"audio. Isto e o transcript entregue na vespera (PRO-006): a aula chega "
+                f"com nada para escutar. Uma fala solta como estimulo pode ficar; o audio "
+                f"inteiro sai. Primeira: \"{dentro[0][:60]}...\""]
+    return []
 
 
 def falta_apoio_por_item(n, chave, b):
@@ -945,6 +1011,51 @@ def monta(cfg, base_frag):
                             f"recolhido atras do botao 'Ver em português'.")
                     if bilingue(cfg):
                         erros += falta_apoio_por_item(n, chave, b)
+
+        # ---- O ENUNCIADO DO IN-CLASS E DA TELA, E A TELA TEM DE TER UM ----------------
+        #
+        # GATE 63 virado assert: o gate barra no PR, o assert impede de escrever. As duas
+        # regras sao as da revisao da aula 1 da Vanessa ("Tela 5 e 6: enunciado na TELA,
+        # nao atras do botao de portugues", #2509):
+        #
+        #   (a) tela que injeta exercicio tem elemento de enunciado;
+        #   (b) bloco injetado numa TELA nao carrega `abertura`/`instr`/`pt` proprios -- o
+        #       `pt` de um bloco vira acordeao FECHADO, e no in-class o apoio e inline,
+        #       porque ha professora conduzindo e nada que oriente a acao pode depender de
+        #       um clique. No pre-class e o contrario, e por isso a regra le so as seccoes
+        #       que o `slides.html` injeta.
+        slides_txt = slides[aulas.index(n)]
+        for m_tela in re.finditer(r'<div class="slide [^>]*data-slide="(\d+)"[^>]*>(.*?)'
+                                  r'(?=\n<div class="slide |\Z)', slides_txt, re.S):
+            num, corpo = m_tela.group(1), m_tela.group(2)
+            secs = re.findall(r"<!--BLOCOS:([a-z0-9]+)-->", corpo)
+            exercicios = [b for sc in secs for b in (declarado[n].get(sc) or [])
+                          if isinstance(b, dict) and b.get("kind") in KIND_EXERCICIO]
+            if not exercicios:
+                continue
+            classes_tela = {c for lista in re.findall(r'class="([a-z0-9 \-]+)"', corpo)
+                            for c in lista.split()}
+            if not (classes_tela & set(ENUNCIADO_DA_TELA)):
+                erros.append(
+                    f"aula {n}, tela {num}: injeta {secs} e nao tem enunciado. A aluna ve o "
+                    f"exercicio sem uma frase que diga o que fazer com ele. Escreva um "
+                    f"<p class=\"slide-question\"> logo depois do titulo da tela.")
+            for b in exercicios:
+                proprios = [k for k in ("abertura", "instr", "pt") if b.get(k)]
+                if proprios:
+                    erros.append(
+                        f"aula {n}, tela {num}: o bloco {b.get('id')} traz {proprios} "
+                        f"proprio. No in-class quem enuncia e a TELA: o `pt` do bloco vira "
+                        f"acordeao fechado e o enunciado sai depois do material. Suba a "
+                        f"instrucao para a tela e zere essas chaves.")
+
+        # ---- O PRE-CLASS NAO ENTREGA O AUDIO DA AULA ---------------------------------
+        #
+        # GATE 61 virado assert (PRO-006, BLOCKER). Reprova o audio INTEIRO no pre-class,
+        # nunca uma fala solta: uma linha escrita e estimulo, o audio inteiro e transcript
+        # e nao sobra nada para escutar. Le so as seccoes do `preclass.html`, porque o
+        # post-class carrega o transcript de proposito.
+        erros += falta_escuta_por_entregar(n, pasta, declarado[n])
 
         if "btn-bar ao-topo" in post[-1]:
             raise SystemExit(f"aula {n} post-class: o bloco da aula traz uma barra "

@@ -43,13 +43,18 @@ Nao ha aqui nenhuma regra sobre COMO a frase e escrita. Verbo, tom e naturalidad
 A05 e de leitura humana -- e o proprio A05 §10.2 manda a suite REPROVAR detector lexical
 simplista. Este gate conta elemento, nao palavra.
 
-PENDENTES (declarados, nao consertados aqui)
----------------------------------------------
-Treze telas de tres alunos entram na regra (a): tem exercicio e nenhum elemento de
-enunciado. Em varias delas a tarefa esta insinuada no `slide-heading` ("Two of these say
-something back") ou so na nota do professor. Escrever o enunciado e conteudo -- e conteudo
-de aluno que este PR nao foi pedido para mexer (REGRA 31). Ficam listadas abaixo com o caso,
-como o Dan fixou em 03/09/2026 (excecao em codigo, com a razao). A lista so pode CAIR.
+O QUE JA FOI CONSERTADO POR CAUSA DELE
+--------------------------------------
+Ao nascer, o gate encontrou TREZE telas com exercicio e sem enunciado nenhum: seis do Caio,
+cinco da Joice e duas da Lucia. Em todas, a tarefa estava insinuada no `slide-heading`
+("Two of these say something back") ou so na nota do professor -- e a aluna via a lista de
+opcoes sem uma frase que dissesse o que fazer com elas.
+
+As treze receberam enunciado no mesmo PR, com autorizacao do Dan. Cada frase nomeia a acao
+que aquela tela oferece e a quantidade que se espera marcar, que e o que o exercicio ja
+media: "Two of these get the missing piece back. Mark those two."
+
+Nao ha lista de excecao: a partir daqui, tela com exercicio e sem enunciado reprova.
 
 ESCOPO: os fragmentos autorais, `_build/consultivo/{slug}/aula{n}/`.
 
@@ -70,19 +75,9 @@ VERDE, VERMELHO, AMARELO, ZERA = "\033[32m", "\033[31m", "\033[33m", "\033[0m"
 ENUNCIADO = ("slide-question", "task-instr", "subprompt", "slide-lead")
 EXERCICIO = ("escolha", "par", "completar", "classificar", "lacuna", "gravar", "escrever")
 
-PENDENTES = {
-    # "{slug}/{aula} tela N": ja estava assim quando a regra nasceu
-    "caio-de-souza-amante/aula1 tela 5", "caio-de-souza-amante/aula1 tela 6",
-    "caio-de-souza-amante/aula2 tela 6", "caio-de-souza-amante/aula3 tela 4",
-    "caio-de-souza-amante/aula4 tela 4", "caio-de-souza-amante/aula4 tela 5",
-    "joice-lopes-leite/aula9 tela 6", "joice-lopes-leite/aula10 tela 6",
-    "joice-lopes-leite/aula11 tela 4", "joice-lopes-leite/aula12 tela 5",
-    "joice-lopes-leite/aula12 tela 6",
-    "lucia-nishiyama-serra/aula4 tela 4", "lucia-nishiyama-serra/aula5 tela 4",
-}
-POR_QUE_PENDENTE = ("a tarefa aparece no slide-heading ou so na nota do professor; escrever "
-                    "o enunciado e decisao de conteudo em material fora do escopo deste PR "
-                    "(REGRA 31)")
+# Sem excecao. As treze que existiam foram consertadas (ver o cabecalho).
+PENDENTES = set()
+POR_QUE_PENDENTE = ""
 
 
 def telas(html):
