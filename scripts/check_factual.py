@@ -53,6 +53,16 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ---- O ESCOPO E O OBJETO FORAM REAPONTADOS (08/09/2026)
+#
+# Este gate media `<div class="evi">` + `<span class="evi-src">`, o markup do artefato da
+# Erica. A anatomia que foi ao ar chama as mesmas duas coisas de `doc-brief` e `doc-fonte`.
+# Medido antes do conserto: `blocos_evi()` devolvia ZERO nos seis materiais publicados --
+# o gate dizia "0 falhas" porque nao achava o objeto, nao porque o material estivesse
+# limpo. Trocar so o seletor de ARQUIVO teria produzido o mesmo verde falso.
+# Ver `scripts/anatomia_quatro_modalidades.py`.
+from anatomia_quatro_modalidades import ANATOMIA_PUBLICADA, no_escopo  # noqa: E402
+
 ANATOMIA_GD = ('reading-into-speaking', 'listening-into-interaction',
                'grammar-for-communication', 'esp-real-world')
 
@@ -92,6 +102,50 @@ def texto_puro(b):
     return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', _html.unescape(b))).strip()
 
 
+def documentos(h):
+    """(titulo, tem_fonte) de cada documento reproduzido na tela, na anatomia publicada.
+
+    `doc-brief` e o bloco; `doc-tit` o que ele e; `doc-fonte` de onde ele vem. Sao os
+    mesmos tres papeis de `evi` / `evi-src` do artefato, com outro nome."""
+    out = []
+    for m in re.finditer(r'<div class="[^"]*\bdoc-brief\b[^"]*"[^>]*>', h):
+        b = h[m.start():_fim_do_div(h, m.start())]
+        t = re.search(r'class="doc-tit"[^>]*>(.*?)</p>', b, re.S)
+        titulo = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', _html.unescape(t.group(1)))).strip() \
+            if t else ""
+        out.append((titulo, 'doc-fonte' in b))
+    return out
+
+
+def fonte_que_some(h):
+    """O documento que se apresenta DUAS vezes e so uma delas diz de onde veio.
+
+    POR QUE ESTA E A FORMA DA REGRA, e nao "todo bloco de texto declara fonte"
+    ---------------------------------------------------------------------------
+    Nem todo `doc-brief` e documento. Metade deles e BRIEFING DE CENA -- "The situation",
+    "Who is on the call", "Your side" -- texto que o proprio material escreve para montar
+    a tarefa. Briefing nao tem fonte porque nao veio de lugar nenhum, e exigir uma
+    produziria dezoito linhas de ruido.
+
+    Separar os dois por LEITURA do titulo seria um detector lexico, e o A05 §10.2 proibe
+    aprovar ou reprovar linguagem por lista de palavras. Mas nao e preciso ler nada: o
+    material JA diz quais blocos sao documento, ao atribuir fonte a eles. O que sobra e
+    uma incoerencia que se mede sem dicionario -- o MESMO documento, pelo mesmo titulo,
+    aparece atribuido numa tela e nu na outra.
+
+    Medido em 08/09/2026, antes do conserto: `Witness account — Ms. Ferraz` aparece quatro
+    vezes no material do Luiz e so a primeira diz de onde veio; `Incident report — officer
+    on duty`, idem; `Hotel Marina · Lisbon, Portugal` aparece cinco vezes no da Vanessa e
+    uma delas esta sem. A aluna reencontra o mesmo papel e na segunda vez ele nao tem
+    procedencia."""
+    por_titulo = {}
+    for titulo, tem in documentos(h):
+        if not titulo:
+            continue
+        por_titulo.setdefault(titulo, []).append(tem)
+    return sorted(t for t, v in por_titulo.items() if any(v) and not all(v))
+
+
 def autenticidade_do_syllabus(slug, n):
     p = os.path.join(RAIZ, '_build', slug, 'syllabus.json')
     if not os.path.exists(p):
@@ -111,18 +165,27 @@ def verifica(paths, online=False):
     fails, checados = [], 0
     for p in paths:
         base = os.path.basename(p)
-        m = re.search(r'^(.*)-aula(\d+)\.html$', base)
-        if not m:
-            continue
         if os.sep + 'aluno' + os.sep in p:
             continue
-        slug, n = m.group(1), int(m.group(2))
         with open(p, encoding='utf-8', errors='replace') as fh:
             h = fh.read()
-        if framework_de(h) not in ANATOMIA_GD:
+        if not no_escopo(p, h):
             continue
+        # A regra (c) precisa da aula para achar a `autenticidade` no syllabus. So a forma
+        # antiga tem uma aula por arquivo; no consultivo o arquivo e o CICLO inteiro, e o
+        # syllabus por aula nao existe nesse caminho. Sem os dois, (c) nao roda -- dizer
+        # isto aqui e melhor do que inventar uma aula e medir a autenticidade da errada.
+        m = re.search(r'^(.*)-aula(\d+)\.html$', base)
+        slug, n = (m.group(1), int(m.group(2))) if m else (None, None)
         checados += 1
         rel = os.path.relpath(p, RAIZ)
+
+        # (a') o documento que perde a fonte ao ser reapresentado (anatomia publicada)
+        for titulo in fonte_que_some(h):
+            fails.append(
+                f'{rel}: o documento {titulo!r} aparece com <p class="doc-fonte"> numa tela '
+                f'e SEM em outra. O mesmo papel, reapresentado, deixa de dizer de onde veio '
+                f'— e atribuir a fonte e criterio do proprio ciclo (03 §6/§8).')
 
         # (a) texto na tela sem fonte declarada
         for i, b in enumerate(blocos_evi(h), 1):
@@ -134,7 +197,9 @@ def verifica(paths, online=False):
 
         # (b) gabarito citando fonte que nao esta na tela
         na_tela = set()
-        for x in re.findall(r'<span class="evi-src">(.*?)</span>', h, re.S):
+        for x in re.findall(r'<span class="evi-src">(.*?)</span>'
+                            r'|<p class="doc-fonte">(.*?)</p>', h, re.S):
+            x = x[0] or x[1]
             na_tela |= set(ROTULO_FONTE.findall(_html.unescape(re.sub(r'<[^>]+>', '', x))))
         gab = ' '.join(re.findall(r'<div class="rationale">(.*?)</div>', h, re.S))
         gab += ' '.join(re.findall(r'class="r-back">(.*?)</div>', h, re.S))
@@ -148,7 +213,7 @@ def verifica(paths, online=False):
 
         # (c) simulado nao se veste de real + links
         links = re.findall(r'<a[^>]+href="(https?://[^"]+)"', ' '.join(blocos_evi(h)))
-        aut = (autenticidade_do_syllabus(slug, n) or '').lower()
+        aut = (autenticidade_do_syllabus(slug, n) or '').lower() if slug else ''
         if links and ('simulad' in aut or 'cenario' in aut or 'cenário' in aut):
             fails.append(
                 f'{rel}: o syllabus declara o input como simulado ("{aut[:40]}...") e o '
@@ -175,6 +240,12 @@ TEXTO = ('The syllabus published to families says ninety minutes per unit, and t
          'unit seven adds up to ninety-five minutes in total.')
 
 
+def _consultivo(corpo):
+    """Um material da anatomia publicada: carimbo de anatomia, nome que nao e `-aulaN`."""
+    return (f'<meta name="alumni-anatomia" content="{ANATOMIA_PUBLICADA}">'
+            f'<div class="slide slide-light" data-slide="1">{corpo}</div>')
+
+
 def selftest():
     casos = [
         ('texto com fonte',
@@ -193,12 +264,31 @@ def selftest():
         ('imersivo — nao e deste gate',
          _falso(f'<div class="evi-list"><div class="evi">{TEXTO}</div></div>',
                 fw='imersivo-prototipo'), False),
+
+        # ---- A ANATOMIA PUBLICADA: `doc-brief` / `doc-fonte`, e a fonte que some
+        ('anatomia publicada: documento uma vez so, sem fonte — e briefing de cena',
+         _consultivo('<div class="doc-brief"><p class="doc-tit">The situation</p>'
+                     f'<p class="doc-para">{TEXTO}</p></div>'), False),
+        ('anatomia publicada: as duas vezes com fonte',
+         _consultivo('<div class="doc-brief"><p class="doc-tit">Witness account</p>'
+                     '<p class="doc-fonte">Sample document.</p>'
+                     f'<p class="doc-para">{TEXTO}</p></div>'
+                     '<div class="doc-brief"><p class="doc-tit">Witness account</p>'
+                     '<p class="doc-fonte">Sample document.</p>'
+                     f'<p class="doc-para">{TEXTO}</p></div>'), False),
+        ('anatomia publicada: reapresentado SEM a fonte que tinha',
+         _consultivo('<div class="doc-brief"><p class="doc-tit">Witness account</p>'
+                     '<p class="doc-fonte">Sample document.</p>'
+                     f'<p class="doc-para">{TEXTO}</p></div>'
+                     '<div class="doc-brief"><p class="doc-tit">Witness account</p>'
+                     f'<p class="doc-para">{TEXTO}</p></div>'), True),
     ]
     import tempfile
     falhou = False
     for rotulo, htm, deve_falhar in casos:
         d = tempfile.mkdtemp()
-        p = os.path.join(d, 'professor', 'zz-aula1.html')
+        nome = 'zz-ciclo1.html' if 'alumni-anatomia' in htm else 'zz-aula1.html'
+        p = os.path.join(d, 'professor', nome)
         os.makedirs(os.path.dirname(p), exist_ok=True)
         with open(p, 'w', encoding='utf-8') as fh:
             fh.write(htm)
@@ -228,7 +318,7 @@ def _sem_objeto(n_medidos):
         try:
             with open(_f, encoding="utf-8", errors="replace") as _fh:
                 if 'content="consultivo"' in _fh.read(4000):
-                    print("  AVISO — SEM OBJETO: este gate mede a forma guided-discovery e nao"
+                    print("  AVISO — SEM OBJETO: este gate mede a forma das quatro modalidades e nao"
                           " ha nenhuma aula dela no repo. O material da anatomia nova"
                           " (consultivo) NAO e coberto por ele. Reaponte-o para o"
                           " requisito, ou aposente-o com o motivo escrito (P2 §13/§23).")
@@ -248,7 +338,7 @@ def main():
     if fails:
         print(f'\n{len(fails)} problema(s) de fonte/gabarito em {checados} aula(s).')
         return 1
-    print(f'OK — {checados} aula(s) guided-discovery: todo texto na tela tem fonte, e o '
+    print(f'OK — {checados} material(is) das quatro modalidades: todo texto na tela tem fonte, e o '
           f'gabarito so cita fonte que a aluna tem na frente.')
     _sem_objeto(checados)
     return 0
