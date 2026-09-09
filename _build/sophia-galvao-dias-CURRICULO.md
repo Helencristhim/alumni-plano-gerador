@@ -9,7 +9,7 @@
 |---|---|
 | Slug | `sophia-galvao-dias` |
 | Modelo do material | **TEENS** (`"model": "teens"` no config do builder) — decisão do Dan, 10/08/2026 |
-| Nível | **B1** (a PRIVATE vence — ver ressalva abaixo) |
+| Nível | **B1 até a aula 3 · B2 da aula 4 em diante** (ver *Re-nivelamento*, abaixo) |
 | Encontros | **72** aulas de **60 min** |
 | Frequência | 2x por semana — **quartas e sextas, 16h–17h** |
 | Modalidade | Online (Zoom) |
@@ -17,6 +17,31 @@
 | Escola | Colégio Dante Alighieri, São Paulo (SP) — colégio tradicional, sem programa bilíngue |
 | Consultor | Rodrigo Guedes |
 | Paleta | `--accent: #9D1C63` · `--accent-light: #D946A8` (única no roster) |
+
+---
+
+## Re-nivelamento para B2, a partir da aula 4 (09/09/2026)
+
+**O pai deu retorno de que o conteúdo gramatical não estava desafiador.** A ordem do Dan:
+regerar **da aula 4 em diante em B2**, sem mudar os temas nem a abordagem, sem revisão de
+conteúdo básico que o perfil já registra como dominado, e respeitando a faixa etária (12 anos).
+
+O que isso mudou, e o que **não** mudou:
+
+| | |
+|---|---|
+| Muda | O ponto gramatical de cada aula, a densidade do input (texto e áudio) e o que a tarefa final cobra |
+| Muda | `"level": "B2"` no config das aulas 4+ |
+| **Não** muda | Tema, personagens, formato, paridade FALA/LEITURA, vocabulário, jogos, a paleta |
+| **Não** muda | As aulas 1–3, que já foram dadas ou estão no ar como estão |
+
+Aulas regeradas em 09/09/2026: **4** (modal perfect para dedução) e **5** (orações relativas,
+defining e non-defining). A coluna "Foco linguístico" das aulas 6–11 foi elevada junto, para que
+a próxima geração não volte ao B1 — os temas são os mesmos.
+
+> **A ressalva de produção abaixo continua valendo, e agora importa mais.** O input dela é alto
+> e a produção é curta. Em B2 o ajuste, se for preciso, é de **apoio e densidade** — nunca voltar
+> o ponto gramatical para trás sem falar com o Dan.
 
 ---
 
@@ -174,15 +199,15 @@ faltou na consultoria: uma apresentação que passe de "My name is Sofia. I am t
 | 01 | FALA | More Than My Name | present simple × present continuous | Gravar 5 frases de apresentação, 3 no simple e 2 no continuous |
 | 02 | LEITURA | The Club Profiles | adverbs of frequency + ordem na frase | Escrever o próprio perfil em 4 linhas com 3 advérbios |
 | 03 | FALA | The Best Part of Sunday | past simple (regulares + irregulares) | Contar o último fim de semana em 6 frases |
-| 04 | LEITURA | The Word I Don't Know | orações relativas com that / which / who | Descrever 3 objetos sem dizer o nome deles |
-| 05 | FALA | New City, New Street | there is / there are + quantificadores | Descrever a rua de casa em 5 frases |
-| 06 | LEITURA | Two Schools | comparativos | Comparar duas escolas em 4 frases |
-| 07 | FALA | The Best Thing About It | superlativos | Dizer o melhor e o pior lugar da cidade, com motivo |
-| 08 | LEITURA | The Night of the Concert | present perfect com ever / never | 3 coisas que já fez e 3 que nunca fez |
-| 09 | FALA | Larry Caramelo | verbo + -ing × verbo + to-infinitive | Falar do cachorro em 6 frases com 4 verbos diferentes |
-| 10 | LEITURA | The Plan for the Holidays | be going to (planos) | Contar 4 planos reais das próximas férias |
-| 11 | FALA | Only One at Home | will × be going to | Fazer 3 previsões e tomar 2 decisões na hora |
-| 12 | LEITURA | Why English, Really | **CHECKPOINT 1** — recuperação das aulas 1–11 | Gravar a apresentação da aula 1 de novo e comparar |
+| 04 | LEITURA | The Order That Came Out Wrong | **modal perfect** para dedução: must / might / can't / should + have + particípio | Gravar um jantar inteiro, explicando três problemas com *must have* / *might have* / *can't have* |
+| 05 | FALA | New City, New Street | **orações relativas**: defining, non-defining e reduzidas | Cinco frases sobre a rua, cada uma com uma relativa e ao menos uma entre vírgulas |
+| 06 | LEITURA | Two Schools | **comparação com precisão**: not nearly as… as, far / considerably + comparativo, the more… the more | Comparar as duas escolas em 4 frases, nenhuma com *more good* nem *very more* |
+| 07 | FALA | The Best Thing About It | **superlativo + present perfect**: the best I've ever…, by far, one of the… | O melhor e o pior lugar da cidade, com motivo, em *the best I've ever seen* |
+| 08 | LEITURA | The Night of the Concert | **tempos da narrativa**: past simple × past continuous × past perfect | Contar a noite do show em 6 frases, com pelo menos um *had* |
+| 09 | FALA | Larry Caramelo | **verb patterns que mudam de sentido**: stop / remember / try + -ing × to | Falar do cachorro com *stop barking* e *stopped to look*, e explicar a diferença |
+| 10 | LEITURA | The Plan for the Holidays | **formas de futuro em contraste**: will × going to × presente contínuo × future perfect | Contar 4 planos reais, cada um numa forma diferente, e dizer por que aquela |
+| 11 | FALA | Only One at Home | **segundo condicional / irreal do presente**: if I had…, I'd… | Três frases sobre a casa que ela não tem: *if I had a brother, I'd…* |
+| 12 | LEITURA | Why English, Really | **CHECKPOINT 1** — recuperação das aulas 1–11, nenhum ponto novo | Gravar a apresentação da aula 1 de novo e comparar |
 
 ### Bloco 2 (13–24) · Grécia — o primeiro destino
 *O destino que ela nomeou pela arquitetura. Traz o vocabulário de deslocamento, mercado,
