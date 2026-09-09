@@ -607,6 +607,17 @@ jobs:
         # Ele PROÍBE em vez de conferir: contar dá o número certo de outra coisa.
         run: python3 scripts/consultivo/check_conta_o_audio.py
 
+      - name: "GATE 71 — selftest: prova que o gate do gabarito ainda morde"
+        run: python3 scripts/consultivo/check_expected_gabarito.py --selftest
+
+      - name: "GATE 71 — o `Expected` do guia de tela é gabarito, não resumo"
+        # Revisão da professora sobre a aula 19 da Gabriela (09/09/2026): o `Expected`
+        # parafraseava três dos seis itens e chamava os outros de "the other three".
+        # Ela marcou como RECORRENTE em todos os teacher's guides — e era: 3 de 54
+        # telas de atividade fechada tinham o gabarito inteiro. As 51 de então estão
+        # no alvará (REGRA 30); o gate existe para que nenhuma tela nova nasça vaga.
+        run: python3 scripts/consultivo/check_expected_gabarito.py
+
       - name: "GATE 68 — selftest: prova que o gate do handler ainda morde"
         run: python3 scripts/consultivo/check_handler_acha_o_alvo.py --selftest
 

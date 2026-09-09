@@ -1,116 +1,757 @@
 {
-  "_fonte_unica": "Registro de TODOS os gates do repo. Quem le: scripts/check_gates_registry.py (o meta-gate). Gate novo = uma entrada aqui, senao o CI reprova. Ver o cabecalho do meta-gate para o porque.",
-  "version": 1,
-
-  "_tipos": {
-    "anatomia": "A FORMA de um molde/framework: etapas, capitulos, componentes obrigatorios. SEMPRE escopado — 'tem 7 capitulos na ordem X' so vale para quem tem esses capitulos.",
-    "sequencia": "A relacao ENTRE aulas do mesmo aluno: vocabulario que nao repete, pre-class que previewa a aula. SEMPRE escopado — a ancora que ele mede e anatomia de um molde.",
-    "integridade": "O arquivo FUNCIONA: handler compila, funcao existe, MP3 e valido, contraste passa, HTML nao esta truncado. NUNCA escopado — botao morto e botao morto em qualquer molde.",
-    "autorizacao": "Quem pode usar o que. Nunca escopado: e o gate que DEFINE escopo dos outros.",
-    "regressao": "Nao piorar contra uma base congelada. Nunca escopado: mede delta, nao forma.",
-    "processo": "O PR, o CI e o deploy — nao o material. Nunca escopado."
+ "_fonte_unica": "Registro de TODOS os gates do repo. Quem le: scripts/check_gates_registry.py (o meta-gate). Gate novo = uma entrada aqui, senao o CI reprova. Ver o cabecalho do meta-gate para o porque.",
+ "version": 1,
+ "_tipos": {
+  "anatomia": "A FORMA de um molde/framework: etapas, capitulos, componentes obrigatorios. SEMPRE escopado — 'tem 7 capitulos na ordem X' so vale para quem tem esses capitulos.",
+  "sequencia": "A relacao ENTRE aulas do mesmo aluno: vocabulario que nao repete, pre-class que previewa a aula. SEMPRE escopado — a ancora que ele mede e anatomia de um molde.",
+  "integridade": "O arquivo FUNCIONA: handler compila, funcao existe, MP3 e valido, contraste passa, HTML nao esta truncado. NUNCA escopado — botao morto e botao morto em qualquer molde.",
+  "autorizacao": "Quem pode usar o que. Nunca escopado: e o gate que DEFINE escopo dos outros.",
+  "regressao": "Nao piorar contra uma base congelada. Nunca escopado: mede delta, nao forma.",
+  "processo": "O PR, o CI e o deploy — nao o material. Nunca escopado."
+ },
+ "_escopo": {
+  "repo": "Roda em tudo. So legitimo para integridade, autorizacao, regressao e processo.",
+  "framework": "Lista de ids de public/data/frameworks.json. Obrigatorio em anatomia e sequencia.",
+  "marcador": "O gate ja se escopa sozinho pela presenca de um marcador no HTML (ex: sem data-grammar, nada a comparar). Vale como escopo, e o campo diz QUAL marcador."
+ },
+ "gates": {
+  "check_workflows.py": {
+   "gate": 0,
+   "tipo": "processo",
+   "escopo": "repo"
   },
-
-  "_escopo": {
-    "repo": "Roda em tudo. So legitimo para integridade, autorizacao, regressao e processo.",
-    "framework": "Lista de ids de public/data/frameworks.json. Obrigatorio em anatomia e sequencia.",
-    "marcador": "O gate ja se escopa sozinho pela presenca de um marcador no HTML (ex: sem data-grammar, nada a comparar). Vale como escopo, e o campo diz QUAL marcador."
+  "validate_lesson.py": {
+   "gate": 1,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "imersivo-prototipo"
+    ]
+   },
+   "caminho": "_build/model",
+   "nota": "Ja escopado no proprio codigo (le alumni-framework e alumni-gen)."
   },
-
-  "gates": {
-    "check_workflows.py":              {"gate": 0,  "tipo": "processo",    "escopo": "repo"},
-    "validate_lesson.py":              {"gate": 1,  "tipo": "anatomia",    "escopo": {"framework": ["imersivo-prototipo"]}, "caminho": "_build/model", "nota": "Ja escopado no proprio codigo (le alumni-framework e alumni-gen)."},
-    "check_gates_registry.py":         {"gate": 17, "tipo": "processo",    "escopo": "repo", "nota": "O meta-gate. Confere este proprio arquivo."},
-    "check_audio_declarado.py":        {"gate": 19, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"], "marcador": "alumni-anatomia=consultivo"}, "nota": "A pergunta que faltava: nao 'o MP3 prometido existe?' (GATE 5), mas 'foi prometido ALGUM?'. Aula da anatomia guided-discovery com audioMap vazio passava em tudo. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."},
-    "check_banco_mecanicas.py":        {"gate": 27, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"], "marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts", "nota": "Ordem do Dan (11/08/2026): 'se nao tem no artefato nada parecido que o documento descreva, hora de remover'. Matching, Ordering/reconstruction e Information gap sairam do banco do 03 §4, e o kind quickfire junto. O gate cobra os dois lados: aula guided-discovery nao usa o markup removido, e syllabus nao promete a mecanica removida. NAO toca o imersivo — matching esta em 1.015 aulas publicadas dele e quickfire em 290 configs; o kind segue no builder e o CSS nos dois shells (REGRA 30 + GATE 18). Banco operativo em _build/model/ciclo.json -> banco_de_mecanicas. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."},
-    "check_factual.py":                {"gate": 25, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"], "marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts", "nota": "A camada Factual (03 §6/§8), na parte que uma maquina consegue provar: todo texto na tela declara fonte (12 de 12 no artefato), o gabarito nao cita rotulo de fonte que a tela nao mostra (resposta-modelo que afirma mais que a evidencia), e material que o syllabus declara SIMULADO nao carrega link externo de veiculo real. Conferir se a fonte real diz o que a aula afirma continua sendo trabalho humano, e continua marcado como tal no relatorio. Com --online, checa tambem se o link resolve. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."},
-    "check_coerencia_interna.py":      {"gate": 26, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"], "marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts", "nota": "Item 2.10 da instrucao corretiva: a nota mandava 'toque o audio' numa aula de LEITURA. Nota com imperativo (tocar, ler o texto, preencher, classificar, cronometrar) exige o mecanismo NA TELA ou uma indicacao de para onde ir. A primeira versao das regras disparou 20x no proprio artefato — polissemia ('leia o quadro' = o brief) e prosa que descreve o percurso; a versao que ficou e muda nas 63 telas dele e mesmo assim pegou um defeito real na aula 2. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."},
-    "check_teacher_notes.py":          {"gate": 23, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"], "marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts", "nota": "Nota do professor em TODA tela (63/63 no artefato), com orcamento de tempo (63/63) e sem comando gritado. O item 2.15 da instrucao corretiva nomeia 'NAO ajude', 'force a resposta' e 'TEM de responder' — as tres ainda estavam no material meses depois, porque a correcao era prosa num .docx e nada a cobrava. So no arquivo do PROFESSOR: o espelho do aluno perde o data-teacher por desenho. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."},
-    "check_syllabus_ciclo.py":         {"gate": 24, "tipo": "sequencia",   "escopo": {"marcador": "_build/{slug}/syllabus.json"}, "caminho": "scripts", "nota": "Os DEZ campos do docx §3.1 em cada aula do ciclo, a ficha de especificacao do prompt controlador, os cinco subcampos de cada mecanica (03 §4.2) e o cruzamento com estado.json -> mecanicas_gastas: mecanica usada e nao declarada, ou declarada e nao usada, reprova. Escopado por marcador: so o aluno que TEM syllabus.json — o eixo CICLO e do Private Black Adults, nao do pacote antigo."},
-    "check_anatomia.py":               {"gate": 20, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"]}, "caminho": "scripts", "nota": "Desde 24/08/2026 cobre TRES anatomias, e a consultivo usa a forma MEDIDA do inventario (classe -> contagem, gerada do artefato por scripts/consultivo/gen_inventario.py) em vez da declarada a mao: sao 177 classes, que ninguem digitaria sem errar. Confere o shell contra _build/model/anatomias.json, cujas classes declaradas sao as DO ARTEFATO (_build/model/artefatos/erica-professor-view.html) desde 11/08/2026. Pega componente que SOME. A nota anterior dizia 'nunca contra o artefato, cujo papel acabou' — foi isso que deixou o inventario catalogar a reescrita ic-* e o gate comparar a copia consigo mesma; o artefato voltou para o repo e o GATE 21 compara com ele."},
-    "check_artefato_paridade.py":      {"gate": 21, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"]}, "caminho": "scripts", "nota": "A interface do molde guided-discovery E a do ARTEFATO. Compara as classes usadas dentro de .slide no artefato com o CSS do shell, acusa classe ic-* orfa (reescrita sem par no original) e declaracao paralela no anatomias.json. Divida congelada em scripts/artefato-paridade-baseline.json, que so pode CAIR."},
-    "check_shell_drift.py":            {"gate": 18, "tipo": "regressao",   "escopo": "repo", "nota": "Enquanto existir mais de um shell CLONE, garante que eles nao derivam nas funcoes JS e nas classes-mecanismo. Some sozinho quando os shells voltarem a ser um: sem clone no disco, ele passa dizendo 'estado ideal'. NAO alcanca a story-quest nem a anatomia consultivo: nenhuma das duas e clone do helen-mendes, e forcar o shell novo a ter as funcoes do imersivo seria o cano por onde os defeitos dele entrariam (docs/consultivo/FRONTEIRA.md)."},
-    "check_no_regression.py":          {"gate": 3,  "tipo": "regressao",   "escopo": "repo", "caminho": "_build/model"},
-    "check_hub_orphans.py":            {"gate": 4,  "tipo": "integridade", "escopo": "repo", "caminho": "_build/model", "nota": "Accordion orfao e corrupcao estrutural, nao anatomia."},
-    "check_lesson_integrity.py":       {"gate": 5,  "tipo": "integridade", "escopo": "repo"},
-    "check_order_audio_len.py":        {"gate": "5b","tipo": "integridade","escopo": "repo"},
-    "check_audio_src.py":              {"gate": "5c","tipo": "integridade","escopo": "repo", "nota": "Procedencia: o MP3 sabe de que texto nasceu. Legado sem _src.json e ignorado."},
-    "check_forbidden_patterns.py":     {"gate": 6,  "tipo": "regressao",   "escopo": "repo"},
-    "check_inline_js.mjs":             {"gate": 7,  "tipo": "integridade", "escopo": "repo", "nota": "Compila o handler no V8. Botao morto e botao morto."},
-    "check_undefined_handlers.py":     {"gate": "7b","tipo": "integridade","escopo": "repo"},
-    "check_legacy_baseline.py":        {"gate": 8,  "tipo": "regressao",   "escopo": "repo"},
-    "check_grammar_progression.py":    {"gate": 9,  "tipo": "sequencia",   "escopo": {"marcador": "data-grammar"}, "caminho": "_build/model", "nota": "Escopado por construcao: aula sem data-grammar e ignorada."},
-    "check_fill_reveal.py": {
+  "check_gates_registry.py": {
+   "gate": 17,
+   "tipo": "processo",
+   "escopo": "repo",
+   "nota": "O meta-gate. Confere este proprio arquivo."
+  },
+  "check_audio_declarado.py": {
+   "gate": 19,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ],
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "nota": "A pergunta que faltava: nao 'o MP3 prometido existe?' (GATE 5), mas 'foi prometido ALGUM?'. Aula da anatomia guided-discovery com audioMap vazio passava em tudo. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."
+  },
+  "check_banco_mecanicas.py": {
+   "gate": 27,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ],
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts",
+   "nota": "Ordem do Dan (11/08/2026): 'se nao tem no artefato nada parecido que o documento descreva, hora de remover'. Matching, Ordering/reconstruction e Information gap sairam do banco do 03 §4, e o kind quickfire junto. O gate cobra os dois lados: aula guided-discovery nao usa o markup removido, e syllabus nao promete a mecanica removida. NAO toca o imersivo — matching esta em 1.015 aulas publicadas dele e quickfire em 290 configs; o kind segue no builder e o CSS nos dois shells (REGRA 30 + GATE 18). Banco operativo em _build/model/ciclo.json -> banco_de_mecanicas. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."
+  },
+  "check_factual.py": {
+   "gate": 25,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ],
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts",
+   "nota": "A camada Factual (03 §6/§8), na parte que uma maquina consegue provar: todo texto na tela declara fonte (12 de 12 no artefato), o gabarito nao cita rotulo de fonte que a tela nao mostra (resposta-modelo que afirma mais que a evidencia), e material que o syllabus declara SIMULADO nao carrega link externo de veiculo real. Conferir se a fonte real diz o que a aula afirma continua sendo trabalho humano, e continua marcado como tal no relatorio. Com --online, checa tambem se o link resolve. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."
+  },
+  "check_coerencia_interna.py": {
+   "gate": 26,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ],
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts",
+   "nota": "Item 2.10 da instrucao corretiva: a nota mandava 'toque o audio' numa aula de LEITURA. Nota com imperativo (tocar, ler o texto, preencher, classificar, cronometrar) exige o mecanismo NA TELA ou uma indicacao de para onde ir. A primeira versao das regras disparou 20x no proprio artefato — polissemia ('leia o quadro' = o brief) e prosa que descreve o percurso; a versao que ficou e muda nas 63 telas dele e mesmo assim pegou um defeito real na aula 2. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."
+  },
+  "check_teacher_notes.py": {
+   "gate": 23,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ],
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts",
+   "nota": "Nota do professor em TODA tela (63/63 no artefato), com orcamento de tempo (63/63) e sem comando gritado. O item 2.15 da instrucao corretiva nomeia 'NAO ajude', 'force a resposta' e 'TEM de responder' — as tres ainda estavam no material meses depois, porque a correcao era prosa num .docx e nada a cobrava. So no arquivo do PROFESSOR: o espelho do aluno perde o data-teacher por desenho. REAPONTADO em 08/09/2026: nenhum arquivo publicado carrega o meta `alumni-framework`, entao o gate imprimia `0 aula(s)` e um AVISO desde que nasceu. As mesmas quatro modalidades foram ao ar sob a anatomia `consultivo`, com outro carimbo e outro nome de arquivo. Seletor unico em scripts/anatomia_quatro_modalidades.py; as duas formas continuam aceitas."
+  },
+  "check_syllabus_ciclo.py": {
+   "gate": 24,
+   "tipo": "sequencia",
+   "escopo": {
+    "marcador": "_build/{slug}/syllabus.json"
+   },
+   "caminho": "scripts",
+   "nota": "Os DEZ campos do docx §3.1 em cada aula do ciclo, a ficha de especificacao do prompt controlador, os cinco subcampos de cada mecanica (03 §4.2) e o cruzamento com estado.json -> mecanicas_gastas: mecanica usada e nao declarada, ou declarada e nao usada, reprova. Escopado por marcador: so o aluno que TEM syllabus.json — o eixo CICLO e do Private Black Adults, nao do pacote antigo."
+  },
+  "check_anatomia.py": {
+   "gate": 20,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ]
+   },
+   "caminho": "scripts",
+   "nota": "Desde 24/08/2026 cobre TRES anatomias, e a consultivo usa a forma MEDIDA do inventario (classe -> contagem, gerada do artefato por scripts/consultivo/gen_inventario.py) em vez da declarada a mao: sao 177 classes, que ninguem digitaria sem errar. Confere o shell contra _build/model/anatomias.json, cujas classes declaradas sao as DO ARTEFATO (_build/model/artefatos/erica-professor-view.html) desde 11/08/2026. Pega componente que SOME. A nota anterior dizia 'nunca contra o artefato, cujo papel acabou' — foi isso que deixou o inventario catalogar a reescrita ic-* e o gate comparar a copia consigo mesma; o artefato voltou para o repo e o GATE 21 compara com ele."
+  },
+  "check_artefato_paridade.py": {
+   "gate": 21,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ]
+   },
+   "caminho": "scripts",
+   "nota": "A interface do molde guided-discovery E a do ARTEFATO. Compara as classes usadas dentro de .slide no artefato com o CSS do shell, acusa classe ic-* orfa (reescrita sem par no original) e declaracao paralela no anatomias.json. Divida congelada em scripts/artefato-paridade-baseline.json, que so pode CAIR."
+  },
+  "check_shell_drift.py": {
+   "gate": 18,
+   "tipo": "regressao",
+   "escopo": "repo",
+   "nota": "Enquanto existir mais de um shell CLONE, garante que eles nao derivam nas funcoes JS e nas classes-mecanismo. Some sozinho quando os shells voltarem a ser um: sem clone no disco, ele passa dizendo 'estado ideal'. NAO alcanca a story-quest nem a anatomia consultivo: nenhuma das duas e clone do helen-mendes, e forcar o shell novo a ter as funcoes do imersivo seria o cano por onde os defeitos dele entrariam (docs/consultivo/FRONTEIRA.md)."
+  },
+  "check_no_regression.py": {
+   "gate": 3,
+   "tipo": "regressao",
+   "escopo": "repo",
+   "caminho": "_build/model"
+  },
+  "check_hub_orphans.py": {
+   "gate": 4,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "_build/model",
+   "nota": "Accordion orfao e corrupcao estrutural, nao anatomia."
+  },
+  "check_lesson_integrity.py": {
+   "gate": 5,
+   "tipo": "integridade",
+   "escopo": "repo"
+  },
+  "check_order_audio_len.py": {
+   "gate": "5b",
+   "tipo": "integridade",
+   "escopo": "repo"
+  },
+  "check_audio_src.py": {
+   "gate": "5c",
+   "tipo": "integridade",
+   "escopo": "repo",
+   "nota": "Procedencia: o MP3 sabe de que texto nasceu. Legado sem _src.json e ignorado."
+  },
+  "check_forbidden_patterns.py": {
+   "gate": 6,
+   "tipo": "regressao",
+   "escopo": "repo"
+  },
+  "check_inline_js.mjs": {
+   "gate": 7,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "nota": "Compila o handler no V8. Botao morto e botao morto."
+  },
+  "check_undefined_handlers.py": {
+   "gate": "7b",
+   "tipo": "integridade",
+   "escopo": "repo"
+  },
+  "check_legacy_baseline.py": {
+   "gate": 8,
+   "tipo": "regressao",
+   "escopo": "repo"
+  },
+  "check_grammar_progression.py": {
+   "gate": 9,
+   "tipo": "sequencia",
+   "escopo": {
+    "marcador": "data-grammar"
+   },
+   "caminho": "_build/model",
+   "nota": "Escopado por construcao: aula sem data-grammar e ignorada."
+  },
+  "check_fill_reveal.py": {
    "gate": 49,
    "tipo": "integridade",
-   "escopo": { "marcador": "fill-item" },
+   "escopo": {
+    "marcador": "fill-item"
+   },
    "caminho": "scripts",
    "nota": "O irmao do 28 para o que o 28 nao alcanca: o 28 pergunta 'mudou o estilo de alguem?' e passa reto quando o clique esconde o espaco em branco e a resposta some junto por ser FILHA dele (patricia-yamaguti-shimada aulas 5-20, 32 arquivos: seis exercicios mortos por aula, nunca funcionaram). Este mede a CAIXA do alvo depois do clique -- largura ou altura zero = o aluno nao ve, seja qual for o mecanismo. Escopado por construcao: so abre arquivo que tem .fill-item. Integridade: reveal que nao mostra e mecanismo morto em qualquer molde."
   },
-  "check_reveal_clica.py":           {"gate": 28, "tipo": "integridade", "escopo": "repo", "caminho": "scripts", "nota": "O irmao do 10, para o que o 10 nao alcanca: ele acha o alvo por CLASSE (3 familias fixas) e a tabela do 'Reveal the Rule' e um <div id=\"ruleN\"> sem classe — 130 slides de 4 alunos ficaram meses com o botao trocando de texto e a regra nunca aparecendo. Decidir isso NO TEXTO exigiria casar seletor CSS, cascata e especificidade, e saber que inline vence stylesheet menos com !important; entao este CLICA no Chromium e compara o computed style antes/depois. Integridade: reveal que nao revela e mecanismo morto em qualquer molde."},
-  "check_vocab_reveal.py":           {"gate": 10, "tipo": "integridade", "escopo": {"marcador": "alumni-gen"}, "nota": "Reveal que nasce escondido e mecanismo quebrado, nao anatomia."},
-    "check_framework_isolation.py":    {"gate": 11, "tipo": "autorizacao", "escopo": "repo"},
-    "check_pt_na_tela.py":             {"gate": 55, "tipo": "anatomia", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O portugues que chega ao aluno chega COMO portugues. Nasceu da revisao da professora em 03/09/2026, na caixa que confirma o Reset da Vanessa: o titulo e o rotulo do botao saiam com `&middot;` LITERAL na tela, e o texto em PT saia sem acento ('e so dela', 'e afetado', 'ficam como estao'). Duas coisas diferentes, medidas as duas no NAVEGADOR porque so ali elas existem. (A) ENTIDADE CRUA: `askOpen` escreve titulo e rotulo por `textContent`, que nao interpreta HTML -- a entidade entra caractere por caractere. O corpo da MESMA caixa vai por innerHTML e aparecia certo: metade certa, metade com o codigo cru, e nada acusa (HTML valido, console limpo, texto que so existe depois do clique). E a REGRA 7.1 do imersivo por outro caminho: tratar o texto ESCRITO como o texto EXECUTADO. Vale para TODO material da anatomia -- o mesmo defeito ja estava em 5 itens da aula 3 da Vanessa e 6 da aula 3 do Caio, por outra origem (o autor escreveu `&rarr;` num campo que o `esc()` escapava, e o `&` virava `&amp;`); a correcao foi no emissor, que agora resolve a entidade antes de escapar. (B) ACENTO: lista FECHADA de palavras que em portugues sempre levam acento e nao sao palavra inglesa -- por isso 'so', 'e' e 'ate' ficam de fora, apesar de serem os erros mais comuns. Um gate que gera falso positivo por material vira ruido; este prefere deixar passar um acento a acusar uma palavra inglesa, e a lista cresce quando aparecer caso real. So onde o config declara `apoio.bilingue`: material sem promessa de portugues nao tem portugues a cobrar."},
-    "check_nome_da_tela.py":           {"gate": 56, "tipo": "anatomia", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O menu do deck chama cada tela pelo nome que a propria tela usa. O nome esta em DOIS lugares que ninguem obriga a concordar: a `.stage-pill` da tela (slides.html) e o `nav:[...]` do registro.js, que alimenta o menu lateral E o titulo da nota do professor. Numa revisao a tela 5 da aula 1 da Vanessa foi renomeada no pill e o nav ficou como estava: o menu levava a uma tela chamada outra coisa e a nota abria com o titulo antigo. Nada quebra e nada avisa -- o material so passa a mentir sobre si mesmo em dois lugares. NAO deriva um do outro de proposito: o nav nomeia as dez telas e so oito tem pill (abertura e fecho nao tem), e ha telas cujo pill traz legitimamente o nome da ETAPA porque a etapa ocupa duas telas -- derivar apagaria esses nomes proprios. Entao cobra o que importa: onde os dois existem, dizem a mesma coisa. Divida anterior congelada em scripts/consultivo/nome-da-tela-baseline.json (16 pares em 03/09/2026, inclusive um nav DESLOCADO uma posicao da tela 3 em diante no luiz-bressane aula 12), que so pode CAIR: alvara, nao lista de tarefas (REGRA 30)."},
-    "check_id_unico.py":               {"gate": 60, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Dois elementos com o mesmo `id` no material. O bloco de recap declarava `id: conteudo` nas quatro aulas e o emissor deriva dele o id do apoio em portugues: quatro <div id=conteudo-pt> no MESMO documento. `toggleEl` chama `getElementById`, que devolve o PRIMEIRO -- o da aula 1, escondido noutra tela --, entao nas aulas 2, 3 e 4 o botao 'Ver em portugues' trocava de rotulo e nada aparecia (revisao da professora, 04/09/2026). Nenhum gate viu porque id repetido nao e erro de sintaxe: o HTML e valido, o handler compila, o texto existe no arquivo, o contraste esta certo -- faltava a RELACAO entre duas pecas. Sem baseline em JSON: no Black a excecao se escreve em codigo, com o caso e a razao (decisao do Dan, 03/09/2026). A unica declarada esta em PENDENTES no cabecalho do gate -- quatro materiais emitem o gravador ou a caixa de escrita DUAS VEZES, porque o autor declarou o componente na `abertura` de um bloco que ja e kind gravar/escrever; escolher qual das duas pecas fica e decisao de conteudo, e a lista some quando o emissor recusar as duas rotas juntas."},
-    "check_preclass_nao_entrega.py":  {"gate": 61, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/aula{n}/"}, "caminho": "scripts/consultivo", "nota": "PRO-006 do catalogo do auditor (BLOCKER): o pre-class da aula 2 da Vanessa trazia as TRES falas do audio escritas num doc, na vespera — o listening virava leitura. Mede o talk.json contra as seccoes que o preclass.html injeta; o post-class carrega o transcript de proposito, e a #2526 mandou escrever as tres perguntas ali. Reprova o AUDIO INTEIRO, nunca uma fala solta: uma linha e ESTIMULO (a pergunta do Ray na aula 4 da Lucia, que ela analisa), o audio inteiro e TRANSCRIPT e nao sobra nada para escutar. Nao mede vocabulario nem chunk — a REGRA 29 EXIGE que o pre-class previeja o lexico da aula, entao a comparacao e por fala inteira (>=4 palavras). Duas aulas (Caio a2, Joice a10) entram como PENDENTES declaradas no codigo."},
-    "check_atividade_fechada.py":     {"gate": 62, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/aula{n}/ + alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Quatro apontamentos da professora numa regra so: lista com TODAS as opcoes corretas (aula 1 da Vanessa — 'entraram tres que nao pertencem a uma reserva, para a pergunta voltar a ser uma pergunta'), cinco itens com a MESMA resposta (aula 4), 'Complete the four sentences' com cinco itens (REG-001, que o GATE 46 so cobria no audio) e itens na ordem da resposta (PRO-009). O PRO-009 nao virou regra para o autor lembrar: virou embaralha() no EMISSOR (render.py), com semente estavel no ident do bloco — 12 bancos de gap-fill nas 24 aulas listavam as palavras na ordem exata das lacunas, em 5 alunos, apesar de a REGRA 24 mandar embaralhar desde sempre. O gate le o FRAGMENTO para autoria (contraste, resposta repetida, contagem, resposta fora do banco) e o HTML PUBLICADO para a ordem, que e o que a aluna ve. Nao julga se o distrator e plausivel: pergunta se ha estrutura de escolha."},
-    "check_nome_do_framework.py":     {"gate": 64, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/"}, "caminho": "scripts/consultivo", "nota": "O quarto framework tem UM nome. Relatorio de Alteracoes Normativas de 02/09/2026, ajuste 22: 'Quarto framework tinha nomes hibridos e sigla -> Nome exclusivo: Personalized Real-World English'; e a secao 5 e bloqueante: 'ocorrencia residual da sigla ou de forma hibrida reprova o novo material'. Medido em 08/09/2026: os SEIS materiais mostravam a sigla — mod:'ESP' virava a etiqueta 'ESP / E1', o fwNome era 'ESP — Real World' em cinco (o molde ja estava certo), o syllabus dizia 'ESP · Real-World English' e o cabecalho do pre/post-class trazia 'Aula 04 · ESP / E1'. Mede TEXTO VISIVEL, nao codigo: a classe mod-esp, a var --mod-esp e o id esp-real-world do proprio gates.json continuam validos, porque ninguem os le na tela — e o Documento 06 preserva id tecnico legado. 'Real-World' na etiqueta curta e o encurtamento do nome oficial, igual a Reading/Listening/Grammar; hibrido e misturar sigla e nome, e e isso que reprova. A primeira versao da lista de alvos esquecia preclass.html e postclass.html, que era justamente onde a sigla estava viva."},
-    "check_painel_docente.py":        {"gate": 65, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/"}, "caminho": "scripts/consultivo", "nota": "PC_NOTAS e painel do PROFESSOR: fala SOBRE o aluno, nunca COM ele. Medido em 09/09/2026: 61 campos em quatro alunos estavam em 2a pessoa ('Voce nao precisa entender tudo', 'Use a sua empresa de verdade'), num painel que o aluno nao ve por desenho. A revisao da professora ja tinha consertado isso na Vanessa (#2509 na aula 1, #2530 nas aulas 2-4) e nao alcancou os outros quatro, porque ninguem os revisou. NAO e o detector lexico que o A05 §10.2 proibe: nao julga qualidade de linguagem, detecta DESTINATARIO — classe gramatical fechada (2a pessoa do singular) num painel de leitor fixo. Isenta 'voces' (inclui quem le) e lingua CITADA (aspas, <em>), e foi medido que a isencao nao esconde nenhum dos 61."},
-    "check_recurso_e_um_item.py":     {"gate": 66, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/"}, "caminho": "scripts/consultivo", "nota": "O recurso aponta para UM item, nunca para o canal, a serie ou a home. A revisao da professora escreveu na aula 4 da Vanessa (#2536): 'Reading e Listen & Watch apontavam para SERIES INTEIRAS'. Ela consertou aquelas duas; medido em 09/09/2026, 30 links do resto da anatomia ainda mandavam o aluno para uma porta -- 7 canais do YouTube, 2 homes, e hubs de serie e paginas de topico -- concentrados no Caio (11) e na Joice (15), os dois nunca revisados, mais a aula 1 da Vanessa. Mede as tres formas em que a propria URL prova que nao e um item: canal do YouTube (video/playlist/short passam), caminho vazio, e indice conhecido (/topics/, /episodes, /podcasts/, secoes /z/ e /p/ da VOA). NAO tenta adivinhar se uma pagina de serie da BBC e episodio: isso daria falso positivo."},
-    "check_etiqueta_verdadeira.py":   {"gate": 67, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/"}, "caminho": "scripts/consultivo", "nota": "A etiqueta diz o que a atividade E. A revisao da aula 2 da Vanessa (#2526) achou 'um classificar com badge Listening, sem audio'; medido em 09/09/2026, DUAS continuavam, as duas na Lucia (aula4 vg4 e aula6 md6) -- a aula 6 chega a dizer 'You will hear one answer IN CLASS'. O material ja distingue: 'Listening' quando a tarefa E ouvir e o audio esta na atividade; 'Before you listen' quando a escuta acontece em aula (9 usos, todos certos). NAO e detector lexico: badge e campo declarado e audio e filho declarado da abertura -- a regra e uma implicacao entre duas declaracoes do autor, sem ler prosa."},
-    "check_handler_acha_o_alvo.py":   {"gate": 68, "tipo": "anatomia", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O handler acha o elemento que vai procurar. `czCheck(btn,id)` faz `getElementById(id); if(!host)return` -- e DUAS telas do MOLDE chamavam czCheck(this), com um argumento so: a aluna preenche as lacunas, clica em Check e nada acontece, sem erro no console. O GATE 42 nao pega porque nao ESTOURA. NAO e checagem de aridade: medido antes, 85 chamadas do consultivo passam menos argumentos que a funcao declara (playTalk, say, sayAs) e as 85 estao certas -- sao parametros opcionais. O que sobra e o parametro que a funcao entrega a getElementById, que nao tem padrao. A regra LE o corpo da funcao para descobrir qual e; nao ha lista de nomes escrita no gate."},
-    "check_item_explica.py":          {"gate": 69, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/"}, "caminho": "scripts/consultivo", "nota": "O item de atividade fechada diz POR QUE. O molde e o Luiz explicam CADA item de escolha e classificar (67/67 e 106/106); medido em 09/09/2026, Caio 0/109, Joice 0/113, Lucia 0/117 e Vanessa 0/109. O aluno marca, confere, e nao fica sabendo por que -- distrator sem explicacao e pegadinha. A EXCECAO e declarada: a Vanessa tem apoio.bilingue no config e o apoio por item dela e o portugues (ptt), decidido na revisao de 02/09, entao o gate aceita as duas formas e o bilingue satisfaz pela segunda. `par` e `completar` ficam de fora por MEDICAO: os dois materiais de referencia nao os explicam (0/30, 0/24), porque ali a resposta e uma palavra do proprio vocabulario e nao ha distrator a desfazer."},
-    "check_conta_o_audio.py":          {"gate": 70, "tipo": "anatomia",    "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "A tela nao CONTA o audio. Incidente de 09/09/2026, aula 20 da Gabriela Pires: uma tela do deck afirmava 'Maya asks twice and Chris asks once' sobre o dialogo que a aluna acabara de ouvir, e o talk.json diz outra coisa — cada uma pergunta UMA vez. Nenhum gate via: o texto e gramatical e todos os exercicios batem com o audio; so a prosa mentia. O gate PROIBE em vez de conferir, porque conferir nao pega: contando turnos com '?', Maya tem dois (o turno 0 comeca com 'So?') e a frase errada passaria — 'asks' ali significa 'pede o motivo', que e leitura de funcao e nao de pontuacao. Mesma escolha do PRO-008, que proibe 'a terceira' em vez de verificar qual e. Diga o que cada um FAZ. Base medida antes de entrar: zero ocorrencias nos sete materiais da anatomia."},
-    "check_instrucao_da_tela.py":     {"gate": 63, "tipo": "anatomia", "escopo": {"marcador": "_build/consultivo/{slug}/aula{n}/"}, "caminho": "scripts/consultivo", "nota": "'Tela 5 e 6: enunciado na TELA, nao atras do botao de portugues' (revisao da aula 1 da Vanessa, #2509). No in-class quem enuncia e a TELA: (a) toda tela que injeta exercicio tem elemento de enunciado (slide-question/task-instr/subprompt/slide-lead) e (b) o bloco injetado num slide nao carrega abertura/instr/pt proprios — o pt do bloco vira acordeao FECHADO, e no in-class o apoio e inline por desenho (ha professora conduzindo); alem disso o enunciado sairia depois do documento em vez de antes. No pre-class e o contrario, e por isso a regra so vale para as seccoes que o slides.html injeta. Conta ELEMENTO, nunca palavra: tom e naturalidade sao do A05, cujo 10.2 manda a suite reprovar detector lexical simplista. 13 telas de 3 alunos declaradas como PENDENTES no codigo."},
-    "check_ppp_lesson.py":             {"gate": 12, "tipo": "anatomia",    "escopo": {"framework": ["ppp"]}},
-    "check_communicative_lesson.py":   {"gate": 13, "tipo": "anatomia",    "escopo": {"framework": ["communicative"]}},
-    "check_tbl_lesson.py":             {"gate": 14, "tipo": "anatomia",    "escopo": {"framework": ["task-based"]}},
-    "check_produce_modes.py":          {"gate": 15, "tipo": "anatomia",    "escopo": {"marcador": "alumni-gen"}},
-    "check_contrato_aula.py":          {"gate": 16, "tipo": "autorizacao", "escopo": {"marcador": "alumni-contrato"}, "nota": "Era o SEGUNDO a se declarar GATE 12; renumerado em 06/08/2026. Ver o meta-gate."},
-
-    "check_deploy_source.py":          {"gate": null, "tipo": "processo",   "escopo": "repo"},
-    "check_pr_scope.py":               {"gate": null, "tipo": "processo",   "escopo": "repo"},
-    "gen_catalogo_modelos.py":         {"gate": null, "tipo": "processo",   "escopo": "repo", "nota": "Roda com --check no CI."},
-    "check_audio_quality.py":          {"gate": null, "tipo": "integridade","escopo": "repo", "caminho": "_build/model"},
-    "check_contrast.py":               {"gate": 2,  "tipo": "integridade", "escopo": "repo", "caminho": "_build/model", "nota": "Contraste computado. Ilegivel e ilegivel em qualquer molde."},
-    "check_order_audio.py":            {"gate": null, "tipo": "integridade","escopo": "repo", "caminho": "_build/model"},
-    "check_media_links.py":            {"gate": null, "tipo": "integridade","escopo": "repo", "caminho": "_build/model", "nota": "So morde onde existe media-card; sem card, nada a conferir."},
-    "check_lesson_tracking.py":        {"gate": null, "tipo": "integridade","escopo": "repo"},
-    "check_inclass_patterns.py":       {"gate": null, "tipo": "anatomia",   "escopo": {"framework": ["imersivo-prototipo"]}, "caminho": "_build/model", "nota": "PENDENTE DE WIRING: hoje roda no repo inteiro. O escopo esta DECLARADO aqui, mas o codigo ainda nao consulta este registro. Passa a consultar quando houver aula de outro framework para medir — nao antes, para nao encolher cobertura por previsao."},
-    "check_preclass_coherence.py":     {"gate": null, "tipo": "sequencia",  "escopo": {"framework": ["imersivo-prototipo"]}, "caminho": "_build/model", "nota": "PENDENTE DE WIRING, mesma razao. A ancora dele e vocabulario compartilhado entre Pre-class e IN CLASS; o molde stephanie-vicente nao tem essa ancora, entao ele vai precisar de escopo — mas so quando houver hub para medir."},
-    "check_vocab_progression.py":      {"gate": null, "tipo": "sequencia",  "escopo": {"marcador": "vocab-card-pc"}, "caminho": "_build/model", "nota": "Escopado por construcao: conta vocab card; molde sem vocab card nao tem o que comparar. Medido em 06/08 na aula reading-into-speaking: passa."},
-    "check_recording_paths.py":        {"gate": 29, "tipo": "integridade","escopo": "repo", "caminho": "scripts", "nota": "A gravacao do ALUNO nao pode ser destruida pela do PROFESSOR. O bucket `recordings` nao versiona e o upload e upsert:true; enquanto o path era {slug}/{frase}.{ext} (sem a view), o link do professor escrevia no MESMO objeto do aluno — e sem sinal, porque a URL publica nao muda, so o conteudo. Incidente de 19/08/2026: rafael-pelizaro, pre-class aula 9 (3,16s do aluno trocados por 0,26s de silencio), recuperado do backup acidental recording-{ts}.webm. NUNCA escopado: vale para qualquer molde — adulto, kids, teens. Le uma LIB (public/lib/activity-sync.js), nao material, entao roda sempre e nao depende dos arquivos do PR."},
-    "check_score_align.mjs":           {"gate": 30, "tipo": "integridade","escopo": "repo", "caminho": "scripts", "nota": "O score marcava errado quem falou CERTO. O reconhecedor ouve certo mas escreve diferente do exercicio ('ten' vira '10', 'greenlight' vira 'green light') e a comparacao e palavra a palavra. Medido em 19/08/2026 no rafael-pelizaro pre-class 11. O conserto (window.__alumniAlignSpoken) so troca um pedaco da transcricao quando o resultado e palavra que o ALVO tem — fora disso a string sai intacta e o veredito e identico ao de antes. O gate prova as DUAS metades: os dois casos consertados, e ~6.7 mil comparacoes antes-vs-depois em 12 alunos com zero divergencia. NUNCA escopado: le a lib, nao material."},
-    "check_reset_completo.py":         {"gate": 31, "tipo": "integridade","escopo": "repo", "caminho": "scripts", "nota": "O botao Reset zera TUDO que conta progresso. Ele limpava matching, fill-in, quiz e speech mas NAO os vocab cards nem os think cards; como o collectState recolhe o estado do DOM logo em seguida, o que sobrava era salvo de novo e a aula 'resetada' voltava a marcar 20-30%. Medido em 19/08/2026 (rafael-pelizaro, aulas 12-20 presas entre 21% e 33%). Cobra a REGRA 18.1 nos dois sentidos: tipo contado que o Reset nao limpa, e tipo novo no progresso nao declarado no gate. NUNCA escopado: le a lib."},
-    "check_pedagogico.py":             {"gate": 44, "tipo": "anatomia",    "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Itens que o catalogo marcou 'Semantico' e que TEM forma observavel -- INT-005/006 (nivel por habilidade com base propria), PRO-001 (atividade fechada com itens comparaveis e checagem), PRO-016 (producao aberta sem gabarito rigido), PRO-005 (audio de narracao/dialogo que so le a tela). Existe porque eu tinha usado 'semantico' como sacola para 31 itens sem examinar nenhum. O ancora e o `data-ok`, e levou tres tentativas erradas para aparecer: procurei a atividade de descoberta por reveal-card (4 de 8), por sortcol (1 de 8) e por .opt (ZERO de 8) -- eu contava o WIDGET, e a mesma operacao aparece em widgets diferentes conforme o conteudo. Classe e implementacao; data-ok e contrato. O PRO-005 SO vale escopado por categoria: sem isso 15 das 20 falas 'duplicavam', porque frase-modelo de pronuncia existe para ser vista e ouvida junto."},
-    "check_contraste_deck.py":        {"gate": 52, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "REG-005 nas telas ESCURAS do deck, com a razao WCAG COMPUTADA no navegador. Existe porque a revisao do Dan de 02/09/2026 achou a olho o que nenhum gate via: no slide 6 da aula 9 da Joice o enunciado do exercicio e o botao Check estavam ilegiveis. Medido: .task-instr 1.75:1 e .verify-all-btn.ghost 1.49:1 (minimo 4.5) -- 28 ocorrencias em 4 dos 6 materiais. A causa nao foi cor errada, foi regra que nunca chegou a existir: .btn-ghost, .audio-btn-sm.ghost e .aud-estado tem a variante .slide-dark logo abaixo da regra clara, e estas duas nasceram sem a delas, ficando com --accent e --text-mid, que sao cores de fundo CLARO. Peca com a cor do tema errado nao da erro, nao quebra layout e passa em todo gate estatico -- ela so nao e lida, e quem esta na aula supoe que o exercicio e assim. O caso do enunciado e o pior: a tela mostra as alternativas e esconde a PERGUNTA, que e a REGRA 2.1 por outro caminho (ali a tarefa nascia com display:none, aqui nasce da cor). Mede DENTRO do deck aberto, tela a tela, andando pela navegacao da propria pagina: as telas nascem em display:none, entao medir a pagina parada mede zero elementos e devolve verde falso -- foi o primeiro resultado que tive. O fundo e o EFETIVO: sobe a arvore compondo as camadas semitransparentes ate achar uma opaca, senao rgba(255,255,255,.06) sobre azul-marinho seria lido como branco. Limiar 4.5, ou 3.0 em texto grande (WCAG AA). As telas CLARAS ficam FORA de proposito: a origem do defeito e a variante escura que falta, e varrer tudo mediria junto os cinzas deliberados do tema claro, que sao outra discussao. So o arquivo do PROFESSOR -- o do aluno nao tem deck (GATE 36), entao nao ha tela escura para medir."},
-    "check_visual.py":                 {"gate": 43, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "REG-006 em 375/768/1024/1440. Tres perguntas: a pagina rola de lado? algo ultrapassa a viewport SEM ter onde rolar? ha texto visivel cortado? A sutileza que importa e a segunda: tabela de 660px numa tela de 375 NAO e defeito se ela rola dentro do proprio container. Medi antes de escrever: a 375px havia 31 elementos 'fora da viewport' no professor e 24 no aluno, TODOS com scroll proprio -- regra ingenua acusaria 55 defeitos inexistentes. O texto so-para-leitor-de-tela e cortado de proposito e sai pela FORMA do padrao (caixa de 1px ou clip), nunca pelo nome da classe, que muda. REG-007 (hierarquia visual) fica FORA: depende de comparar peso e espacamento com uma intencao de design, e nao ha limiar honesto."},
-    "check_clique.py":                 {"gate": 42, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "REG-004/PRO-011: o unico gate da anatomia que CLICA. Tres perguntas -- clicar estoura? o painel que o handler nomeia existe e alterna? o pre-class responde na URL certa? A terceira tem DOIS lados: controle morto no arquivo da ALUNA e exercicio quebrado, e controle que RESPONDE no do professor significa que o modo consulta caiu e ele passa a sobrescrever a resposta dela. Medido no molde: aluna 33/33, professor 0/33. NAO tem veredito universal de 'o clique mudou o DOM': medi, e 193 dos 360 controles nao mudam por motivo legitimo (rolar a pagina, tocar audio, gravar valor, modo consulta) -- 54% de falso positivo ensina a ignorar gate. Cada fase roda em CONTEXTO novo: a fase 1 clica setView('aluno'), que grava a visao no localStorage, e sem isso a fase 3 media a pagina errada."},
-    "check_catalogo_auditor.py":       {"gate": 41, "tipo": "anatomia",    "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "A regra do PRO-009 nasceu CEGA e o proprio molde provou: ela casava o rabo que a grade tem no pre-class (`</div>` seguido de `<button>`), e no deck o botao esta noutro lugar -- lia 10 das 14 grades e passava calada pelas outras quatro, uma delas com a chave alternando (`an4`). Agora le por ANINHAMENTO e recusa grade que nao fecha. O primeiro guarda que escrevi para isso era VAZIO: comparava 'quantas li' com 'quantas existem', e as duas contagens saiam da mesma regex de abertura, entao nunca podiam diferir -- guarda que nao pode disparar da a mesma sensacao de seguranca que um que funciona. Ampliado em 26/08/2026 com sete itens que faltavam (PRO-007/008/009, REG-003/008, SEQ-002/006), depois de MEDIR o molde contra cada um -- e tres deram defeito real: a chave de dois matchings era a permutacao identidade (item 1 -> opcao A, item 2 -> B...), os SEIS pares alternavam perfeitamente (depois de dois itens a aluna adivinha o resto), e dois gabaritos apontavam por posicao, sendo que um deles ('everything in the first column is about the reason') era simplesmente FALSO: as respostas certas eram esquerda, direita, esquerda. A PRO-008 so varre a voz do MATERIAL (instrucao, gabarito, nota): dentro de um artefato, 'the unit assessment is in the last session' e o texto do syllabus e fica. O catalogo do auditor (25/08/2026) virou codigo na parte que da para provar: 10 regras, cada uma com o ID do item e um caso plantado no selftest. A coluna 'Deteccao recomendada' do catalogo e SUGESTAO, nao limite -- o INT-002 estava marcado como Script+semantico e foi achado perguntando 'este arquivo fala de alguma aula que nao existe neste ciclo?'. Fora daqui de proposito: julgamento pedagogico (guided discovery nominal, producao desalinhada ao objetivo), que depende de LER o conteudo -- detector que fingisse medir isso daria verde a torto e a direito. Escrito com o molde ja limpo: o gate existe para a aula que ainda vai ser gerada."},
-    "check_contagem_declarada.py":     {"gate": 46, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "REG-001 do catalogo do auditor, na forma que se mede. O defeito era real e estava no molde: a aula 2 dizia \"Two lines, once\" no titulo E na instrucao, e o audio era UMA fala de voz unica -- a propria seccao ja falava no singular (a pergunta e What is THE SPEAKER doing, o gabarito e SHE names the item... it is the WHOLE of what she does). A seccao seguinte prometia \"The same line\" e trazia outra. E ESTREITO de proposito: escrevi antes a versao ampla do REG-001 (numero declarado vs itens reais) e MEDI -- 11 achados no molde, 11 falso positivo, porque numero em prosa quase nunca conta os itens da propria seccao (os dois documentos sao de outra, os dois locutores sao de um podcast externo, as duas frases sao de CADA par). Gate com 100% de falso positivo nao e rigor, e ruido que ensina a ignorar o CI. Sobra a forma em que o numero so pode se referir ao que esta ali: seccao com player proprio, frase contando FALAS. `one` fica fora porque as tres ocorrencias do molde eram pronome."},
-    "normaliza_chave.py":              {"gate": null, "tipo": "processo", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Tira a previsibilidade da chave (PRO-009) sem tocar em conteudo: so em ORDEM. Existe porque barrar nao basta -- quando corrigi na mao, trocando uma linha de cada grade, uma grade de tres virou b b b, todas do mesmo lado, o defeito literal do catalogo. Chave com ate duas respostas distintas reordena os ITENS (reordenar as opcoes nao adiantaria: A B A B viraria B A B A, que alterna igual); com mais opcoes reordena as OPCOES, buscando zero ponto fixo, porque a ordem dos itens costuma ser a da conversa. A semente e o ID do exercicio: sorteio deixaria o build irreproduzivel, e padrao unico seria previsivel entre aulas -- quem decora na aula 1 acertaria na 4."},
-    "check_cutover_explicito.py":      {"gate": 47, "tipo": "autorizacao", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O molde novo entra AOS POUCOS, primeiro em alunos de teste, enquanto os demais continuam tendo aula no antigo pelo link que ja usam. Nesse periodo o jeito mais facil de estragar a vida de um aluno e trivial: rodar o builder sem `fase` e sobrescrever public/aluno/{slug}.html. O comando e o mesmo, o arquivo novo esta CERTO e passa em todos os gates de anatomia -- e o aluno abre o link de sempre e o material dele sumiu no meio do contrato. Todo gate existente pergunta se o arquivo esta bem formado; este pergunta se alguem DECIDIU. Arquivo que era imersivo na base e aparece consultivo no PR exige [cutover] no commit, na mesma forma do [remove-ok] da guarda do main. No piloto nao ha o que marcar: fase piloto escreve em {slug}-c{N}.html, que e arquivo NOVO."},
-    "check_link_namespace.py":         {"gate": 48, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Link e porta. Na transicao o aluno tem DOIS materiais e a ligacao entre eles e um botao -- e o GATE 36 nao ve href: ele mede os bytes do arquivo do aluno e a tentativa de virar professor no navegador, nunca para onde a pagina aponta. Um arquivo de aluno impecavel, sem data-teacher e sem deck, pode entregar o deck inteiro num clique com os dois gates verdes. Nao e hipotese: o padrao existe em material antigo, escrito de proposito (\"o conteudo completo esta no arquivo principal\" + link para /professor/). Aquilo e legado e fica (REGRA 30); o molde novo nao nasce com ele. Escopado ao consultivo para nao fazer o GATE 8 acusar arquivo que ninguem vai consertar."},
-    "check_molde_reconstroi.py":       {"gate": 50, "tipo": "regressao", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "O MOLDE reconstroi dos proprios fragmentos, e o publicado e byte a byte o que o builder devolve. Existe porque em 28/08/2026 o molde tinha parado de reconstruir e nada acusava: uma trava do emissor classificava um gap-fill de EXPRESSOES como gramatica e recusava o banco declarado. O material da Stephanie continuava no ar, funcionando -- o que morreu foi o caminho de volta ate ele. E o molde e por onde toda correcao entra: sete consertos de plataforma daquele dia chegaram ao aluno real e NAO chegaram ao molde, e a proxima aula gerada a partir dele nasceria com o defeito recem-corrigido, sem que nenhum gate visse -- cada arquivo, isolado, passa em tudo. Mede DUAS coisas porque sao duas: o builder aceita os fragmentos, e o que ele produz e igual ao publicado. A segunda pega o publicado editado a mao, o publicado vindo de build antigo e o fragmento corrigido que ninguem reconstruiu. NUNCA escopado: vale para qualquer molde que o sistema use como origem."},
-    "check_atividade_declarada.py":    {"gate": 45, "tipo": "processo", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "A trava do passo que a Helen pediu em 25/08/2026: ela relatou que o gerador \"capta o essencial mas deixa passar detalhe que e regra fixa e clara\", e que repetiu erro que o normativo tinha ACABADO de reforcar. Gate que barra no fim nao resolve isso -- quando reprova, o defeito ja nasceu, e da vez seguinte o autor escreve o mesmo HTML. A saida foi tirar o exercicio da mao de quem escreve: o autor DECLARA (blocos.json) e o builder EMITE (render.py) -- o data-ok deixa de ser digitado (o autor escreve o TEXTO da resposta certa e a letra e derivada), as classes e a ordem dos atributos idem. Nao ha o que errar porque nao ha o que teclar. Este gate guarda a unica condicao que sustenta isso: fragmento de pre/post-class nao contem HTML de atividade, so prosa e <!--BLOCOS:chave-->. Busca pela FORMA (tag/atributo), nunca pela palavra: prosa que MENCIONE match-grid nao constroi grade. Deixa de fora _do-artefato, que ninguem escreve -- e extracao de maquina do prototipo, onde HTML cru e a origem. Medido no dia: molde 48 de 48 seccoes; aulas do artefato do Marcos, 4 de 24 -- o emissor cobre O MOLDE, ainda nao toda forma."},
-    "check_audio_oficial.py":          {"gate": 40, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O Anexo P-A proibe Web Speech no build oficial, e o molde usava speechSynthesis em 17 pontos com ZERO chamadas a new Audio -- escolhendo voz por NOME COMERCIAL do sistema (Microsoft Aria, Samantha), contra o §4. Faz QUATRO perguntas porque sao quatro formas de falhar: a tecnologia voltou (em CODIGO -- comentario que explica a proibicao nao e a proibicao), alguem escolhe voz por nome comercial, algum acionador nao resolve no AUD_MAP (botao que nao faz nada e nao da erro), e algum MP3 prometido nao existe. NAO julga se o audio diz o texto certo: isso e QA auditiva (qa_status do manifesto), e maquina que afirmasse isso estaria mentindo."},
-    "check_ciclo_limpo.py":            {"gate": 39, "tipo": "integridade", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "INT-002 do catalogo do auditor (25/08/2026), e o defeito era REAL: o molde publicado trazia na aba Feedback os botoes 'Lesson 19' e 'Lesson 20' e os titulos do artefato do Marcos, num ciclo de aulas 1 a 4 -- nos DOIS arquivos, e a aba e do ALUNO. Nenhum gate viu porque todos olhavam o que o builder EMITE, e este e do que ele NAO emitia: a regiao ficou intacta, valida e de outro aluno. Dai a pergunta deste gate nao ser 'o builder emitiu certo?' e sim 'o arquivo publicado fala de aula que nao existe neste ciclo?'. Le o intervalo do proprio var LESSONS. Comentario de HTML/CSS/JS e data-teacher NAO contam: o primeiro nao chega ao olho de ninguem e o segundo pode citar outra aula de proposito."},
-    "validate_consultivo.py":          {"gate": 37, "tipo": "anatomia",    "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O par do GATE 1 para a outra anatomia. O validate_lesson.py mede as promessas do IMERSIVO (25 telas, as cinco etapas do pre-class, survival card) e por isso sai fora deste carimbo de proposito. Este mede o ARQUIVO PUBLICADO -- a saida --, enquanto o confere_aula() do build_consultivo.py mede os FRAGMENTOS, que sao a entrada: arquivo publicado pode ser editado a mao depois do build ou vir de um build antigo. Le o contrato de anatomias.json e do proprio var LESSONS, nunca de numero digitado aqui, e avalia o JS no node em vez de contar chave com regex (a leitura por regex chegou a inventar uma chave no GUIDE). A presenca da aba in-class decide se o arquivo e o do professor -- assim a AUSENCIA do deck reprova, em vez de virar um 'pulei porque nao achei'."},
-    "check_isolamento_aluno.py":       {"gate": 36, "tipo": "integridade", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "A URL do aluno nao entrega o que nao e dele (Stephanie, 24/08/2026; 00 §5, 04 §13, P1 §3.2, P2 §3.2, P3 §3). Mede DUAS coisas porque sao duas: os BYTES do arquivo (gabarito, guia, checkpoint, estado, alternador, deck) e a ELEVACAO DE PAPEL tentada no navegador por tres portas -- atributo, armazenamento e ?mode=teacher-guide. A segunda existe porque a primeira sozinha aprova o defeito mais provavel: o arquivo limpo cuja pagina ainda le o papel gravado e se declara docente. A busca e pela FORMA, nunca pela palavra: o comentario que CITA a rota nao abre rota, a regra de CSS que cita [data-view=professor] nao entrega elemento, e o molde de markup dentro de uma funcao que ninguem chama nao e markup servido. NUNCA escopado: vale para qualquer molde que gere duas URLs."},
-    "build_consultivo.py":                  {"gate": null, "tipo": "processo", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "O builder da anatomia consultivo. Roda com --round-trip no CI: monta com os fragmentos tirados do PROPRIO artefato e compara regiao por regiao com ele -- se o builder perder alguma coisa no caminho, o gate diz qual regiao e quantos bytes (o 'prove o superset' do P2 §38 aplicado a geracao). Os asserts de build recusam a GERACAO, nao o PR: oito etapas na ordem com os minutos fechando 55, seis atividades no pre-class, catorze campos no guia. E o build do aluno sai da MESMA funcao que o extrator usa (deriva_aluno), entao o isolamento e propriedade do caminho, nao lista de cuidados que alguem repete a cada aula."},
-    "gen_audio_consultivo.py":         {"gate": null, "tipo": "processo",    "escopo": "repo", "caminho": "scripts/consultivo", "nota": "Gera os MP3s oficiais pela ElevenLabs (Anexo P-A). Modelo eleven_v3; fala unica pelo text-to-speech e dialogo pelo text-to-dialogue/with-timestamps -- os timestamps sao o que permite UM arquivo por dialogo, como o §3 exige, sem perder o realce de quem fala. O nome do arquivo deriva do hash do transcript, entao mudar uma virgula gera arquivo novo e aprovacao nova, que e o que o §2 pede. A lista do que precisa de audio vem de audio_surface.py, o MESMO modulo que o builder usa para emitir o AUD_MAP."},
-    "extrai_fragmentos.py":            {"gate": null, "tipo": "processo", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "Extrai do artefato os fragmentos de conteudo por aula (telas, pre-class, post-class, guia, registro). E o que fecha o circulo artefato -> fragmentos -> builder -> material == artefato."},
-    "gen_inventario.py":               {"gate": null, "tipo": "processo",   "escopo": "repo", "caminho": "scripts/consultivo", "nota": "Gera a entrada consultivo do inventario MEDINDO o artefato, por regiao, com contagem. Roda com --check no CI. Existe porque inventario escrito a mao a partir da COPIA valida qualquer copia: foi assim que o anatomias.json catalogou as classes ic-* que o porte inventou, e o GATE 20 passou a comparar a copia consigo mesma. Gerado, ele nao pode catalogar uma reescrita."},
-    "check_carga_limpa.py":            {"gate": 35, "tipo": "integridade", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "A PRIMEIRA prova de todas (P3 §1.1): a pagina abre, o console fica limpo, e cada componente que se monta por script EXISTE depois da carga -- contado, nao presumido. Mede as DUAS evidencias em separado, porque um construtor que engole a propria excecao nao produz erro nenhum e a peca simplesmente nao esta la. Para medir CONSTRUCAO e nao texto, limpa os hosts antes do boot: o artefato foi salvo pelo navegador, entao o DOM ja vem construido no arquivo, e sem a limpeza a contagem continua batendo mesmo com o boot morto (medido). Pegou o primeiro defeito da derivacao do shell no mesmo dia em que nasceu. NUNCA escopado: pagina que nao abre e pagina que nao abre em qualquer molde -- hoje aponta para os alvos declarados no proprio gate."},
-    "check_voz_do_material.py":       {"gate": 51, "tipo": "anatomia",    "escopo": {"framework": ["reading-into-speaking", "listening-into-interaction", "grammar-for-communication", "esp-real-world"]}, "caminho": "scripts/consultivo", "nota": "A VOZ, e nao a forma: a superficie que um humano LE nao carrega o vocabulario de quem PRODUZIU o material. Nasceu em 01/09/2026, quando o Dan abriu a aba Perfil da Joice e achou 'e o primeiro A1 desta anatomia' e 'o pacote normativo cobre A1' na pagina que descreve a ALUNA, com os codigos H1/H2/H3 usados como se a professora soubesse o que sao, e um cartao citando a hipotese 'do bloco do Caio' — outro aluno. Mede o DELTA contra o shell (os rotulos fixos da interface, como a aba 'Estado pedagogico do ciclo', sao decisao do molde e nao do autor da aula) e ignora o que esta dentro de <script>. Divida anterior congelada em scripts/consultivo/voz-baseline.json, que so pode CAIR: nao e lista de tarefas, e o alvara do que ja existia (REGRA 30)."},
-    "check_guia_de_tela.py": {"gate": 53, "tipo": "anatomia", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "A nota de tela do professor (`data-teacher`) E o guia de dez campos do Doc 04 §8.2, em ingles: Goal, Interaction, Run it, Exact prompt (condicional), Expected, Conditional support, Challenge, Monitoring, Evidence to record, Transition. A forma declarada (`guia_telas.json` + render.nota_de_tela) existe desde 02/09/2026 e o emissor ja recusa guia declarado incompleto -- o que ele nao pode e obrigar alguem a DECLARAR: a aula que nunca cria o arquivo passa por ele sem ser vista, e foi o que aconteceu com cinco dos seis materiais. O custo apareceu na revisao do Dan de 02/09/2026, que nao conseguiu avaliar a linguagem didatica do guia porque o guia de uma escola de INGLES estava em PORTUGUES, em prosa livre, com os campos que cada aula inventava para si ('Objetivo / Conduza / Atencao / Siga quando'). Mede pelos CAMPOS e nunca pelo idioma: nota em ingles com campo trocado de nome continua sendo prosa livre, e e o campo que o professor procura na hora da aula. `Exact prompt` NAO entra nos obrigatorios -- ele e condicional, e omitir a chave e a unica forma correta de dizer que nao se aplica. Divida anterior congelada em scripts/consultivo/guia_em_prosa.json (190 telas em 02/09/2026), que so pode CAIR: e o alvara do que ja existia, nao lista de tarefas (REGRA 30). Material fora do arquivo comeca em zero -- aula nova nasce declarada, de graca. So o arquivo do PROFESSOR: o do aluno nao tem data-teacher (GATE 36)."},
-    "check_apoio_bilingue.py": {"gate": 54, "tipo": "anatomia", "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "O material que se DECLARA bilingue entrega o apoio inteiro. Nasceu com a Vanessa Aparecida, primeira aluna real-beginner do produto (A1 declarado, A0 real) -- um ponto de partida que a producao nunca tinha previsto. O gate NAO pergunta 'tem portugues?': de A2 em diante vale a REGRA 13 (zero portugues na tela do aluno), e o modo e declarado no config do aluno (`apoio.bilingue`), nunca deduzido do nivel. Ele pergunta se a PROMESSA foi cumprida, porque promessa parcial e o pior dos dois mundos: metade dos exercicios acessivel, metade nao, e nada na tela dizendo qual e qual. Quatro regras, medidas no arquivo do ALUNO, que e onde a promessa e cobrada: (1) o botao de conferir nas duas linguas ('Check / Checar') -- `Check` e a primeira palavra em ingles de que o pre-class inteiro depende e a aluna ainda nao a entende; (2) todo item de exercicio fechado do pre/post-class tem a sua traducao; (3) a traducao nasce ESCONDIDA e abre ao conferir -- visivel desde o inicio, o olho vai nela e o ingles ao lado vira decoracao, que e a REGRA 2.1 do imersivo pelo avesso; (4) a aba Feedback em portugues, a unica superficie do aluno que nao e exercicio e sim o professor falando com ele. O VOCABULARIO (`kind: par`) fica de fora e nao por esquecimento: ali as duas alternativas SAO a traducao, e uma segunda por baixo entregaria a resposta antes da escolha. Material que nao declara o modo nao e medido -- nao ha promessa a cobrar."},
-    "check_pre_a1.py":                 {"gate": 57, "tipo": "anatomia",  "escopo": {"marcador": "A0 no primeiro chip de student-info"}, "caminho": "_build/model", "nota": "Material A0 nao presume producao autonoma de frase como condicao de entrada. A0 / Real Beginner e a faixa Pre-A1 do CEFR Companion Volume, um estagio ANTERIOR a capacidade generativa: palavra solta e resposta formulaica sao desempenho VALIDO, e a frase simples e OBJETIVO progressivo rumo ao A1, nunca requisito de entrada. Por isso a REGRA 13 ganhou banda propria em 03/09/2026 -- ela dizia 'a etapa so muda de IDIOMA e de DENSIDADE', e era essa frase que proibia o conserto. Mede so o PRE-CLASS (onde o aluno esta SOZINHO; no in-class ha professor mediando e a norma manda o apoio ser mais seletivo) e so em quem DECLARA A0 no header. Tres coisas: gap-fill com banco de palavras (escolher, nao recuperar), producao livre com modelo falado (palavra solta passa a ter de onde sair) e alvo de fala ate 6 palavras. A pergunta e 'o material que prometeu A0 entrega o apoio inteiro?', nunca 'tem portugues?' -- mesmo desenho do GATE 54. O que gerou tudo: medido em 03/09, o A0 NAO recebia material B1 (6-7 palavras/aula e apoio bilingue completo, contra 8 e zero portugues do B1 de controle), mas a estrutura era CEGA AO NIVEL -- Ricardo (A0) e Giovanna (A1) com contagens identicas de exercicio -- e a fatia de producao autonoma do A0 era MAIOR que a do B1: 48% contra 37%. A professora do Ricardo reportou em tres de cinco aulas que ele 'had not completed the pre-class activities'. Baseline em pre_a1_baseline.json e alvara (REGRA 30) e so pode CAIR."},
-    "check_boot_paridade.py":          {"gate": 58, "tipo": "integridade", "escopo": "repo", "caminho": "scripts/consultivo", "nota": "O boot do ALUNO nao esquece construtor que o do PROFESSOR tem. `deriva_aluno()` NAO filtra o boot: ele o SUBSTITUI pela constante BOOT_ALUNO, escrita a mao — sao DUAS listas independentes de construtores e nada comparava uma com a outra. Em 03/09/2026 isso custou o 'Reset my answers' dos SEIS materiais da anatomia: `preResetGo` so restaura se `_preSnap[n]` existir, e o boot do aluno nunca chamou `preSnap()`. O botao apagava o armazenamento (limpeza real) e nao tocava numa classe; as alternativas conferidas seguiam verdes, sem erro no console. Toda funcao do boot do professor tem de estar no BOOT_ALUNO ou na lista SO_DO_PROFESSOR com o MOTIVO escrito — a lista obriga a declarar que a ausencia e proposital, em vez de deixar 'esqueci' e 'de proposito' com a mesma aparencia. Pega tambem a excecao que MENTE (declarada como so-do-professor mas presente no aluno), porque excecao errada autoriza o proximo esquecimento. NUNCA escopado: e sobre o gerador, nao sobre material."},
-    "check_classe_orfa.py":            {"gate": 59, "tipo": "anatomia",  "escopo": {"marcador": "alumni-anatomia=consultivo"}, "caminho": "scripts/consultivo", "nota": "Classe usada no conteudo do consultivo existe no CSS do shell. A professora reportou que as perguntas de uma tela estavam 'sem espaco e pequenas demais': elas usavam `comp-questions`/`comp-q`, classes do molde IMERSIVO que o shell do CONSULTIVO nao estiliza — saiam com o corpo padrao do navegador (16px, sem espacamento) em vez do componente da casa (`qlist`/`q-item`, 23px com respiro e filete). O HTML e valido, o gate estatico passa, o navegador nao reclama: so a TELA mostra. E se espalha por copia, porque quem escreve a aula seguinte olha a anterior — medido em 03/09/2026: 33 ocorrencias em 7 aulas de 5 alunos. Le as classes do CSS dos DOIS shells mais as que o JS cria em runtime (classList/querySelector), e compara com o que os fragmentos usam. NAO mede o imersivo, onde `comp-q` E estilizada e legitima. Baseline em classe_orfa_baseline.json e alvara (REGRA 30) e so pode CAIR."},
-    "check_docs_pacote.py":            {"gate": 34, "tipo": "processo",   "escopo": "repo", "caminho": "scripts/consultivo", "nota": "O pacote normativo do consultivo (docs/consultivo/) so vale INTEIRO: o A02 §13.3 diz que arquivo fora do pacote nao constitui carregamento e que a ausencia de A01/A02 bloqueia a declaracao de conformidade. Cobra os dois lados do defeito: documento que NAO ESTA (tres dos cinco normativos de agosto viviam em ~/Downloads, e por isso nunca viraram nada) e documento que ESTA MAS ESVAZIOU (os .md sao conversao mecanica dos .docx; reimportacao que perca tabela deixa o arquivo existindo e some com a regra). Cada documento tem frases-ancora de FORMAS diferentes -- prosa, celula de tabela, item de lista, identificador tecnico -- para que a perda de qualquer forma derrube uma ancora. NUNCA escopado: e sobre o repositorio, nao sobre material."},
-    "check_sem_senha_no_repo.py":      {"gate": 32, "tipo": "processo",   "escopo": "repo", "caminho": "scripts", "nota": "Senha de aluno nunca entra no repo. O repo e PUBLICO: a lista (ou um hash dela, que com 4 digitos cai por forca bruta offline em milissegundos) commitada acaba com a protecao e fica no historico do git para sempre. As senhas vivem em ~/alumni-senhas e na env ACESSO_ALUNOS da Vercel. NUNCA escopado: e sobre o repositorio, nao sobre material."},
-    "test_senhas_estaveis.py":         {"gate": 33, "tipo": "processo",   "escopo": "repo", "caminho": "scripts", "nota": "Codigo de aluno JAMAIS muda quando entra gente nova. O aluno recebe o numero uma vez e ele e distribuido; renumerar em silencio transforma toda senha na mao da equipe em lixo, e ninguem percebe ate um aluno nao conseguir entrar. Prova 3 cenarios num dir de teste: aluno novo alfabeticamente antes de todos nao renumera ninguem; material -v2 de aluno existente herda o codigo dele; sumico em massa ABORTA em vez de revogar (quase sempre e a arvore errada, nao aluno que saiu). NUNCA escopado: e sobre o gerador, nao sobre material."}
+  "check_reveal_clica.py": {
+   "gate": 28,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "O irmao do 10, para o que o 10 nao alcanca: ele acha o alvo por CLASSE (3 familias fixas) e a tabela do 'Reveal the Rule' e um <div id=\"ruleN\"> sem classe — 130 slides de 4 alunos ficaram meses com o botao trocando de texto e a regra nunca aparecendo. Decidir isso NO TEXTO exigiria casar seletor CSS, cascata e especificidade, e saber que inline vence stylesheet menos com !important; entao este CLICA no Chromium e compara o computed style antes/depois. Integridade: reveal que nao revela e mecanismo morto em qualquer molde."
+  },
+  "check_vocab_reveal.py": {
+   "gate": 10,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-gen"
+   },
+   "nota": "Reveal que nasce escondido e mecanismo quebrado, nao anatomia."
+  },
+  "check_framework_isolation.py": {
+   "gate": 11,
+   "tipo": "autorizacao",
+   "escopo": "repo"
+  },
+  "check_pt_na_tela.py": {
+   "gate": 55,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O portugues que chega ao aluno chega COMO portugues. Nasceu da revisao da professora em 03/09/2026, na caixa que confirma o Reset da Vanessa: o titulo e o rotulo do botao saiam com `&middot;` LITERAL na tela, e o texto em PT saia sem acento ('e so dela', 'e afetado', 'ficam como estao'). Duas coisas diferentes, medidas as duas no NAVEGADOR porque so ali elas existem. (A) ENTIDADE CRUA: `askOpen` escreve titulo e rotulo por `textContent`, que nao interpreta HTML -- a entidade entra caractere por caractere. O corpo da MESMA caixa vai por innerHTML e aparecia certo: metade certa, metade com o codigo cru, e nada acusa (HTML valido, console limpo, texto que so existe depois do clique). E a REGRA 7.1 do imersivo por outro caminho: tratar o texto ESCRITO como o texto EXECUTADO. Vale para TODO material da anatomia -- o mesmo defeito ja estava em 5 itens da aula 3 da Vanessa e 6 da aula 3 do Caio, por outra origem (o autor escreveu `&rarr;` num campo que o `esc()` escapava, e o `&` virava `&amp;`); a correcao foi no emissor, que agora resolve a entidade antes de escapar. (B) ACENTO: lista FECHADA de palavras que em portugues sempre levam acento e nao sao palavra inglesa -- por isso 'so', 'e' e 'ate' ficam de fora, apesar de serem os erros mais comuns. Um gate que gera falso positivo por material vira ruido; este prefere deixar passar um acento a acusar uma palavra inglesa, e a lista cresce quando aparecer caso real. So onde o config declara `apoio.bilingue`: material sem promessa de portugues nao tem portugues a cobrar."
+  },
+  "check_nome_da_tela.py": {
+   "gate": 56,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O menu do deck chama cada tela pelo nome que a propria tela usa. O nome esta em DOIS lugares que ninguem obriga a concordar: a `.stage-pill` da tela (slides.html) e o `nav:[...]` do registro.js, que alimenta o menu lateral E o titulo da nota do professor. Numa revisao a tela 5 da aula 1 da Vanessa foi renomeada no pill e o nav ficou como estava: o menu levava a uma tela chamada outra coisa e a nota abria com o titulo antigo. Nada quebra e nada avisa -- o material so passa a mentir sobre si mesmo em dois lugares. NAO deriva um do outro de proposito: o nav nomeia as dez telas e so oito tem pill (abertura e fecho nao tem), e ha telas cujo pill traz legitimamente o nome da ETAPA porque a etapa ocupa duas telas -- derivar apagaria esses nomes proprios. Entao cobra o que importa: onde os dois existem, dizem a mesma coisa. Divida anterior congelada em scripts/consultivo/nome-da-tela-baseline.json (16 pares em 03/09/2026, inclusive um nav DESLOCADO uma posicao da tela 3 em diante no luiz-bressane aula 12), que so pode CAIR: alvara, nao lista de tarefas (REGRA 30)."
+  },
+  "check_id_unico.py": {
+   "gate": 60,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Dois elementos com o mesmo `id` no material. O bloco de recap declarava `id: conteudo` nas quatro aulas e o emissor deriva dele o id do apoio em portugues: quatro <div id=conteudo-pt> no MESMO documento. `toggleEl` chama `getElementById`, que devolve o PRIMEIRO -- o da aula 1, escondido noutra tela --, entao nas aulas 2, 3 e 4 o botao 'Ver em portugues' trocava de rotulo e nada aparecia (revisao da professora, 04/09/2026). Nenhum gate viu porque id repetido nao e erro de sintaxe: o HTML e valido, o handler compila, o texto existe no arquivo, o contraste esta certo -- faltava a RELACAO entre duas pecas. Sem baseline em JSON: no Black a excecao se escreve em codigo, com o caso e a razao (decisao do Dan, 03/09/2026). A unica declarada esta em PENDENTES no cabecalho do gate -- quatro materiais emitem o gravador ou a caixa de escrita DUAS VEZES, porque o autor declarou o componente na `abertura` de um bloco que ja e kind gravar/escrever; escolher qual das duas pecas fica e decisao de conteudo, e a lista some quando o emissor recusar as duas rotas juntas."
+  },
+  "check_preclass_nao_entrega.py": {
+   "gate": 61,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "PRO-006 do catalogo do auditor (BLOCKER): o pre-class da aula 2 da Vanessa trazia as TRES falas do audio escritas num doc, na vespera — o listening virava leitura. Mede o talk.json contra as seccoes que o preclass.html injeta; o post-class carrega o transcript de proposito, e a #2526 mandou escrever as tres perguntas ali. Reprova o AUDIO INTEIRO, nunca uma fala solta: uma linha e ESTIMULO (a pergunta do Ray na aula 4 da Lucia, que ela analisa), o audio inteiro e TRANSCRIPT e nao sobra nada para escutar. Nao mede vocabulario nem chunk — a REGRA 29 EXIGE que o pre-class previeja o lexico da aula, entao a comparacao e por fala inteira (>=4 palavras). Duas aulas (Caio a2, Joice a10) entram como PENDENTES declaradas no codigo."
+  },
+  "check_atividade_fechada.py": {
+   "gate": 62,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/ + alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Quatro apontamentos da professora numa regra so: lista com TODAS as opcoes corretas (aula 1 da Vanessa — 'entraram tres que nao pertencem a uma reserva, para a pergunta voltar a ser uma pergunta'), cinco itens com a MESMA resposta (aula 4), 'Complete the four sentences' com cinco itens (REG-001, que o GATE 46 so cobria no audio) e itens na ordem da resposta (PRO-009). O PRO-009 nao virou regra para o autor lembrar: virou embaralha() no EMISSOR (render.py), com semente estavel no ident do bloco — 12 bancos de gap-fill nas 24 aulas listavam as palavras na ordem exata das lacunas, em 5 alunos, apesar de a REGRA 24 mandar embaralhar desde sempre. O gate le o FRAGMENTO para autoria (contraste, resposta repetida, contagem, resposta fora do banco) e o HTML PUBLICADO para a ordem, que e o que a aluna ve. Nao julga se o distrator e plausivel: pergunta se ha estrutura de escolha."
+  },
+  "check_nome_do_framework.py": {
+   "gate": 64,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O quarto framework tem UM nome. Relatorio de Alteracoes Normativas de 02/09/2026, ajuste 22: 'Quarto framework tinha nomes hibridos e sigla -> Nome exclusivo: Personalized Real-World English'; e a secao 5 e bloqueante: 'ocorrencia residual da sigla ou de forma hibrida reprova o novo material'. Medido em 08/09/2026: os SEIS materiais mostravam a sigla — mod:'ESP' virava a etiqueta 'ESP / E1', o fwNome era 'ESP — Real World' em cinco (o molde ja estava certo), o syllabus dizia 'ESP · Real-World English' e o cabecalho do pre/post-class trazia 'Aula 04 · ESP / E1'. Mede TEXTO VISIVEL, nao codigo: a classe mod-esp, a var --mod-esp e o id esp-real-world do proprio gates.json continuam validos, porque ninguem os le na tela — e o Documento 06 preserva id tecnico legado. 'Real-World' na etiqueta curta e o encurtamento do nome oficial, igual a Reading/Listening/Grammar; hibrido e misturar sigla e nome, e e isso que reprova. A primeira versao da lista de alvos esquecia preclass.html e postclass.html, que era justamente onde a sigla estava viva."
+  },
+  "check_painel_docente.py": {
+   "gate": 65,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "PC_NOTAS e painel do PROFESSOR: fala SOBRE o aluno, nunca COM ele. Medido em 09/09/2026: 61 campos em quatro alunos estavam em 2a pessoa ('Voce nao precisa entender tudo', 'Use a sua empresa de verdade'), num painel que o aluno nao ve por desenho. A revisao da professora ja tinha consertado isso na Vanessa (#2509 na aula 1, #2530 nas aulas 2-4) e nao alcancou os outros quatro, porque ninguem os revisou. NAO e o detector lexico que o A05 §10.2 proibe: nao julga qualidade de linguagem, detecta DESTINATARIO — classe gramatical fechada (2a pessoa do singular) num painel de leitor fixo. Isenta 'voces' (inclui quem le) e lingua CITADA (aspas, <em>), e foi medido que a isencao nao esconde nenhum dos 61."
+  },
+  "check_recurso_e_um_item.py": {
+   "gate": 66,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O recurso aponta para UM item, nunca para o canal, a serie ou a home. A revisao da professora escreveu na aula 4 da Vanessa (#2536): 'Reading e Listen & Watch apontavam para SERIES INTEIRAS'. Ela consertou aquelas duas; medido em 09/09/2026, 30 links do resto da anatomia ainda mandavam o aluno para uma porta -- 7 canais do YouTube, 2 homes, e hubs de serie e paginas de topico -- concentrados no Caio (11) e na Joice (15), os dois nunca revisados, mais a aula 1 da Vanessa. Mede as tres formas em que a propria URL prova que nao e um item: canal do YouTube (video/playlist/short passam), caminho vazio, e indice conhecido (/topics/, /episodes, /podcasts/, secoes /z/ e /p/ da VOA). NAO tenta adivinhar se uma pagina de serie da BBC e episodio: isso daria falso positivo."
+  },
+  "check_etiqueta_verdadeira.py": {
+   "gate": 67,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A etiqueta diz o que a atividade E. A revisao da aula 2 da Vanessa (#2526) achou 'um classificar com badge Listening, sem audio'; medido em 09/09/2026, DUAS continuavam, as duas na Lucia (aula4 vg4 e aula6 md6) -- a aula 6 chega a dizer 'You will hear one answer IN CLASS'. O material ja distingue: 'Listening' quando a tarefa E ouvir e o audio esta na atividade; 'Before you listen' quando a escuta acontece em aula (9 usos, todos certos). NAO e detector lexico: badge e campo declarado e audio e filho declarado da abertura -- a regra e uma implicacao entre duas declaracoes do autor, sem ler prosa."
+  },
+  "check_handler_acha_o_alvo.py": {
+   "gate": 68,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O handler acha o elemento que vai procurar. `czCheck(btn,id)` faz `getElementById(id); if(!host)return` -- e DUAS telas do MOLDE chamavam czCheck(this), com um argumento so: a aluna preenche as lacunas, clica em Check e nada acontece, sem erro no console. O GATE 42 nao pega porque nao ESTOURA. NAO e checagem de aridade: medido antes, 85 chamadas do consultivo passam menos argumentos que a funcao declara (playTalk, say, sayAs) e as 85 estao certas -- sao parametros opcionais. O que sobra e o parametro que a funcao entrega a getElementById, que nao tem padrao. A regra LE o corpo da funcao para descobrir qual e; nao ha lista de nomes escrita no gate."
+  },
+  "check_item_explica.py": {
+   "gate": 69,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O item de atividade fechada diz POR QUE. O molde e o Luiz explicam CADA item de escolha e classificar (67/67 e 106/106); medido em 09/09/2026, Caio 0/109, Joice 0/113, Lucia 0/117 e Vanessa 0/109. O aluno marca, confere, e nao fica sabendo por que -- distrator sem explicacao e pegadinha. A EXCECAO e declarada: a Vanessa tem apoio.bilingue no config e o apoio por item dela e o portugues (ptt), decidido na revisao de 02/09, entao o gate aceita as duas formas e o bilingue satisfaz pela segunda. `par` e `completar` ficam de fora por MEDICAO: os dois materiais de referencia nao os explicam (0/30, 0/24), porque ali a resposta e uma palavra do proprio vocabulario e nao ha distrator a desfazer."
+  },
+  "check_conta_o_audio.py": {
+   "gate": 70,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A tela nao CONTA o audio. Incidente de 09/09/2026, aula 20 da Gabriela Pires: uma tela do deck afirmava 'Maya asks twice and Chris asks once' sobre o dialogo que a aluna acabara de ouvir, e o talk.json diz outra coisa — cada uma pergunta UMA vez. Nenhum gate via: o texto e gramatical e todos os exercicios batem com o audio; so a prosa mentia. O gate PROIBE em vez de conferir, porque conferir nao pega: contando turnos com '?', Maya tem dois (o turno 0 comeca com 'So?') e a frase errada passaria — 'asks' ali significa 'pede o motivo', que e leitura de funcao e nao de pontuacao. Mesma escolha do PRO-008, que proibe 'a terceira' em vez de verificar qual e. Diga o que cada um FAZ. Base medida antes de entrar: zero ocorrencias nos sete materiais da anatomia."
+  },
+  "check_instrucao_da_tela.py": {
+   "gate": 63,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "'Tela 5 e 6: enunciado na TELA, nao atras do botao de portugues' (revisao da aula 1 da Vanessa, #2509). No in-class quem enuncia e a TELA: (a) toda tela que injeta exercicio tem elemento de enunciado (slide-question/task-instr/subprompt/slide-lead) e (b) o bloco injetado num slide nao carrega abertura/instr/pt proprios — o pt do bloco vira acordeao FECHADO, e no in-class o apoio e inline por desenho (ha professora conduzindo); alem disso o enunciado sairia depois do documento em vez de antes. No pre-class e o contrario, e por isso a regra so vale para as seccoes que o slides.html injeta. Conta ELEMENTO, nunca palavra: tom e naturalidade sao do A05, cujo 10.2 manda a suite reprovar detector lexical simplista. 13 telas de 3 alunos declaradas como PENDENTES no codigo."
+  },
+  "check_ppp_lesson.py": {
+   "gate": 12,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "ppp"
+    ]
+   }
+  },
+  "check_communicative_lesson.py": {
+   "gate": 13,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "communicative"
+    ]
+   }
+  },
+  "check_tbl_lesson.py": {
+   "gate": 14,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "task-based"
+    ]
+   }
+  },
+  "check_produce_modes.py": {
+   "gate": 15,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-gen"
+   }
+  },
+  "check_contrato_aula.py": {
+   "gate": 16,
+   "tipo": "autorizacao",
+   "escopo": {
+    "marcador": "alumni-contrato"
+   },
+   "nota": "Era o SEGUNDO a se declarar GATE 12; renumerado em 06/08/2026. Ver o meta-gate."
+  },
+  "check_deploy_source.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo"
+  },
+  "check_pr_scope.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo"
+  },
+  "gen_catalogo_modelos.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo",
+   "nota": "Roda com --check no CI."
+  },
+  "check_audio_quality.py": {
+   "gate": null,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "_build/model"
+  },
+  "check_contrast.py": {
+   "gate": 2,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "_build/model",
+   "nota": "Contraste computado. Ilegivel e ilegivel em qualquer molde."
+  },
+  "check_order_audio.py": {
+   "gate": null,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "_build/model"
+  },
+  "check_media_links.py": {
+   "gate": null,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "_build/model",
+   "nota": "So morde onde existe media-card; sem card, nada a conferir."
+  },
+  "check_lesson_tracking.py": {
+   "gate": null,
+   "tipo": "integridade",
+   "escopo": "repo"
+  },
+  "check_inclass_patterns.py": {
+   "gate": null,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "imersivo-prototipo"
+    ]
+   },
+   "caminho": "_build/model",
+   "nota": "PENDENTE DE WIRING: hoje roda no repo inteiro. O escopo esta DECLARADO aqui, mas o codigo ainda nao consulta este registro. Passa a consultar quando houver aula de outro framework para medir — nao antes, para nao encolher cobertura por previsao."
+  },
+  "check_preclass_coherence.py": {
+   "gate": null,
+   "tipo": "sequencia",
+   "escopo": {
+    "framework": [
+     "imersivo-prototipo"
+    ]
+   },
+   "caminho": "_build/model",
+   "nota": "PENDENTE DE WIRING, mesma razao. A ancora dele e vocabulario compartilhado entre Pre-class e IN CLASS; o molde stephanie-vicente nao tem essa ancora, entao ele vai precisar de escopo — mas so quando houver hub para medir."
+  },
+  "check_vocab_progression.py": {
+   "gate": null,
+   "tipo": "sequencia",
+   "escopo": {
+    "marcador": "vocab-card-pc"
+   },
+   "caminho": "_build/model",
+   "nota": "Escopado por construcao: conta vocab card; molde sem vocab card nao tem o que comparar. Medido em 06/08 na aula reading-into-speaking: passa."
+  },
+  "check_recording_paths.py": {
+   "gate": 29,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "A gravacao do ALUNO nao pode ser destruida pela do PROFESSOR. O bucket `recordings` nao versiona e o upload e upsert:true; enquanto o path era {slug}/{frase}.{ext} (sem a view), o link do professor escrevia no MESMO objeto do aluno — e sem sinal, porque a URL publica nao muda, so o conteudo. Incidente de 19/08/2026: rafael-pelizaro, pre-class aula 9 (3,16s do aluno trocados por 0,26s de silencio), recuperado do backup acidental recording-{ts}.webm. NUNCA escopado: vale para qualquer molde — adulto, kids, teens. Le uma LIB (public/lib/activity-sync.js), nao material, entao roda sempre e nao depende dos arquivos do PR."
+  },
+  "check_score_align.mjs": {
+   "gate": 30,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "O score marcava errado quem falou CERTO. O reconhecedor ouve certo mas escreve diferente do exercicio ('ten' vira '10', 'greenlight' vira 'green light') e a comparacao e palavra a palavra. Medido em 19/08/2026 no rafael-pelizaro pre-class 11. O conserto (window.__alumniAlignSpoken) so troca um pedaco da transcricao quando o resultado e palavra que o ALVO tem — fora disso a string sai intacta e o veredito e identico ao de antes. O gate prova as DUAS metades: os dois casos consertados, e ~6.7 mil comparacoes antes-vs-depois em 12 alunos com zero divergencia. NUNCA escopado: le a lib, nao material."
+  },
+  "check_reset_completo.py": {
+   "gate": 31,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "O botao Reset zera TUDO que conta progresso. Ele limpava matching, fill-in, quiz e speech mas NAO os vocab cards nem os think cards; como o collectState recolhe o estado do DOM logo em seguida, o que sobrava era salvo de novo e a aula 'resetada' voltava a marcar 20-30%. Medido em 19/08/2026 (rafael-pelizaro, aulas 12-20 presas entre 21% e 33%). Cobra a REGRA 18.1 nos dois sentidos: tipo contado que o Reset nao limpa, e tipo novo no progresso nao declarado no gate. NUNCA escopado: le a lib."
+  },
+  "check_pedagogico.py": {
+   "gate": 44,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Itens que o catalogo marcou 'Semantico' e que TEM forma observavel -- INT-005/006 (nivel por habilidade com base propria), PRO-001 (atividade fechada com itens comparaveis e checagem), PRO-016 (producao aberta sem gabarito rigido), PRO-005 (audio de narracao/dialogo que so le a tela). Existe porque eu tinha usado 'semantico' como sacola para 31 itens sem examinar nenhum. O ancora e o `data-ok`, e levou tres tentativas erradas para aparecer: procurei a atividade de descoberta por reveal-card (4 de 8), por sortcol (1 de 8) e por .opt (ZERO de 8) -- eu contava o WIDGET, e a mesma operacao aparece em widgets diferentes conforme o conteudo. Classe e implementacao; data-ok e contrato. O PRO-005 SO vale escopado por categoria: sem isso 15 das 20 falas 'duplicavam', porque frase-modelo de pronuncia existe para ser vista e ouvida junto."
+  },
+  "check_contraste_deck.py": {
+   "gate": 52,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "REG-005 nas telas ESCURAS do deck, com a razao WCAG COMPUTADA no navegador. Existe porque a revisao do Dan de 02/09/2026 achou a olho o que nenhum gate via: no slide 6 da aula 9 da Joice o enunciado do exercicio e o botao Check estavam ilegiveis. Medido: .task-instr 1.75:1 e .verify-all-btn.ghost 1.49:1 (minimo 4.5) -- 28 ocorrencias em 4 dos 6 materiais. A causa nao foi cor errada, foi regra que nunca chegou a existir: .btn-ghost, .audio-btn-sm.ghost e .aud-estado tem a variante .slide-dark logo abaixo da regra clara, e estas duas nasceram sem a delas, ficando com --accent e --text-mid, que sao cores de fundo CLARO. Peca com a cor do tema errado nao da erro, nao quebra layout e passa em todo gate estatico -- ela so nao e lida, e quem esta na aula supoe que o exercicio e assim. O caso do enunciado e o pior: a tela mostra as alternativas e esconde a PERGUNTA, que e a REGRA 2.1 por outro caminho (ali a tarefa nascia com display:none, aqui nasce da cor). Mede DENTRO do deck aberto, tela a tela, andando pela navegacao da propria pagina: as telas nascem em display:none, entao medir a pagina parada mede zero elementos e devolve verde falso -- foi o primeiro resultado que tive. O fundo e o EFETIVO: sobe a arvore compondo as camadas semitransparentes ate achar uma opaca, senao rgba(255,255,255,.06) sobre azul-marinho seria lido como branco. Limiar 4.5, ou 3.0 em texto grande (WCAG AA). As telas CLARAS ficam FORA de proposito: a origem do defeito e a variante escura que falta, e varrer tudo mediria junto os cinzas deliberados do tema claro, que sao outra discussao. So o arquivo do PROFESSOR -- o do aluno nao tem deck (GATE 36), entao nao ha tela escura para medir."
+  },
+  "check_visual.py": {
+   "gate": 43,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "REG-006 em 375/768/1024/1440. Tres perguntas: a pagina rola de lado? algo ultrapassa a viewport SEM ter onde rolar? ha texto visivel cortado? A sutileza que importa e a segunda: tabela de 660px numa tela de 375 NAO e defeito se ela rola dentro do proprio container. Medi antes de escrever: a 375px havia 31 elementos 'fora da viewport' no professor e 24 no aluno, TODOS com scroll proprio -- regra ingenua acusaria 55 defeitos inexistentes. O texto so-para-leitor-de-tela e cortado de proposito e sai pela FORMA do padrao (caixa de 1px ou clip), nunca pelo nome da classe, que muda. REG-007 (hierarquia visual) fica FORA: depende de comparar peso e espacamento com uma intencao de design, e nao ha limiar honesto."
+  },
+  "check_clique.py": {
+   "gate": 42,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "REG-004/PRO-011: o unico gate da anatomia que CLICA. Tres perguntas -- clicar estoura? o painel que o handler nomeia existe e alterna? o pre-class responde na URL certa? A terceira tem DOIS lados: controle morto no arquivo da ALUNA e exercicio quebrado, e controle que RESPONDE no do professor significa que o modo consulta caiu e ele passa a sobrescrever a resposta dela. Medido no molde: aluna 33/33, professor 0/33. NAO tem veredito universal de 'o clique mudou o DOM': medi, e 193 dos 360 controles nao mudam por motivo legitimo (rolar a pagina, tocar audio, gravar valor, modo consulta) -- 54% de falso positivo ensina a ignorar gate. Cada fase roda em CONTEXTO novo: a fase 1 clica setView('aluno'), que grava a visao no localStorage, e sem isso a fase 3 media a pagina errada."
+  },
+  "check_catalogo_auditor.py": {
+   "gate": 41,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A regra do PRO-009 nasceu CEGA e o proprio molde provou: ela casava o rabo que a grade tem no pre-class (`</div>` seguido de `<button>`), e no deck o botao esta noutro lugar -- lia 10 das 14 grades e passava calada pelas outras quatro, uma delas com a chave alternando (`an4`). Agora le por ANINHAMENTO e recusa grade que nao fecha. O primeiro guarda que escrevi para isso era VAZIO: comparava 'quantas li' com 'quantas existem', e as duas contagens saiam da mesma regex de abertura, entao nunca podiam diferir -- guarda que nao pode disparar da a mesma sensacao de seguranca que um que funciona. Ampliado em 26/08/2026 com sete itens que faltavam (PRO-007/008/009, REG-003/008, SEQ-002/006), depois de MEDIR o molde contra cada um -- e tres deram defeito real: a chave de dois matchings era a permutacao identidade (item 1 -> opcao A, item 2 -> B...), os SEIS pares alternavam perfeitamente (depois de dois itens a aluna adivinha o resto), e dois gabaritos apontavam por posicao, sendo que um deles ('everything in the first column is about the reason') era simplesmente FALSO: as respostas certas eram esquerda, direita, esquerda. A PRO-008 so varre a voz do MATERIAL (instrucao, gabarito, nota): dentro de um artefato, 'the unit assessment is in the last session' e o texto do syllabus e fica. O catalogo do auditor (25/08/2026) virou codigo na parte que da para provar: 10 regras, cada uma com o ID do item e um caso plantado no selftest. A coluna 'Deteccao recomendada' do catalogo e SUGESTAO, nao limite -- o INT-002 estava marcado como Script+semantico e foi achado perguntando 'este arquivo fala de alguma aula que nao existe neste ciclo?'. Fora daqui de proposito: julgamento pedagogico (guided discovery nominal, producao desalinhada ao objetivo), que depende de LER o conteudo -- detector que fingisse medir isso daria verde a torto e a direito. Escrito com o molde ja limpo: o gate existe para a aula que ainda vai ser gerada."
+  },
+  "check_contagem_declarada.py": {
+   "gate": 46,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "REG-001 do catalogo do auditor, na forma que se mede. O defeito era real e estava no molde: a aula 2 dizia \"Two lines, once\" no titulo E na instrucao, e o audio era UMA fala de voz unica -- a propria seccao ja falava no singular (a pergunta e What is THE SPEAKER doing, o gabarito e SHE names the item... it is the WHOLE of what she does). A seccao seguinte prometia \"The same line\" e trazia outra. E ESTREITO de proposito: escrevi antes a versao ampla do REG-001 (numero declarado vs itens reais) e MEDI -- 11 achados no molde, 11 falso positivo, porque numero em prosa quase nunca conta os itens da propria seccao (os dois documentos sao de outra, os dois locutores sao de um podcast externo, as duas frases sao de CADA par). Gate com 100% de falso positivo nao e rigor, e ruido que ensina a ignorar o CI. Sobra a forma em que o numero so pode se referir ao que esta ali: seccao com player proprio, frase contando FALAS. `one` fica fora porque as tres ocorrencias do molde eram pronome."
+  },
+  "normaliza_chave.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Tira a previsibilidade da chave (PRO-009) sem tocar em conteudo: so em ORDEM. Existe porque barrar nao basta -- quando corrigi na mao, trocando uma linha de cada grade, uma grade de tres virou b b b, todas do mesmo lado, o defeito literal do catalogo. Chave com ate duas respostas distintas reordena os ITENS (reordenar as opcoes nao adiantaria: A B A B viraria B A B A, que alterna igual); com mais opcoes reordena as OPCOES, buscando zero ponto fixo, porque a ordem dos itens costuma ser a da conversa. A semente e o ID do exercicio: sorteio deixaria o build irreproduzivel, e padrao unico seria previsivel entre aulas -- quem decora na aula 1 acertaria na 4."
+  },
+  "check_cutover_explicito.py": {
+   "gate": 47,
+   "tipo": "autorizacao",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O molde novo entra AOS POUCOS, primeiro em alunos de teste, enquanto os demais continuam tendo aula no antigo pelo link que ja usam. Nesse periodo o jeito mais facil de estragar a vida de um aluno e trivial: rodar o builder sem `fase` e sobrescrever public/aluno/{slug}.html. O comando e o mesmo, o arquivo novo esta CERTO e passa em todos os gates de anatomia -- e o aluno abre o link de sempre e o material dele sumiu no meio do contrato. Todo gate existente pergunta se o arquivo esta bem formado; este pergunta se alguem DECIDIU. Arquivo que era imersivo na base e aparece consultivo no PR exige [cutover] no commit, na mesma forma do [remove-ok] da guarda do main. No piloto nao ha o que marcar: fase piloto escreve em {slug}-c{N}.html, que e arquivo NOVO."
+  },
+  "check_link_namespace.py": {
+   "gate": 48,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Link e porta. Na transicao o aluno tem DOIS materiais e a ligacao entre eles e um botao -- e o GATE 36 nao ve href: ele mede os bytes do arquivo do aluno e a tentativa de virar professor no navegador, nunca para onde a pagina aponta. Um arquivo de aluno impecavel, sem data-teacher e sem deck, pode entregar o deck inteiro num clique com os dois gates verdes. Nao e hipotese: o padrao existe em material antigo, escrito de proposito (\"o conteudo completo esta no arquivo principal\" + link para /professor/). Aquilo e legado e fica (REGRA 30); o molde novo nao nasce com ele. Escopado ao consultivo para nao fazer o GATE 8 acusar arquivo que ninguem vai consertar."
+  },
+  "check_molde_reconstroi.py": {
+   "gate": 50,
+   "tipo": "regressao",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "O MOLDE reconstroi dos proprios fragmentos, e o publicado e byte a byte o que o builder devolve. Existe porque em 28/08/2026 o molde tinha parado de reconstruir e nada acusava: uma trava do emissor classificava um gap-fill de EXPRESSOES como gramatica e recusava o banco declarado. O material da Stephanie continuava no ar, funcionando -- o que morreu foi o caminho de volta ate ele. E o molde e por onde toda correcao entra: sete consertos de plataforma daquele dia chegaram ao aluno real e NAO chegaram ao molde, e a proxima aula gerada a partir dele nasceria com o defeito recem-corrigido, sem que nenhum gate visse -- cada arquivo, isolado, passa em tudo. Mede DUAS coisas porque sao duas: o builder aceita os fragmentos, e o que ele produz e igual ao publicado. A segunda pega o publicado editado a mao, o publicado vindo de build antigo e o fragmento corrigido que ninguem reconstruiu. NUNCA escopado: vale para qualquer molde que o sistema use como origem."
+  },
+  "check_atividade_declarada.py": {
+   "gate": 45,
+   "tipo": "processo",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A trava do passo que a Helen pediu em 25/08/2026: ela relatou que o gerador \"capta o essencial mas deixa passar detalhe que e regra fixa e clara\", e que repetiu erro que o normativo tinha ACABADO de reforcar. Gate que barra no fim nao resolve isso -- quando reprova, o defeito ja nasceu, e da vez seguinte o autor escreve o mesmo HTML. A saida foi tirar o exercicio da mao de quem escreve: o autor DECLARA (blocos.json) e o builder EMITE (render.py) -- o data-ok deixa de ser digitado (o autor escreve o TEXTO da resposta certa e a letra e derivada), as classes e a ordem dos atributos idem. Nao ha o que errar porque nao ha o que teclar. Este gate guarda a unica condicao que sustenta isso: fragmento de pre/post-class nao contem HTML de atividade, so prosa e <!--BLOCOS:chave-->. Busca pela FORMA (tag/atributo), nunca pela palavra: prosa que MENCIONE match-grid nao constroi grade. Deixa de fora _do-artefato, que ninguem escreve -- e extracao de maquina do prototipo, onde HTML cru e a origem. Medido no dia: molde 48 de 48 seccoes; aulas do artefato do Marcos, 4 de 24 -- o emissor cobre O MOLDE, ainda nao toda forma."
+  },
+  "check_audio_oficial.py": {
+   "gate": 40,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O Anexo P-A proibe Web Speech no build oficial, e o molde usava speechSynthesis em 17 pontos com ZERO chamadas a new Audio -- escolhendo voz por NOME COMERCIAL do sistema (Microsoft Aria, Samantha), contra o §4. Faz QUATRO perguntas porque sao quatro formas de falhar: a tecnologia voltou (em CODIGO -- comentario que explica a proibicao nao e a proibicao), alguem escolhe voz por nome comercial, algum acionador nao resolve no AUD_MAP (botao que nao faz nada e nao da erro), e algum MP3 prometido nao existe. NAO julga se o audio diz o texto certo: isso e QA auditiva (qa_status do manifesto), e maquina que afirmasse isso estaria mentindo."
+  },
+  "check_ciclo_limpo.py": {
+   "gate": 39,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "INT-002 do catalogo do auditor (25/08/2026), e o defeito era REAL: o molde publicado trazia na aba Feedback os botoes 'Lesson 19' e 'Lesson 20' e os titulos do artefato do Marcos, num ciclo de aulas 1 a 4 -- nos DOIS arquivos, e a aba e do ALUNO. Nenhum gate viu porque todos olhavam o que o builder EMITE, e este e do que ele NAO emitia: a regiao ficou intacta, valida e de outro aluno. Dai a pergunta deste gate nao ser 'o builder emitiu certo?' e sim 'o arquivo publicado fala de aula que nao existe neste ciclo?'. Le o intervalo do proprio var LESSONS. Comentario de HTML/CSS/JS e data-teacher NAO contam: o primeiro nao chega ao olho de ninguem e o segundo pode citar outra aula de proposito."
+  },
+  "validate_consultivo.py": {
+   "gate": 37,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O par do GATE 1 para a outra anatomia. O validate_lesson.py mede as promessas do IMERSIVO (25 telas, as cinco etapas do pre-class, survival card) e por isso sai fora deste carimbo de proposito. Este mede o ARQUIVO PUBLICADO -- a saida --, enquanto o confere_aula() do build_consultivo.py mede os FRAGMENTOS, que sao a entrada: arquivo publicado pode ser editado a mao depois do build ou vir de um build antigo. Le o contrato de anatomias.json e do proprio var LESSONS, nunca de numero digitado aqui, e avalia o JS no node em vez de contar chave com regex (a leitura por regex chegou a inventar uma chave no GUIDE). A presenca da aba in-class decide se o arquivo e o do professor -- assim a AUSENCIA do deck reprova, em vez de virar um 'pulei porque nao achei'."
+  },
+  "check_isolamento_aluno.py": {
+   "gate": 36,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "A URL do aluno nao entrega o que nao e dele (Stephanie, 24/08/2026; 00 §5, 04 §13, P1 §3.2, P2 §3.2, P3 §3). Mede DUAS coisas porque sao duas: os BYTES do arquivo (gabarito, guia, checkpoint, estado, alternador, deck) e a ELEVACAO DE PAPEL tentada no navegador por tres portas -- atributo, armazenamento e ?mode=teacher-guide. A segunda existe porque a primeira sozinha aprova o defeito mais provavel: o arquivo limpo cuja pagina ainda le o papel gravado e se declara docente. A busca e pela FORMA, nunca pela palavra: o comentario que CITA a rota nao abre rota, a regra de CSS que cita [data-view=professor] nao entrega elemento, e o molde de markup dentro de uma funcao que ninguem chama nao e markup servido. NUNCA escopado: vale para qualquer molde que gere duas URLs."
+  },
+  "build_consultivo.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "O builder da anatomia consultivo. Roda com --round-trip no CI: monta com os fragmentos tirados do PROPRIO artefato e compara regiao por regiao com ele -- se o builder perder alguma coisa no caminho, o gate diz qual regiao e quantos bytes (o 'prove o superset' do P2 §38 aplicado a geracao). Os asserts de build recusam a GERACAO, nao o PR: oito etapas na ordem com os minutos fechando 55, seis atividades no pre-class, catorze campos no guia. E o build do aluno sai da MESMA funcao que o extrator usa (deriva_aluno), entao o isolamento e propriedade do caminho, nao lista de cuidados que alguem repete a cada aula."
+  },
+  "gen_audio_consultivo.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "Gera os MP3s oficiais pela ElevenLabs (Anexo P-A). Modelo eleven_v3; fala unica pelo text-to-speech e dialogo pelo text-to-dialogue/with-timestamps -- os timestamps sao o que permite UM arquivo por dialogo, como o §3 exige, sem perder o realce de quem fala. O nome do arquivo deriva do hash do transcript, entao mudar uma virgula gera arquivo novo e aprovacao nova, que e o que o §2 pede. A lista do que precisa de audio vem de audio_surface.py, o MESMO modulo que o builder usa para emitir o AUD_MAP."
+  },
+  "extrai_fragmentos.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "Extrai do artefato os fragmentos de conteudo por aula (telas, pre-class, post-class, guia, registro). E o que fecha o circulo artefato -> fragmentos -> builder -> material == artefato."
+  },
+  "gen_inventario.py": {
+   "gate": null,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "Gera a entrada consultivo do inventario MEDINDO o artefato, por regiao, com contagem. Roda com --check no CI. Existe porque inventario escrito a mao a partir da COPIA valida qualquer copia: foi assim que o anatomias.json catalogou as classes ic-* que o porte inventou, e o GATE 20 passou a comparar a copia consigo mesma. Gerado, ele nao pode catalogar uma reescrita."
+  },
+  "check_carga_limpa.py": {
+   "gate": 35,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "A PRIMEIRA prova de todas (P3 §1.1): a pagina abre, o console fica limpo, e cada componente que se monta por script EXISTE depois da carga -- contado, nao presumido. Mede as DUAS evidencias em separado, porque um construtor que engole a propria excecao nao produz erro nenhum e a peca simplesmente nao esta la. Para medir CONSTRUCAO e nao texto, limpa os hosts antes do boot: o artefato foi salvo pelo navegador, entao o DOM ja vem construido no arquivo, e sem a limpeza a contagem continua batendo mesmo com o boot morto (medido). Pegou o primeiro defeito da derivacao do shell no mesmo dia em que nasceu. NUNCA escopado: pagina que nao abre e pagina que nao abre em qualquer molde -- hoje aponta para os alvos declarados no proprio gate."
+  },
+  "check_voz_do_material.py": {
+   "gate": 51,
+   "tipo": "anatomia",
+   "escopo": {
+    "framework": [
+     "reading-into-speaking",
+     "listening-into-interaction",
+     "grammar-for-communication",
+     "esp-real-world"
+    ]
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A VOZ, e nao a forma: a superficie que um humano LE nao carrega o vocabulario de quem PRODUZIU o material. Nasceu em 01/09/2026, quando o Dan abriu a aba Perfil da Joice e achou 'e o primeiro A1 desta anatomia' e 'o pacote normativo cobre A1' na pagina que descreve a ALUNA, com os codigos H1/H2/H3 usados como se a professora soubesse o que sao, e um cartao citando a hipotese 'do bloco do Caio' — outro aluno. Mede o DELTA contra o shell (os rotulos fixos da interface, como a aba 'Estado pedagogico do ciclo', sao decisao do molde e nao do autor da aula) e ignora o que esta dentro de <script>. Divida anterior congelada em scripts/consultivo/voz-baseline.json, que so pode CAIR: nao e lista de tarefas, e o alvara do que ja existia (REGRA 30)."
+  },
+  "check_guia_de_tela.py": {
+   "gate": 53,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A nota de tela do professor (`data-teacher`) E o guia de dez campos do Doc 04 §8.2, em ingles: Goal, Interaction, Run it, Exact prompt (condicional), Expected, Conditional support, Challenge, Monitoring, Evidence to record, Transition. A forma declarada (`guia_telas.json` + render.nota_de_tela) existe desde 02/09/2026 e o emissor ja recusa guia declarado incompleto -- o que ele nao pode e obrigar alguem a DECLARAR: a aula que nunca cria o arquivo passa por ele sem ser vista, e foi o que aconteceu com cinco dos seis materiais. O custo apareceu na revisao do Dan de 02/09/2026, que nao conseguiu avaliar a linguagem didatica do guia porque o guia de uma escola de INGLES estava em PORTUGUES, em prosa livre, com os campos que cada aula inventava para si ('Objetivo / Conduza / Atencao / Siga quando'). Mede pelos CAMPOS e nunca pelo idioma: nota em ingles com campo trocado de nome continua sendo prosa livre, e e o campo que o professor procura na hora da aula. `Exact prompt` NAO entra nos obrigatorios -- ele e condicional, e omitir a chave e a unica forma correta de dizer que nao se aplica. Divida anterior congelada em scripts/consultivo/guia_em_prosa.json (190 telas em 02/09/2026), que so pode CAIR: e o alvara do que ja existia, nao lista de tarefas (REGRA 30). Material fora do arquivo comeca em zero -- aula nova nasce declarada, de graca. So o arquivo do PROFESSOR: o do aluno nao tem data-teacher (GATE 36)."
+  },
+  "check_apoio_bilingue.py": {
+   "gate": 54,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O material que se DECLARA bilingue entrega o apoio inteiro. Nasceu com a Vanessa Aparecida, primeira aluna real-beginner do produto (A1 declarado, A0 real) -- um ponto de partida que a producao nunca tinha previsto. O gate NAO pergunta 'tem portugues?': de A2 em diante vale a REGRA 13 (zero portugues na tela do aluno), e o modo e declarado no config do aluno (`apoio.bilingue`), nunca deduzido do nivel. Ele pergunta se a PROMESSA foi cumprida, porque promessa parcial e o pior dos dois mundos: metade dos exercicios acessivel, metade nao, e nada na tela dizendo qual e qual. Quatro regras, medidas no arquivo do ALUNO, que e onde a promessa e cobrada: (1) o botao de conferir nas duas linguas ('Check / Checar') -- `Check` e a primeira palavra em ingles de que o pre-class inteiro depende e a aluna ainda nao a entende; (2) todo item de exercicio fechado do pre/post-class tem a sua traducao; (3) a traducao nasce ESCONDIDA e abre ao conferir -- visivel desde o inicio, o olho vai nela e o ingles ao lado vira decoracao, que e a REGRA 2.1 do imersivo pelo avesso; (4) a aba Feedback em portugues, a unica superficie do aluno que nao e exercicio e sim o professor falando com ele. O VOCABULARIO (`kind: par`) fica de fora e nao por esquecimento: ali as duas alternativas SAO a traducao, e uma segunda por baixo entregaria a resposta antes da escolha. Material que nao declara o modo nao e medido -- nao ha promessa a cobrar."
+  },
+  "check_pre_a1.py": {
+   "gate": 57,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "A0 no primeiro chip de student-info"
+   },
+   "caminho": "_build/model",
+   "nota": "Material A0 nao presume producao autonoma de frase como condicao de entrada. A0 / Real Beginner e a faixa Pre-A1 do CEFR Companion Volume, um estagio ANTERIOR a capacidade generativa: palavra solta e resposta formulaica sao desempenho VALIDO, e a frase simples e OBJETIVO progressivo rumo ao A1, nunca requisito de entrada. Por isso a REGRA 13 ganhou banda propria em 03/09/2026 -- ela dizia 'a etapa so muda de IDIOMA e de DENSIDADE', e era essa frase que proibia o conserto. Mede so o PRE-CLASS (onde o aluno esta SOZINHO; no in-class ha professor mediando e a norma manda o apoio ser mais seletivo) e so em quem DECLARA A0 no header. Tres coisas: gap-fill com banco de palavras (escolher, nao recuperar), producao livre com modelo falado (palavra solta passa a ter de onde sair) e alvo de fala ate 6 palavras. A pergunta e 'o material que prometeu A0 entrega o apoio inteiro?', nunca 'tem portugues?' -- mesmo desenho do GATE 54. O que gerou tudo: medido em 03/09, o A0 NAO recebia material B1 (6-7 palavras/aula e apoio bilingue completo, contra 8 e zero portugues do B1 de controle), mas a estrutura era CEGA AO NIVEL -- Ricardo (A0) e Giovanna (A1) com contagens identicas de exercicio -- e a fatia de producao autonoma do A0 era MAIOR que a do B1: 48% contra 37%. A professora do Ricardo reportou em tres de cinco aulas que ele 'had not completed the pre-class activities'. Baseline em pre_a1_baseline.json e alvara (REGRA 30) e so pode CAIR."
+  },
+  "check_boot_paridade.py": {
+   "gate": 58,
+   "tipo": "integridade",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "O boot do ALUNO nao esquece construtor que o do PROFESSOR tem. `deriva_aluno()` NAO filtra o boot: ele o SUBSTITUI pela constante BOOT_ALUNO, escrita a mao — sao DUAS listas independentes de construtores e nada comparava uma com a outra. Em 03/09/2026 isso custou o 'Reset my answers' dos SEIS materiais da anatomia: `preResetGo` so restaura se `_preSnap[n]` existir, e o boot do aluno nunca chamou `preSnap()`. O botao apagava o armazenamento (limpeza real) e nao tocava numa classe; as alternativas conferidas seguiam verdes, sem erro no console. Toda funcao do boot do professor tem de estar no BOOT_ALUNO ou na lista SO_DO_PROFESSOR com o MOTIVO escrito — a lista obriga a declarar que a ausencia e proposital, em vez de deixar 'esqueci' e 'de proposito' com a mesma aparencia. Pega tambem a excecao que MENTE (declarada como so-do-professor mas presente no aluno), porque excecao errada autoriza o proximo esquecimento. NUNCA escopado: e sobre o gerador, nao sobre material."
+  },
+  "check_classe_orfa.py": {
+   "gate": 59,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Classe usada no conteudo do consultivo existe no CSS do shell. A professora reportou que as perguntas de uma tela estavam 'sem espaco e pequenas demais': elas usavam `comp-questions`/`comp-q`, classes do molde IMERSIVO que o shell do CONSULTIVO nao estiliza — saiam com o corpo padrao do navegador (16px, sem espacamento) em vez do componente da casa (`qlist`/`q-item`, 23px com respiro e filete). O HTML e valido, o gate estatico passa, o navegador nao reclama: so a TELA mostra. E se espalha por copia, porque quem escreve a aula seguinte olha a anterior — medido em 03/09/2026: 33 ocorrencias em 7 aulas de 5 alunos. Le as classes do CSS dos DOIS shells mais as que o JS cria em runtime (classList/querySelector), e compara com o que os fragmentos usam. NAO mede o imersivo, onde `comp-q` E estilizada e legitima. Baseline em classe_orfa_baseline.json e alvara (REGRA 30) e so pode CAIR."
+  },
+  "check_docs_pacote.py": {
+   "gate": 34,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts/consultivo",
+   "nota": "O pacote normativo do consultivo (docs/consultivo/) so vale INTEIRO: o A02 §13.3 diz que arquivo fora do pacote nao constitui carregamento e que a ausencia de A01/A02 bloqueia a declaracao de conformidade. Cobra os dois lados do defeito: documento que NAO ESTA (tres dos cinco normativos de agosto viviam em ~/Downloads, e por isso nunca viraram nada) e documento que ESTA MAS ESVAZIOU (os .md sao conversao mecanica dos .docx; reimportacao que perca tabela deixa o arquivo existindo e some com a regra). Cada documento tem frases-ancora de FORMAS diferentes -- prosa, celula de tabela, item de lista, identificador tecnico -- para que a perda de qualquer forma derrube uma ancora. NUNCA escopado: e sobre o repositorio, nao sobre material."
+  },
+  "check_sem_senha_no_repo.py": {
+   "gate": 32,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "Senha de aluno nunca entra no repo. O repo e PUBLICO: a lista (ou um hash dela, que com 4 digitos cai por forca bruta offline em milissegundos) commitada acaba com a protecao e fica no historico do git para sempre. As senhas vivem em ~/alumni-senhas e na env ACESSO_ALUNOS da Vercel. NUNCA escopado: e sobre o repositorio, nao sobre material."
+  },
+  "test_senhas_estaveis.py": {
+   "gate": 33,
+   "tipo": "processo",
+   "escopo": "repo",
+   "caminho": "scripts",
+   "nota": "Codigo de aluno JAMAIS muda quando entra gente nova. O aluno recebe o numero uma vez e ele e distribuido; renumerar em silencio transforma toda senha na mao da equipe em lixo, e ninguem percebe ate um aluno nao conseguir entrar. Prova 3 cenarios num dir de teste: aluno novo alfabeticamente antes de todos nao renumera ninguem; material -v2 de aluno existente herda o codigo dele; sumico em massa ABORTA em vez de revogar (quase sempre e a arvore errada, nao aluno que saiu). NUNCA escopado: e sobre o gerador, nao sobre material."
+  },
+  "check_expected_gabarito.py": {
+   "gate": 71,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O `Expected` do guia de tela e GABARITO, nao resumo. Revisao da professora sobre a aula 19 da Gabriela Pires, 09/09/2026: a nota parafraseava tres dos seis itens e chamava os outros de 'the other three', e ela marcou como RECORRENTE em todos os teacher's guides. Era: medidas as seis anatomias, 3 de 54 telas de atividade fechada tinham o gabarito inteiro -- e as tres sao as que essa mesma revisao acabara de reescrever. A regra: tela que declara escolha/classificar/par/completar/lacuna cita CADA item no expected (cinco palavras bastam, para nao punir a citacao encurtada; parafrase nao passa) e, quando a resposta e texto, tambem cada resposta correta. A chave da baseline e {aluno}/aula{N}:{ids dos blocos da tela} e NUNCA o ordinal: inserir uma tela renumera o deck -- a propria revisao da 19 fez isso -- e a baseline passaria a perdoar a tela errada, calada. As 51 telas de 09/09/2026 sao de aulas publicadas e estao no ALVARA (REGRA 30): o gate as pula, e existe para que nenhuma tela nova nasca vaga."
   }
+ }
 }
