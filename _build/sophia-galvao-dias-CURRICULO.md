@@ -36,8 +36,16 @@ O que isso mudou, e o que **não** mudou:
 | **Não** muda | As aulas 1–3, que já foram dadas ou estão no ar como estão |
 
 Aulas regeradas em 09/09/2026: **4** (modal perfect para dedução) e **5** (orações relativas,
-defining e non-defining). A coluna "Foco linguístico" das aulas 6–11 foi elevada junto, para que
-a próxima geração não volte ao B1 — os temas são os mesmos.
+defining e non-defining). A coluna "Foco linguístico" foi elevada em **todo o resto do programa**,
+com os temas intactos — senão a próxima geração volta ao B1.
+
+Subir as aulas 4 e 5 **criou colisão** com pontos que o desenho original guardava para depois, e
+as sete linhas afetadas foram remendadas no mesmo movimento: **08** (era "tempos da narrativa",
+que engolia o past continuous das aulas 15 e 16 → virou past perfect), **09** (era
+*stop/remember/try*, que é o tema da 50 → virou verbos de percepção), **11** (era second
+conditional, que é da 37 → virou frases clivadas), **35** (era present continuous para combinados,
+que a 10 passou a dar → virou *be due to / be about to*), **39**, **51** e **56** (ver a tabela de
+segunda camada nas instruções permanentes).
 
 > **A ressalva de produção abaixo continua valendo, e agora importa mais.** O input dela é alto
 > e a produção é curta. Em B2 o ajuste, se for preciso, é de **apoio e densidade** — nunca voltar
@@ -201,12 +209,12 @@ faltou na consultoria: uma apresentação que passe de "My name is Sofia. I am t
 | 03 | FALA | The Best Part of Sunday | past simple (regulares + irregulares) | Contar o último fim de semana em 6 frases |
 | 04 | LEITURA | The Order That Came Out Wrong | **modal perfect** para dedução: must / might / can't / should + have + particípio | Gravar um jantar inteiro, explicando três problemas com *must have* / *might have* / *can't have* |
 | 05 | FALA | New City, New Street | **orações relativas**: defining, non-defining e reduzidas | Cinco frases sobre a rua, cada uma com uma relativa e ao menos uma entre vírgulas |
-| 06 | LEITURA | Two Schools | **comparação com precisão**: not nearly as… as, far / considerably + comparativo, the more… the more | Comparar as duas escolas em 4 frases, nenhuma com *more good* nem *very more* |
+| 06 | LEITURA | Two Schools | **comparação com precisão**: far / considerably / slightly + comparativo, the more… the more | Comparar as duas escolas em 4 frases, nenhuma com *more good* nem *very more* |
 | 07 | FALA | The Best Thing About It | **superlativo + present perfect**: the best I've ever…, by far, one of the… | O melhor e o pior lugar da cidade, com motivo, em *the best I've ever seen* |
-| 08 | LEITURA | The Night of the Concert | **tempos da narrativa**: past simple × past continuous × past perfect | Contar a noite do show em 6 frases, com pelo menos um *had* |
-| 09 | FALA | Larry Caramelo | **verb patterns que mudam de sentido**: stop / remember / try + -ing × to | Falar do cachorro com *stop barking* e *stopped to look*, e explicar a diferença |
-| 10 | LEITURA | The Plan for the Holidays | **formas de futuro em contraste**: will × going to × presente contínuo × future perfect | Contar 4 planos reais, cada um numa forma diferente, e dizer por que aquela |
-| 11 | FALA | Only One at Home | **segundo condicional / irreal do presente**: if I had…, I'd… | Três frases sobre a casa que ela não tem: *if I had a brother, I'd…* |
+| 08 | LEITURA | The Night of the Concert | **past perfect**: o que já tinha acontecido antes | Contar a noite do show em 6 frases, com pelo menos um *had* |
+| 09 | FALA | Larry Caramelo | **verbos de percepção + objeto**: see / hear / watch somebody *do* × *doing* | Falar do cachorro com *I heard him barking* e *I watched him eat*, e explicar a diferença |
+| 10 | LEITURA | The Plan for the Holidays | **formas de futuro em contraste**: will × going to × presente contínuo (o grau de decisão) | Contar 4 planos reais, cada um numa forma diferente, e dizer por que aquela |
+| 11 | FALA | Only One at Home | **frases clivadas para dar ênfase**: What I like about… is… / The thing that… | Explicar em 4 frases como é ser filha única, cada uma começando por *What…* ou *The thing that…* |
 | 12 | LEITURA | Why English, Really | **CHECKPOINT 1** — recuperação das aulas 1–11, nenhum ponto novo | Gravar a apresentação da aula 1 de novo e comparar |
 
 ### Bloco 2 (13–24) · Grécia — o primeiro destino
@@ -244,7 +252,7 @@ cada um uma vez, como manda o livro-razão.*
 | 32 | LEITURA | Two Ways to Say It | present perfect simple × continuous | Escolher o tempo certo em 6 situações e justificar |
 | 33 | FALA | How Well Do You Do It? | advérbios de modo + comparação de advérbios | Descrever como faz 5 coisas, e quem faz melhor |
 | 34 | LEITURA | Nobody Told Her Anything | pronomes indefinidos (someone / anything / nowhere) | Recontar a cena de um filme com 5 indefinidos |
-| 35 | FALA | What Are You Doing on Friday? | present continuous para combinados futuros | Contar a agenda real da semana que vem |
+| 35 | FALA | What Are You Doing on Friday? | **compromisso e iminência**: be due to / be about to / be supposed to | Contar a agenda real da semana que vem, sem repetir a mesma forma |
 | 36 | LEITURA | Half Way | **CHECKPOINT 3** — recuperação das aulas 25–35 | Autoavaliação gravada: o que mudou desde a aula 12 |
 
 ### Bloco 4 (37–48) · Espanha — o segundo destino
@@ -255,7 +263,7 @@ desejo e dedução, que é o que se faz o tempo todo planejando uma viagem que a
 |---|---|---|---|---|
 | 37 | FALA | If I Could Go Tomorrow | second conditional | 5 frases "If I ..., I would ..." sobre a viagem |
 | 38 | LEITURA | I Wish I Could Be There | wish + past simple | 4 desejos sobre o presente |
-| 39 | FALA | That Must Be the Place | modais de dedução (must be / can't be / might be) | Deduzir 5 coisas a partir de fotos |
+| 39 | FALA | That Must Be the Place | **dedução no presente** (must be / can't be / might be), contrastada com a forma do passado da aula 4 | Deduzir 5 coisas a partir de fotos, duas delas sobre o que já aconteceu |
 | 40 | LEITURA | Who Lets You Do What | be allowed to / let / make | Contar 4 coisas que pode e 2 que não pode fazer |
 | 41 | FALA | Bored or Boring? | adjetivos em -ed × -ing | 6 frases alternando os dois tipos |
 | 42 | LEITURA | Across the Bridge, Past the Church | preposições de lugar e movimento | Descrever um trajeto de 6 passos |
@@ -274,12 +282,12 @@ inglês dela de consumo para produção.*
 |---|---|---|---|---|
 | 49 | FALA | Eight Hours Behind | orações temporais de futuro (when / as soon as / until) | Combinar um horário com alguém de outro fuso |
 | 50 | LEITURA | I Stopped Playing / I Stopped to Play | verbos que mudam de sentido com -ing / to | Explicar a diferença em 4 pares de frases |
-| 51 | FALA | My Friend, Who Lives Far Away | orações relativas não-restritivas | Apresentar 4 pessoas com uma relativa explicativa cada |
+| 51 | FALA | My Friend, Who Lives Far Away | **relativas com preposição, *whose* e *where*** — a segunda camada da aula 5 | Apresentar 4 pessoas: uma com *whose*, uma com *the friend I play with* |
 | 52 | LEITURA | She Told Me to Wait | discurso indireto — ordens e pedidos | Reportar 5 instruções recebidas na semana |
 | 53 | FALA | For Six Years, Since I Was Six | for / since + present perfect | Dizer há quanto tempo faz 6 coisas |
 | 54 | LEITURA | Every Summer We Would... | used to × would (hábitos numa história) | Contar uma tradição de família em 6 frases |
 | 55 | FALA | If I Had Known | third conditional | 4 frases sobre o que teria feito diferente numa viagem |
-| 56 | LEITURA | I Should Have Said Something | should have / could have | 4 frases de arrependimento e 2 de alternativa |
+| 56 | LEITURA | I Should Have Said Something | **wish / if only + past perfect** | 4 arrependimentos em *I wish I had…* e 2 alternativas |
 | 57 | FALA | A Bit, Quite, Absolutely | adjetivos graduáveis e fortes + advérbios de grau | Reagir a 8 coisas com intensidades diferentes |
 | 58 | LEITURA | On the Other Hand | conectivos de opinião | Defender e depois contestar uma mesma ideia |
 | 59 | FALA | This Time Next Year | future continuous | 5 previsões sobre a própria vida daqui a um ano |
@@ -306,14 +314,29 @@ uma habilidade só: contar, pedir, opinar e apresentar — sem trocar para o por
 
 ---
 
-## Instruções permanentes para quem gerar da aula 3 em diante
+## Instruções permanentes para quem gerar da aula 6 em diante
 
 1. **Consultar o livro-razão antes de escolher o tema.** Fato já usado = só callback.
 2. **Um ponto gramatical por aula, e nunca um que já apareceu.** A coluna "Foco linguístico"
    vira `lesson.grammar_point` no config — é ela que o `check_grammar_progression.py` lê.
+
+   **Os pares de segunda camada NÃO são repetição, e não se "consertam".** O programa volta a
+   um mesmo território de propósito, uma camada acima, e as duas aulas ficam a dezenas de
+   encontros de distância:
+
+   | Território | Primeira | Segunda camada |
+   |---|---|---|
+   | Dedução | 04 · passado (*must have been*) | 39 · presente, contrastado com a 04 |
+   | Relativas | 05 · defining, non-defining, reduzidas | 51 · com preposição, *whose*, *where* |
+   | Past perfect | 08 · a forma | 56 · *wish / if only* + past perfect |
+   | Voz passiva | 20 · presente | 22 · passado |
+   | Discurso indireto | 28 · afirmações | 30 · perguntas → 52 · ordens → 67 · conversa inteira |
+   | Present perfect | 07 · *the best I've ever* | 23 · just/already/yet → 31/32 · contínuo → 53 · for/since |
+   | *Used to* | 27 · hábito | 54 · contrastado com *would* |
+   | Past continuous | 15 · sozinho | 16 · contra o past simple |
 3. **Paridade ímpar/par (REGRA 29)** — sem exceção, inclusive nos checkpoints.
-4. **10 palavras novas por aula** (faixa B1 = 10–12), nenhuma repetida de aula anterior
-   (REGRA 22 / `check_vocab_progression.py`).
+4. **Palavras novas por aula:** 10–12 nas aulas 1–3 (B1) e **12–15 da aula 4 em diante** (B2),
+   nenhuma repetida de aula anterior (REGRA 22 / `check_vocab_progression.py`).
 5. **Modelo teens:** `"model": "teens"` no config. Sem essa chave sai material de adulto.
 6. **Vozes:** os dois personagens do diálogo são adolescentes e usam vozes de adolescente
    distintas (`ellen` remapeada + `candy` no `cfg["voices"]`) — nunca duas vozes adultas.
