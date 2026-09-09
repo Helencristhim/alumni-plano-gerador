@@ -596,6 +596,17 @@ jobs:
       - name: "GATE 69 — o item de atividade fechada diz POR QUE"
         run: python3 scripts/consultivo/check_item_explica.py
 
+      - name: "GATE 70 — selftest: prova que o gate da contagem de fala ainda morde"
+        run: python3 scripts/consultivo/check_conta_o_audio.py --selftest
+
+      - name: "GATE 70 — a tela não conta o áudio: diz o que cada um faz"
+        # Incidente de 09/09/2026 (aula 20 da Gabriela Pires): a tela afirmava
+        # "Maya asks twice and Chris asks once" sobre o diálogo que a aluna acabara
+        # de ouvir, e o talk.json diz outra coisa. Nenhum gate via — o texto é
+        # gramatical e todos os exercícios batem com o áudio; só a prosa mentia.
+        # Ele PROÍBE em vez de conferir: contar dá o número certo de outra coisa.
+        run: python3 scripts/consultivo/check_conta_o_audio.py
+
       - name: "GATE 68 — selftest: prova que o gate do handler ainda morde"
         run: python3 scripts/consultivo/check_handler_acha_o_alvo.py --selftest
 
