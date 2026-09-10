@@ -638,7 +638,13 @@ CAMPOS_TELA = [
     # vazios, com 'N/A' nem preenchidos por repeticao do conteudo projetado". Entao a tela em
     # que o professor nao precisa dizer nada que ja nao esteja na tela OMITE a chave -- ela
     # nao escreve um travessao. Ver `nota_de_tela`, que recusa o preenchimento de fachada.
-    ("exact", "Exact prompt"),
+    # O ROTULO diz o que o campo E para quem le as 8h da manha (revisao da professora,
+    # 10/09/2026). "Exact prompt" -- o nome que o normativo (04 §8.2) usa para descrever o
+    # campo -- lido na tela vira ordem: a frase EXATA, aquela e nao outra. Nao e o que ele
+    # e: e a formulacao pronta para quem nao quer inventar na hora, e o professor que tem a
+    # sua continua tendo. "Suggested prompt(s)" diz isso, e o plural entre parenteses porque
+    # a maior parte das telas traz mais de uma.
+    ("exact", "Suggested prompt(s)"),
     ("expected", "Expected"),
     ("support", "Conditional support"),
     ("challenge", "Challenge"),
@@ -739,10 +745,18 @@ def rotulo_de_tempo(minutos, etapa_min):
     PORQUE o professor ja teria aqui.
 
     Prosa livre num campo que so pode conter um numero e um convite a quarenta grafias. O
-    autor escreve o inteiro; o resto e derivado -- inclusive o total da etapa, que vem de
-    `registro.js` e nunca e redigitado aqui."""
-    if etapa_min and minutos != etapa_min:
-        return f"{minutos} of the {etapa_min} min"
+    autor escreve o inteiro; o resto e derivado.
+
+    A GRAFIA E O TEMPO DA TELA, E SO ELE (revisao da professora, 10/09/2026)
+    ----------------------------------------------------------------------
+    Ate aqui a etiqueta dizia "4 of the 7 min": os minutos da tela e, junto, o total da
+    etapa a que ela pertence. Quem da a aula esta olhando UMA tela e precisa de UM numero
+    -- o orcamento dela. O total da etapa ja esta na barra de etapas, e repeti-lo aqui
+    obriga a subtrair para saber quanto tempo esta tela tem. A professora pediu o tempo
+    exato: "(4 min)".
+
+    `etapa_min` continua chegando porque `nota_de_tela` ainda o usa para RECUSAR a tela
+    que nao cabe na propria etapa. O que saiu foi a etiqueta, nao a checagem."""
     return f"{minutos} min"
 
 

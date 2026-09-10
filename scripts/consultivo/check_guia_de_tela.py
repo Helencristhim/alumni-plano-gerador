@@ -6,7 +6,7 @@ O QUE ELE MEDE
 --------------
 Toda tela do deck carrega um `data-teacher`. O Documento 04 §8.2 diz o que tem de haver
 dentro dele: DEZ campos, nomeados, na mesma ordem, em todas as telas -- Goal, Interaction,
-Run it, Exact prompt (condicional), Expected, Conditional support, Challenge, Monitoring,
+Run it, Suggested prompt(s) (condicional), Expected, Conditional support, Challenge, Monitoring,
 Evidence to record, Transition.
 
 POR QUE ISTO PRECISOU DE UM GATE
@@ -63,7 +63,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 ANATOMIA = "consultivo"
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"
 
-# Os dez do 04 §8.2, na ordem. `Exact prompt` e CONDICIONAL: a tela em que o professor nao
+# Os dez do 04 §8.2, na ordem. `Suggested prompt(s)` e CONDICIONAL: a tela em que o professor nao
 # precisa dizer nada que ja nao esteja projetado OMITE a chave -- e omitir e a unica forma
 # correta de dizer que nao se aplica (o normativo proibe campo condicional vazio ou com
 # "N/A"). Por isso ele nao entra na lista de obrigatorios.
@@ -174,8 +174,8 @@ def selftest():
         falhas.append("mediu um arquivo sem a aba in-class (o do aluno)")
     os.unlink(p)
     # o campo CONDICIONAL nao pode ser exigido
-    if "Exact prompt" in CAMPOS:
-        falhas.append("`Exact prompt` esta na lista de obrigatorios, e ele e condicional")
+    if "Suggested prompt(s)" in CAMPOS:
+        falhas.append("`Suggested prompt(s)` esta na lista de obrigatorios, e ele e condicional")
     # portugues DENTRO do guia declarado e visto
     if not _RX_PT.search("<strong>Conduza:</strong> leia com ela"):
         falhas.append("a marca de prosa em portugues nao foi vista")
