@@ -41,7 +41,22 @@ SLUG = 'diego-leonel-george-wached'
 HUB = os.path.join(RAIZ, 'public', 'aluno', SLUG + '.html')
 OUT = os.path.join(RAIZ, 'public', 'audio', SLUG)
 LEDGER = os.path.join(OUT, '_src.json')
-SNIPPETS = [('xp', 'xpractice.html'), ('us', 'uslife.html'), ('gs', 'gospel.html')]
+# (prefixo, arquivo, atributos que declaram audio, par de vozes)
+#
+# As TRES primeiras abas ficam EXATAMENTE como estavam -- mesmos atributos
+# (data-phrase), mesmo par de vozes, mesma ordem. E o que garante que rodar este
+# script de novo nao regere um unico MP3 delas.
+#
+# A aba EXPRESSIONS entra com duas diferencas, e as duas sao de proposito:
+#   * le tambem `data-speak`, porque ali o audio da expressao e o da frase moram
+#     no botao Listen do card, nao num speech-card;
+#   * usa Arthur + SARAH, as duas com accent=american na ElevenLabs. A aba
+#     inteira existe para ensinar como o americano fala; a Ellen, que atende o
+#     resto do material, esta catalogada como accent=german.
+SNIPPETS = [('xp', 'xpractice.html', ('data-phrase',), ('arthur', 'ellen')),
+            ('us', 'uslife.html', ('data-phrase',), ('arthur', 'ellen')),
+            ('gs', 'gospel.html', ('data-phrase',), ('arthur', 'ellen')),
+            ('ae', 'expressions.html', ('data-phrase', 'data-speak'), ('arthur', 'sarah_us'))]
 
 VOICES = json.load(open(os.path.join(RAIZ, '_build', 'model', 'voices.json'), encoding='utf-8'))
 KEY = os.environ.get('ELEVENLABS_API_KEY', '')
@@ -87,10 +102,13 @@ def frases_dos_snippets():
     tem de ser identico a cada execucao (build reproduzivel).
     """
     achadas, vistas = [], set()
-    for prefixo, arquivo in SNIPPETS:
+    for prefixo, arquivo, atributos, vozes in SNIPPETS:
         caminho = os.path.join(AQUI, arquivo)
+        if not os.path.exists(caminho):
+            continue
         html = open(caminho, encoding='utf-8').read()
-        for m in re.finditer(r'data-phrase="([^"]+)"', html):
+        padrao = r'data-(?:%s)="([^"]+)"' % '|'.join(a.replace('data-', '') for a in atributos)
+        for m in re.finditer(padrao, html):
             txt = m.group(1)
             # o HTML guarda entidades; o navegador entrega o texto ja desescapado,
             # e e ESSE texto que vira chave do audioMap.
@@ -99,7 +117,7 @@ def frases_dos_snippets():
             if txt in vistas:
                 continue
             vistas.add(txt)
-            achadas.append((prefixo, txt))
+            achadas.append((prefixo, txt, vozes))
     return achadas
 
 
@@ -123,14 +141,20 @@ def main():
     except (IOError, ValueError):
         ledger = {}
 
-    # REGRA 7: 1-2 palavras sempre Arthur; 3+ alterna Arthur/Ellen.
+    # REGRA 7: 1-2 palavras sempre a voz masculina; 3+ alterna o par DA ABA.
+    #
+    # O contador continua GLOBAL e na ordem da lista, de proposito: e o que
+    # mantem cada frase ja publicada com a MESMA voz de antes. Aba nova entra
+    # sempre no FIM -- assim ela nao desloca a paridade de ninguem, e o ledger
+    # de procedencia (voz|texto) das abas antigas continua batendo, entao nao
+    # se regera um MP3 sequer do que ja esta no ar.
     voz_longa = 0
     plano = []
-    for prefixo, txt in frases:
+    for prefixo, txt, vozes in frases:
         if len(txt.split()) <= SHORT_WORDS:
-            voz = 'arthur'
+            voz = vozes[0]
         else:
-            voz = 'arthur' if voz_longa % 2 == 0 else 'ellen'
+            voz = vozes[0] if voz_longa % 2 == 0 else vozes[1]
             voz_longa += 1
         plano.append((nome(prefixo, txt), txt, voz))
 
@@ -151,8 +175,9 @@ def main():
     chars = sum(len(t) for _, t, _, _ in gerar)
     print('frases nas abas novas : %d' % len(plano))
     print('a gerar               : %d  (%d caracteres)' % (len(gerar), chars))
-    arthur = sum(1 for _, _, v, _ in gerar if v == 'arthur')
-    print('vozes                 : arthur %d / ellen %d' % (arthur, len(gerar) - arthur))
+    from collections import Counter
+    print('vozes                 : %s'
+          % ', '.join('%s %d' % (v, n) for v, n in sorted(Counter(x[2] for x in gerar).items())))
 
     if dry:
         for arq, txt, voz, _ in gerar[:5]:
@@ -194,14 +219,17 @@ def limpa_orfaos(plano):
     que este script criou. O audio do material original nao e tocado.
     """
     hub = open(HUB, encoding='utf-8').read()
-    vivas = set(re.findall(r'data-phrase="([^"]+)"', hub))
+    # data-speak conta: na aba Expressions o audio da expressao e o da frase de
+    # exemplo moram no botao Listen do card, nao num speech-card. Sem isto, as
+    # chaves novas seriam apagadas como orfas no instante seguinte a insercao.
+    vivas = set(re.findall(r'data-(?:phrase|speak)="([^"]+)"', hub))
     vivas |= {t.replace('&amp;', '&').replace('&quot;', '"') for t in vivas}
 
     ini = hub.index('var audioMap = {')
     fim = hub.index('\n};', ini)
     linhas = hub[ini:fim].split('\n')
 
-    meus = re.compile(r'"/audio/%s/(xp|us|gs)_' % re.escape(SLUG))
+    meus = re.compile(r'"/audio/%s/(xp|us|gs|ae)_' % re.escape(SLUG))
     mantidas, removidas = [], []
     for ln in linhas:
         m = re.match(r'\s*"((?:[^"\\]|\\.)*)":\s*("/audio/[^"]+")', ln)
@@ -230,7 +258,7 @@ def limpa_orfaos(plano):
     except (IOError, ValueError):
         return
     sumiram = [a for a in os.listdir(OUT)
-               if a.startswith(('xp_', 'us_', 'gs_')) and a not in usados]
+               if a.startswith(('xp_', 'us_', 'gs_', 'ae_')) and a not in usados]
     for a in sumiram:
         os.remove(os.path.join(OUT, a))
         ledger.pop(a, None)
@@ -261,7 +289,7 @@ def injeta_audiomap(plano):
         print('audioMap ja cobria tudo, nada a inserir')
         return
 
-    marca = '\n  // --- abas suplementares (Extra Practice / Living in the USA / Gospel) ---\n'
+    marca = '\n  // --- abas suplementares (Extra Practice / Living in the USA / Gospel / Expressions) ---\n'
     hub = hub[:fim] + marca + '\n'.join(novas) + hub[fim:]
     with open(HUB, 'w', encoding='utf-8') as f:
         f.write(hub)

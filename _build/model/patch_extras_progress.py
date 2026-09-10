@@ -51,7 +51,8 @@ BLOCO = ABRE + '''
   var ABAS = [
     { tab: 'xpractice', cards: '.lesson-card[id^="xp-lesson-"]' },
     { tab: 'uslife',    cards: '.lesson-card[id^="us-lesson-"]' },
-    { tab: 'gospel',    cards: '.media-card-wrapper[data-media^="gs-song-"]' }
+    { tab: 'gospel',    cards: '.media-card-wrapper[data-media^="gs-song-"]' },
+    { tab: 'expressions', cards: '.lesson-card[id^="ae-group-"]' }
   ];
 
   // MESMAS unidades que o updateProgress() do hub conta numa aula do Pre-class,
@@ -124,11 +125,11 @@ BLOCO = ABRE + '''
   // Rede de seguranca: exercicio que nao passe pelo updateProgress (um check
   // que so muda classe, o checkbox da musica) mesmo assim redesenha a barra.
   document.addEventListener('click', function (ev) {
-    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel') : null;
+    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel, #tab-expressions') : null;
     if (alvo) setTimeout(updateExtrasProgress, 60);
   }, true);
   document.addEventListener('change', function (ev) {
-    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel') : null;
+    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel, #tab-expressions') : null;
     if (alvo) setTimeout(updateExtrasProgress, 60);
   }, true);
 
