@@ -147,6 +147,46 @@ def secao(titulo, badge, badge_cls, instrucao, corpo):
             % (esc(titulo), badge_cls, esc(badge), ITAL, esc(instrucao), corpo))
 
 
+# ------------------------------------------------------------------ PROGRESSO
+# A barrinha de % das abas suplementares (pedido da Helen, 10/09/2026: "tudo o
+# que ele faz nessas abas precisa ficar salvo, e ter a barrinha de % assim como
+# a dinamica do pre class").
+#
+# Aqui so nasce MARCACAO. Quem escreve os numeros e o `updateExtrasProgress()`
+# que o `_build/model/patch_extras_progress.py` pendura no hub -- este arquivo
+# nao pode emitir `onclick` novo, porque o `checa_handlers` do
+# `insert_hub_extras.py` recusaria o snippet inteiro.
+#
+# Os atributos chamam-se `data-extra-*` DE PROPOSITO. O `updateProgress()` do
+# hub procura `data-lesson-progress="N"` com `document.querySelector`, que
+# devolve o PRIMEIRO do documento: reaproveitar o nome faria a barra da Licao 1
+# do Pre-class receber a % da Extra Practice 01 (ou o contrario, conforme a
+# ordem no arquivo). Nome proprio = as duas contas nunca se cruzam.
+
+def barra_card(chave):
+    """Mini-barra de uma unidade das abas novas (card de licao ou musica)."""
+    return ('      <div class="lesson-progress-mini"><div class="mini-bar">'
+            '<div class="mini-bar-fill" data-extra-progress="%s" style="width:0%%"></div></div>'
+            '<span class="mini-percent" data-extra-pct="%s">0%%</span></div>'
+            % (chave, chave))
+
+
+def painel_aba(slot, rotulo):
+    """Resumo da aba inteira. Estilo INLINE: o CSS do hub fica fora das abas e
+    o insert_hub_extras so pode escrever dentro delas."""
+    return ('<div class="extras-progress-panel" style="background:var(--bg-card);'
+            'border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:1.5rem">\n'
+            '  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;'
+            'flex-wrap:wrap;font-size:.78rem;color:var(--text-dim);margin-bottom:.5rem">\n'
+            '    <span style="font-weight:600;color:var(--text)">%s</span>\n'
+            '    <span><span data-extra-tab-done="%s">0</span> of <span data-extra-tab-total="%s">0</span> '
+            'exercises done &middot; <strong data-extra-tab-pct="%s" style="color:var(--accent)">0%%</strong></span>\n'
+            '  </div>\n'
+            '  <div class="mini-bar" style="height:6px"><div class="mini-bar-fill" '
+            'data-extra-tab="%s" style="width:0%%"></div></div>\n'
+            '</div>' % (esc(rotulo), slot, slot, slot, slot))
+
+
 def lesson_card(card_id, img, numero, titulo, desc, blocos):
     return ('<div class="lesson-card" id="%s">\n'
             '  <div class="lesson-header" onclick="toggleLesson(this)">\n'
@@ -155,11 +195,13 @@ def lesson_card(card_id, img, numero, titulo, desc, blocos):
             '      <div class="lesson-number">%s</div>\n'
             '      <h3>%s</h3>\n'
             '      <div class="lesson-desc">%s</div>\n'
+            '%s\n'
             '    </div>\n'
             '    <div class="expand-icon">&#9660;</div>\n'
             '  </div>\n'
             '  <div class="lesson-body">\n\n%s\n\n  </div>\n'
-            '</div>' % (card_id, img, esc(numero), esc(titulo), esc(desc), '\n\n'.join(blocos)))
+            '</div>' % (card_id, img, esc(numero), esc(titulo), esc(desc), barra_card(card_id),
+     '\n\n'.join(blocos)))
 
 
 # ============================================================ ABA: EXTRA PRACTICE
@@ -500,7 +542,9 @@ def render_xpractice():
             '<p style="%s">More practice on the lessons you have already done. Same vocabulary and same grammar as the Pre-class, '
             'with exercises you have not seen before. Do each one after you finish the matching Pre-class lesson.</p>\n'
             '%s\n'
-            '</div><!-- /tab-xpractice -->\n' % (H3, INTRO, '\n\n'.join(cards)))
+            '%s\n'
+            '</div><!-- /tab-xpractice -->\n' % (H3, INTRO, painel_aba('xpractice', 'Your progress in Extra Practice'),
+                        '\n\n'.join(cards)))
 
 
 # ========================================================= ABA: LIVING IN THE USA
@@ -841,7 +885,9 @@ def render_uslife():
             '<p style="%s">General English for everyday life in the United States, outside the clinic. '
             'These lessons are yours to study on your own, whenever you want. They do not replace any of your scheduled lessons.</p>\n'
             '%s\n'
-            '</div><!-- /tab-uslife -->\n' % (H3, INTRO, '\n\n'.join(cards)))
+            '%s\n'
+            '</div><!-- /tab-uslife -->\n' % (H3, INTRO, painel_aba('uslife', 'Your progress in Living in the USA'),
+                        '\n\n'.join(cards)))
 
 
 # ================================================================= ABA: GOSPEL
@@ -1260,11 +1306,12 @@ def render_gospel():
             '      <a href="https://www.youtube.com/watch?v=%s" target="_blank" rel="noopener" style="%s">Listen on YouTube &#8599;</a>\n'
             '      <a href="%s" target="_blank" rel="noopener" style="%s;margin-left:1rem">Read the lyrics &#8599;</a>\n'
             '%s\n'
+            '%s\n'
             '    </div>\n'
             '  </div>\n'
             '</div>' % (i, SVG_MUSIC, esc(s['gram']), esc(s['artista']), esc(s['titulo']),
                         esc(s['nota']), esc(s['tip']), s['vid'], LINK_STYLE,
-                        s['lyr'], LINK_STYLE, blocos))
+                        s['lyr'], LINK_STYLE, barra_card('gs-song-%d' % i), blocos))
 
     return ('<!-- ========== TAB 5: GOSPEL (aditivo, 09/09/2026) ========== -->\n'
             '<div class="tab-content" id="tab-gospel">\n'
@@ -1272,8 +1319,10 @@ def render_gospel():
             '<p style="%s">Twelve gospel songs in English. Each one was chosen for a structure you have already studied, and each comes with the lyrics, '
             'a listening exercise, the vocabulary of the song, practice in your own context, and a line to record. '
             'Mark each song as done after you work through it.</p>\n'
+            '%s\n'
             '<div class="media-grid">\n%s\n</div>\n'
-            '</div><!-- /tab-gospel -->\n' % (H3, INTRO, '\n\n'.join(cards)))
+            '</div><!-- /tab-gospel -->\n' % (H3, INTRO, painel_aba('gospel', 'Your progress in the Gospel Playlist'),
+                        '\n\n'.join(cards)))
 
 
 # ===================================================================== EMISSOR
