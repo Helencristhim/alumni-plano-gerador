@@ -178,6 +178,67 @@ def main():
             lf.write('\n')
 
     injeta_audiomap(plano)
+    limpa_orfaos(plano)
+
+
+def limpa_orfaos(plano):
+    """Tira do audioMap as chaves MINHAS que o HTML nao usa mais.
+
+    O `injeta_audiomap` so ACRESCENTA. Quando uma frase e reescrita (foi o caso
+    das letras que ganharam pontuacao na 2a rodada), a chave antiga fica para
+    tras apontando para o mesmo MP3 -- e como o nome do arquivo ignora
+    pontuacao, duas chaves passam a apontar para o mesmo audio. O GATE 8 chama
+    isso de COLISAO DE AUDIO, e com razao: e o sintoma de uma frase orfa.
+
+    Mexe SO em entradas cujo arquivo tem prefixo xp_/us_/gs_ -- ou seja, so no
+    que este script criou. O audio do material original nao e tocado.
+    """
+    hub = open(HUB, encoding='utf-8').read()
+    vivas = set(re.findall(r'data-phrase="([^"]+)"', hub))
+    vivas |= {t.replace('&amp;', '&').replace('&quot;', '"') for t in vivas}
+
+    ini = hub.index('var audioMap = {')
+    fim = hub.index('\n};', ini)
+    linhas = hub[ini:fim].split('\n')
+
+    meus = re.compile(r'"/audio/%s/(xp|us|gs)_' % re.escape(SLUG))
+    mantidas, removidas = [], []
+    for ln in linhas:
+        m = re.match(r'\s*"((?:[^"\\]|\\.)*)":\s*("/audio/[^"]+")', ln)
+        if m and meus.search(m.group(2)):
+            chave = m.group(1).replace('\\"', '"')
+            if chave not in vivas:
+                removidas.append(chave)
+                continue
+        mantidas.append(ln)
+
+    if not removidas:
+        print('audioMap: nenhuma chave orfa')
+    else:
+        hub = hub[:ini] + '\n'.join(mantidas) + hub[fim:]
+        with open(HUB, 'w', encoding='utf-8') as f:
+            f.write(hub)
+        print('audioMap: -%d chave(s) orfa(s) (frase reescrita na rodada nova)' % len(removidas))
+        for k in removidas[:3]:
+            print('    - %s' % k[:60])
+
+    # MP3 meus que nenhuma entrada referencia mais
+    hub = open(HUB, encoding='utf-8').read()
+    usados = set(v.split('/')[-1] for v in re.findall(r'"(/audio/%s/[^"]+)"' % re.escape(SLUG), hub))
+    try:
+        ledger = json.load(open(LEDGER, encoding='utf-8'))
+    except (IOError, ValueError):
+        return
+    sumiram = [a for a in os.listdir(OUT)
+               if a.startswith(('xp_', 'us_', 'gs_')) and a not in usados]
+    for a in sumiram:
+        os.remove(os.path.join(OUT, a))
+        ledger.pop(a, None)
+    if sumiram:
+        with open(LEDGER, 'w', encoding='utf-8') as lf:
+            json.dump(ledger, lf, indent=1, sort_keys=True, ensure_ascii=False)
+            lf.write('\n')
+        print('disco: -%d MP3 orfao(s)' % len(sumiram))
 
 
 def injeta_audiomap(plano):

@@ -102,6 +102,31 @@ def checa_ids_reservados(snippet, rotulo):
                      '       Isso mexeria na barra de progresso/stamps do aluno.' % (rotulo, oque))
 
 
+def _sem_abas(src, slots):
+    """O documento sem os blocos das abas indicadas -- o que NAO pode mudar."""
+    for slot in slots:
+        abre = '<div class="tab-content" id="tab-%s">' % slot
+        fecho = '</div><!-- /tab-%s -->' % slot
+        while abre in src and fecho in src:
+            i_div = src.index(abre)
+            i_com = src.rfind('<!-- ==========', 0, i_div)
+            ini = i_com if i_com != -1 and src.count('\n', i_com, i_div) <= 2 else i_div
+            fim = src.index(fecho, i_div) + len(fecho)
+            src = src[:ini] + ('\x00ABA:%s\x00' % slot) + src[fim:]
+    return src
+
+
+def so_mudaram_as_abas(antes, depois, slots):
+    """True se o unico trecho diferente entre os dois for o conteudo das abas.
+
+    E a trava que sustenta a promessa da Helen ("nao mexe em NADA que existe")
+    quando estamos SUBSTITUINDO conteudo, e nao so acrescentando: o resto do
+    documento -- as 10 licoes medicas, os stamps, as abas antigas, o audioMap --
+    tem de sair byte a byte igual.
+    """
+    return _sem_abas(antes, slots) == _sem_abas(depois, slots)
+
+
 def ultimo(regex, hub_src, oque):
     """Ultima ocorrencia do padrao -- o ponto de juncao onde o novo e pendurado."""
     achados = list(regex.finditer(hub_src))
@@ -110,9 +135,39 @@ def ultimo(regex, hub_src, oque):
     return achados[-1]
 
 
-def insere_aba(hub_src, slot, rotulo, snippet):
+def substitui_aba(hub_src, slot, snippet):
+    """Troca o BLOCO da aba pela versao nova, NA MESMA POSICAO.
+
+    So existe porque uma aba publicada precisa poder receber conteudo novo. O
+    recorte vai do comentario de abertura ate o fecho nomeado `<!-- /tab-X -->`,
+    entao nenhuma outra aba e tocada, e o BOTAO nao se mexe (ja esta na barra,
+    na ordem certa). Sem isto, a idempotencia por aba impediria a atualizacao.
+    """
+    fecho = '</div><!-- /tab-%s -->' % slot
+    abre = '<div class="tab-content" id="tab-%s">' % slot
+    if abre not in hub_src or fecho not in hub_src:
+        sys.exit('ERRO [%s]: aba marcada para --replace nao tem abertura/fecho nomeado.' % slot)
+
+    i_div = hub_src.index(abre)
+    # recua ate o comentario de secao que precede o bloco, se houver
+    i_com = hub_src.rfind('<!-- ==========', 0, i_div)
+    ini = i_com if i_com != -1 and hub_src.count('\n', i_com, i_div) <= 2 else i_div
+    fim = hub_src.index(fecho, i_div) + len(fecho)
+
+    if not snippet.endswith('\n'):
+        snippet += '\n'
+    antigo = hub_src[ini:fim]
+    hub_src = hub_src[:ini] + snippet.rstrip('\n') + hub_src[fim:]
+    print('  ~ %-12s substituida (%d -> %d bytes)'
+          % (slot, len(antigo.encode('utf-8')), len(snippet.rstrip().encode('utf-8'))))
+    return hub_src, True
+
+
+def insere_aba(hub_src, slot, rotulo, snippet, replace=False):
     if 'id="tab-%s"' % slot in hub_src:
-        print('  = %-12s ja existe, pulando' % slot)
+        if replace:
+            return substitui_aba(hub_src, slot, snippet)
+        print('  = %-12s ja existe, pulando (use --replace para atualizar)' % slot)
         return hub_src, False
 
     # 1) botao, logo DEPOIS do ultimo botao da barra (preserva a ordem de entrada)
@@ -138,6 +193,8 @@ def main():
     ap.add_argument('--aba', action='append', required=True,
                     metavar='SLOT:ARQUIVO:ROTULO')
     ap.add_argument('--dry-run', action='store_true')
+    ap.add_argument('--replace', action='store_true',
+                    help='atualiza o BLOCO de uma aba que ja existe (o botao nao se mexe)')
     args = ap.parse_args()
 
     if not os.path.exists(args.hub):
@@ -155,17 +212,23 @@ def main():
         snippet = open(caminho, encoding='utf-8').read()
         checa_handlers(snippet, disponiveis, slot)
         checa_ids_reservados(snippet, slot)
-        hub_src, feito = insere_aba(hub_src, slot, rotulo, snippet)
+        hub_src, feito = insere_aba(hub_src, slot, rotulo, snippet, args.replace)
         mudou = mudou or feito
 
     if not mudou:
         print('nada a fazer (todas as abas ja existiam)')
         return
 
-    # O conteudo ANTERIOR tem de sobreviver byte a byte. Se o original nao for
-    # subsequencia do resultado, alguma coisa foi reescrita -- e ai nao grava.
-    if len(hub_src) <= len(original):
+    # Em insercao pura o hub so pode CRESCER. Em --replace o bloco antigo sai,
+    # entao a trava passa a ser outra: NADA fora das abas indicadas pode mudar,
+    # e isso e conferido logo abaixo.
+    if not args.replace and len(hub_src) <= len(original):
         sys.exit('ERRO: o hub nao cresceu. Insercao nao foi aditiva.')
+
+    if args.replace:
+        alvos = [spec.split(':', 2)[0] for spec in args.aba]
+        if not so_mudaram_as_abas(original, hub_src, alvos):
+            sys.exit('ERRO: --replace alterou algo FORA das abas %s. Nao gravado.' % alvos)
 
     if args.dry_run:
         print('--dry-run: nada gravado (+%d bytes)'
