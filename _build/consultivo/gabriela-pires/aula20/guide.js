@@ -25,7 +25,7 @@
     'Screen 11 has no support at all, and that is deliberate: it is the same conversation with the scaffolding removed, on a new subject she chooses.<br><br>'+
     '<strong>What is not supported is the subject.</strong> She chooses it on both screens 10 and 11.',
   feedback:'One point on screen 12, then the replay at natural pace.<br><br>'+
-    '<strong>Count the turns out loud when you praise.</strong> &ldquo;You kept that going for seven turns&rdquo; is information she can use; &ldquo;good job&rdquo; is not.<br><br>'+
+    '<strong>Praise what she actually did.</strong> &ldquo;You kept that going, and you never went quiet&rdquo; is information she can use; &ldquo;good job&rdquo; is not.<br><br>'+
     'Do not correct during the conversations. Her communication does not break down over grammar, and interrupting costs the turns that were still coming.',
   evidence:'<ul>'+
     '<li><strong>How many turns she sustained without you pulling.</strong> Six is the target on screens 10 and 11.</li>'+
