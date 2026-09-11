@@ -81,6 +81,29 @@ def fim_tab_exercises(s):
     return fim_da_aba(s, 'tab-exercises', 'Pre-class')
 
 
+def garante_fim_comp(s):
+    """Marca o fim da aba Complementares com `</div><!-- /tab-complementary -->`.
+
+    O marcador e convencao do hub que o builder emite; hub anterior ao modelo fecha a aba
+    com um </div> mudo, e quem le a aba de fora tem de adivinhar onde ela acaba. O
+    validate_lesson adivinha com um regex que, sem marcador e sem card seguinte, deixa o
+    ULTIMO card da ULTIMA aula correr ate o fim do arquivo: o gate de idioma entao acha
+    portugues no <script> do shell e reprova uma aula que so tem ingles na tela. Sempre a
+    aula mais nova, sempre invisivel ate alguem gerar a proxima.
+
+    Escrever o marcador uma vez, no hub que este insert ja esta tocando, fecha a aba para
+    todo mundo que a le depois. E ADITIVO (nao move nem reescreve card nenhum) e
+    IDEMPOTENTE (hub que ja tem o marcador sai byte a byte igual).
+    """
+    if FIM_COMP in s:
+        return s
+    i = fim_tab_complementary(s)          # indice do </div> que FECHA a aba
+    m = re.compile(r'</div\s*>').match(s, i)
+    if not m:
+        return s
+    return s[:i] + FIM_COMP + s[m.end():]
+
+
 def menu_card_do_hub(s, cfg, target):
     """O card do menu IN CLASS **no formato QUE AQUELE HUB JÁ USA**.
 
@@ -512,6 +535,11 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             fim = fim_tab_complementary(s)
             s = s[:fim] + '\n' + comp + '\n\n' + s[fim:]
         feitos.append('complementares')
+
+    # 4b. FECHA a aba Complementares com o marcador, se o hub ainda nao o tem (ver
+    #     garante_fim_comp): sem ele o ultimo card da ultima aula nao tem fronteira.
+    if B.tem_aba_complementares(cfg) and 'id="tab-complementary"' in s:
+        s = garante_fim_comp(s)
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
     #    Depende do preclass.html (é dele que saem as frases). Num conserto que só
