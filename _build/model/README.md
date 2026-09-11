@@ -198,6 +198,15 @@ reprova isso, e o canário prova que ele ainda morde.
     Para o gate cobrir a aula, preencha lesson.grammar_point com o ponto canonico
     (ex.: "past perfect", "second conditional") — campo OPCIONAL, mas sem ele o gate nao ve
     a aula. Roda no CI (GATE 9) por slug tocado, contra as aulas irmas ja publicadas.
+    ONDE O BUILDER ANCORA o marcador (inject_grammar_marker): no chapter-label do capitulo
+    de descoberta, reconhecido pelo VERBO e nao pelo titulo exato — "Grammar Discovery",
+    "Discovery", "Discover the Rule", "Discover the Code", "Descubre la Regla" servem todos.
+    Segunda via: a CHAMADA onclick="revealGrammar(" (nao o nome revealGrammar, que e uma
+    funcao do shell e existe em TODO arquivo). Slides que ja trazem data-grammar escrito a
+    mao ficam intocados. SE grammar_point estiver declarado e nada casar numa aula com
+    capitulos numerados, o BUILD ABORTA com instrucao — nunca mais um no-op silencioso
+    (11/09/2026: 42 aulas sem marcador, 4 pacotes inteiros invisiveis ao gate). Aula de
+    review/checkpoint nao ensina gramatica nova: nao declare grammar_point nela.
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
    ou usar hub "new" no config (aluno novo, sem hub)
