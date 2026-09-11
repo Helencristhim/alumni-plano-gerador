@@ -2166,56 +2166,95 @@ def _opening_tag_end(s, start):
     return -1
 
 
-def inject_grammar_marker(slides, grammar_point):
+# O marcador ja posto — pelo autor, no slides.html, ou por uma passada anterior.
+_GRAMMAR_MARK_RE = re.compile(r'\bdata-grammar\s*=')
+# A tag do SLIDE de verdade: "slide" tem de ser a classe INTEIRA. Um rfind por
+# '<div class="slide' tambem casa '<div class="slide-inner"' — que e justamente o
+# primeiro ancestral do chapter-label. Era LA que o marcador vinha nascendo em toda
+# aula, fora da tag que carrega data-slide/data-lesson; e quando o autor ja havia
+# marcado o slide certo a mao, o injetor plantava um SEGUNDO no slide-inner.
+_SLIDE_OPEN_RE = re.compile(r'<div class="slide[ "]')
+# O rotulo do capitulo de descoberta e AUTORAL e varia de aula para aula: "Grammar
+# Discovery", "Discovery", "Discover the Rule", "Discover the Code", "Descubre la
+# Regla". O que nao varia e o VERBO — a familia se reconhece por ele.
+_DISCOVERY_LABEL_RE = re.compile(
+    r'chapter-label">\s*(?:the\s+)?(?:grammar\s+)?(?:discover|descubre|descobr)', re.I)
+# Anatomia de capitulos numerados ("Chapter 3: The Code" / "Capitulo 3: El Codigo").
+# So onde ela existe e que a ausencia de slide de descoberta e suspeita o bastante para
+# ABORTAR: moldes sem essa anatomia (consultivo) nao tem esse slide por construcao, e
+# abortar neles seria um landmine, nao um gate.
+_CHAPTER_ANATOMY_RE = re.compile(r'chapter-label">\s*(?:chapter|cap[ií]tulo)\s*\d', re.I)
+
+
+def inject_grammar_marker(slides, grammar_point, ctx=''):
     """REGRA 22 (gramática não repete) — o IRMÃO gramatical do vocab-card-word.
 
     Marca o slide de Grammar Discovery com data-grammar="<ponto canônico>". É esse
     marcador — uniforme, um-por-aula, emitido pelo BUILDER — que o
     check_grammar_progression.py lê para saber qual gramática a aula ENSINA como nova.
-    Espelha o que o vocab-card-word faz para o vocabulário: um-conceito-por-elemento,
-    posto pelo builder, impossível de divergir.
 
-    Tolerante por construção: sem `lesson.grammar_point` no config (config legado, ou
-    aula de leitura/review sem slide de Grammar Discovery), NÃO injeta nada. A aula
-    passa incólume e o gate simplesmente a ignora (nunca compara aula sem marcador —
-    é assim que o legado nunca dispara falso-positivo). Idempotente: não duplica."""
+    POR QUE O ÂNCORA NÃO PODE SER SÓ O RÓTULO (incidente de 11/09/2026):
+      Até aqui a função procurava o texto `chapter-label">Grammar Discovery` (e o curto
+      `Discovery`). O rótulo é PROSA DE TELA e é autoral de propósito — a mesma aula de
+      descoberta se intitula "Discover the Rule", "Discover the Code" ou "Descubre la
+      Regla" sem deixar de ser descoberta. Quando nenhum literal casava, a função fazia
+      `return slides`: NO-OP SILENCIOSO, com `grammar_point` declarado no config e tudo.
+      A aula saía sem marcador e o gate a IGNORAVA — verde porque não viu nada, não
+      porque conferiu. Medido no dia: 42 aulas assim, entre elas os pacotes INTEIROS de
+      quatro alunos (dejair 1-11, diogo-leal-espanhol 1-10, giovanna-waltrick 1-10,
+      stephanie-santin 1-10) — nenhuma jamais comparada com as outras.
+      Agora o âncora é uma FAMÍLIA (o verbo discover/descubre/descobr, com ou sem
+      "grammar"), com a CHAMADA `onclick="revealGrammar("` como segunda via nos moldes
+      que usam o botão, e — o que fecha o buraco de verdade — SILÊNCIO É IMPOSSÍVEL: se
+      o ponto foi declarado e nada casou numa aula com anatomia de capítulos, ABORTA.
+
+      Nota para quem for "melhorar" o âncora: `revealGrammar()` sozinho NÃO serve como
+      identidade. Ele é o nome de uma função definida no SHELL
+      (`function revealGrammar() {...}`), presente em TODO arquivo publicado e ausente
+      de TODO slides.html — procurar por ele casa a definição, nunca a descoberta. Foi
+      por isso que a "segunda via" estrutural existente não salvou a aula 11 do dejair.
+      Por isso o que se procura aqui é a CHAMADA, não o nome.
+
+    Tolerante onde a tolerância é legítima, e só aí:
+      - sem `lesson.grammar_point` (config legado, aula que não ensina gramática nova):
+        não injeta nada, a aula passa incólume e o gate a ignora — é assim que o legado
+        nunca dispara falso-positivo;
+      - slides que JÁ trazem `data-grammar` (autor marcou à mão, como no molde teens):
+        intocados. A intenção do autor vence e o marcador continua um-por-aula;
+      - molde SEM anatomia de capítulos (consultivo): não tem slide de descoberta por
+        construção, então a ausência não é defeito e não aborta.
+    """
     if not grammar_point:
         return slides
     g = ' '.join(str(grammar_point).split()).strip()
     if not g:
         return slides
-    # O rótulo do slide de descoberta NÃO é sempre "Grammar Discovery": uma aula de
-    # pronúncia/prosódia descobre um SISTEMA que não é gramática, e forçá-la a se rotular
-    # "Grammar Discovery" na tela seria mentir para a aluna só para agradar ao gate.
-    # Aceita-se também o rótulo curto "Discovery" — o marcador continua sendo emitido pelo
-    # BUILDER, um por aula, e só quando lesson.grammar_point existe (opt-in explícito).
-    idx = -1
-    for marker in ('chapter-label">Grammar Discovery', 'chapter-label">Discovery'):
-        idx = slides.find(marker)
-        if idx != -1:
-            break
+    if _GRAMMAR_MARK_RE.search(slides):
+        return slides  # idempotente: o autor ja marcou (ou uma passada anterior)
+    m = _DISCOVERY_LABEL_RE.search(slides)
+    idx = m.start() if m else slides.find('onclick="revealGrammar(')
     if idx == -1:
-        # ROTULO E APARENCIA; revealGrammar() E IDENTIDADE. Procurar so pelo texto do
-        # chapter-label faz o marcador depender de como a AULA se intitula na tela, e o
-        # rotulo e autoral de proposito (uma aula pode chamar o capitulo de "The Pattern"
-        # e continuar sendo descoberta gramatical). Quando isso acontecia, o no-op era
-        # SILENCIOSO: a aula saia sem data-grammar e o check_grammar_progression a
-        # ignorava — gate verde porque nao viu nada, nao porque conferiu. Foi assim que
-        # SEIS aulas de um mesmo aluno passaram sem nunca ser comparadas entre si.
-        # O botao `revealGrammar()` e o que FAZ de um slide uma descoberta gramatical:
-        # existe em todos eles por construcao e nao depende de como o capitulo se chama.
-        # Mesma licao do _exposicao(), que passou a ler data-kind em vez da classe.
-        idx = slides.find('revealGrammar()')
-    if idx == -1:
-        return slides  # aula sem slide de descoberta — no-op silencioso
-    start = slides.rfind('<div class="slide', 0, idx)
+        if _CHAPTER_ANATOMY_RE.search(slides):
+            raise SystemExit(
+                f'inject_grammar_marker: {ctx or "esta aula"} declara grammar_point='
+                f'"{g}" mas NENHUM slide de descoberta foi localizado nos slides.\n'
+                f'  O data-grammar NAO seria emitido e o gate da REGRA 22 ficaria CEGO '
+                f'nesta aula (verde por nao ver, nao por conferir).\n'
+                f'  Saidas, nesta ordem:\n'
+                f'   1. o capitulo de descoberta existe? nomeie-o com o verbo da familia '
+                f'(chapter-label "Grammar Discovery" / "Discover the Rule" / '
+                f'"Descubre la Regla"), ou ponha data-grammar a mao na tag do slide;\n'
+                f'   2. a aula NAO ensina gramatica nova (review/checkpoint)? entao ela '
+                f'nao deve declarar grammar_point — apague o campo do config.')
+        return slides  # molde sem anatomia de capitulos: sem slide de descoberta, por construcao
+    start = -1
+    for mm in _SLIDE_OPEN_RE.finditer(slides, 0, idx):
+        start = mm.start()
     if start == -1:
         return slides
     tag_end = _opening_tag_end(slides, start)
     if tag_end == -1:
         return slides
-    if 'data-grammar=' in slides[start:tag_end]:
-        return slides  # idempotente
     return slides[:tag_end] + f' data-grammar="{_attr_escape(g)}"' + slides[tag_end:]
 
 
@@ -2663,7 +2702,7 @@ def build_standalone(cfg, content_dir, manifest):
     # incólume (o gate ignora aula sem marcador, então o legado nunca dispara).
     gp = L.get('grammar_point')
     if gp:
-        slides = inject_grammar_marker(slides, gp)
+        slides = inject_grammar_marker(slides, gp, ctx=f'{cfg["slug"]} aula {n}')
     elif 'chapter-label">Grammar Discovery' in slides:
         # Nudge não-bloqueante: a aula ENSINA gramática mas o config não declarou o ponto,
         # então o gate da REGRA 22 fica cego para ela. Não é erro (campo opcional p/ não
