@@ -102,12 +102,62 @@ def fecha(s, i, tag="div"):
     return extrai_shell.fecha_tag(s, i, tag)
 
 
+# A barra "Back to top" e do SHELL, e o fragmento nao decide nada sobre ela.
+RX_AO_TOPO = re.compile(r'[ \t]*<div class="btn-bar ao-topo">.*?</div>[ \t]*\n?', re.S)
+
+
+def ao_topo_do_shell(antigo, novo):
+    """A barra `ao-topo` que o bloco novo leva e a que o SHELL tinha, e vai por ULTIMO.
+
+    O DEFEITO (medido em 11/09/2026, reportado pelo Dan olhando o material no ar):
+    "visao aluno, aba Planning: botao 'Back to top' esta no topo da pagina, deve vir no
+    final". Estava assim nos SEIS materiais de ciclo -- e eram dois defeitos, nao um:
+
+      1. A barra vinha ANTES do conteudo. A aba Planning tem duas metades; a do professor
+         (`perfil.html`) termina com a barra, e o builder encaixa a metade do ALUNO depois
+         dela. Na URL do professor isso nao aparece, porque a metade do aluno fica escondida;
+         na do aluno a metade do professor e REMOVIDA, e o que sobra e a barra seguida do
+         conteudo -- o botao de voltar ao topo como primeira coisa da primeira aba dele.
+
+      2. O rotulo chegava em PORTUGUES a tela da aluna: a barra do fragmento e a variante do
+         professor (`Voltar ao topo`, sem os `data-view`), e o `deriva_aluno` nao tem o que
+         trocar num texto que nao esta marcado por visao. Viola a REGRA 13 (A2+ = zero
+         portugues na tela dela) e a regra das duas URLs.
+
+    UMA CAUSA, DOIS SINTOMAS, e por isso um conserto so. A barra nao e conteudo do aluno
+    nem do professor: e o controle da aba, e o shell ja o tem certo -- ultimo filho, com
+    `<span data-view="professor">Voltar ao topo</span><span data-view="aluno">Back to
+    top</span>`. Reposicionar no HTML de saida consertaria os sete de hoje e deixaria o
+    proximo fragmento nascer igual. Aqui o fragmento simplesmente nao tem como carregar uma:
+    a que ele traz e DESCARTADA, e a do shell entra por ultimo.
+
+    Nada acontece quando o bloco do shell nao tem barra -- so as abas tem.
+
+    O QUE SE COPIA E A CAUDA INTEIRA, do recuo da barra ate o fechamento da aba, e nao a
+    barra reindentada por conta propria: o round-trip compara o artefato com o gerado BYTE
+    A BYTE, e remontar o fim do bloco "do jeito certo" custou tres bytes de espaco em
+    branco no `tab-syllabus` -- suficiente para a prova falhar dizendo que o builder nao
+    devolve o artefato."""
+    marca = '<div class="btn-bar ao-topo">'
+    i = antigo.rfind(marca)
+    if i < 0:
+        return RX_AO_TOPO.sub("", novo) if RX_AO_TOPO.search(novo) else novo
+    linha = antigo.rfind("\n", 0, i)
+    cauda = antigo[linha + 1:] if linha >= 0 else antigo[i:]
+    corpo = RX_AO_TOPO.sub("", novo).rstrip()
+    if not corpo.endswith("</div>"):
+        raise SystemExit("bloco novo nao fecha com </div>: nao ha onde pendurar a barra "
+                         "`ao-topo`, que tem de ser o ULTIMO filho da aba.")
+    return corpo[:-len("</div>")].rstrip() + "\n" + cauda
+
+
 def troca_bloco_por_id(html, ident, novo, tag="div"):
     hm = mascara(html)
     m = re.search(r"<" + tag + r'[^>]*id="' + re.escape(ident) + r'"[^>]*>', hm)
     if not m:
         raise SystemExit(f"o shell nao tem o bloco id={ident!r}")
-    return html[:m.start()] + novo + html[fecha(hm, m.start(), tag):]
+    fim = fecha(hm, m.start(), tag)
+    return html[:m.start()] + ao_topo_do_shell(html[m.start():fim], novo) + html[fim:]
 
 
 def troca_var(js, nome, valor):

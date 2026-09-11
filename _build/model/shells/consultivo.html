@@ -438,6 +438,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -5425,6 +5445,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

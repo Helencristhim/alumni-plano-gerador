@@ -607,6 +607,29 @@ jobs:
         # Ele PROÍBE em vez de conferir: contar dá o número certo de outra coisa.
         run: python3 scripts/consultivo/check_conta_o_audio.py
 
+      - name: "GATE 73 — selftest: prova que o gate do Back to top ainda morde"
+        run: python3 scripts/consultivo/check_ao_topo_no_fim.py --selftest
+
+      - name: "GATE 73 — a barra `Back to top` é o último elemento da aba, e fala inglês"
+        # Dan, olhando o material no ar (11/09/2026): "visão aluno, aba Planning: botão
+        # 'Back to top' está no topo da página, deve vir no final". Seis materiais + o
+        # molde, e dois defeitos com uma causa só — a barra vinha do fragmento (metade do
+        # professor), então ficava antes da metade do aluno e com o rótulo em português.
+        # Nenhum gate via: cada metade estava bem formada, e ninguém media ORDEM.
+        run: python3 scripts/consultivo/check_ao_topo_no_fim.py
+
+      - name: "GATE 72 — selftest: prova que o gate do ordenar ainda morde"
+        run: python3 scripts/consultivo/check_ordenar_arrastando.py --selftest
+
+      - name: "GATE 72 — ordenar arrastando: gabarito fechado e caminho sem arrasto"
+        # O componente nasceu de um pedido da professora (revisão da aula 20 da Gabriela,
+        # 11/09/2026): a ordenação era um `classificar` com opções 1st..6th — seis
+        # dropdowns para uma tarefa só. Componente que nasce sem gate volta a nascer
+        # quebrado: este repo já teve 324 botões mortos que nenhum gate viu. Mede o que é
+        # estático (handler acha o alvo, gabarito 1..N, ordem embaralhada, `.sortdrop` e
+        # setas em todas as linhas); o comportamento quem mede é o GATE 42, no navegador.
+        run: python3 scripts/consultivo/check_ordenar_arrastando.py
+
       - name: "GATE 71 — selftest: prova que o gate do gabarito ainda morde"
         run: python3 scripts/consultivo/check_expected_gabarito.py --selftest
 

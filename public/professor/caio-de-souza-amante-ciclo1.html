@@ -439,6 +439,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1459,7 +1479,6 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="callout rule-box"><strong>Tempo fora da aula:</strong> relata não dispor de tempo adicional na agenda. As atividades prévias precisam caber em 15 a 20 minutos e ser autossuficientes.<br><br><strong>Atenção e dispersão:</strong> relata dificuldade de sustentar a atenção em áudios longos. Trechos curtos, com apoio visual e com a tarefa apresentada antes da escuta, favorecem o engajamento.<br><br><strong>Condução da aula:</strong> relata que, em experiências anteriores, acabava assumindo a direção das aulas. Um percurso explícito e previsível sustenta o enquadramento e reduz esse deslocamento.<br><br><strong>Correção:</strong> pede correção direta e imediata dos próprios erros, e reage mal à tolerância percebida. Devolutivas curtas e objetivas funcionam melhor do que explicações longas.</div>
 
   </div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 1 to 4</h2>
@@ -1477,6 +1496,9 @@ body.tg-guia > #tgGuia{display:block!important}
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="professor">Voltar ao topo</span><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 <!-- ============================= TAB 2 — PLANEJAMENTO ============================= -->
@@ -1522,8 +1544,11 @@ body.tg-guia > #tgGuia{display:block!important}
   <h2 class="sec">O que ele já trabalhou</h2>
   <p class="lead">Em inglês, com registro: nada. Fora daqui, relata cerca de 30 anos de tentativas, entre escolas e oito a dez professores particulares, e aulas diárias nos últimos seis meses sem perceber evolução.</p>
   <div class="callout rule-box"><div class="callout-title">Como isso orienta o bloco</div>Não há conteúdo a evitar por repetição, porque não há registro anterior. A atenção vai para outro ponto: ele relata abandonar métodos que percebe como pouco estruturados e, quando o percurso afrouxa, tende a assumir a condução da aula. Por isso cada aula tem percurso visível, produto único e tempo definido — e o bloco produz, desde a primeira aula, o registro gravado que permite comparar.</div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
-</div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
+  </div>
+
+  </div>
 
 <!-- ============================= TAB 3 — PRE-CLASS ============================= -->
 <div class="tab-content" id="tab-preclass" data-consulta="1" data-lig-del="1">
@@ -1551,12 +1576,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of a buyer&rsquo;s first approach.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd1">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It asks for information and, at the same time, tests how you answer.</span></div><div class="item-why">Yes. The three questions are the visible half; the invisible half is your reply time and whether you saw which question mattered.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Everything it asks for is a question with a question mark.</span></div><div class="item-why">No &mdash; the line that matters most in this email has no question mark at all. It is the date.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The date in it is usually the most important line.</span></div><div class="item-why">Yes. Everything else can be answered next week; the date decides whether there is a next week.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It asks for information and, at the same time, tests how you answer.</span></div><div class="item-why">Yes. The three questions are the visible half; the invisible half is your reply time and whether you saw which question mattered.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written so that a slow reply costs you nothing.</span></div><div class="item-why">No. A slow reply is the cheapest way to leave a shortlist without anyone telling you.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Some of what looks like a question is actually an offer.</span></div><div class="item-why">Yes. &ldquo;Whether a minority investment is something you would consider&rdquo; is not a request for data &mdash; it is an opening.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It expects a formal document in return.</span></div><div class="item-why">No. It asks for a short conversation. Sending a deck answers a question nobody made.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Some of what looks like a question is actually an offer.</span></div><div class="item-why">Yes. &ldquo;Whether a minority investment is something you would consider&rdquo; is not a request for data &mdash; it is an opening.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The date in it is usually the most important line.</span></div><div class="item-why">Yes. Everything else can be answered next week; the date decides whether there is a next week.</div>
       </div>
       <div class="rationale">A first approach is short on purpose. What it asks for is easy to send; what it is really measuring is whether you answer, how fast, and whether you understood which of the three things mattered.</div>
     </div>
@@ -1641,10 +1666,10 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="quiz-options" id="fl1">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It asks three things, and none of them is numbered.</span></div><div class="item-why">Yes. Three, in a row, none numbered &mdash; which is exactly why one of them is easy to drop.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It asks for a formal presentation of the company.</span></div><div class="item-why">No. She asked for a conversation. The deck is what you would send AFTER, if they ask.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It asks you to reply after the shortlist is closed.</span></div><div class="item-why">No. The reply has to be BEFORE the shortlist, and the email says when that is.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The date matters more than any single one of the three answers.</span></div><div class="item-why">Yes. Miss Thursday and the three answers arrive to a shortlist that is already closed.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It says they are only interested in buying the company outright.</span></div><div class="item-why">No &mdash; a minority investment is the opposite of buying you outright, and she named it herself.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One of the three questions is about the language your team delivers in.</span></div><div class="item-why">Yes. &ldquo;How much of your delivery already runs in English&rdquo; is about the team, not the accounts.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It asks you to reply after the shortlist is closed.</span></div><div class="item-why">No. The reply has to be BEFORE the shortlist, and the email says when that is.</div>
       </div>
       <div class="rationale">Three requests, one date, no numbering &mdash; that is the standard shape. The date decides whether the other answers are worth anything, which is why it opens the reply.</div>
     </div>
@@ -1705,12 +1730,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of that situation.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd2">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Anything that matters will be repeated later.</span></div><div class="item-why">No. What matters gets DECIDED once. Repetition is for what does not.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The most important information is often said in passing, not announced.</span></div><div class="item-why">Yes. The number that decides the deal usually arrives inside a sentence about something else.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you look lost, they will slow down.</span></div><div class="item-why">No &mdash; they are talking to each other, not to you. Nobody is watching your face.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for a figure again tells them you are following.</span></div><div class="item-why">Yes. Asking for a figure again is the opposite of looking lost: it says you were tracking it.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Waiting until the end is the polite way to say you missed something.</span></div><div class="item-why">No. At the end the call is over and the two of them have already agreed on what they heard.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A condition can be stated without ever being called a condition.</span></div><div class="item-why">Yes. &ldquo;That only holds if&hellip;&rdquo; is a condition wearing the clothes of a remark.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Anything that matters will be repeated later.</span></div><div class="item-why">No. What matters gets DECIDED once. Repetition is for what does not.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for a figure again tells them you are following.</span></div><div class="item-why">Yes. Asking for a figure again is the opposite of looking lost: it says you were tracking it.</div>
       </div>
       <div class="rationale">Nobody in that call is monitoring whether you are following. They cannot see you, and it is not their job. The one signal that works is the one you send: a question, at the moment you lose the thread.</div>
     </div>
@@ -1793,10 +1818,10 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="quiz-options" id="fl2">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A figure you will be asked about later.</span></div><div class="item-why">Yes. If they ask you about it next week, &ldquo;I did not catch it&rdquo; is a worse answer than the interruption would have been.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A condition that changes what you have to promise.</span></div><div class="item-why">Yes. A condition changes what you are agreeing to, and you cannot agree to what you did not hear.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The name of someone who is not in the room.</span></div><div class="item-why">No. Write the name down and ask afterwards; stopping the call for it costs more than it is worth.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A word you did not know but can guess from the rest.</span></div><div class="item-why">No. Guessing a word from context is what fluent listeners do all day. Stopping for it trains the wrong habit.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>An opinion you happen to disagree with.</span></div><div class="item-why">No &mdash; and disagreeing with an opinion you were not asked for turns a listening call into a debate.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A sentence you lost completely, in the middle of the point.</span></div><div class="item-why">Yes. One lost sentence in the middle of a point is the case where waiting makes it worse.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A word you did not know but can guess from the rest.</span></div><div class="item-why">No. Guessing a word from context is what fluent listeners do all day. Stopping for it trains the wrong habit.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The name of someone who is not in the room.</span></div><div class="item-why">No. Write the name down and ask afterwards; stopping the call for it costs more than it is worth.</div>
       </div>
       <div class="rationale">The three worth stopping for are the ones you cannot reconstruct later: a number, a condition, and a sentence you lost. An opinion you disagree with is not a gap in understanding, and a word you can guess is not a gap at all.</div>
     </div>
@@ -1857,12 +1882,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Describing who decides what is as much of the conversation as the figures.</span></div><div class="item-why">Yes. Half of due diligence is who decides what, and it is the half nobody rehearses.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A missing verb ending changes the meaning of the sentence.</span></div><div class="item-why">No &mdash; the meaning survives. What breaks is the impression of control, which in this room is not a small thing.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The form slips most when the sentence gets long.</span></div><div class="item-why">Yes. The ending goes missing at the end of long sentences, not short ones. Shorter sentences are the fix, not more care.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Knowing the rule is enough to say it right under pressure.</span></div><div class="item-why">No. You already know the rule; what is missing is the ear catching it while you are thinking about the answer.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Correcting yourself mid-sentence is better than stopping to fix it.</span></div><div class="item-why">Yes. Correcting mid-sentence keeps the floor. Stopping to fix it hands the floor back.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you speak slowly enough, the ending takes care of itself.</span></div><div class="item-why">No. Slowing down helps the listener and does nothing for the ending.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A missing verb ending changes the meaning of the sentence.</span></div><div class="item-why">No &mdash; the meaning survives. What breaks is the impression of control, which in this room is not a small thing.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Correcting yourself mid-sentence is better than stopping to fix it.</span></div><div class="item-why">Yes. Correcting mid-sentence keeps the floor. Stopping to fix it hands the floor back.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Describing who decides what is as much of the conversation as the figures.</span></div><div class="item-why">Yes. Half of due diligence is who decides what, and it is the half nobody rehearses.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Knowing the rule is enough to say it right under pressure.</span></div><div class="item-why">No. You already know the rule; what is missing is the ear catching it while you are thinking about the answer.</div>
       </div>
       <div class="rationale">The ending does not carry meaning &mdash; nobody misunderstands <em>he want</em>. It carries something else: whether the person listening spends any attention on your English instead of on your answer.</div>
     </div>
@@ -1902,12 +1927,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the sentences that are correct. Two of the six are not.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="nt3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Our Head of Delivery decides who goes on each account.</span></div><div class="item-why">Correct. Third person singular, and the ending is there.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Their CFO want the recurring number confirmed.</span></div><div class="item-why">Wrong: <em>their CFO</em> is one person, so it is <em>wants</em>. This is the exact form that slips when the sentence starts with a possessive.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The team handles three markets from São José.</span></div><div class="item-why">Correct. <em>The team</em> takes the singular, which surprises people who translate it as a plural.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>She report to me, and I report to the board.</span></div><div class="item-why">Wrong: <em>she reports</em>. Note that the second half of the sentence is right &mdash; the ending goes missing where the sentence starts, not where it ends.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Their board meets once a month.</span></div><div class="item-why">Correct, and short. Short sentences are where the ending survives.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Peter keeps coming back to delivery.</span></div><div class="item-why">Correct. <em>Keeps</em> plus <em>-ing</em> is the form that says he returns to it again and again.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>She report to me, and I report to the board.</span></div><div class="item-why">Wrong: <em>she reports</em>. Note that the second half of the sentence is right &mdash; the ending goes missing where the sentence starts, not where it ends.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Their CFO want the recurring number confirmed.</span></div><div class="item-why">Wrong: <em>their CFO</em> is one person, so it is <em>wants</em>. This is the exact form that slips when the sentence starts with a possessive.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Our Head of Delivery decides who goes on each account.</span></div><div class="item-why">Correct. Third person singular, and the ending is there.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The team handles three markets from São José.</span></div><div class="item-why">Correct. <em>The team</em> takes the singular, which surprises people who translate it as a plural.</div>
       </div>
       <div class="rationale">Both of the wrong ones are third person singular with the ending missing. Nothing about them is hard to understand &mdash; and that is exactly why they survive for years.</div>
     </div>
@@ -1987,12 +2012,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of those three minutes.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Their job is to make the buyer want to ask a question.</span></div><div class="item-why">Yes. Three minutes that end in silence failed, however complete they were.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They should cover everything the company does.</span></div><div class="item-why">No. Everything the company does is what a website is for. This is a room with three people and a shortlist.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What you leave out matters as much as what you say.</span></div><div class="item-why">Yes. What you leave out is what tells them where you think the value is.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Detail builds credibility, so more of it is better.</span></div><div class="item-why">No &mdash; detail with no question behind it reads as not knowing what matters.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The one thing only you can say belongs in them.</span></div><div class="item-why">Yes. Anyone can read the numbers. Only you can say why you would do this deal.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you go over, they will stop you.</span></div><div class="item-why">No. They will let you run over and count it as the answer to a question they did not have to ask.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What you leave out matters as much as what you say.</span></div><div class="item-why">Yes. What you leave out is what tells them where you think the value is.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Their job is to make the buyer want to ask a question.</span></div><div class="item-why">Yes. Three minutes that end in silence failed, however complete they were.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Detail builds credibility, so more of it is better.</span></div><div class="item-why">No &mdash; detail with no question behind it reads as not knowing what matters.</div>
       </div>
       <div class="rationale">Nobody stops you at three minutes; they stop listening, which is worse because you cannot see it. Three minutes that end with a question from them is the whole objective.</div>
     </div>
@@ -2079,9 +2104,9 @@ body.tg-guia > #tgGuia{display:block!important}
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four have delivered in English. Everyone else has worked with English-speaking clients, but not led.&rdquo;</span></div><div class="item-why">Yes. The number, and then what surrounds it &mdash; the honest figure with the context that makes it readable.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;All of them can work in English.&rdquo;</span></div><div class="item-why">No. It is not true, and the first place it will be checked is due diligence.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four today. If we go ahead, that is the number I would be hiring against.&rdquo;</span></div><div class="item-why">Yes. It turns a weakness into a plan, which is what a buyer is listening for.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That would not be a problem for us.&rdquo;</span></div><div class="item-why">No &mdash; it answers a question they did not ask and avoids the one they did.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four &mdash; and I would rather tell you that now than in due diligence.&rdquo;</span></div><div class="item-why">Yes. Saying it now is worth more than the four; it tells them what you do with bad news.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;It depends on what you mean by delivered.&rdquo;</span></div><div class="item-why">No. Redefining the word is what people do when the answer is worse than four.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That would not be a problem for us.&rdquo;</span></div><div class="item-why">No &mdash; it answers a question they did not ask and avoids the one they did.</div>
       </div>
       <div class="rationale">The three that work all start with the number. Two of the three that do not are the comfortable answers, and both of them get checked in due diligence, where being wrong costs far more than being small.</div>
     </div>
@@ -3191,10 +3216,10 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Which of these is saying it back &mdash; and which is just repeating it?</p>
       <div class="quiz-options" id="cl1">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You said that you lead corporate development at Halden Group and that our company came up twice in your screening.&rdquo;</span></div><div class="item-why">No. It repeats the email back and adds nothing. She wrote it; she knows what it says.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;What you are asking is three things, and the third one is the one I can answer today.&rdquo;</span></div><div class="item-why">Yes. It names how many things were asked and which one you can answer now &mdash; the two facts she needs to plan Thursday.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I read your email. It is very interesting. Thank you for contacting us.&rdquo;</span></div><div class="item-why">No. &ldquo;Very interesting&rdquo; is what people write when they have not decided. She will read it that way.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Let me make sure I have this right: you need this before Thursday, not after we meet.&rdquo;</span></div><div class="item-why">Yes. It checks the deadline before promising anything, and it does it in one sentence.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You said that you lead corporate development at Halden Group and that our company came up twice in your screening.&rdquo;</span></div><div class="item-why">No. It repeats the email back and adds nothing. She wrote it; she knows what it says.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I read your email. It is very interesting. Thank you for contacting us.&rdquo;</span></div><div class="item-why">No. &ldquo;Very interesting&rdquo; is what people write when they have not decided. She will read it that way.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;What you are asking is three things, and the third one is the one I can answer today.&rdquo;</span></div><div class="item-why">Yes. It names how many things were asked and which one you can answer now &mdash; the two facts she needs to plan Thursday.</div>
       </div>
       <div class="rationale">Repeating gives the sender their own sentence back. Saying it back gives them your reading of it &mdash; what you understood, in fewer words than they used.</div>
     </div>
@@ -3369,10 +3394,10 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Two of these get you the missing piece back. Which two?</p>
       <div class="quiz-options" id="cl2">
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Just to check I got that: a no changes the price, not the deal?&rdquo;</span></div><div class="item-why">Yes. It checks the condition, not the number, and it is the condition that changes your answer.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I did not understand. Can you repeat everything?&rdquo;</span></div><div class="item-why">No. Same problem as the first, with the added cost of saying you understood nothing.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Sorry?&rdquo;</span></div><div class="item-why">No. It asks them to repeat everything, and they will repeat what THEY think mattered.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Could you say that number again? The churn one.&rdquo;</span></div><div class="item-why">Yes. It names the number and which one &mdash; they can answer in three words.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I did not understand. Can you repeat everything?&rdquo;</span></div><div class="item-why">No. Same problem as the first, with the added cost of saying you understood nothing.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Just to check I got that: a no changes the price, not the deal?&rdquo;</span></div><div class="item-why">Yes. It checks the condition, not the number, and it is the condition that changes your answer.</div>
       </div>
       <div class="rationale">The two that work say which piece is missing. The two that do not hand the choice back to the other person &mdash; and they will repeat what they think mattered, which is rarely the part you lost.</div>
     </div>
@@ -3511,9 +3536,9 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Four of these six are correct. Which two are not?</p>
       <div class="quiz-options" id="ev3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Our Head of Delivery decides who goes on each account.</span></div><div class="item-why">Correct. One person, one ending.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Their CFO want the recurring number confirmed.</span></div><div class="item-why">Wrong: <em>our CFO signs</em>. Same slip as in the pre-class, in a new sentence &mdash; which is how you find out whether the rule is in the ear yet.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The team handles three markets from São José.</span></div><div class="item-why">Correct. <em>The two of them</em> is plural, so no ending.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Their CFO want the recurring number confirmed.</span></div><div class="item-why">Wrong: <em>our CFO signs</em>. Same slip as in the pre-class, in a new sentence &mdash; which is how you find out whether the rule is in the ear yet.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Our Head of Delivery decides who goes on each account.</span></div><div class="item-why">Correct. One person, one ending.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>She report to me, and I report to the board.</span></div><div class="item-why">Wrong: <em>my Head of People knows</em>. The long subject is what makes it slip; say it once with the subject alone.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Their board meets once a month.</span></div><div class="item-why">Correct, and it is the shape you will use most: name, verb, what they own.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Peter keeps coming back to delivery.</span></div><div class="item-why">Correct. <em>The delivery teams</em> is plural, so <em>report</em> is right &mdash; and it is the contrast with the line above that makes the rule visible.</div>
@@ -3689,10 +3714,10 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Three of these keep the conversation. Which three?</p>
       <div class="quiz-options" id="cl4">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That would not be a problem for us.&rdquo;</span></div><div class="item-why">No. It avoids the number, and avoiding a number is itself an answer.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four today &mdash; and that is the number I would be hiring against.&rdquo;</span></div><div class="item-why">Yes. It says what you would do about it, which is the part they can act on.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four have delivered in English. Everyone else has worked with English-speaking clients, but not led.&rdquo;</span></div><div class="item-why">Yes. The number first, the context second, and nothing softened.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;All of them can work in English.&rdquo;</span></div><div class="item-why">No. Untrue, and it will be checked.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four today &mdash; and that is the number I would be hiring against.&rdquo;</span></div><div class="item-why">Yes. It says what you would do about it, which is the part they can act on.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That would not be a problem for us.&rdquo;</span></div><div class="item-why">No. It avoids the number, and avoiding a number is itself an answer.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four, and I would rather tell you now than in due diligence.&rdquo;</span></div><div class="item-why">Yes. It puts the bad news before due diligence does, which is the whole move.</div>
       </div>
       <div class="rationale">All three that work start with the number. The two that do not are the comfortable answers &mdash; and both get checked later, where being wrong costs more than being small.</div>
@@ -5221,6 +5246,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

@@ -439,6 +439,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1368,7 +1388,6 @@ document.body.setAttribute('data-view','aluno');
 
 <div class="tab-content active" id="tab-planning">
   
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 19 to 22</h2>
@@ -1386,6 +1405,9 @@ document.body.setAttribute('data-view','aluno');
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 
@@ -1416,11 +1438,11 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd19-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Na aula você vai ler duas resenhas do mesmo filme: uma é positiva e a outra é negativa. Antes disso, marque as <strong>três</strong> frases verdadeiras sobre para que serve uma resenha.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd19">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A review says what someone thinks about something.</span></div><div class="item-why">That is the opinion, and it is the easiest part to write. It is also the part nobody can argue with.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A review has to tell the whole story.</span></div><div class="item-why">A review that tells the whole story is a spoiler. Reviews say enough for you to decide, and no more.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A good review explains why.</span></div><div class="item-why">The reason is the only part the reader can actually use. Without it, a review is just a number of stars.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to agree with a review for it to be useful.</span></div><div class="item-why">You can read a bad review, see the reason, and decide that the reason does not bother you. That review just helped you.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A review usually ends by telling you what to do.</span></div><div class="item-why">Watch it, skip it, wait for season two. That is the recommendation, and it is what the reader came for.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A review says what someone thinks about something.</span></div><div class="item-why">That is the opinion, and it is the easiest part to write. It is also the part nobody can argue with.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to agree with a review for it to be useful.</span></div><div class="item-why">You can read a bad review, see the reason, and decide that the reason does not bother you. That review just helped you.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A good review explains why.</span></div><div class="item-why">The reason is the only part the reader can actually use. Without it, a review is just a number of stars.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>A review has to tell the whole story.</span></div><div class="item-why">A review that tells the whole story is a spoiler. Reviews say enough for you to decide, and no more.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Reviews are always written by professionals.</span></div><div class="item-why">Most of the reviews you read were written by people your age, on a phone, right after watching.</div>
       </div>
       <div class="rationale">Opinion, reason, recommendation. Three different jobs, and the middle one is the one people remember.</div>
@@ -1514,12 +1536,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl19-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">A mesma resenha do exercício anterior. Agora leia para achar informação: <strong>três</strong> das frases são verdadeiras. Marque as três.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl19">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The writer likes the beginning of the episode.</span></div><div class="item-why">&ldquo;The first ten minutes are perfect.&rdquo; The praise is there, and it is only for the beginning.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The writer thinks the actors do a bad job.</span></div><div class="item-why">The opposite: &ldquo;the acting is great&rdquo;. The complaint is about the writing, and the two are not the same thing.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The writer will keep watching the series.</span></div><div class="item-why">&ldquo;I will watch the next one&rdquo; &mdash; with &ldquo;I am not excited about it&rdquo; right after. Both are true at once, and that is why it is three stars and not one.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Most of the episode happens in a car.</span></div><div class="item-why">&ldquo;turns into a long conversation in a car, and it never leaves&rdquo;. <em>Never leaves</em> is the part that tells you it is most of the episode.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The writer says the story is easy to guess.</span></div><div class="item-why">That complaint is not here. This review complains about a long scene, which is a different problem from a predictable story.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Most of the episode happens in a car.</span></div><div class="item-why">&ldquo;turns into a long conversation in a car, and it never leaves&rdquo;. <em>Never leaves</em> is the part that tells you it is most of the episode.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The writer likes the beginning of the episode.</span></div><div class="item-why">&ldquo;The first ten minutes are perfect.&rdquo; The praise is there, and it is only for the beginning.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The writer gave the episode five stars.</span></div><div class="item-why">Three. The number is at the top, and it is part of the review &mdash; a reader checks it before reading a single word.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The writer will keep watching the series.</span></div><div class="item-why">&ldquo;I will watch the next one&rdquo; &mdash; with &ldquo;I am not excited about it&rdquo; right after. Both are true at once, and that is why it is three stars and not one.</div>
       </div>
       <div class="rationale">The one that catches people is the sentence about the writer carrying on with the series: the writer will keep watching AND is not excited. Reviews are full of two true things at once, and that is what makes them worth reading.</div>
     </div>
@@ -1585,11 +1607,11 @@ document.body.setAttribute('data-view','aluno');
     <div class="quiz-item">
       <div class="quiz-options" id="kd20">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Going quiet while you think ends your turn.</span></div><div class="item-why">Silence is read as &ldquo;I have finished&rdquo;, and the other person starts talking. Three seconds of silence costs you the turn.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you do not understand something, it is better to answer anyway.</span></div><div class="item-why">Answering something else is how conversations go wrong quietly. Asking takes two seconds and fixes it.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking the other person a question keeps the conversation going.</span></div><div class="item-why">It hands the turn back, and it buys you the whole time they take to answer.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Disagreeing with someone usually ends the conversation.</span></div><div class="item-why">It usually starts one. The two people in this lesson disagree the whole way through and neither of them leaves.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You should only speak when you are sure your English is correct.</span></div><div class="item-why">Nobody would say anything, ever. The two people you are about to hear make mistakes and neither of them stops.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying something like <em>let me think</em> keeps your turn while you decide.</span></div><div class="item-why">It says &ldquo;I am still talking&rdquo; without saying anything else. It is the cheapest three seconds in English.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Disagreeing with someone usually ends the conversation.</span></div><div class="item-why">It usually starts one. The two people in this lesson disagree the whole way through and neither of them leaves.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you do not understand something, it is better to answer anyway.</span></div><div class="item-why">Answering something else is how conversations go wrong quietly. Asking takes two seconds and fixes it.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking the other person a question keeps the conversation going.</span></div><div class="item-why">It hands the turn back, and it buys you the whole time they take to answer.</div>
       </div>
       <div class="rationale">Three of these are about time: buying it, using it, and not losing it. That is what the lesson is about.</div>
     </div>
@@ -1675,12 +1697,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl20-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Leia a conversa de chat entre duas pessoas e marque as <strong>três</strong> frases verdadeiras. Repare que ninguém escreve frase inteira &mdash; e mesmo assim há opinião, motivo, pergunta e concordância parcial ali dentro.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl20">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Alex asks Sam to explain.</span></div><div class="item-why"><em>in what way though</em>. It is not a full sentence and it does the same job as &ldquo;why do you say that?&rdquo;</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Sam thinks the second season is better.</span></div><div class="item-why">The opposite: <em>the first season was better</em>. The whole message is a careful way of saying no.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Sam gives a reason with two parts.</span></div><div class="item-why">Nothing happens for four episodes, <em>and then</em> everything happens at once. Two problems, and the second one only makes sense after the first.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Alex agrees with Sam about everything.</span></div><div class="item-why"><em>fair. but the last scene tho</em> &mdash; Alex concedes the point and immediately keeps their own. That is one sentence doing two things.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Alex finds something good in it.</span></div><div class="item-why">The last scene. Alex never says it is good in so many words, and you can tell anyway.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Alex agrees with Sam about everything.</span></div><div class="item-why"><em>fair. but the last scene tho</em> &mdash; Alex concedes the point and immediately keeps their own. That is one sentence doing two things.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The conversation ends because they disagree.</span></div><div class="item-why">It is still going. They disagreed six messages ago and neither of them has left.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Alex asks Sam to explain.</span></div><div class="item-why"><em>in what way though</em>. It is not a full sentence and it does the same job as &ldquo;why do you say that?&rdquo;</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Sam gives a reason with two parts.</span></div><div class="item-why">Nothing happens for four episodes, <em>and then</em> everything happens at once. Two problems, and the second one only makes sense after the first.</div>
       </div>
       <div class="rationale">Nobody here writes a full sentence, and the conversation still has an opinion, a reason, a question and a concession in it. That is the shape you are learning to say out loud.</div>
     </div>
@@ -1741,12 +1763,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd21-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Na aula você vai fazer muitas perguntas e descobrir três coisas que não sabia. Antes disso, marque as <strong>três</strong> frases verdadeiras sobre perguntas.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd21">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A question keeps a conversation going better than an answer does.</span></div><div class="item-why">An answer can end. A question hands the turn back and buys you the whole time the other person takes.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you are not sure your question is correct, it is better not to ask it.</span></div><div class="item-why">A question with the words in the wrong order still gets answered. A question nobody asks gets nothing.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The best question is usually the second one, about the answer you just heard.</span></div><div class="item-why">Anyone can ask what they prepared. The second one proves you were listening, and it is the one you can practice in your lesson.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to know a lot of words to ask a good question.</span></div><div class="item-why"><em>Why?</em> is one word. Most of the questions that matter are five words long.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Short answers force you to ask again.</span></div><div class="item-why">This is on purpose in the last part of the lesson: your teacher answers short so that you have to keep going.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking a lot of questions makes you look like you did not understand.</span></div><div class="item-why">It makes you look interested. The person who is lost is the one who stops asking.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If you are not sure your question is correct, it is better not to ask it.</span></div><div class="item-why">A question with the words in the wrong order still gets answered. A question nobody asks gets nothing.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A question keeps a conversation going better than an answer does.</span></div><div class="item-why">An answer can end. A question hands the turn back and buys you the whole time the other person takes.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Short answers force you to ask again.</span></div><div class="item-why">This is on purpose in the last part of the lesson: your teacher answers short so that you have to keep going.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to know a lot of words to ask a good question.</span></div><div class="item-why"><em>Why?</em> is one word. Most of the questions that matter are five words long.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The best question is usually the second one, about the answer you just heard.</span></div><div class="item-why">Anyone can ask what they prepared. The second one proves you were listening, and it is the one you can practice in your lesson.</div>
       </div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'kd21')">Check</button>
@@ -1830,12 +1852,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl21-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Leia o aviso de trabalho em grupo e marque as <strong>três</strong> frases verdadeiras. É o tipo de texto que você lê na parede da escola &mdash; e em inglês ele é exatamente igual.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl21">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can choose who you work with.</span></div><div class="item-why"><em>You choose your own group.</em> It is one short line and it is the one everybody reads first.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You can hand the written part in on Saturday and lose nothing.</span></div><div class="item-why">The deadline is Friday, and late work loses ten per cent. Handing in late is allowed and it is not free.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Every person in the group has to speak.</span></div><div class="item-why"><em>everyone in the group speaks</em>. It changes who you want in your group, which is why it is in the notice.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The presentation is on the same day as the written part.</span></div><div class="item-why">Friday 14 for the writing, the last week of the month for the presentation. Two dates, and the notice never says they are the same.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>If you have a question, you have to ask in person.</span></div><div class="item-why"><em>Come and find me at the second break, not by email.</em> That is the whole reason a lesson about asking questions is useful.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can choose who you work with.</span></div><div class="item-why"><em>You choose your own group.</em> It is one short line and it is the one everybody reads first.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>There is no limit on how long you present.</span></div><div class="item-why">Ten minutes per group. The number is easy to miss because it is in the middle of a longer line.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Every person in the group has to speak.</span></div><div class="item-why"><em>everyone in the group speaks</em>. It changes who you want in your group, which is why it is in the notice.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You can hand the written part in on Saturday and lose nothing.</span></div><div class="item-why">The deadline is Friday, and late work loses ten per cent. Handing in late is allowed and it is not free.</div>
       </div>
     </div>
     <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'fl21')">Check</button>
@@ -1891,9 +1913,9 @@ document.body.setAttribute('data-view','aluno');
     <div class="quiz-item">
       <div class="quiz-options" id="kd22">
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to know what you want to do before you can talk about it.</span></div><div class="item-why">Not being sure is one of the things you talk about. In the lesson you will find a sentence for exactly that, and it is one of the most useful ones there is.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The person listening will ask about the part you said least about.</span></div><div class="item-why">That is how conversations work, and it is why the short answer is the risky one: it is exactly what gets picked.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying why you want something makes the answer more interesting than saying what.</span></div><div class="item-why"><em>I want to study medicine</em> ends there. <em>Because what I like is helping someone</em> gives the other person something to ask about.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If someone asks you something you had not thought about, it is better to change the subject.</span></div><div class="item-why">Changing the subject is what ends a conversation. There are three or four short phrases that buy you time instead, and you already used them last lesson.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The person listening will ask about the part you said least about.</span></div><div class="item-why">That is how conversations work, and it is why the short answer is the risky one: it is exactly what gets picked.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Two minutes is a long time to talk about yourself.</span></div><div class="item-why">It is. It is roughly six or seven sentences said slowly, and until now you have been stopping at two or three.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You should have the whole thing memorized before you speak.</span></div><div class="item-why">Memorized answers fall apart at the first unexpected question &mdash; and there is one in this lesson, on purpose.</div>
       </div>
@@ -3934,6 +3956,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

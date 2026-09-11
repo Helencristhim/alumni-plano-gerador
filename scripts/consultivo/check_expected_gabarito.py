@@ -74,7 +74,7 @@ BASELINE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "expected_gabarito_baseline.json")
 VERDE, VERMELHO, AMARELO, ZERA = "\033[32m", "\033[31m", "\033[33m", "\033[0m"
 
-FECHADOS = ("escolha", "classificar", "par", "completar", "lacuna")
+FECHADOS = ("escolha", "classificar", "par", "completar", "lacuna", "ordenar")
 PALAVRAS = 5   # quantas palavras do item bastam para dizer que o guia CITOU o item
 
 

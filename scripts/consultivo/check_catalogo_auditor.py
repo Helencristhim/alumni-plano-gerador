@@ -379,12 +379,32 @@ def r_resposta_previsivel(c, ctx):
             fora.append(f"PRO-009: em '{ident}' ha tres respostas seguidas do mesmo "
                         f"lado ({' '.join(ok)}).")
 
-    for m in re.finditer(r'<div class="quiz-options" id="([^"]+)">(.*?)</div>', t, re.S):
-        ok = re.findall(r'data-ok="([01])"', m.group(2))
+    # O `escolha` lia UMA opcao e chamava isso de medir (11/09/2026).
+    #
+    # Este laco usava `(.*?)</div>` -- preguicoso, entao o corpo terminava no PRIMEIRO
+    # `</div>`, que e o fim da primeira `.quiz-option`. `ok` saia com um elemento so, e a
+    # condicao pede `len(pos) > 1`: a regra NUNCA disparou. Medido no dia em que o `escolha`
+    # passou a ser embaralhado pelo emissor: dos 76 blocos da anatomia, 48 eram previsiveis
+    # pela posicao -- 43 em alternancia perfeita -- e este gate estava verde sobre todos.
+    #
+    # As outras duas familias ja usavam o `_grades`, que conta `<div>`/`</div>` ate o
+    # balanco fechar; a correcao e usa-lo aqui tambem.
+    for ident, corpo, fechou in _grades(t, "quiz-options"):
+        if not fechou:
+            fora.append(f"PRO-009: a lista '{ident}' nao fecha — a chave lida dali nao e a "
+                        f"dela, e qualquer veredito sobre esta lista e falso.")
+            continue
+        ok = re.findall(r'data-ok="([01])"', corpo)
         pos = [i for i, x in enumerate(ok) if x == "1"]
         if len(pos) > 1 and len(pos) < len(ok) and all(b - a == 1 for a, b in zip(pos, pos[1:])):
-            fora.append(f"PRO-009: em '{m.group(1)}' as respostas certas estao todas "
+            fora.append(f"PRO-009: em '{ident}' as respostas certas estao todas "
                         f"coladas ({''.join(ok)}).")
+        elif len(ok) >= 3 and len(set(ok)) == 2 and all(a != b for a, b in zip(ok, ok[1:])):
+            fora.append(f"PRO-009: em '{ident}' verdadeira e falsa alternam perfeitamente "
+                        f"({''.join(ok)}) — depois de dois itens o resto se adivinha.")
+        # A corrida de tres do mesmo lado NAO se mede aqui, e a diferenca e aritmetica: com
+        # uma certa e cinco erradas nao existe ordem sem tres erradas seguidas. Barrar seria
+        # exigir do emissor uma ordem que nao existe.
     return fora
 
 
@@ -663,6 +683,30 @@ def _selftest():
         ("SEQ-006 ultima aula do bloco sem checkpoint", limpo_p,
          lambda s: s.replace("checkpoint", "revisao"), "SEQ-006"),
 
+        # ---- os dois casos do `escolha`, que provam o conserto do laco de quiz-options.
+        # Com o `(.*?)</div>` preguicoso de antes, o corpo terminava na primeira opcao e
+        # NENHUM dos dois disparava: o gate dava OK sobre a lista inteira depois de ler um
+        # item. As listas sao acrescentadas inteiras, em vez de mutar uma do molde, porque
+        # e a LEITURA do corpo que esta sob prova -- e uma lista de quatro itens so prova
+        # isso se as quatro chegarem ao `data-ok`.
+        ("PRO-009 escolha alternando verdadeira e falsa", limpo_p,
+         lambda s: s.replace("</body>",
+                             '<div class="quiz-options" id="zqa">'
+                             '<div class="quiz-option" data-ok="1"><span>a</span></div>'
+                             '<div class="quiz-option" data-ok="0"><span>b</span></div>'
+                             '<div class="quiz-option" data-ok="1"><span>c</span></div>'
+                             '<div class="quiz-option" data-ok="0"><span>d</span></div>'
+                             '</div></body>', 1),
+         "alternam perfeitamente"),
+        ("PRO-009 escolha com as certas coladas", limpo_p,
+         lambda s: s.replace("</body>",
+                             '<div class="quiz-options" id="zqc">'
+                             '<div class="quiz-option" data-ok="0"><span>a</span></div>'
+                             '<div class="quiz-option" data-ok="1"><span>b</span></div>'
+                             '<div class="quiz-option" data-ok="1"><span>c</span></div>'
+                             '<div class="quiz-option" data-ok="0"><span>d</span></div>'
+                             '</div></body>', 1),
+         "coladas"),
     ]
     falhou = False
     for nome, base, muta, esperado in casos:

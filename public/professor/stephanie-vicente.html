@@ -440,6 +440,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1514,9 +1534,6 @@ body.tg-guia > #tgGuia{display:block!important}
     </div>
   </div>
 
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
-  </div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 1 to 4</h2>
@@ -1534,6 +1551,9 @@ body.tg-guia > #tgGuia{display:block!important}
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="professor">Voltar ao topo</span><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 <!-- ============================= TAB 2 — PLANEJAMENTO ============================= -->
@@ -1584,8 +1604,11 @@ body.tg-guia > #tgGuia{display:block!important}
       <tr><td>Retomar o turno quando é interrompida</td><td>Perfil, campo 10</td><td>sem evidência</td><td>novo</td><td>Aula 2 observa; o bloco 2 decide se vira foco explícito.</td></tr>
     </tbody></table></div>
   <div class="callout warn"><div class="callout-title">Produção por bloco</div>Somente o bloco vigente é produzido. As aulas 5–20 deste mapa são <strong>projeção</strong>: a distribuição das modalidades pode mudar na aula 4, que fecha o bloco, e mudança sem justificativa registrada não é autorizada.</div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
-</div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
+  </div>
+
+  </div>
 
 <!-- ============================= TAB 3 — PRE-CLASS ============================= -->
 <div class="tab-content" id="tab-preclass" data-consulta="1" data-lig-del="1">
@@ -1613,12 +1636,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> statements that are true of a course syllabus and not of a lesson plan.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="who1">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written by a teacher</span></div><div class="item-why">Both are. Who wrote it does not separate them &mdash; what they are FOR does.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>People outside the classroom rely on it</span></div><div class="item-why">The syllabus. Coordination, the next teacher and the student read it, which is why it cannot be changed alone.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It says what will happen in one session</span></div><div class="item-why">That is the lesson plan. The syllabus covers the course.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Changing it needs someone else to agree</span></div><div class="item-why">The syllabus, again for the same reason: other people depend on it.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It can be adjusted while the course runs</span></div><div class="item-why">The plan. Adjusting it is normal work; adjusting the syllabus is a decision.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>People outside the classroom rely on it</span></div><div class="item-why">The syllabus. Coordination, the next teacher and the student read it, which is why it cannot be changed alone.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It lists every task the students will do</span></div><div class="item-why">Neither, and the syllabus says so explicitly. That line is what makes the missing listening task NOT a divergence.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It can be adjusted while the course runs</span></div><div class="item-why">The plan. Adjusting it is normal work; adjusting the syllabus is a decision.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Changing it needs someone else to agree</span></div><div class="item-why">The syllabus, again for the same reason: other people depend on it.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written by a teacher</span></div><div class="item-why">Both are. Who wrote it does not separate them &mdash; what they are FOR does.</div>
       </div>
       <div class="rationale">A syllabus is a commitment: it is read by people who were not in the room, and it is not the teacher&rsquo;s to change alone. A plan is an instrument for one lesson.</div>
     </div>
@@ -1699,12 +1722,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things the plan does <strong>not</strong> tell you.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="pl1">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the unit runs</span></div><div class="item-why">Both say it, and they disagree: eighteen against twenty. A divergence, not a gap.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the report is corrected by a classmate</span></div><div class="item-why">Neither says why. The plan says it happens; nobody explains the choice &mdash; and that is what you ask for.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>When the assessment happens</span></div><div class="item-why">Both say it, and they disagree (week seven against week eight).</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the written report is</span></div><div class="item-why">It is in the documents. Not a gap.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anyone approved these choices</span></div><div class="item-why">A real gap, and the most important one: without it, nobody knows whether these are decisions or drift.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the report is corrected by a classmate</span></div><div class="item-why">Neither says why. The plan says it happens; nobody explains the choice &mdash; and that is what you ask for.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What the listening task is built on</span></div><div class="item-why">The plan describes the task. What is missing is the SOURCE it is built on &mdash; but that is detail, not the gap that changes the decision.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anyone approved these choices</span></div><div class="item-why">A real gap, and the most important one: without it, nobody knows whether these are decisions or drift.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the unit runs</span></div><div class="item-why">Both say it, and they disagree: eighteen against twenty. A divergence, not a gap.</div>
       </div>
       <div class="rationale">The plan says what will happen. It never says why, and it never says who agreed to it &mdash; and that is normal for a plan.</div>
     </div>
@@ -1769,12 +1792,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things this entry does <strong>not</strong> tell you.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="cal2">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the call is</span></div><div class="item-why">Useful, and it does not change what you do in it.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anything will be decided</span></div><div class="item-why">It changes everything: in a call that decides, silence is a position.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Who is chairing</span></div><div class="item-why">Worth knowing, but it does not tell you whether to speak.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether you are expected to speak</span></div><div class="item-why">The second thing that changes your behavior &mdash; and the one people assume instead of checking.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Which unit is being discussed</span></div><div class="item-why">Context, not a rule for how to take part.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the call is</span></div><div class="item-why">Useful, and it does not change what you do in it.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Who is chairing</span></div><div class="item-why">Worth knowing, but it does not tell you whether to speak.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anything will be decided</span></div><div class="item-why">It changes everything: in a call that decides, silence is a position.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people are on it</span></div><div class="item-why">It affects the room, not whether your point has to be made.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Which unit is being discussed</span></div><div class="item-why">Context, not a rule for how to take part.</div>
       </div>
       <div class="rationale">&ldquo;Open items&rdquo; is exactly as far as the entry commits. Nothing in it says a decision will be reached, and nothing in it says anything about you.</div>
     </div>
@@ -1853,8 +1876,8 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="quiz-item">
       <p class="task-instr">What is the speaker doing?</p>
       <div class="quiz-options" id="l1a2">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Giving her own opinion on the coursebook</span></div><div class="item-why">She does not do this. Hearing an opinion where there is none is what makes people answer the wrong thing.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Opening the item and handing the turn to someone</span></div><div class="item-why">That is what she is doing &mdash; and it is the moment where entering costs nothing, because the floor is open.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Giving her own opinion on the coursebook</span></div><div class="item-why">She does not do this. Hearing an opinion where there is none is what makes people answer the wrong thing.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking Peter to change his view</span></div><div class="item-why">She asks him to explain it, which is a different request.</div>
       </div>
       <div class="rationale">She names the item, names the person and gives the turn away. That is chairing, and it is the whole of what she does.</div>
@@ -1918,12 +1941,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> statements that follow from that note.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="ob3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Section A has to be something both people saw</span></div><div class="item-why">Yes. If only one of you can see it, it is not description &mdash; it is already a reading.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section B is the more important one</span></div><div class="item-why">No. B without A is an opinion with nothing under it.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Section A has to be something both people saw</span></div><div class="item-why">Yes. If only one of you can see it, it is not description &mdash; it is already a reading.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Both sections say the same thing in different words</span></div><div class="item-why">If they did, one of them would be unnecessary.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Putting an opinion in Section A takes away the teacher&rsquo;s right to reply</span></div><div class="item-why">Yes, and it is the whole reason for the two sections: he cannot argue with something presented as what happened.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid concluding anything</span></div><div class="item-why">No &mdash; the conclusion is what the observation is for. It just goes in B, marked as yours.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section A is written after the class</span></div><div class="item-why">When it is written is not what makes it Section A.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Both sections say the same thing in different words</span></div><div class="item-why">If they did, one of them would be unnecessary.</div>
       </div>
       <div class="rationale">The two sections exist because they have different statuses. What is in A is shared ground; what is in B is the observer&rsquo;s, and can be argued with. Mixing them removes the argument without winning it.</div>
     </div>
@@ -2067,12 +2090,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things that follow from that.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="mt4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The teacher can decline a suggestion</span></div><div class="item-why">Yes. If he cannot, it was never a suggestion &mdash; and everything you said before it reads as an instruction.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid saying anything critical</span></div><div class="item-why">No. Feedback with nothing to act on wastes the observation.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The observer has to give reasons, not instructions</span></div><div class="item-why">Yes: the reason is what he can argue with, and arguing with it is how it becomes his.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The meeting has no consequences at all</span></div><div class="item-why">It has consequences &mdash; which is why the difference between a reason and an order matters.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The teacher can decline a suggestion</span></div><div class="item-why">Yes. If he cannot, it was never a suggestion &mdash; and everything you said before it reads as an instruction.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The teacher has to agree by the end</span></div><div class="item-why">No. Agreement that is required is not agreement.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer decides what changes</span></div><div class="item-why">In this format, no. He does, with your evidence in front of him.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The observer has to give reasons, not instructions</span></div><div class="item-why">Yes: the reason is what he can argue with, and arguing with it is how it becomes his.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The meeting has no consequences at all</span></div><div class="item-why">It has consequences &mdash; which is why the difference between a reason and an order matters.</div>
       </div>
       <div class="rationale">If the decision is his, then what you bring has to be arguable. That is not softness &mdash; it is what makes the meeting worth having.</div>
     </div>
@@ -5623,6 +5646,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */
