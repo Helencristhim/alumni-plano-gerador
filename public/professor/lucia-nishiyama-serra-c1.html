@@ -439,6 +439,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1457,7 +1477,6 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="callout rule-box"><div class="callout-title">O desafio é a condição desta aula</div>A queixa registrada em 28/08 é literal: <strong>“não está se sentindo desafiada e motivada”</strong>, e vem depois de três faltas seguidas. Não é avaliação da condução — é uma condição de desenho. Scaffolding visível demais reproduz exatamente o que a fez parar de vir: o apoio deste bloco entra no <em>input</em>, não na produção.<br><br>Ela é executiva sênior com agenda de viagens internacionais. Material que dependa de preparo longo fora da aula não será feito; o que a aula cobrar precisa caber na aula.</div>
 
   </div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 3 to 6</h2>
@@ -1475,6 +1494,9 @@ body.tg-guia > #tgGuia{display:block!important}
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="professor">Voltar ao topo</span><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 <!-- ============================= TAB 2 — PLANEJAMENTO ============================= -->
@@ -1527,8 +1549,11 @@ body.tg-guia > #tgGuia{display:block!important}
   <h2 class="sec">O que ela já trabalhou</h2>
   <p class="lead">Duas aulas em cinco encontros realizados (mais três faltas), entre 28/07 e 27/08. Dois desses encontros não tiveram aula do material — o primeiro foi metade conversa de necessidades, e o de 27/08 foi <em>Speaking Class</em>. <strong>Encontro não é aula</strong>: o percurso avançou duas enquanto o calendário avançou oito.</p>
   <div class="callout rule-box"><div class="callout-title">O que isso significa para este bloco</div>Conteúdo já oferecido não volta como objetivo central — e aqui isso é mais que uma regra de currículo. As aulas 1 e 2 cobriram present perfect e narrativa de carreira, e a professora registrou <strong>domínio</strong>. Revisar isso de novo é exatamente o que a aluna apontou como o problema. Por isso o eixo é apresentação, e não gramática.</div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
-</div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
+  </div>
+
+  </div>
 
 <!-- ============================= TAB 3 — PRE-CLASS ============================= -->
 <div class="tab-content" id="tab-preclass" data-consulta="1" data-lig-del="1">
@@ -1556,12 +1581,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of a talk that signals its moves.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The listener knows when the speaker is about to change direction.</span></div><div class="item-why">Yes. That is the whole job of a signal: it says a turn is coming before the turn arrives.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It contains more information than the version without signals.</span></div><div class="item-why">No &mdash; the facts are identical in both. That is what makes the pair worth reading twice.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The listener can tell a concession from a conclusion.</span></div><div class="item-why">Yes. Without the signal, a concession sounds like the speaker changing her mind.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is longer because the speaker repeats the facts.</span></div><div class="item-why">No. Version B repeats nothing. It adds four short phrases, not four sentences.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The listener knows, before the end, that the end is coming.</span></div><div class="item-why">Yes. &ldquo;Which brings me to&rdquo; is the listener putting the pen down and getting ready.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It uses more difficult vocabulary.</span></div><div class="item-why">No. Same words, both versions. Signposting is structure, not register.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It contains more information than the version without signals.</span></div><div class="item-why">No &mdash; the facts are identical in both. That is what makes the pair worth reading twice.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The listener knows, before the end, that the end is coming.</span></div><div class="item-why">Yes. &ldquo;Which brings me to&rdquo; is the listener putting the pen down and getting ready.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The listener knows when the speaker is about to change direction.</span></div><div class="item-why">Yes. That is the whole job of a signal: it says a turn is coming before the turn arrives.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is longer because the speaker repeats the facts.</span></div><div class="item-why">No. Version B repeats nothing. It adds four short phrases, not four sentences.</div>
       </div>
       <div class="rationale">Signalling adds no facts and no vocabulary. It adds a map. The listener spends nothing on working out where you are, and can spend it all on what you are saying.</div>
     </div>
@@ -1648,12 +1673,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="fl3">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version A is more objective because it has no signposting.</span></div><div class="item-why">No. Removing the signals does not make it neutral; it makes it hard to follow, which reads as evasive.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Both versions end with the same ask.</span></div><div class="item-why">Yes, word for word. The difference is entirely in what surrounds the ask.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version B contains a fact that Version A does not.</span></div><div class="item-why">No. Every fact in B is in A. If you found a new one, read A again &mdash; it is there, unmarked.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version B is easier because its sentences are shorter.</span></div><div class="item-why">No &mdash; B has the LONGER sentences. What it has is a map, not shorter units.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>In Version B you know, before the recommendation arrives, that a recommendation is coming.</span></div><div class="item-why">Yes. B says a recommendation is coming, and the room stops listening for facts and starts listening for the ask.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>In Version A the six-week fix reads as a new problem rather than as a concession.</span></div><div class="item-why">Yes. In A the six weeks arrives as bad news; in B it arrives as the price of something. Same six weeks.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version B is easier because its sentences are shorter.</span></div><div class="item-why">No &mdash; B has the LONGER sentences. What it has is a map, not shorter units.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Both versions end with the same ask.</span></div><div class="item-why">Yes, word for word. The difference is entirely in what surrounds the ask.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Version A is more objective because it has no signposting.</span></div><div class="item-why">No. Removing the signals does not make it neutral; it makes it hard to follow, which reads as evasive.</div>
       </div>
       <div class="rationale">Same facts, same ask, same length. What Version B adds is the reader&rsquo;s certainty about where each sentence sits in the argument &mdash; and that certainty is what makes an executive room follow you.</div>
     </div>
@@ -1714,12 +1739,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of a good answer under those conditions.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd4">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is longer than the part of the talk it refers to.</span></div><div class="item-why">No. An answer longer than the point it refers to has stopped being an answer.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It starts before you have decided the whole answer.</span></div><div class="item-why">Yes. Waiting until the whole answer is ready reads as not having one. The first sentence buys the rest.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It checks what was asked when the question is not clear.</span></div><div class="item-why">Yes. Eight seconds of checking beats a perfect answer to the wrong question.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It never says &ldquo;I do not have that number&rdquo;.</span></div><div class="item-why">No. &ldquo;I do not have that number&rdquo; plus when you will have it is a complete answer.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It can disagree, as long as it says why.</span></div><div class="item-why">Yes &mdash; on the record, with the reason. Disagreeing without one is where it goes wrong.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is longer than the part of the talk it refers to.</span></div><div class="item-why">No. An answer longer than the point it refers to has stopped being an answer.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It answers whatever the person seemed to mean.</span></div><div class="item-why">No. Answering what someone SEEMED to mean is the most common way to lose a room that was on your side.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It can disagree, as long as it says why.</span></div><div class="item-why">Yes &mdash; on the record, with the reason. Disagreeing without one is where it goes wrong.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It never says &ldquo;I do not have that number&rdquo;.</span></div><div class="item-why">No. &ldquo;I do not have that number&rdquo; plus when you will have it is a complete answer.</div>
       </div>
       <div class="rationale">Two of the wrong ones are the same mistake in different clothes: answering the question you imagined instead of the one that was asked. Checking costs eight seconds and saves the whole answer.</div>
     </div>
@@ -1802,12 +1827,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true of this question.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="vg4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It contains a complaint that is not stated as one.</span></div><div class="item-why">Yes. &ldquo;We have said December before&rdquo; is the complaint, and it arrives dressed as context.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It asks for a fact.</span></div><div class="item-why">No. There is no fact in it that you could look up. It is asking you to commit.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It offers you two answers and expects one of them.</span></div><div class="item-why">Yes &mdash; hard date or direction. Answering with a third thing is what makes the room impatient.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The last sentence is the real question.</span></div><div class="item-why">Yes. Everything before it is preamble; the question is the last clause.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is hostile.</span></div><div class="item-why">No. It is uncomfortable, which is not the same thing. Hearing hostility where there is none changes your tone for the worse.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It can be answered without checking anything.</span></div><div class="item-why">No. You have to know whether December is committed, and that is not in the question.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is hostile.</span></div><div class="item-why">No. It is uncomfortable, which is not the same thing. Hearing hostility where there is none changes your tone for the worse.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It contains a complaint that is not stated as one.</span></div><div class="item-why">Yes. &ldquo;We have said December before&rdquo; is the complaint, and it arrives dressed as context.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The last sentence is the real question.</span></div><div class="item-why">Yes. Everything before it is preamble; the question is the last clause.</div>
       </div>
       <div class="rationale">&ldquo;We have said December before&rdquo; is where the question actually lives. Answering only the hard-date/direction pair leaves the complaint on the table, and it will come back.</div>
     </div>
@@ -1871,12 +1896,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the three statements that are true.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd5">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>They contain the same information.</span></div><div class="item-why">Yes. Nothing was added and nothing removed. What changed is where the listener puts her attention.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The second one tells the listener that a conclusion is arriving.</span></div><div class="item-why">Yes. <em>What the real problem is, is&hellip;</em> is an announcement: the room hears that a verdict is coming.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The second one is more formal.</span></div><div class="item-why">No &mdash; the cleft is not more formal. It is used in speech far more than in writing.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The second one puts the new information at the end.</span></div><div class="item-why">Yes. The point lands last, which is where a listener is still holding on.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The first one is wrong.</span></div><div class="item-why">No. Both are correct English. The first is simply harder to hear in a room that is not fully with you.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Only the second one can be used in a presentation.</span></div><div class="item-why">No. The plain sentence is the right choice most of the time. The cleft is for the one line you cannot afford to have missed.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>They contain the same information.</span></div><div class="item-why">Yes. Nothing was added and nothing removed. What changed is where the listener puts her attention.</div>
       </div>
       <div class="rationale">Neither is wrong. English puts what is new at the END of the sentence, and these three structures exist to move it there &mdash; which is why they sound like signalling even though they are only word order.</div>
     </div>
@@ -2014,11 +2039,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="quiz-item">
       <div class="quiz-options" id="kd6">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It takes a position in the first eight seconds.</span></div><div class="item-why">Yes. Eight seconds. After that the listener is grading your reasons against a position she has to guess.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It gives the best possible position.</span></div><div class="item-why">No. There is no best position &mdash; there is the one you can support in forty-five seconds.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has two reasons, not four.</span></div><div class="item-why">Yes. Two reasons, both developed. Four reasons in forty-five seconds is a list, not an argument.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It uses the fifteen seconds to decide, not to write.</span></div><div class="item-why">Yes. Fifteen seconds is enough to choose a side and two reasons, and not enough to write a sentence.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It ends when the time ends.</span></div><div class="item-why">No. It ends when the argument ends. Being cut off mid-sentence undoes the close.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It needs an example for every reason.</span></div><div class="item-why">Yes &mdash; one example, for one reason, is what the format has room for.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has two reasons, not four.</span></div><div class="item-why">Yes. Two reasons, both developed. Four reasons in forty-five seconds is a list, not an argument.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It ends when the time ends.</span></div><div class="item-why">No. It ends when the argument ends. Being cut off mid-sentence undoes the close.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It gives the best possible position.</span></div><div class="item-why">No. There is no best position &mdash; there is the one you can support in forty-five seconds.</div>
       </div>
       <div class="rationale">Two of the wrong ones are the same mistake: treating forty-five seconds as a short essay. It is not. It is a position, two reasons and a close &mdash; and the close has to arrive before the clock does.</div>
     </div>
@@ -2101,12 +2126,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">You will hear one answer in class. Mark the three things a good answer does here.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="md6">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Chooses one of the two sides, without arguing for both.</span></div><div class="item-why">Yes. One side, from the first sentence. Arguing both is the most common way to run out of time.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Announces how many reasons are coming.</span></div><div class="item-why">Yes. &ldquo;For two reasons&rdquo; buys you the listener's patience for both of them.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Mentions the other side, briefly, and keeps its position.</span></div><div class="item-why">Yes. One clause of concession makes the position sound considered rather than uninformed.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Gives three reasons, to be safe.</span></div><div class="item-why">No. Three reasons in forty-five seconds means none of them is developed.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Explains the two positions before choosing.</span></div><div class="item-why">No &mdash; that is the prompt's job, not yours. Explaining the two positions is how the time disappears.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Mentions the other side, briefly, and keeps its position.</span></div><div class="item-why">Yes. One clause of concession makes the position sound considered rather than uninformed.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Chooses one of the two sides, without arguing for both.</span></div><div class="item-why">Yes. One side, from the first sentence. Arguing both is the most common way to run out of time.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Finishes exactly at forty-five seconds.</span></div><div class="item-why">No. It finishes when the argument finishes. Stopping at forty-four with a close beats stopping at forty-five mid-clause.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Gives three reasons, to be safe.</span></div><div class="item-why">No. Three reasons in forty-five seconds means none of them is developed.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Announces how many reasons are coming.</span></div><div class="item-why">Yes. &ldquo;For two reasons&rdquo; buys you the listener's patience for both of them.</div>
       </div>
       <div class="rationale">Explaining both sides before choosing is the single most common way to run out of time. The prompt already explained them; your forty-five seconds are for the choice.</div>
     </div>
@@ -3305,11 +3330,11 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Listen to all three once. Mark the two that are true.</p>
       <div class="quiz-options" id="gs4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One of the three is not really asking a question.</span></div><div class="item-why">Yes. One of the three is a complaint with a question mark on the end.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>All three are about the December date.</span></div><div class="item-why">No. Two are about December; the third is about the six weeks.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One of them asks for something you did not say in your three minutes.</span></div><div class="item-why">Yes &mdash; and that is the one worth flagging: it asks for something your three minutes left out.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They all agree with your recommendation.</span></div><div class="item-why">No. Two of them are pushing back, which is why the lesson exists.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>All three are about the December date.</span></div><div class="item-why">No. Two are about December; the third is about the six weeks.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One of the three is not really asking a question.</span></div><div class="item-why">Yes. One of the three is a complaint with a question mark on the end.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The last one is the friendliest.</span></div><div class="item-why">No. Friendliest and easiest are different things, and the one that sounds friendliest is the one that commits you.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They all agree with your recommendation.</span></div><div class="item-why">No. Two of them are pushing back, which is why the lesson exists.</div>
       </div>
       <div class="rationale">The third is a challenge dressed as a question, and the first asks for the fact your talk left out. Hearing which is which, before answering, is the whole lesson.</div>
     </div>
@@ -3488,11 +3513,11 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Which of these did she actually say? Mark the two.</p>
       <div class="quiz-options" id="dg5">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What we cannot do is explain a single decision.</span></div><div class="item-why">Yes. The cleft announces the conclusion, and the room stops hunting for it.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>We cannot explain a single decision.</span></div><div class="item-why">No &mdash; not wrong, just flat. In a room that is half-listening it goes past.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>While the accuracy is there, the explainability is not.</span></div><div class="item-why">Yes. The concessive gives ground first, which is what makes the second half land as a position and not as a complaint.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The accuracy is there but the explainability is not.</span></div><div class="item-why">No. <em>But</em> does the same work with less warning; the listener finds out mid-sentence.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Explainability is missing, accuracy is fine.</span></div><div class="item-why">No. Two facts side by side, and the listener has to do the joining. That is the work you are being paid to do.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>We cannot explain a single decision.</span></div><div class="item-why">No &mdash; not wrong, just flat. In a room that is half-listening it goes past.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What we cannot do is explain a single decision.</span></div><div class="item-why">Yes. The cleft announces the conclusion, and the room stops hunting for it.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The accuracy is there but the explainability is not.</span></div><div class="item-why">No. <em>But</em> does the same work with less warning; the listener finds out mid-sentence.</div>
       </div>
       <div class="rationale">All five say the same thing and two of them are the ones a room remembers. The difference is where the new information sits, and it is the only difference.</div>
     </div>
@@ -3642,11 +3667,11 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <p class="task-instr">Before you hear the model: mark the two things your own attempt did.</p>
       <div class="quiz-options" id="at6">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Took a position in the first eight seconds.</span></div><div class="item-why">Yes &mdash; and if this one is missing, everything after it is harder to follow.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Announced how many reasons were coming.</span></div><div class="item-why">Yes. It is one phrase and it changes how the rest is heard.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Explained both sides before choosing.</span></div><div class="item-why">No. Explaining both sides first is exactly what the format does not have room for.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ran out of time before the close.</span></div><div class="item-why">No. Running out before the close means the answer has no ending, and the ending is what is graded.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Used an example from my own work.</span></div><div class="item-why">Yes. Your own work is the example nobody in the room can dispute.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Announced how many reasons were coming.</span></div><div class="item-why">Yes. It is one phrase and it changes how the rest is heard.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ran out of time before the close.</span></div><div class="item-why">No. Running out before the close means the answer has no ending, and the ending is what is graded.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Took a position in the first eight seconds.</span></div><div class="item-why">Yes &mdash; and if this one is missing, everything after it is harder to follow.</div>
       </div>
       <div class="rationale">This is your own attempt, not a right answer. Mark it honestly &mdash; the point is to hear the model against what you actually did, not against what you meant to do.</div>
     </div>
@@ -5212,6 +5237,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

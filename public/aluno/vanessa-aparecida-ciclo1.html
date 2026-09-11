@@ -439,6 +439,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1368,7 +1388,6 @@ document.body.setAttribute('data-view','aluno');
 
 <div class="tab-content active" id="tab-planning">
   
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 1 to 4</h2>
@@ -1386,6 +1405,9 @@ document.body.setAttribute('data-view','aluno');
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 
@@ -1416,12 +1438,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Você vai ler uma reserva de hotel em inglês. É um texto curto. Três das frases abaixo são verdadeiras — marque essas três. Não precisa entender todas as palavras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd1">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A hotel booking always has a name and dates.</span></div><div class="item-why item-pt" lang="pt-BR">Uma reserva de hotel sempre tem um nome e datas.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to understand every word to use it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa entender todas as palavras para usar a reserva.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The dates are the most important part.</span></div><div class="item-why item-pt" lang="pt-BR">As datas são a parte mais importante.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A hotel booking always has a name and dates.</span></div><div class="item-why item-pt" lang="pt-BR">Uma reserva de hotel sempre tem um nome e datas.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to answer the hotel in English.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de responder ao hotel em inglês.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Four things are enough: name, city, dates, breakfast.</span></div><div class="item-why item-pt" lang="pt-BR">Quatro informações bastam: nome, cidade, datas e café da manhã.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need a dictionary to read it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa de um dicionário para ler a reserva.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Four things are enough: name, city, dates, breakfast.</span></div><div class="item-why item-pt" lang="pt-BR">Quatro informações bastam: nome, cidade, datas e café da manhã.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The dates are the most important part.</span></div><div class="item-why item-pt" lang="pt-BR">As datas são a parte mais importante.</div>
       </div>
       <div class="rationale">A booking is short on purpose. Four things &mdash; who, where, when, what is included &mdash; and you can use it anywhere in the world.<div class="item-pt" lang="pt-BR">A reserva é curta de propósito. Quatro informações — quem, onde, quando e o que está incluído — e ela serve em qualquer lugar do mundo.</div></div>
     </div>
@@ -1513,10 +1535,10 @@ document.body.setAttribute('data-view','aluno');
       <div class="quiz-options" id="fl1">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The hotel is in Portugal.</span></div><div class="item-why item-pt" lang="pt-BR">O hotel fica em Portugal.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The guest arrives on 18 October.</span></div><div class="item-why item-pt" lang="pt-BR">O hóspede chega no dia 18 de outubro.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The booking number is 4718.</span></div><div class="item-why item-pt" lang="pt-BR">O número da reserva é 4718.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Breakfast is included.</span></div><div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is a room for one person.</span></div><div class="item-why item-pt" lang="pt-BR">É um quarto para uma pessoa.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The guest stays four nights.</span></div><div class="item-why item-pt" lang="pt-BR">O hóspede fica quatro noites.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The booking number is 4718.</span></div><div class="item-why item-pt" lang="pt-BR">O número da reserva é 4718.</div>
       </div>
       <div class="rationale">Check-in on the 14th and check-out on the 18th is four nights. It is the one thing the paper does not say in words &mdash; and the one the hotel will ask you.<div class="item-pt" lang="pt-BR">Check-in no dia 14 e check-out no dia 18 dá quatro noites. É a única informação que o papel não diz com palavras — e é justamente a que o hotel vai perguntar.</div></div>
     </div>
@@ -1585,12 +1607,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Num balcão de hotel, em qualquer lugar do mundo, perguntam a você as mesmas três coisas. Marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd2">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must answer very fast.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de responder muito rápido.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The questions are short &mdash; about five words.</span></div><div class="item-why item-pt" lang="pt-BR">As perguntas são curtas — mais ou menos cinco palavras.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to understand every word to answer.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de entender todas as palavras para responder.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can ask them to say it again.</span></div><div class="item-why item-pt" lang="pt-BR">Você pode pedir para repetirem.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking again is impolite.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para repetir é falta de educação.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A short answer is enough for each question.</span></div><div class="item-why item-pt" lang="pt-BR">Uma resposta curta basta para cada pergunta.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must answer very fast.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de responder muito rápido.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can ask them to say it again.</span></div><div class="item-why item-pt" lang="pt-BR">Você pode pedir para repetirem.</div>
       </div>
       <div class="rationale">Three questions, five words each, and the same ones every time. Asking for a repeat is normal &mdash; people do it in their own language, at every desk.<div class="item-pt" lang="pt-BR">Três perguntas, cinco palavras cada, e sempre as mesmas. Pedir para repetir é normal — as pessoas fazem isso na própria língua, em qualquer balcão.</div></div>
     </div>
@@ -1698,12 +1720,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Num balcão de hotel, algumas destas funcionam como resposta e outras não. Marque as três que funcionam como resposta.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl2">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four nights.&rdquo;</span></div><div class="item-why item-pt" lang="pt-BR">&ldquo;Quatro noites.&rdquo;</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>(nodding)</span></div><div class="item-why item-pt" lang="pt-BR">(balançando a cabeça que sim)</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Yes, please.&rdquo;</span></div><div class="item-why item-pt" lang="pt-BR">&ldquo;Sim, por favor.&rdquo;</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>(showing your phone)</span></div><div class="item-why item-pt" lang="pt-BR">(mostrando o celular)</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;My name is Vanessa.&rdquo;</span></div><div class="item-why item-pt" lang="pt-BR">&ldquo;Meu nome é Vanessa.&rdquo;</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Four nights.&rdquo;</span></div><div class="item-why item-pt" lang="pt-BR">&ldquo;Quatro noites.&rdquo;</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>(smiling and saying nothing)</span></div><div class="item-why item-pt" lang="pt-BR">(sorrindo e sem dizer nada)</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>(nodding)</span></div><div class="item-why item-pt" lang="pt-BR">(balançando a cabeça que sim)</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;My name is Vanessa.&rdquo;</span></div><div class="item-why item-pt" lang="pt-BR">&ldquo;Meu nome é Vanessa.&rdquo;</div>
       </div>
       <div class="rationale">Short is fine. Two words said out loud are an answer, and the person at the desk goes on talking to you.<div class="item-pt" lang="pt-BR">Curto está bom. Duas palavras ditas em voz alta são uma resposta, e a pessoa do balcão segue falando com você.</div></div>
     </div>
@@ -1755,12 +1777,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Nas aulas 1 e 2 você disse frases com o mesmo verbo, sem saber o nome dele. Marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You said sentences with this verb in lessons 1 and 2.</span></div><div class="item-why item-pt" lang="pt-BR">Você disse frases com este verbo nas aulas 1 e 2.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to know the name of a verb to use it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa saber o nome de um verbo para usá-lo.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>This verb has more than one form.</span></div><div class="item-why item-pt" lang="pt-BR">Este verbo tem mais de uma forma.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to learn the rule before you can say anything.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de aprender a regra antes de conseguir dizer qualquer coisa.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Some of these sentences you already know by heart.</span></div><div class="item-why item-pt" lang="pt-BR">Algumas destas frases você já sabe de cor.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>This verb only appears at a hotel.</span></div><div class="item-why item-pt" lang="pt-BR">Este verbo só aparece num hotel.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to know the name of a verb to use it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa saber o nome de um verbo para usá-lo.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Some of these sentences you already know by heart.</span></div><div class="item-why item-pt" lang="pt-BR">Algumas destas frases você já sabe de cor.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You said sentences with this verb in lessons 1 and 2.</span></div><div class="item-why item-pt" lang="pt-BR">Você disse frases com este verbo nas aulas 1 e 2.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to learn the rule before you can say anything.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de aprender a regra antes de conseguir dizer qualquer coisa.</div>
       </div>
       <div class="rationale">You have been using this verb since the first lesson. In class it gets a name.<div class="item-pt" lang="pt-BR">Você usa este verbo desde a primeira aula. Na aula ele ganha um nome.</div></div>
     </div>
@@ -1872,12 +1894,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="dr3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Algumas destas apareceram nas aulas 1 e 2, outras não. Marque as três que você já usou.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="dr3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>My name is Vanessa.</span></div><div class="item-why item-pt" lang="pt-BR">Meu nome é Vanessa. — aula 1.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The train is late.</span></div><div class="item-why item-pt" lang="pt-BR">O trem está atrasado. — não apareceu nas aulas 1 e 2.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Breakfast is included.</span></div><div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído. — aula 1.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The shop is closed.</span></div><div class="item-why item-pt" lang="pt-BR">A loja está fechada. — não apareceu nas aulas 1 e 2.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>I am here for four nights.</span></div><div class="item-why item-pt" lang="pt-BR">Eu estou aqui por quatro noites. — aulas 1 e 2.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The shop is closed.</span></div><div class="item-why item-pt" lang="pt-BR">A loja está fechada. — não apareceu nas aulas 1 e 2.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>My name is Vanessa.</span></div><div class="item-why item-pt" lang="pt-BR">Meu nome é Vanessa. — aula 1.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>My car is black.</span></div><div class="item-why item-pt" lang="pt-BR">O meu carro é preto. — não apareceu nas aulas 1 e 2.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The train is late.</span></div><div class="item-why item-pt" lang="pt-BR">O trem está atrasado. — não apareceu nas aulas 1 e 2.</div>
       </div>
       <div class="rationale">Three of the six are yours already. They come back in class, and you will not have to build them from nothing.<div class="item-pt" lang="pt-BR">Três das seis já são suas. Elas voltam na aula, e você não vai ter de construí-las do zero.</div></div>
     </div>
@@ -1923,12 +1945,12 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Pense em um check-in de hotel. Quais três frases geralmente descrevem essa conversa?</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying good morning first changes how they speak to you.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer bom dia primeiro muda o jeito como falam com você.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must show your passport before you speak.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de mostrar o passaporte antes de falar.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for one thing is part of a check-in.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir uma coisa faz parte de um check-in.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need long sentences.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa de frases longas.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A yes or no answer can be a complete answer.</span></div><div class="item-why item-pt" lang="pt-BR">Um sim ou um não já pode ser uma resposta completa.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If they ask something new, the conversation is over.</span></div><div class="item-why item-pt" lang="pt-BR">Se perguntarem uma coisa nova, a conversa acabou.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for one thing is part of a check-in.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir uma coisa faz parte de um check-in.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying good morning first changes how they speak to you.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer bom dia primeiro muda o jeito como falam com você.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need long sentences.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa de frases longas.</div>
       </div>
       <div class="rationale">Most check-ins move through the same few moments: hello, your name, the dates, one request. The words change from hotel to hotel; the moments usually do not.<div class="item-pt" lang="pt-BR">A maioria dos check-ins passa pelos mesmos poucos momentos: olá, o seu nome, as datas, um pedido. As palavras mudam de hotel para hotel; os momentos, em geral, não.</div></div>
     </div>
@@ -2042,9 +2064,9 @@ document.body.setAttribute('data-view','aluno');
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to say it again.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para repetirem.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say nothing and wait.</span></div><div class="item-why item-pt" lang="pt-BR">Não dizer nada e esperar.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to speak more slowly.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para falarem mais devagar.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say that you do not speak English.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer que você não fala inglês.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to say it again, and then answer.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para repetirem &mdash; e então responder.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Leave the desk.</span></div><div class="item-why item-pt" lang="pt-BR">Sair do balcão.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say that you do not speak English.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer que você não fala inglês.</div>
       </div>
       <div class="rationale">The three that work all ask for something, and the conversation goes on. Asking comes first; the answer comes after you have understood.<div class="item-pt" lang="pt-BR">As três que funcionam pedem alguma coisa, e a conversa continua. Primeiro você pede; a resposta vem depois de entender.</div></div>
     </div>
@@ -4022,6 +4044,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

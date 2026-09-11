@@ -752,6 +752,24 @@
    },
    "caminho": "scripts/consultivo",
    "nota": "O `Expected` do guia de tela e GABARITO, nao resumo. Revisao da professora sobre a aula 19 da Gabriela Pires, 09/09/2026: a nota parafraseava tres dos seis itens e chamava os outros de 'the other three', e ela marcou como RECORRENTE em todos os teacher's guides. Era: medidas as seis anatomias, 3 de 54 telas de atividade fechada tinham o gabarito inteiro -- e as tres sao as que essa mesma revisao acabara de reescrever. A regra: tela que declara escolha/classificar/par/completar/lacuna cita CADA item no expected (cinco palavras bastam, para nao punir a citacao encurtada; parafrase nao passa) e, quando a resposta e texto, tambem cada resposta correta. A chave da baseline e {aluno}/aula{N}:{ids dos blocos da tela} e NUNCA o ordinal: inserir uma tela renumera o deck -- a propria revisao da 19 fez isso -- e a baseline passaria a perdoar a tela errada, calada. As 51 telas de 09/09/2026 sao de aulas publicadas e estao no ALVARA (REGRA 30): o gate as pula, e existe para que nenhuma tela nova nasca vaga."
+  },
+  "check_ordenar_arrastando.py": {
+   "gate": 72,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O componente de ORDENAR ARRASTANDO (`kind: ordenar`) nasceu em 11/09/2026, de pedido da professora na revisao da aula 20 da Gabriela: a ordenacao era um `classificar` com as opcoes 1st..6th, seis dropdowns para uma tarefa so. O gate mede, no HTML publicado: (1) o handler acha o alvo -- ha `soCheck(this,'{id}')` e `{id}-out`, porque sem eles o Check e um clique que nao faz nada e `if(!box)return` nao da erro em lugar nenhum; (2) o id da caixa nao se repete no arquivo; (3) existe o caminho SEM ARRASTO, que sao duas coisas distintas -- o `.sortdrop` focalizavel em cada coluna (destino do teclado e do toque) e o par de setas em cada linha (o unico jeito de REORDENAR sem arrastar, REGRA 25); (4) o gabarito e fechado: os `data-ok` sao 1..N, uma vez cada; (5) a ordem emitida nao e a ordem da resposta, nem a invertida, nem com metade das linhas no proprio lugar (PRO-009 aplicada a este componente); (6) a coluna de destino nasce vazia. NAO mede se a sequencia declarada e a certa (conteudo) nem comportamento -- clicar e arrastar se medem no navegador, e quem faz isso e o GATE 42. Sem baseline: no alumni-black nao ha legado."
+  },
+  "check_ao_topo_no_fim.py": {
+   "gate": 73,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Dan, olhando o material no ar em 11/09/2026: 'visao aluno, aba Planning: botao Back to top esta no topo da pagina, deve vir no final'. Estava nos SEIS materiais de ciclo E no molde, e eram dois defeitos com uma causa so: (1) a aba Planning tem duas metades, a do professor (perfil.html) termina com a barra e o builder encaixava a do ALUNO depois dela -- na URL do professor nao aparece porque a metade do aluno fica escondida, na do aluno a metade do professor e removida e sobra a barra seguida do conteudo; (2) a barra do fragmento e a variante do professor ('Voltar ao topo', sem data-view), e o deriva_aluno nao tem o que trocar num texto nao marcado por visao -- portugues na tela de aluna A2+ (REGRA 13) e conteudo docente na URL dela. Nenhum gate via porque cada metade estava bem formada: o HTML e valido, o botao funciona, o handler acha o alvo, o contraste passa, nao ha overflow, e os gates de portugues medem por lista de palavras de aula. Ninguem media ORDEM de elemento dentro da aba. Conserto no builder (ao_topo_do_shell): a barra vem do SHELL, sempre, por ultimo, e a do fragmento e descartada. O gate mede, por aba de cada material publicado: a barra e o ULTIMO no visivel da aba, ha no maximo uma por aba, e na URL do aluno o rotulo esta em ingles (sem 'Voltar ao topo' e sem data-view=professor sobrevivente). Nao mede se a aba DEVE ter barra. Sem baseline: no alumni-black nao ha legado."
   }
  }
 }

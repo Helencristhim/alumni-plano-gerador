@@ -48,6 +48,7 @@ MARCAS = [
     (r'<div class="match-grid"', "grade de classificar/completar", "classificar / completar"),
     (r'<div class="quiz-options"', "lista de marcar", "escolha"),
     (r'<div class="pair-grid"', "grade de duas leituras", "par"),
+    (r'<div class="sortbox ordbox"|<div class="ordrow"', "colunas de ordenar", "ordenar"),
     (r'<input class="blank-input"', "lacuna", "lacuna"),
     (r'<div class="res-card">', "cartao de acervo", "recursos / recurso"),
     (r'<textarea class="writebox"', "caixa de escrita", "escrita"),

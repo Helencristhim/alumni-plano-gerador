@@ -439,6 +439,26 @@ table.data td.num{font-weight:var(--peso-forte);color:var(--accent);text-align:c
 .sortcol.sobre{background:var(--accent-dim);border-width:2px;padding:calc(var(--space-3) - 1px)}
 .sortdrop{display:block;width:100%;text-align:center;margin-top:var(--space-2);padding:var(--space-2) var(--space-2h);border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-family:var(--font-interface);font-size:.74rem;font-weight:var(--peso-medio);letter-spacing:var(--ls-micro);cursor:pointer}
 .sortdrop:hover{background:var(--accent);color:#fff;border-style:solid}
+.ordbox .sortcol{display:flex;flex-direction:column}
+.ordbox .sortlist{flex:1}
+.ordrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1h);margin-bottom:var(--space-1h)}
+.ordrow[draggable="true"]{cursor:grab}
+.ordrow.arrastando{opacity:.45}
+.ordnum{min-width:1.5rem;font-size:.74rem;font-weight:var(--peso-forte);color:var(--accent);text-align:right}
+.ordmark{min-width:1rem;font-weight:var(--peso-forte)}
+.ordrow .sortitem{flex:1 1 60%;width:auto;margin-bottom:0}
+.ordmove{display:flex;gap:var(--space-1);margin-left:auto}
+.ordarrow{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--border-light);border-radius:6px;color:var(--text-mid);font-family:var(--font-interface);font-size:.72rem;cursor:pointer}
+.ordarrow:hover{border-color:var(--accent);color:var(--accent)}
+.ordbox .sortdrop{display:none}
+.ordbox .sortcol.alvo .sortdrop{display:block}
+.ordrow.correct .ordmark{color:var(--success)}
+.ordrow.wrong .ordmark{color:var(--danger)}
+.slide-dark .ordnum,.slide-open .ordnum{color:var(--d-accent)}
+.slide-dark .ordarrow,.slide-open .ordarrow{border-color:var(--d-border);color:var(--d-text-mid)}
+.slide-dark .ordarrow:hover,.slide-open .ordarrow:hover{border-color:var(--d-accent);color:var(--d-accent)}
+.slide-dark .ordrow.correct .ordmark,.slide-open .ordrow.correct .ordmark{color:var(--d-ok)}
+.slide-dark .ordrow.wrong .ordmark,.slide-open .ordrow.wrong .ordmark{color:var(--d-danger)}
 .slide-dark .sortitem.sel,.slide-open .sortitem.sel{border-color:var(--d-accent);background:rgba(125,157,215,.18);color:var(--d-text)}
 .slide-dark .sortsel,.slide-open .sortsel{color:var(--d-accent)}
 .slide-dark .sortcol.alvo,.slide-open .sortcol.alvo{border-color:var(--d-accent);background:rgba(255,255,255,.08)}
@@ -1471,7 +1491,6 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="callout rule-box"><div class="callout-title">O turno de fala é a condição deste ciclo</div>A análise automática da aula 8 (19/08) registrou o professor em <strong>63%</strong> do tempo de fala contra 37% do aluno, e observou que a faixa adequada ao nível é 30–50%. Não é avaliação da condução: é uma condição de desenho, e vale para as vinte aulas do ciclo. Material que oferece espaço de exposição será preenchido por exposição, e a necessidade deste aluno é produzir.<br><br>No encontro 27 (19/08) o professor registrou: “começamos trabalhar a revisão 8 <strong>fora da plataforma</strong> para poder ter um rendimento melhor”. O que este ciclo entregar precisa servir para revisar <em>dentro</em> dela.</div>
 
   </div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
 <div data-view="aluno">
   <p class="eyebrow">Your planning</p>
   <h2 class="sec">Block 1 — lessons 9 to 12</h2>
@@ -1489,6 +1508,9 @@ body.tg-guia > #tgGuia{display:block!important}
   </div>
   <p class="lead" style="margin-top:var(--space-4)">Your next lessons will appear here as you finish each block.</p>
 </div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()"><span data-view="professor">Voltar ao topo</span><span data-view="aluno">Back to top</span></button>
+  </div>
 </div>
 
 <!-- ============================= TAB 2 — PLANEJAMENTO ============================= -->
@@ -1553,8 +1575,11 @@ body.tg-guia > #tgGuia{display:block!important}
     </table>
   </div>
   <div class="callout rule-box"><div class="callout-title">O que isso significa para este bloco</div>Conteúdo já oferecido não volta como objetivo central. Mas <strong>oferecido não é dominado</strong>: as aulas 04, 05 e 06 apresentaram as três formas condicionais, e o registro do professor mostra que ele as identifica e ainda não as usa quando fala. Por isso o eixo deste bloco é a produção, e não a apresentação.</div>
-  <div class="btn-bar ao-topo"><button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button></div>
-</div>
+  <div class="btn-bar ao-topo">
+    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
+  </div>
+
+  </div>
 
 <!-- ============================= TAB 3 — PRE-CLASS ============================= -->
 <div class="tab-content" id="tab-preclass" data-consulta="1" data-lig-del="1">
@@ -1582,11 +1607,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two statements that are true of a <strong>witness account</strong> and not of an incident report.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd9">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It is written by someone who saw what happened.</span></div><div class="item-why">Yes &mdash; that is what makes it an account. It is one person&rsquo;s version, and it is the only one of the two written from inside the event.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written to a fixed form, with headings and times.</span></div><div class="item-why">That is the report. The form is what makes it complete and also what makes it leave things out.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is the same on every night of the year.</span></div><div class="item-why">Neither, and it is not what makes them different: the report&rsquo;s <em>form</em> repeats, its content does not.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It can say what the person felt or thought at the moment.</span></div><div class="item-why">Yes. Only the witness can say this &mdash; and it is also why an account can be honest and still not match a record.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is signed by the officer on duty.</span></div><div class="item-why">The report. The signature says who wrote it down, not what was seen.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is the same on every night of the year.</span></div><div class="item-why">Neither, and it is not what makes them different: the report&rsquo;s <em>form</em> repeats, its content does not.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It is written by someone who saw what happened.</span></div><div class="item-why">Yes &mdash; that is what makes it an account. It is one person&rsquo;s version, and it is the only one of the two written from inside the event.</div>
       </div>
       <div class="rationale">An account is one person&rsquo;s version. A report is a record made to a form &mdash; it can be complete and still leave out what only the witness could know.</div>
     </div>
@@ -1669,11 +1694,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two things you cannot get from either text.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="gap9">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the group was on that corner.</span></div><div class="item-why">Neither text says it. That is the kind of gap you ask for &mdash; and closing a briefing on it is stronger than closing on a divergence.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people the report recorded.</span></div><div class="item-why">The report says three. It is on the page, so it is not a gap.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What was said after the first words.</span></div><div class="item-why">Both texts stop there: she went in, and the report registers no further exchange. A genuine gap.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What time the officer recorded.</span></div><div class="item-why">23:40, written down. Not a gap.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Whether the witness spoke first.</span></div><div class="item-why">Both texts answer this &mdash; and they answer it in opposite ways. That is a divergence, which is not the same thing as a gap.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What was said after the first words.</span></div><div class="item-why">Both texts stop there: she went in, and the report registers no further exchange. A genuine gap.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people the report recorded.</span></div><div class="item-why">The report says three. It is on the page, so it is not a gap.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What time the officer recorded.</span></div><div class="item-why">23:40, written down. Not a gap.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the group was on that corner.</span></div><div class="item-why">Neither text says it. That is the kind of gap you ask for &mdash; and closing a briefing on it is stronger than closing on a divergence.</div>
       </div>
       <div class="rationale">Two texts that disagree are still two texts. What both of them leave out is not a divergence &mdash; it is a hole, and it is the thing worth asking for.</div>
     </div>
@@ -1732,11 +1757,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two things that make a question, asked out loud, land well in a room like that.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="rm10">
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It names the part you are not sure about, and asks about that.</span></div><div class="item-why">Yes. A question with one target gets one answer.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It waits until the speaker has finished the whole talk.</span></div><div class="item-why">Not the point &mdash; waiting is a habit of the room, not a property of the question.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is long enough that everyone can follow your reasoning.</span></div><div class="item-why">No. Length is what makes a question unanswerable: by the end she is answering the beginning.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It points at something the speaker actually said.</span></div><div class="item-why">Yes. Quoting her fixes what you are asking about, and she can answer without guessing.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It shows the room how much you know about the subject.</span></div><div class="item-why">No. That is a speech with a question mark at the end, and it spends the time you have.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It names the part you are not sure about, and asks about that.</span></div><div class="item-why">Yes. A question with one target gets one answer.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is long enough that everyone can follow your reasoning.</span></div><div class="item-why">No. Length is what makes a question unanswerable: by the end she is answering the beginning.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It waits until the speaker has finished the whole talk.</span></div><div class="item-why">Not the point &mdash; waiting is a habit of the room, not a property of the question.</div>
       </div>
       <div class="rationale">A question that quotes the speaker back to herself is doing two things at once: it proves you followed, and it gives her something exact to answer.</div>
     </div>
@@ -1830,11 +1855,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two statements that match what she is arguing.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="gs10">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot program failed.</span></div><div class="item-why">Not said. She is arguing about what a number proves, not about whether the work was any good.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The figure is real, but it answers a question nobody asked.</span></div><div class="item-why">Her thesis, in one line.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The cases in the pilot were not typical of all cases.</span></div><div class="item-why">Her evidence for the thesis: the sample is what makes the figure look like that.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ninety percent is too high to be true.</span></div><div class="item-why">She does not dispute the number anywhere. Disputing it for her leaves you defending arithmetic.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The second year produced a worse program.</span></div><div class="item-why">The second year changes the <em>figure</em>, which is not the same as changing the program.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ninety percent is too high to be true.</span></div><div class="item-why">She does not dispute the number anywhere. Disputing it for her leaves you defending arithmetic.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The cases in the pilot were not typical of all cases.</span></div><div class="item-why">Her evidence for the thesis: the sample is what makes the figure look like that.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot program failed.</span></div><div class="item-why">Not said. She is arguing about what a number proves, not about whether the work was any good.</div>
       </div>
       <div class="rationale">She separates two things that sound like one: the figure is right, and it is evidence of something narrower than people take it for. She says so twice, in different words &mdash; that repetition is the clue.</div>
     </div>
@@ -1900,11 +1925,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two things a hypothetical argument has to do to be worth making.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="hy11">
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be impossible to disagree with.</span></div><div class="item-why">No. If it were impossible to disagree with, there would be nothing to argue &mdash; the skill is holding it when someone does.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be about the most serious point in the case.</span></div><div class="item-why">No. It has to be about the point that is still open, which is often not the most serious one.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to change something that is still open.</span></div><div class="item-why">Yes. A hypothetical that changes nothing is a curiosity; the test is what it does to the decision in front of you.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to prove the other side acted in bad faith.</span></div><div class="item-why">No &mdash; and reaching for bad faith turns an argument about facts into an argument about people.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to name the one fact that would have been different.</span></div><div class="item-why">Yes. One fact, named. Two or three at once and nobody can follow which one you are arguing from.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be about the most serious point in the case.</span></div><div class="item-why">No. It has to be about the point that is still open, which is often not the most serious one.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be impossible to disagree with.</span></div><div class="item-why">No. If it were impossible to disagree with, there would be nothing to argue &mdash; the skill is holding it when someone does.</div>
       </div>
       <div class="rationale">A hypothetical that changes nothing still open is an observation, not an argument &mdash; and the person listening will say so.</div>
     </div>
@@ -1987,11 +2012,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two that concede something and still hold the argument.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="cn11">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Even if that were true, it would not change the timeline.&rdquo;</span></div><div class="item-why">Concede the premise, keep the conclusion. Nothing is given away.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You may be right about that. Let us leave it there.&rdquo;</span></div><div class="item-why">The concession alone. It sounds gracious and ends the argument against you.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is a fair point &mdash; the difference is that the witness had already spoken to two people.&rdquo;</span></div><div class="item-why">Concession, then the fact that changes what it means. This is the pair to practice.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree with everything you have said.&rdquo;</span></div><div class="item-why">No concession at all. It costs you the goodwill and it does not answer anything.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Fine, if you insist.&rdquo;</span></div><div class="item-why">Surrender with irritation attached &mdash; the worst of both.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Even if that were true, it would not change the timeline.&rdquo;</span></div><div class="item-why">Concede the premise, keep the conclusion. Nothing is given away.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You may be right about that. Let us leave it there.&rdquo;</span></div><div class="item-why">The concession alone. It sounds gracious and ends the argument against you.</div>
       </div>
       <div class="rationale">A concession that ends the sentence gives the point away. A concession followed by the difference is or it would not change keeps it.</div>
     </div>
@@ -2047,11 +2072,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two things she needs before your argument can land.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="au12">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Who decides, and what exactly they decide.</span></div><div class="item-why">Yes. Without it she maps your case onto her own system and hears a different argument from the one you are making.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The full history of the institution.</span></div><div class="item-why">No. It is the kind of context that feels responsible and costs you the whole three minutes.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>That the defense is a public body, not a firm the family hired.</span></div><div class="item-why">Yes. It changes what she assumes about choice, strategy and resources.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many cases you handle in a year.</span></div><div class="item-why">No &mdash; it is about you, not about what she has to understand to follow the case.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The name of the court where it happened.</span></div><div class="item-why">No. A name she cannot place adds nothing she can use.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many cases you handle in a year.</span></div><div class="item-why">No &mdash; it is about you, not about what she has to understand to follow the case.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>That the defense is a public body, not a firm the family hired.</span></div><div class="item-why">Yes. It changes what she assumes about choice, strategy and resources.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The full history of the institution.</span></div><div class="item-why">No. It is the kind of context that feels responsible and costs you the whole three minutes.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Who decides, and what exactly they decide.</span></div><div class="item-why">Yes. Without it she maps your case onto her own system and hears a different argument from the one you are making.</div>
       </div>
       <div class="rationale">She needs whatever changes the meaning of what you are about to say. Everything else is background, and background spends the three minutes you have.</div>
     </div>
@@ -2131,11 +2156,11 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the two responses that answer it without starting again.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="ob12">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; it does cut both ways. The difference is who had to prove something that night.&rdquo;</span></div><div class="item-why">Concede in four words, then give her the piece she is missing.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Let me go back to the beginning so the sequence is clear.&rdquo;</span></div><div class="item-why">A restart dressed as clarity. She asked one question; this answers a different, longer one.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That is a different question from the one I was answering.&rdquo;</span></div><div class="item-why">It may be accurate, and it sounds like a dodge. Say what you grant first, then draw the distinction.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;It does, and that is exactly why the burden matters here.&rdquo;</span></div><div class="item-why">The objection is granted and turned into your own point &mdash; the strongest answer available.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree &mdash; the delay only affects one side.&rdquo;</span></div><div class="item-why">It is not true, and she knows it is not. Denying a correct objection costs more than the objection did.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That is a different question from the one I was answering.&rdquo;</span></div><div class="item-why">It may be accurate, and it sounds like a dodge. Say what you grant first, then draw the distinction.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Let me go back to the beginning so the sequence is clear.&rdquo;</span></div><div class="item-why">A restart dressed as clarity. She asked one question; this answers a different, longer one.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; it does cut both ways. The difference is who had to prove something that night.&rdquo;</span></div><div class="item-why">Concede in four words, then give her the piece she is missing.</div>
       </div>
       <div class="rationale">The objection is correct, and denying it costs more than granting it. What answers it is the asymmetry she does not know about yet &mdash; who carries the burden.</div>
     </div>
@@ -3482,10 +3507,10 @@ superior não compensa lacuna nas habilidades prioritárias.
     <span class="aud-estado" role="status" aria-live="polite"></span></div>
     <div class="quiz-item">
       <div class="quiz-options" id="gs10d">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot program failed.</span></div><div class="item-why">She never says this. Reading a criticism of the <em>figure</em> as a verdict on the <em>program</em> is the fastest way to lose the room.</div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The figure answers a different question from the one asked.</span></div><div class="item-why">This is her argument, and she makes it twice, in two different ways &mdash; which is how you know it is the point rather than an aside.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The cases were not typical of all cases.</span></div><div class="item-why">Her second route to the same place: the sample explains the number, so the number does not mean what it is being used to mean.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot program failed.</span></div><div class="item-why">She never says this. Reading a criticism of the <em>figure</em> as a verdict on the <em>program</em> is the fastest way to lose the room.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ninety percent is too high to be true.</span></div><div class="item-why">She accepts the number. Attacking arithmetic she has not disputed puts you in an argument she can win in one sentence.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The figure answers a different question from the one asked.</span></div><div class="item-why">This is her argument, and she makes it twice, in two different ways &mdash; which is how you know it is the point rather than an aside.</div>
       </div>
       <div class="rationale">She never disputes the number. She disputes what it is evidence of &mdash; and she says it twice, in two different ways, which is how you know it is the point.</div>
     </div>
@@ -3704,9 +3729,9 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <div class="quiz-options" id="cn11d">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Even if that were true, it would not change the timeline.&rdquo;</span></div><div class="item-why">Grants the premise and holds the conclusion. You lose nothing by conceding something that does not decide anything.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Fine, if you insist.&rdquo;</span></div><div class="item-why">Not a concession &mdash; a retreat with an edge on it. It concedes the point and the goodwill at the same time.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You may be right. Let us leave it there.&rdquo;</span></div><div class="item-why">The concession with nothing after it. In writing it looks polite; out loud it ends the argument in the other person&rsquo;s favor.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; the difference is she had spoken to two people first.&rdquo;</span></div><div class="item-why">Four words of concession, then the fact he does not have. That is the whole move.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Fine, if you insist.&rdquo;</span></div><div class="item-why">Not a concession &mdash; a retreat with an edge on it. It concedes the point and the goodwill at the same time.</div>
       </div>
       <div class="rationale">Accept, then turn. A concession that ends the sentence gives the point away.</div>
     </div>
@@ -3887,9 +3912,9 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="quiz-item">
       <div class="quiz-options" id="ob12d">
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; it does cut both ways. The difference is who had to prove it that night.&rdquo;</span></div><div class="item-why">Four words of concession, then the one thing she does not have. She is a lawyer &mdash; she will do the rest herself.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree &mdash; it only affects one side.&rdquo;</span></div><div class="item-why">She is right, and denying a correct objection spends the credit she gave you at the start.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Let me go back to the beginning.&rdquo;</span></div><div class="item-why">A restart. Three minutes become six, and she stops listening somewhere in the second one.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;It does, and that is exactly why the burden matters.&rdquo;</span></div><div class="item-why">Grants the objection and turns it into your own argument. The strongest of the four.</div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree &mdash; it only affects one side.&rdquo;</span></div><div class="item-why">She is right, and denying a correct objection spends the credit she gave you at the start.</div>
       </div>
       <div class="rationale">Grant it in four words, then give her the one thing she does not have. She is a lawyer &mdash; she will do the rest herself.</div>
     </div>
@@ -5435,6 +5460,282 @@ function unlockTranscript(btn){
   if(preConsulta(btn))return;
   revealRationales(btn);
   var el=document.getElementById('pre-script'); if(el)el.style.display='block';
+}
+
+/* ---------------- ordenar arrastando (`kind: ordenar`) ----------------
+   Pedido da professora na revisao da aula 20 da Gabriela (11/09/2026): "ao inves de
+   escolher a ordem atraves de um dropdown, fazer na funcao da aluna arrastar as frases
+   para serem colocadas na ordem correta em outra coluna". A atividade era um `classificar`
+   com as opcoes 1st..6th -- ordenacao disfarcada de classificacao, com seis <select>.
+
+   IRMA DO `gd*`, E NAO UMA GENERALIZACAO DELE. As duas decisoes que separam as familias:
+
+   1. MULTI-INSTANCIA. O `gd*` e preso a `#gdsort` e a `GD_ITEMS`/`GD_COLS`/`_gd`/`_gdSel`:
+      ha um quadro por pagina, e os dados vem de variaveis que o builder REMOVE do material
+      de cada aluno (sao conteudo da aula do artefato). Aqui o estado mora no proprio DOM --
+      em que coluna a linha esta, e em que posicao dela -- e o gabarito viaja em `data-ok`,
+      linha a linha. Nao ha global de estado, entao duas atividades na mesma aula nao tem
+      como se misturar, e nao ha o que o builder precise trocar.
+
+   2. ORDENAR, NAO CLASSIFICAR. No `gd*` a COLUNA e a resposta e a ordem dentro dela nao
+      importa. Aqui a POSICAO na segunda coluna E a resposta.
+
+   Generalizar o `gd*` sairia mais limpo no papel e mexeria no quadro de sorting do MOLDE da
+   Stephanie, que e o material de referencia do GATE 50 -- trocar o motor de uma atividade
+   que funciona, para nao escrever cento e poucas linhas, e pagar risco para economizar
+   codigo. O CSS, esse sim, e o mesmo (`.sortbox`, `.sortcol`, `.sortitem`, `.sortdrop`),
+   e com ele vem o comportamento visual ja resolvido.
+
+   O QUE FOI COPIADO DO `gd*` PORQUE JA ESTAVA CERTO:
+     - TRES CAMINHOS EQUIVALENTES. Clique/toque (clica o card, ele fica selecionado, clica a
+       coluna), arrasto, e teclado (Enter/espaco no card, Tab ate a coluna, Enter/espaco
+       nela). O caminho por CLIQUE nao depende do de arrasto: em toque ele e o unico.
+     - a coluna-alvo tem um controle FOCALIZAVEL (`.sortdrop`, "Move here"), senao o teclado
+       seleciona o card e nao tem como dizer o destino. Ele so aparece quando ha card
+       escolhido, e isso e CSS (`.ordbox .sortcol.alvo .sortdrop`), nao JS.
+     - a marca de conferencia nao e so cor: vai simbolo na tela e frase para leitor de tela.
+     - nada se repinta no `dragstart` -- reconstruir o HTML destroi o elemento arrastado e o
+       navegador cancela o arrasto. Aqui nada se repinta NUNCA: as linhas sao movidas, o que
+       tambem faz o foco do teclado sobreviver sozinho.
+     - `soSai` guarda o `relatedTarget`, senao o realce pisca a cada linha sob o cursor.
+     - o foco volta com `preventScroll` (P22.3).
+
+   REORDENAR SEM ARRASTO. Arrasto nao existe em toque nem no teclado, e a segunda coluna e
+   uma ORDEM: sem um caminho para trocar duas linhas de lugar, quem nao arrasta teria de
+   devolver tudo a origem e recomecar. Cada linha leva um par de setas, com alvo de toque
+   de 44x44 (REGRA 25 do imersivo, que ja exigia seta alem do drag-and-drop no ordering).
+*/
+var _soArr=null;
+function soBox(el){ return (el&&el.closest)?el.closest('.ordbox'):null; }
+function soLista(box,c){ return box.querySelector('.sortcol[data-c="'+c+'"] .sortlist'); }
+function soNum(box){
+  var cols=box.querySelectorAll('.sortcol'),k,rows,i,n,destino;
+  for(k=0;k<cols.length;k++){
+    destino=(cols[k].getAttribute('data-c')!=='0');
+    rows=cols[k].querySelectorAll('.ordrow');
+    for(i=0;i<rows.length;i++){
+      n=rows[i].querySelector('.ordnum');
+      if(n)n.textContent=destino?String(i+1):'';
+    }
+  }
+}
+function soSel(box){ return box.querySelector('.sortitem.sel'); }
+function soLimpaSel(box){
+  if(!box)return;
+  var s=box.querySelectorAll('.sortitem.sel'),i,c=box.querySelectorAll('.sortcol'),k;
+  for(i=0;i<s.length;i++){ s[i].classList.remove('sel'); s[i].setAttribute('aria-pressed','false'); }
+  for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre');
+}
+/* mover uma linha invalida a conferencia que estava na tela - a mesma regra do gdMover */
+function soLimpaMarca(box){
+  var r=box.querySelectorAll('.ordrow'),i,el;
+  for(i=0;i<r.length;i++){
+    r[i].classList.remove('correct','wrong');
+    el=r[i].querySelector('.sortitem'); if(el)el.classList.remove('correct','wrong');
+    el=r[i].querySelector('.ordmark'); if(el)el.textContent='';
+    el=r[i].querySelector('.so-leitor'); if(el)el.textContent='';
+  }
+  var w=box.querySelectorAll('.item-why.show');
+  for(i=0;i<w.length;i++)w[i].classList.remove('show');
+  el=document.getElementById(box.id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(box.id+'-key'); if(el)el.style.display='none';
+}
+function soAlvo(box){
+  var sel=soSel(box); if(!sel)return;
+  var minha=sel.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soFocar(el){
+  if(!el||!el.focus)return;
+  try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); }
+}
+/* toda mudanca de posicao passa por aqui, venha de onde vier */
+function soDepois(box,foco){
+  soLimpaSel(box); soLimpaMarca(box); soNum(box); soVolta(box); soFocar(foco);
+}
+/* clicar o card seleciona; clicar o MESMO card cancela; clicar outro troca a selecao */
+function soPick(btn,ev){
+  if(preConsulta(btn))return;
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(btn); if(!box)return;
+  var ja=btn.classList.contains('sel');
+  soLimpaSel(box);
+  if(ja)return;
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true'); soAlvo(box);
+}
+function soMove(row,col){
+  var box=soBox(row); if(!box||!col)return;
+  var lista=col.querySelector('.sortlist'); if(!lista)return;
+  lista.appendChild(row);
+  soDepois(box,row.querySelector('.sortitem'));
+}
+function soCol(col,ev){
+  if(preConsulta(col))return;
+  /* clique que nasceu dentro de um controle proprio ja foi tratado por ele */
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.sortitem,.sortdrop,.ordarrow'))return;
+  var box=soBox(col); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),col);
+}
+function soSoltaAqui(btn,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var box=soBox(btn); if(!box)return;
+  var sel=soSel(box); if(!sel)return;
+  soMove(sel.closest('.ordrow'),btn.closest('.sortcol'));
+}
+/* o caminho de reordenar que nao pede arrasto: a linha troca de lugar com a vizinha */
+function soDesloca(btn,dir,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(preConsulta(btn))return;
+  var row=btn.closest('.ordrow'),box=soBox(btn); if(!row||!box)return;
+  var irmao=(dir<0)?row.previousElementSibling:row.nextElementSibling;
+  if(!irmao)return;
+  if(dir<0)row.parentNode.insertBefore(row,irmao);
+  else row.parentNode.insertBefore(irmao,row);
+  /* o foco volta para a SETA, e nao para o card: quem reordena pelo teclado vai apertar a
+     mesma seta de novo, e devolver o foco ao card custaria um Tab a cada passo */
+  soDepois(box,btn);
+}
+/* ---- arrasto ---- */
+function soArrastaIni(ev,row){
+  _soArr=row;
+  try{ ev.dataTransfer.setData('text/plain',row.getAttribute('data-i')||''); ev.dataTransfer.effectAllowed='move'; }catch(e){}
+  row.classList.add('arrastando');
+  var box=soBox(row); if(!box)return;
+  var minha=row.closest('.sortcol'),c=box.querySelectorAll('.sortcol'),k;
+  for(k=0;k<c.length;k++)c[k].classList.toggle('alvo',c[k]!==minha);
+}
+function soArrastaFim(){
+  if(_soArr){
+    _soArr.classList.remove('arrastando');
+    var box=soBox(_soArr),c,k;
+    if(box){ c=box.querySelectorAll('.sortcol');
+             for(k=0;k<c.length;k++)c[k].classList.remove('alvo','sobre'); }
+  }
+  _soArr=null;
+}
+function soSobre(ev){
+  if(!_soArr)return;
+  /* sem o preventDefault o navegador recusa a soltura e o arrasto nao conclui */
+  ev.preventDefault();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=ev.currentTarget; if(col)col.classList.add('sobre');
+}
+function soSai(ev){
+  var col=ev.currentTarget; if(!col)return;
+  /* dragleave dispara tambem ao passar sobre um FILHO da coluna: sem esta guarda o realce
+     pisca a cada linha por baixo do cursor */
+  if(ev.relatedTarget&&col.contains(ev.relatedTarget))return;
+  col.classList.remove('sobre');
+}
+function soSolta(ev){
+  if(!_soArr)return;
+  ev.preventDefault();
+  var col=ev.currentTarget,row=_soArr;
+  soArrastaFim();
+  if(preConsulta(col))return;
+  soMove(row,col);
+}
+/* soltar SOBRE uma linha e a forma natural de ordenar: a arrastada entra antes ou depois
+   daquela, conforme o ponteiro esteja na metade de cima ou na de baixo. Soltar no fundo da
+   coluna continua valendo e poe no fim. */
+function soSobreItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  try{ ev.dataTransfer.dropEffect='move'; }catch(e){}
+  var col=row.closest('.sortcol'); if(col)col.classList.add('sobre');
+}
+function soSoltaItem(ev,row){
+  if(!_soArr||_soArr===row)return;
+  ev.preventDefault();
+  if(ev.stopPropagation)ev.stopPropagation();
+  var box=soBox(row),mov=_soArr; if(!box)return;
+  var r=row.getBoundingClientRect(),depois=(ev.clientY>r.top+r.height/2);
+  soArrastaFim();
+  if(preConsulta(row))return;
+  row.parentNode.insertBefore(mov,depois?row.nextSibling:row);
+  soDepois(box,mov.querySelector('.sortitem'));
+}
+/* ---- conferir, e refazer ----
+   O "Refazer" do consultivo (`exGuarda`/`exFeito`/`exRefaz`) restaura uma copia do
+   innerHTML tirada NA PRIMEIRA CONFERIDA. Aqui isso devolveria a ordem que a aluna acabou
+   de montar -- com cara de respondida, sem estar conferida --, que e exatamente o que
+   aquele mecanismo existe para evitar. A ordem de partida desta atividade nao precisa de
+   copia nenhuma: ela esta escrita em cada linha, no `data-i` com que o emissor numerou.
+   Refazer e devolver as linhas a coluna de origem, na ordem do `data-i`. O rotulo segue o
+   mesmo contrato (`data-redo` do emissor, `data-check` guardado na ida). */
+function soFeito(btn){
+  if(!btn)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function soVolta(box){
+  var btn=box._soBtn;
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return;
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+}
+function soRefaz(btn,box){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var orig=soLista(box,0); if(!orig)return false;
+  var rows=[].slice.call(box.querySelectorAll('.ordrow')),i;
+  rows.sort(function(a,b){
+    return parseInt(a.getAttribute('data-i'),10)-parseInt(b.getAttribute('data-i'),10);
+  });
+  for(i=0;i<rows.length;i++)orig.appendChild(rows[i]);
+  soLimpaSel(box); soLimpaMarca(box); soNum(box);
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  return true;
+}
+function soCheck(btn,id){
+  if(preConsulta(btn))return;
+  var box=document.getElementById(id); if(!box)return;
+  if(soRefaz(btn,box))return;
+  box._soBtn=btn;
+  soLimpaSel(box); soLimpaMarca(box);
+  var dest=soLista(box,1); if(!dest)return;
+  var rows=dest.querySelectorAll('.ordrow'),tot=box.querySelectorAll('.ordrow').length;
+  var n=0,i,ok,el;
+  for(i=0;i<rows.length;i++){
+    ok=(parseInt(rows[i].getAttribute('data-ok'),10)===i+1);
+    rows[i].classList.toggle('correct',ok); rows[i].classList.toggle('wrong',!ok);
+    el=rows[i].querySelector('.sortitem');
+    if(el){ el.classList.toggle('correct',ok); el.classList.toggle('wrong',!ok); }
+    el=rows[i].querySelector('.ordmark'); if(el)el.textContent=ok?'✓':'✗';
+    el=rows[i].querySelector('.so-leitor');
+    if(el)el.textContent=ok?'Right place. ':'Not there yet. ';
+    if(ok)n++;
+  }
+  var falta=tot-rows.length;
+  el=document.getElementById(id+'-out');
+  /* o total sai da contagem de linhas, nunca de um numero escrito aqui */
+  if(el)el.textContent=n+' / '+tot+(falta?' ('+falta+' still without a place)':'');
+  el=document.getElementById(id+'-key'); if(el)el.style.display='block';
+  porqueAbre(box);
+  soFeito(btn);
+}
+/* Escape cancela a selecao - e PARA AI. Mesmo contrato do Escape do `gd*`: fase de CAPTURA
+   e stopImmediatePropagation, porque o ouvinte do deck esta no MESMO no e leria o estado
+   depois de este ja o ter limpado, concluiria que nao ha interacao ativa e FECHARIA A AULA.
+   Quem esta por cima (o dialogo de confirmacao, o menu lateral) tem a vez. */
+if(!window._soEsc){
+  window._soEsc=true;
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Escape')return;
+    var sel=document.querySelector('.ordbox .sortitem.sel'); if(!sel)return;
+    var _awO=document.getElementById('askWrap');
+    if(_awO&&_awO.style.display==='flex')return;
+    var _smO=document.getElementById('slideMenu');
+    if(_smO&&_smO.classList.contains('open'))return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    soLimpaSel(soBox(sel));
+    soFocar(sel);
+  },true);
 }
 
 /* ---------------- Guided Discovery · sorting ---------------- */

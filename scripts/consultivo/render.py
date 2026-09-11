@@ -355,6 +355,96 @@ def r_classificar(b, ident):
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
+def r_ordenar(b, ident):
+    """Poe as frases NA ORDEM, arrastando de uma coluna para a outra.
+
+    PEDIDO DA PROFESSORA, revisao da aula 20 da Gabriela (11/09/2026): *"a funcionalidade da
+    atividade pode ser melhorada, ao inves de escolher a ordem atraves de um dropdown, fazer
+    na funcao da aluna arrastar as frases para serem colocadas na ordem correta em outra
+    coluna."*
+
+    A atividade existia como um `classificar` com as opcoes `1st`..`6th`: ordenacao
+    disfarcada de classificacao, seis <select> onde a tarefa e UMA -- montar a sequencia. A
+    forma escondia a tarefa, e a aluna atravessava seis menus para dizer uma coisa so.
+
+    O AUTOR ESCREVE A ORDEM CERTA, E SO ISSO. A ordem em que ele digita os itens E o
+    gabarito; nao ha campo `ok`, nao ha `1st`/`2nd` para ele manter em sincronia com nada.
+    Quem embaralha para a tela e o emissor -- mesmo principio do `classificar` e do
+    `escolha` (PRO-009, ver embaralha()). Emitir na ordem da resposta seria entregar o
+    exercicio pronto; emiti-la de tras para frente, quase.
+
+    A `recusa` E NECESSARIA AQUI, e mede duas coisas que a `_previsivel` nao ve porque nao
+    sabe que estas categorias sao POSICOES:
+      - a ordem certa invertida (6 5 4 3 2 1) se resolve tao rapido quanto a ordem certa;
+      - metade ou mais das linhas ja caindo no proprio lugar faz o "embaralhado" ser um
+        empurrao de duas frases.
+    A `_previsivel` sozinha so recusaria a permutacao identidade, porque com N posicoes
+    distintas nenhuma das outras tres formas dela chega a se aplicar.
+
+    O `porque` de cada item continua sendo o `porque` de sempre, revelado ao conferir.
+    """
+    itens = b["itens"]
+    rot = b.get("rotulos")
+    if not rot or len(rot) != 2:
+        raise SystemExit(f"{ident}: `ordenar` precisa de `rotulos` com DOIS titulos -- o da "
+                         f"coluna de origem e o da coluna em que a ordem e montada. Sao os "
+                         f"unicos rotulos da tela e ninguem mais sabe o que escrever neles.")
+    if len(itens) < 3:
+        raise SystemExit(f"{ident}: `ordenar` com {len(itens)} item(ns). Com menos de tres "
+                         f"nao ha ordem a montar.")
+
+    def _reconhecivel(candidato):
+        pos = [n for n, _ in candidato]
+        if pos == sorted(pos, reverse=True):
+            return True                                  # a ordem certa de tras para frente
+        return 2 * sum(1 for i, n in enumerate(pos) if n == i + 1) >= len(pos)
+
+    pares = [(i + 1, it) for i, it in enumerate(itens)]
+    linhas = []
+    for i, (posicao, it) in enumerate(embaralha(pares, ident, chave=lambda p: p[0],
+                                                recusa=_reconhecivel)):
+        linhas.append(
+            f'          <div class="ordrow" data-i="{i}" data-ok="{posicao}" '
+            f'draggable="true" ondragstart="soArrastaIni(event,this)" '
+            f'ondragend="soArrastaFim()" ondragover="soSobreItem(event,this)" '
+            f'ondrop="soSoltaItem(event,this)">\n'
+            f'            <span class="ordnum"></span>'
+            f'<span class="ordmark" aria-hidden="true"></span>'
+            f'<span class="so-leitor"></span>\n'
+            f'            <button type="button" class="sortitem" aria-pressed="false" '
+            f'onclick="soPick(this,event)">{esc(it["t"])}</button>\n'
+            f'            <span class="ordmove">'
+            f'<button type="button" class="ordarrow" aria-label="Move up" '
+            f'onclick="soDesloca(this,-1,event)">&#9650;</button>'
+            f'<button type="button" class="ordarrow" aria-label="Move down" '
+            f'onclick="soDesloca(this,1,event)">&#9660;</button></span>'
+            + porque(it) + traducao(it) + '\n'
+            f'          </div>')
+
+    def coluna(c, titulo, corpo, acao, alvo):
+        return (f'      <div class="sortcol" data-c="{c}" onclick="soCol(this,event)" '
+                f'ondragover="soSobre(event)" ondragleave="soSai(event)" '
+                f'ondrop="soSolta(event)">\n'
+                f'        <h5>{esc(titulo)}</h5>\n'
+                f'        <div class="sortlist">{corpo}</div>\n'
+                # O destino tem de ter um controle FOCALIZAVEL, senao o teclado seleciona a
+                # frase e nao tem como dizer para onde ela vai. Ele so aparece quando ha
+                # frase escolhida, e isso e CSS -- `.ordbox .sortcol.alvo .sortdrop`.
+                f'        <button type="button" class="sortdrop" '
+                f'aria-label="{alvo} {esc(titulo)}" onclick="soSoltaAqui(this,event)">'
+                f'{acao}</button>\n'
+                f'      </div>')
+
+    return (f'    <div class="sortbox ordbox" id="{ident}">\n'
+            + coluna(0, rot[0], "\n" + "\n".join(linhas) + "\n        ",
+                     "Move back here", "Move back to") + "\n"
+            + coluna(1, rot[1], "", "Move here", "Move to") + "\n"
+            f'    </div>\n'
+            f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" '
+            f'onclick="soCheck(this,\'{ident}\')">{rot_check()}</button>\n'
+            f'    <div class="score-out" id="{ident}-out"></div>')
+
+
 def r_completar(b, ident):
     """Cada enunciado tem os SEUS finais -- nao ha lista comum.
 
@@ -384,10 +474,47 @@ def r_completar(b, ident):
 
 
 def r_escolha(b, ident):
-    """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0."""
+    """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0.
+
+    A ORDEM DOS ITENS E DO EMISSOR, como no `classificar` (PRO-009) -- ver embaralha().
+
+    Aqui a chave e booleana, entao a previsibilidade tem a forma do DESENHO da coluna de
+    respostas: TfTfTf se resolve batendo alternado, TTTfff se resolve marcando as tres
+    primeiras. Medido nos 7 materiais da anatomia, com o `escolha` ainda saindo na ordem
+    em que o autor digitou: **48 dos 76 blocos** se acertavam pela posicao. Nao e descuido de
+    quem escreveu: uma pessoa que alterna verdadeira/falsa enquanto digita esta escrevendo o
+    exercicio na ordem em que o pensa, e nao ha como pedir que ela lembre de desfazer isso
+    depois -- a REGRA 24 do imersivo ja pedia, e foi assim que os doze bancos de gap-fill
+    nasceram mesmo assim. Quem embaralha e o emissor.
+
+    E NENHUM GATE VIA, porque o GATE 41 estava cego para este bloco: o laco dele lia o
+    `quiz-options` ate o primeiro `</div>`, que e o fim da PRIMEIRA opcao, e a regra pede
+    dois acertos para disparar. Consertado o laco (mesmo PR) e rodado contra os publicados
+    de antes, ele acusa os 48: 43 em alternancia perfeita e 5 com as certas coladas. Com o
+    embaralhamento, zero.
+
+    A `recusa` E OUTRA daqui, e nao a do `classificar`. La ela existe por causa da LETRA --
+    o item que cai na letra da propria posicao --, e aqui nao ha letra nem opcao numerada
+    com que a posicao possa coincidir. O que ha e uma quinta forma, que so faz sentido em
+    resposta booleana e que a `_previsivel` deixa passar: as certas CONTIGUAS no meio da
+    lista (`ffTTf`). A `_previsivel` so recusa o agrupamento quando ele parte a lista em
+    exatamente uma corrida por categoria, entao `ffTTf` escapa dela -- e e justamente a
+    unica forma que o GATE 41 mede no `quiz-options`. O sorteio recusa o que o gate barra:
+    a condicao abaixo e, palavra por palavra, a do `r_resposta_previsivel`.
+
+    O que NAO entra na recusa e a corrida de tres do mesmo lado, que a `_previsivel` ja
+    tenta evitar mas nem sempre pode: com uma certa e cinco erradas, TODA ordem tem tres
+    erradas seguidas. Nesse caso a `embaralha` desiste depois de 200 tentativas e devolve a
+    ordem declarada -- e o GATE 41 nao mede essa forma no `escolha` exatamente por isso."""
+    def _certas_coladas(candidato):
+        pos = [i for i, it in enumerate(candidato) if it.get("ok")]
+        return (len(pos) > 1 and len(pos) < len(candidato)
+                and all(b - a == 1 for a, b in zip(pos, pos[1:])))
+
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
               f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>' + porque(it) + traducao(it)
-              for it in b["itens"]]
+              for it in embaralha(b["itens"], ident, chave=lambda i: bool(i.get("ok")),
+                                  recusa=_certas_coladas)]
     # O `rationale` vive DENTRO do quiz-item, depois das opcoes. E a explicacao da
     # atividade -- diferente da `nota`, que fecha a seccao. Nasce escondido pelo CSS
     # (`.rationale{display:none}`), e por isso nao carrega style aqui.
@@ -948,7 +1075,7 @@ def apoio_pt(texto, ident):
 
 
 RENDER = {"classificar": r_classificar, "completar": r_completar,
-          "escolha": r_escolha, "par": r_par,
+          "escolha": r_escolha, "par": r_par, "ordenar": r_ordenar,
           "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos,
           "gravar": r_gravar, "escrever": r_escrever}
 
@@ -984,6 +1111,8 @@ def seccao(b, i, vocab=None):
     CONHECIDOS = {"kind", "id", "n", "nu", "titulo", "badge", "abertura", "instr", "itens",
                   "opcoes", "nota", "rationale", "prompt", "largura", "rotulo_banco",
                   "banco", "barra", "pt", "chave", "rotulo",
+                  # os dois titulos de coluna do `ordenar`
+                  "rotulos",
                   # o apoio em portugues do material real-beginner
                   "opcoes_pt", "rationale_pt"}
     desconhecidos = set(b) - CONHECIDOS - {k for k in b if k.startswith("_")}
