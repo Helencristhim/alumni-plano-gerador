@@ -870,6 +870,27 @@ def _render_block(b, anat='guided-discovery'):
 
     if k == 'answer':
         titulo = _esc(b.get('title', 'Reveal answer key'))
+        # Mesma regra do gist e do tf: o imersivo (shell helen-mendes) tem icToggleAnswer
+        # + .ic-answer/.ic-ans-head/.ic-akey, e NAO tem icReveal. Quando a interface dos
+        # blocos passou a ser a do artefato (#2027), este kind perdeu o ramo imersivo e
+        # passou a emitir icReveal() para os dois shells — botao MORTO no shell adulto, e
+        # o assert_handlers_do_molde() barra o build (aula 10 da Ana Claudia, 11/09/2026).
+        # A escolha nao e de estilo: e de qual funcao existe no arquivo que vai rodar.
+        if anat == 'imersivo':
+            if b.get('key'):
+                chips = ''.join(f'<span class="ic-a">{_esc(a)}</span>' for a in b['key'])
+                interno = f'<div class="ic-akey">{chips}</div>'
+            elif b.get('list'):
+                nota = (f'<div style="font-size:.78rem;color:var(--text-dim);'
+                        f'margin-bottom:.6rem">{_esc(b["note"])}</div>'
+                        if b.get('note') else '')
+                ol = ''.join(f'<li>{_esc(a)}</li>' for a in b['list'])
+                interno = f'{nota}<ol>{ol}</ol>'
+            else:
+                interno = ''
+            return (f'<div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)">'
+                    f'<span class="ic-ico">+</span>{titulo}</div>'
+                    f'<div class="ic-ans-body"><div class="ic-ans-inner">{interno}</div></div></div>')
         if b.get('key'):
             inner = ' · '.join(_esc(a) for a in b['key'])
         elif b.get('list'):
