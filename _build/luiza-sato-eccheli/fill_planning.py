@@ -33,9 +33,14 @@ BLOCO1 = [
 
 
 def curto(t, n):
+    """Primeira frase, sem o rotulo inicial; corta em n caracteres. Devolve HTML ja escapado."""
     t = re.sub(r'\s+', ' ', t or '').strip()
-    t = re.split(r'(?<=[.;:])\s|\s[—-]\s', t)[0].strip()
-    return t if len(t) <= n else t[:n].rsplit(' ', 1)[0].rstrip(',;:') + '&hellip;'
+    t = re.sub(r'^Aula \d+ \u2014 ', '', t)
+    t = re.sub(r'^(Grammar|Task \d+)[^:]{0,80}:\s*', '', t)
+    t = re.split(r'(?<=[.;])\s| \u2014 | - ', t)[0].strip().rstrip('.')
+    if len(t) > n:
+        return html.escape(t[:n].rsplit(' ', 1)[0].rstrip(',;:')) + '&hellip;'
+    return html.escape(t)
 
 
 def main():
@@ -56,10 +61,10 @@ def main():
             if b != bloco:
                 bloco = b
                 rows.append('      <tr class="phase-row"><td colspan="5">Bloco %d (Aulas %d-%d)</td></tr>' % (b, (b - 1) * 10 + 1, b * 10))
-            tema = html.escape(curto(a.get('tema', ''), 80))
-            foco = html.escape(curto(a.get('focoLinguistico', ''), 90))
+            tema = curto(a.get('tema', ''), 80)
+            foco = curto(a.get('focoLinguistico', ''), 90)
             ativ = READ if n % 2 == 0 else SPEAK
-            hw = html.escape(curto(re.sub(r'^Task 1[^:]*:\s*', '', a.get('homework', '')), 80))
+            hw = curto(a.get('homework', ''), 80)
             rows.append('      <tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (n, tema, foco, ativ, hw))
     else:
         rows.append('      <tr><td colspan="5" style="font-style:italic;color:var(--text-dim)">Aulas 11-80: temas do curr&#237;culo do Perfil 360.</td></tr>')
