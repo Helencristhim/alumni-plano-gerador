@@ -34,6 +34,6 @@
     '<li>Whether she asked a second question built on your answer, on screen 11. That one measures autonomy, not grammar.</li>'+
     '<li>Whether she could ask without reading her paper.</li>'+
     '<li>How many of the six she checked and corrected herself on screen 9, with no help.</li></ul>',
-  prepost:'The pre-class ends by asking her to write the six questions she will ask on screen 2 &mdash; so the diagnostic is already in her hands when the lesson starts, and nothing in the pre-class explains the rule. The post-class has an optional recording, six interview questions to write, and four resources about the school week.',
+  prepost:'The pre-class ends by asking her to write six questions she can use on screen 2 &mdash; so the diagnostic is already in her hands when the lesson starts, and nothing in the pre-class explains the rule. The post-class has an optional recording, six interview questions to write, and four resources about the school week.',
   key:'The measure of this lesson is on screens 11 and 12: does she ask a second question about the answer she just heard? Everything before it is the form; the follow-up question is the habit the cycle works on.'
 }
