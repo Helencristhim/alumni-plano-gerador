@@ -813,6 +813,7 @@ def check_task_before_exposure(c, fails, warns):
 # depois — nunca no passado (REGRA 30). Ver BUILDER_GEN em build_from_model.py.
 GEN_PLAYER_E_PREDICAO = 1
 GEN_PREDICAO_EM_SLIDE = 2   # predição do listening em slide próprio · banco no gap-fill de vocab
+GEN_GAP_DRAG = 3            # drag and drop no gap-fill com banco (/lib/gap-drag.js + data-answer)
 
 
 def _gen(c):
@@ -1061,6 +1062,39 @@ def check_player_vivo(c, fails):
             f'não tem play/seekbar/velocidade dentro — na tela é um retângulo vazio e a aula não '
             f'tem como tocar o áudio (REGRA 2.1). O builder emite o player completo sozinho: '
             f'build_from_model.expand_audio_players()')
+
+
+def check_gap_drag(c, fails):
+    """GAP-FILL COM BANCO ARRASTAVEL E COM GABARITO (bloqueante).
+
+    O paragrafo com lacunas e banco (bloco "gapfill") e interativo pelo /lib/gap-drag.js:
+    arrastar, tocar ou digitar, com Check (verde/vermelho + placar) e Reset. Isso depende
+    de duas coisas que o builder emite e que nada mais checa:
+      1. a aula CARREGA o script — sem a tag, o banco volta a ser enfeite que nao se mexe;
+      2. toda lacuna (.ic-gaptext .ic-blank) tem data-answer — sem ela o Check nao tem o
+         que conferir (config com ["1"] em vez de ["1","resposta"]).
+
+    ESCOPO: BUILDER_GEN >= 3 (14/09/2026). Aula anterior nao e tocada nem reportada.
+    """
+    if _gen(c) < GEN_GAP_DRAG or 'class="ic-gaptext"' not in c:
+        return
+    if ('<script src="/lib/gap-drag.js"></script>' not in c
+            and 'function icGapInit' not in c):
+        fails.append('GAP-FILL SEM /lib/gap-drag.js — a aula tem paragrafo com lacunas e banco '
+                     'e nao carrega o script: a palavra nao arrasta nem se confere. O builder '
+                     'emite a tag (ensure_gap_drag); se sumiu, a aula foi montada por fora dele')
+    sem = []
+    for ch in re.split(r'(?=<div class="slide )', c):
+        num = re.search(r'data-slide="(\d+)"', ch)
+        num = num.group(1) if num else '?'
+        for g in re.findall(r'<div class="ic-gaptext">(.*?)</div>', ch, re.S):
+            for m in re.finditer(r'<span class="ic-blank"([^>]*)><span class="ic-n">([^<]+)</span>', g):
+                if 'data-answer=' not in m.group(1):
+                    sem.append(num + '#' + m.group(2))
+    if sem:
+        fails.append(f'LACUNA SEM GABARITO — {", ".join(sem[:12])} (slide#lacuna). A palavra '
+                     f'arrastada nao pode ser conferida. No config, cada lacuna do gapfill leva a '
+                     f'resposta: ["1","berth"] em vez de ["1"]')
 
 
 def check_predicao(c, fails):
@@ -2092,6 +2126,7 @@ def validate(path):
     check_dialogo_completo(c, fails, warns)
     check_contador_reveal(c, fails)
     check_predicao(c, fails)
+    check_gap_drag(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
     check_input_no_detalhe(c, fails)
