@@ -538,7 +538,16 @@ def r_escolha(b, ident):
 
 
 def r_par(b, ident):
-    """Duas leituras possiveis; qual delas e a que vale aqui."""
+    """Duas leituras possiveis; qual delas e a que vale aqui.
+
+    O `porque` (e o `ptt`) do item sai DENTRO da `pair-row`, como no `escolha` e no
+    `classificar`: o `ppCheck` ja chama `porqueAbre(host)`, e o `.item-why` tem
+    `flex-basis:100%`, entao cai numa linha propria embaixo das duas alternativas.
+    Opcional: item sem `porque` nao emite nada, e o par do pre-class sai byte a byte igual.
+
+    Entrou com a revisao da aula 21 da Gabriela (14/09/2026): a tela 4 comparava tres pares
+    de perguntas espalhados numa lista de seis. Com o `par`, cada par fica numa linha, e a
+    explicacao que a lista ja tinha continua aparecendo ao conferir."""
     linhas = []
     for it in b["itens"]:
         alts = it["alts"]
@@ -553,7 +562,8 @@ def r_par(b, ident):
             f'\n        <button class="pair-opt" data-v="{"ab"[i]}" onclick="ppPick(this)">'
             f'{esc(a)}</button>' for i, a in enumerate(alts))
         linhas.append(f'      <div class="pair-row" data-ok="{letra}">\n'
-                      f'        <span class="pair-word">{esc(it["t"])}</span>{bots}\n'
+                      f'        <span class="pair-word">{esc(it["t"])}</span>{bots}'
+                      + porque(it) + traducao(it) + '\n'
                       f'      </div>')
     return (f'    <div class="pair-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
             f'    <button class="verify-all-btn ghost" data-redo="{rot_redo()}" onclick="ppCheck(this,\'{ident}\')">'
