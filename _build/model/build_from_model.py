@@ -311,7 +311,10 @@ FRAMEWORK_DEFAULT = 'imersivo-prototipo'
 #       o palpite; a 2a, com as perguntas na tela, responde) · banco de palavras também
 #       no gap-fill de vocabulário autorado em .fill-grid (29/07/2026, feedback da chefe
 #       na aula 1 da Ana Claudia)
-BUILDER_GEN = 2
+#   3 = DRAG AND DROP no gap-fill com banco: a aula carrega /lib/gap-drag.js e toda lacuna
+#       do parágrafo (.ic-gaptext .ic-blank) leva data-answer, vindo do config
+#       ["1","resposta"] (14/09/2026, pedido do Dan na aula 2 da Helena Andrade)
+BUILDER_GEN = 3
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
 MODEL_ACCENT_RGB = 'rgba(190,18,60'
@@ -508,7 +511,9 @@ def hex_to_rgb(h):
 #       3o item da palavra = LETRA da definicao certa (gabarito). E OBRIGATORIO: sem ele o
 #       bloco vira duas listas mortas na tela e o aluno tenta clicar/arrastar e nada
 #       acontece. As definicoes seguem EMBARALHADAS (REGRA 24) -- o gabarito e que liga.
-#   {"kind":"gapfill","parts":["texto ",["1"]," mais texto"],"bank":["w1","w2"]}
+#   {"kind":"gapfill","parts":["texto ",["1","w1"]," mais texto"],"bank":["w1","w2"]}
+#       2o item da lacuna = RESPOSTA (sai do banco). Vira data-answer e alimenta o Check do
+#       /lib/gap-drag.js (arrastar/tocar/digitar). OBRIGATORIO desde BUILDER_GEN 3 (gate).
 #   {"kind":"modals","cards":[["should","Strong","..."],["could","Softer","..."]]}
 #   {"kind":"rephrase","title":"...","items":[["cue sentence","modal"], ...]}
 #   {"kind":"scenarios","items":[["Scenario 1","texto"], ...]}
@@ -521,6 +526,62 @@ def hex_to_rgb(h):
 # ============================================================================
 def _esc(t):
     return '' if t is None else str(t)
+
+
+def _attr(t):
+    """Texto de config dentro de atributo HTML: so a aspa dupla fecharia o atributo.
+    Entidade que o autor ja escreveu (&#39;) fica como esta — o navegador decodifica."""
+    return _esc(t).replace('"', '&quot;')
+
+
+def gapfill_respostas(b):
+    """{numero da lacuna: resposta} de um bloco gapfill — so as lacunas que declaram.
+
+    A resposta tem de SAIR DO BANCO: se a palavra certa nao esta entre as candidatas, o
+    arrastar nunca acerta e a aluna fica sem saida. Isso e erro de dado do config, entao
+    e assert (nao aviso)."""
+    out = {}
+    for p in b.get('parts', []):
+        if isinstance(p, list) and len(p) > 1:
+            out[str(p[0])] = p[1]
+    if out:
+        banco = [re.sub(r'\s+', ' ', w).strip().lower() for w in b.get('bank', [])]
+        for num, r in out.items():
+            norm = re.sub(r'\s+', ' ', r).strip().lower()
+            assert norm in banco, (f'gapfill: a resposta da lacuna {num} ({r!r}) nao esta no '
+                                   f'banco {b.get("bank")!r} — arrastando, a aluna nunca acerta')
+            banco.remove(norm)
+    return out
+
+
+# GAP-FILL INTERATIVO (/lib/gap-drag.js): o do bloco "gapfill" (.ic-gaptext + .ic-bank)
+# vira arrastar / tocar / digitar com Check e Reset — o que a professora pediu na aula 1 da
+# Helena Andrade (PR #2614). Por TAG, e nao JS inline no shell, pelo mesmo motivo do
+# audio-toggle.js: um arquivo so, que a aula carrega. Emitido SO onde ha o paragrafo com
+# lacunas; aula sem ele nao ganha nem uma linha. Aula que ja traz a versao embutida
+# (icGapInit, a propria aula 1) fica como esta. Idempotente; o retrofit_gap_drag.py usa a
+# MESMA funcao nas aulas ja publicadas de quem pedir.
+GAP_DRAG_TAG = '<script src="/lib/gap-drag.js"></script>'
+
+
+def ensure_gap_drag(s):
+    if ('class="ic-gaptext"' not in s or GAP_DRAG_TAG in s or 'function icGapInit' in s
+            or '</body>' not in s):
+        return s
+    i = s.rfind('</body>')
+    return s[:i] + GAP_DRAG_TAG + '\n' + s[i:]
+
+
+def apply_gap_answers(s, respostas):
+    """Grava data-answer nas .ic-blank de um arquivo JA EMITIDO, pelo numero da lacuna.
+    Para o retrofit: a aula publicada nao e regerada, so ganha o gabarito. Idempotente
+    (lacuna que ja tem data-answer fica como esta)."""
+    def troca(m):
+        num = m.group(2)
+        if num not in respostas:
+            return m.group(0)
+        return f'<span class="ic-blank" data-answer="{_attr(respostas[num])}"><span class="ic-n">{num}</span>'
+    return re.sub(r'<span class="ic-blank"()><span class="ic-n">([^<]+)</span>', troca, s)
 
 
 def _titulo(b):
@@ -812,13 +873,18 @@ def _render_block(b, anat='guided-discovery'):
 
     if k == 'gapfill':
         html = ''
+        respostas = gapfill_respostas(b)
         for p in b['parts']:
             if isinstance(p, list):
                 # A LACUNA TAMBEM TEM DIALETO. No imersivo ela e teacher-led e numerada
                 # (.ic-blank/.ic-n, que existem no shell); no artefato e um campo que se
                 # digita. Emitir o <input> no slide adulto poe um campo editavel onde o
                 # exercicio e de FALA, e sem CSS nenhum.
-                html += ((f'<span class="ic-blank"><span class="ic-n">{_esc(p[0])}</span>'
+                # O 2o item da lacuna (["1","berth"]) e a RESPOSTA: vira data-answer, que o
+                # /lib/gap-drag.js usa para pintar verde/vermelho quando a palavra do banco
+                # e solta ali. Sem ele a palavra so e colocada (GATE do validate: gen >= 3).
+                ans = (f' data-answer="{_attr(p[1])}"' if len(p) > 1 else '')
+                html += ((f'<span class="ic-blank"{ans}><span class="ic-n">{_esc(p[0])}</span>'
                           f'&nbsp;&nbsp;&nbsp;</span>') if anat == 'imersivo' else
                          (f'<input class="blank-input" data-n="{_esc(p[0])}" '
                           f'aria-label="gap {_esc(p[0])}">'))
@@ -2838,6 +2904,8 @@ def build_standalone(cfg, content_dir, manifest):
     # entao herda junto). Idempotente.
     if cfg.get('transcript'):
         s = transcripts.ensure_assets(s)
+    # Drag and drop do gap-fill com banco (BUILDER_GEN 3). O espelho do aluno herda de `s`.
+    s = ensure_gap_drag(s)
     final_asserts(s, cfg, f'prof aula{n}')
     write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
 
