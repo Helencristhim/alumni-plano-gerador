@@ -25,6 +25,8 @@ NENHUM card de Complementares. Só faz sentido p/ hub "snippets" (hub já existe
 Aluno novo (1a aula) usa hub "new" no build_from_model.py.
 
 USO (da raiz): python3 _build/model/insert_hub.py _build/{slug}-aula{N}/config.json
+      Só reaplicar a aba Planejamento (planning.html) e limpar rótulo de stamp, sem tocar aula:
+      python3 _build/model/insert_hub.py _build/{slug}-aula{N}/config.json --hub-tabs
 Depois: python3 _build/model/audit_hubs_struct.py --check public/professor/{slug}.html public/aluno/{slug}.html
 """
 import json
@@ -581,15 +583,53 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     write(hub_path, s)
 
 
+STAMP_RE = re.compile(r'(<div class="stamp" id="stamp\d+" data-label=")(.*?)(" style=)')
+
+
+def stamp_label_limpo(label):
+    """Mesma limpeza da síntese do stamp em insert(): sem marcação, sem sufixo ' -- '."""
+    return re.sub(r'<[^>]+>', '', label).split(' -- ')[0].split(' — ')[0].strip()
+
+
+def refresh_hub_tabs(path, cfg, content_dir, is_aluno):
+    """--hub-tabs: reaplica no hub EXISTENTE o que o hub "new" escreve uma vez só.
+
+    A aba Planejamento só é escrita por build_hub_new (aula 1). Corrigir o planning.html
+    depois disso não chegava ao hub: rodar a aula 1 de novo recriaria o hub e apagaria as
+    aulas inseridas, e o --replace de uma aula não toca o Planejamento (e deixa cabeçalho
+    de Complementares duplicado). Este modo troca SÓ o miolo da aba, com os mesmos
+    marcadores do build_hub_new, e limpa data-label de stamp que nasceu com marcação
+    (defeito corrigido na síntese em 25/08). Não toca aula nenhuma. Idempotente."""
+    s = read(path)
+    antes = s
+    if not is_aluno:
+        planning = B.read(B.hub_tab_path(cfg, content_dir, 'planning.html'))
+        s = B.replace_between(s, '<div class="tab-content active" id="tab-planning">',
+                              '</div><!-- /tab-planning -->', '\n' + planning + '\n')
+    s = STAMP_RE.sub(lambda m: m.group(1) + stamp_label_limpo(m.group(2)) + m.group(3), s)
+    if s == antes:
+        print(f'  {os.path.relpath(path, ROOT)}: nada a mudar')
+        return
+    write(path, s)
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     replace = '--replace' in sys.argv  # re-nivelamento: troca os blocos de uma aula já no hub
+    hub_tabs = '--hub-tabs' in sys.argv  # só Planejamento + rótulo de stamp, nenhuma aula
     if len(args) != 1:
         print(__doc__)
         sys.exit(2)
     cfg_path = os.path.abspath(args[0])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
+    if hub_tabs:
+        for pasta, is_aluno in (('professor', False), ('aluno', True)):
+            p = os.path.join(ROOT, 'public', pasta, f'{cfg["slug"]}.html')
+            assert os.path.exists(p), f'hub inexistente: {p}'
+            print(f'== hub {pasta} (--hub-tabs) ==')
+            refresh_hub_tabs(p, cfg, content_dir, is_aluno)
+        return
     assert cfg.get('hub') == 'snippets', "insert_hub só p/ hub 'snippets' (hub existente)"
     slug, n = cfg['slug'], cfg['lesson']['n']
     prof = os.path.join(ROOT, 'public', 'professor', f'{slug}.html')
