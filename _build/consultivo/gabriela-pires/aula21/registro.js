@@ -3,8 +3,8 @@
     canonico:'question', statusKey:'af_l21_status',
     nav:['Lesson opening','Ask me six things','What people actually ask',
          'Two versions of the same question','Where the auxiliary goes','The rule, in one line',
-         'When nothing moves','Six questions, scrambled','Ask about my week',
-         'Write three questions','Find out something I have not told you',
+         'When nothing moves','Six questions, scrambled','Your first six questions',
+         'Choose who you ask','Ask your questions',
          'What just happened','Today and next'],
     stages:[
       {n:'Communicative diagnostic',min:9},
@@ -13,6 +13,6 @@
       {n:'Clarification MPF',min:11},
       {n:'Controlled oral practice',min:11},
       {n:'Personalized practice',min:12},
-      {n:'Communicative task',min:14},
-      {n:'Feedback + continuity',min:6}
+      {n:'Communicative task',min:11},
+      {n:'Feedback + continuity',min:9}
     ]}
