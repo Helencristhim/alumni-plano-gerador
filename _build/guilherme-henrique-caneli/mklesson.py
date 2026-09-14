@@ -552,7 +552,7 @@ def render_config(L):
     stamps = [{'id': s['id'], 'label': s['label'], 'img': s['img']} for s in STAMPS]
     lesson = {
         'n': n, 'menu_num': '%02d' % n, 'menu_title': L['title_html'].replace("class='accent'", 'class="accent"'),
-        'menu_desc': L['menu_desc'], 'subtitle': 'Lesson %d -- %s' % (n, plain(L['title_html'])),
+        'menu_desc': '%s -- %d slides' % (L['menu_desc'].split(' -- ')[0], L['_slides']), 'subtitle': 'Lesson %d -- %s' % (n, plain(L['title_html'])),
         'title_tag': 'Professor View -- %s | Lesson %d -- %s' % (STUDENT, n, plain(L['title_html'])),
         'grammar_point': L['grammar_point'], 'phases': L['phases'],
         'listenings': [{'file': 'a%d_listening%d.mp3' % (n, i + 1), 'voice': li['voice'], 'text': li['text']}
@@ -633,7 +633,11 @@ def main():
     def w(name, s):
         open(os.path.join(d, name), 'w', encoding='utf-8').write(s)
         print('  wrote', os.path.relpath(os.path.join(d, name), ROOT), len(s))
-    w('slides.html', render_slides(L))
+    slides = render_slides(L)
+    # O builder injeta 3 slides nas duas formas: a tarefa antes do dialogo/leitura (2.2) e a
+    # predicao antes de cada listening (2.3). A contagem do card do menu e a do arquivo final.
+    L['_slides'] = slides.count('<div class="slide ') + 3
+    w('slides.html', slides)
     w('preclass.html', render_preclass(L))
     w('complementary.html', render_complementary(L))
     w('config.json', json.dumps(render_config(L), ensure_ascii=False, indent=1) + '\n')
