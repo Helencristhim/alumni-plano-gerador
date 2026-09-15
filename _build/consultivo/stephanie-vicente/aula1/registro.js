@@ -2,8 +2,8 @@
     tema:'Two documents, one course',      temaPre:'Before you read either one',
     canonico:'syllabus', statusKey:'af_l1_status',
     nav:['Lesson opening','What she asked for','Before you read','Read them once',
-         'Where it says so','What kind of claim','Say where it came from','Your briefing',
-         'What just happened','Today and next'],
+         'Where it says so','What kind of claim','What gives it away','Say where it came from',
+         'Your briefing','Her questions','What just happened','Today and next'],
     stages:[
       {n:'Personalized lead-in',min:4},
       {n:'Prediction',min:3},
