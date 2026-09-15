@@ -38,6 +38,9 @@ carimbo — sem ele o builder recusa (`scripts/consultivo/geracao.py`).
 | Lacuna de forma verbal declarada (`kind: lacuna`, `nu`), com o verbo entre parênteses para a resposta ser única, sem banco | aula 3, tela 7 (`cz3`) | aula 21, telas 4–6 (a mecânica tem de ser a que diz ser, PR #2618) |
 | Preparação em papel antes do turno longo (opção A/B + notas), sem campos de digitação na tela | aula 3, tela 8 | aula 21, tela 10 (escreve três perguntas e as faz sem ler na tela 11) |
 | A frase da aluna no diagnóstico volta mais tarde na aula, e o guia diz onde | aula 3, telas 2 → 6 → 11 | aula 21, telas 2 → 9 ("Your first six questions again") |
+| Referência posicional trocada por citação: "Number 3 is the politest…" vira a frase escrita na tela | aula 4, tela 6 | notas das aulas 19–22 (PR #2611); A02 §7 |
+| Opções A/B que mudam o conteúdo da conversa, com as falas do professor escritas para cada opção no `exact` | aula 4, telas 8 e 11 | aula 21, telas 10–12 (PR #2618) |
+| Sem metadado de produção na tela: "The teacher and the class in this lesson are invented" sai; o cartão diz "se ela perguntar, confirme" | aula 4, tela 2 e `sec4` do pre-class | aula 19, tela 4 e cartão (PR #2592, #2595) |
 
 ## O que NÃO copiar da Gabriela
 

@@ -121,7 +121,7 @@ def selftest():
     ]
     erros = 0
     for nome, s, gen, deve in casos:
-        pegou = roda(s, gen, "stephanie-vicente/aula1" if gen is None else "aluna-x/aula30")
+        pegou = roda(s, gen, "gabriela-pires/aula19" if gen is None else "aluna-x/aula30")
         ok = pegou == deve
         erros += not ok
         print(f"  {(VERDE + 'ok' + ZERA) if ok else (VERMELHO + 'ERRO' + ZERA)}  {nome}: "

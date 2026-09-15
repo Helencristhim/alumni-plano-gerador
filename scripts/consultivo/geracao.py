@@ -45,7 +45,8 @@ BASE = os.path.join(RAIZ, "_build", "consultivo")
 ARQUIVO = "geracao.json"
 GEN_ATUAL = 1
 
-# As 28 aulas que existiam em origin/main em 15/09/2026 (8db2aac99). Congelada: so pode
+# As aulas que existiam em origin/main em 15/09/2026 (8db2aac99), menos as quatro do molde,
+# reescritas no mesmo dia com `geracao.json` (PRs #2677, #2684, #2688 e o da aula 4, que tira as quatro desta lista). Congelada: so pode
 # CAIR — quando uma aula dessas for reescrita e ganhar `geracao.json`, o arquivo vale e a
 # entrada pode sair. Aula nova nunca entra aqui.
 ANTERIORES = frozenset({
@@ -59,8 +60,6 @@ ANTERIORES = frozenset({
     "lucia-nishiyama-serra/aula5", "lucia-nishiyama-serra/aula6",
     "luiz-bressane/aula9", "luiz-bressane/aula10",
     "luiz-bressane/aula11", "luiz-bressane/aula12",
-    "stephanie-vicente/aula1", "stephanie-vicente/aula2",
-    "stephanie-vicente/aula3", "stephanie-vicente/aula4",
     "vanessa-aparecida/aula1", "vanessa-aparecida/aula2",
     "vanessa-aparecida/aula3", "vanessa-aparecida/aula4",
 })

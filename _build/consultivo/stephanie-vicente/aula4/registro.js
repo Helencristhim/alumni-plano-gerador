@@ -2,8 +2,8 @@
     tema:'The feedback you have to give',   temaPre:'Before you sit down with him',
     canonico:'syllabus', statusKey:'af_l4_status',
     nav:['Lesson opening','What you have to do','Say it now','How someone else says it',
-         'What makes it answerable','Saying it out loud','The conversation','What just happened',
-         'Again, and he pushes back','Today and next'],
+         'What makes it answerable','Polite is not the same','Saying it out loud','The conversation',
+         'His questions','What just happened','Again, and he pushes back','Today and next'],
     stages:[
       {n:'Real-world objective',min:4},
       {n:'Initial attempt',min:7},
