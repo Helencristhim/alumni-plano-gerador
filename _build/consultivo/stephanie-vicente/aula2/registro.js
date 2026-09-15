@@ -2,8 +2,8 @@
     tema:'Three people, one material',    temaPre:'Before the call starts',
     canonico:'syllabus', statusKey:'af_l2_status',
     nav:['Lesson opening','Who is in the call','What to expect','Listen once',
-         'Listen again','What each move does','Coming in','Your call',
-         'What just happened','Today and next'],
+         'Listen again','What each move does','The line that moved the call','Coming in',
+         'Your call','After the call','What just happened','Today and next'],
     stages:[
       {n:'Context + lead-in',min:4},
       {n:'Prediction',min:3},

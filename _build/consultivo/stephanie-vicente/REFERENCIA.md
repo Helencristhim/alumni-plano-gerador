@@ -31,6 +31,10 @@ carimbo — sem ele o builder recusa (`scripts/consultivo/geracao.py`).
 | Callout "Optional" do post-class convida, não desobriga | aula 1, `postclass.html` | aula 19 e 20, `postclass.html` (PR #2592, #2605) |
 | Espaço entre cartões empilhados (`margin-top` da escala do Kit); botão de documentos depois da atividade | aula 1, tela 5 | aula 21, tela 10 (PR #2626); aula 19, tela 6 |
 | Nada de tempo de produção na tela; nada de metadado de produção ("written for this lesson") | todas as telas da aula 1 | aula 19, telas 2 e 4; aula 20, telas 1 e 8 |
+| Tarefa comunicativa com opções A/B, escolhidas na própria tela | aula 2, tela 9 (o que ela precisa saber na call) | aula 21, tela 10 (Option A / Option B, PR #2618) |
+| Escuta com as perguntas lidas antes do Play, e o transcript só depois da checagem | aula 2, telas 4 e 5 (`wq2`) | aula 20, telas 4–6 (PR #2605: "Before pressing play" no `exact`) |
+| Conversa depois da tarefa gravada: o interlocutor faz duas perguntas escritas no `exact` | aula 2, tela 10 (Marta depois da call) | aula 19, tela 12; aula 21, tela 11 |
+| Replay com nova condição: outra pessoa responde e discorda | aula 2, tela 11 (Peter responde) | aula 19, tela 13 |
 
 ## O que NÃO copiar da Gabriela
 
