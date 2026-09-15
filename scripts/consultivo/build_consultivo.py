@@ -55,6 +55,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
 import voz  # noqa: E402  a MESMA lista que o GATE 51 usa
 import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de render.py
+import geracao  # noqa: E402  o carimbo que escopa os gates de material novo
 
 CAMPOS_GUIA = ["goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
@@ -826,6 +827,24 @@ def monta(cfg, base_frag):
                 faltando.append(f"    aula {n}: falta {arq}")
     if faltando:
         return "", 0, ["fragmento(s) ausente(s) — nada foi escrito:\n" + "\n".join(faltando)]
+
+    # ---- a aula diz de que geracao e (geracao.py)
+    #
+    # Os gates de 15/09/2026 so valem para aula escrita depois deles, e quem diz isso e o
+    # `geracao.json` da aula. Se a falta do arquivo valesse "aula antiga", toda aula nova que
+    # o esquecesse sairia do alcance dos gates calada -- entao a falta RECUSA, salvo para as
+    # aulas que ja existiam (lista congelada em geracao.ANTERIORES). O arquivo nao e lido
+    # pelo emissor: nenhum byte do material muda por causa dele.
+    #
+    # Fica de fora o que nao e fragmento de aluno: o round-trip (`_artefato`) e as copias
+    # temporarias do --selftest, que nao moram em _build/consultivo/{slug}/.
+    dentro = os.path.normpath(base_frag).startswith(os.path.normpath(geracao.BASE) + os.sep)
+    if dentro and not cfg.get("_artefato"):
+        carimbo = [geracao.le(os.path.join(base_frag, f"aula{n}"))[1] for n in aulas]
+        carimbo = [c for c in carimbo if c]
+        if carimbo:
+            return "", 0, ["carimbo de geracao — nada foi escrito:\n    " +
+                           "\n    ".join(carimbo)]
 
     # ---- o portugues do fragmento se escreve com acento
     #

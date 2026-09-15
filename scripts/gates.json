@@ -770,6 +770,33 @@
    },
    "caminho": "scripts/consultivo",
    "nota": "Dan, olhando o material no ar em 11/09/2026: 'visao aluno, aba Planning: botao Back to top esta no topo da pagina, deve vir no final'. Estava nos SEIS materiais de ciclo E no molde, e eram dois defeitos com uma causa so: (1) a aba Planning tem duas metades, a do professor (perfil.html) termina com a barra e o builder encaixava a do ALUNO depois dela -- na URL do professor nao aparece porque a metade do aluno fica escondida, na do aluno a metade do professor e removida e sobra a barra seguida do conteudo; (2) a barra do fragmento e a variante do professor ('Voltar ao topo', sem data-view), e o deriva_aluno nao tem o que trocar num texto nao marcado por visao -- portugues na tela de aluna A2+ (REGRA 13) e conteudo docente na URL dela. Nenhum gate via porque cada metade estava bem formada: o HTML e valido, o botao funciona, o handler acha o alvo, o contraste passa, nao ha overflow, e os gates de portugues medem por lista de palavras de aula. Ninguem media ORDEM de elemento dentro da aba. Conserto no builder (ao_topo_do_shell): a barra vem do SHELL, sempre, por ultimo, e a do fragmento e descartada. O gate mede, por aba de cada material publicado: a barra e o ULTIMO no visivel da aba, ha no maximo uma por aba, e na URL do aluno o rotulo esta em ingles (sem 'Voltar ao topo' e sem data-view=professor sobrevivente). Nao mede se a aba DEVE ter barra. Sem baseline: no alumni-black nao ha legado."
+  },
+  "check_tempo_na_tela.py": {
+   "gate": 74,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/geracao.json gen>=1"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "A02 §3 e a revisao das aulas 19 e 20 da Gabriela Pires (09 e 11/09/2026): o tempo de producao da aluna ('You have five seconds', 'you need three seconds', 'Three seconds are yours') sai da tela PROJETADA e fica no guia. Mede so o tempo PRESO A ACAO da aluna (you have N, talk for N, N to decide, your N, N starting now), nunca numero+minuto solto: a primeira sonda deu 57 achados em 28 aulas e boa parte era cena ou texto lido. Excecao declarada por tela em guia_telas.json -> tempo_na_tela (o A02 aceita tempo autentico com justificativa no guia). Pre/post-class fora: nao sao projetados. Escopo pelo carimbo de geracao (geracao.py): nenhuma aula anterior a 15/09/2026 e medida, por ordem do Dan."
+  },
+  "check_cartoes_encostados.py": {
+   "gate": 75,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/geracao.json gen>=1"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "Revisao da aula 21 da Gabriela (PR #2626, 14/09/2026): o .word-bank nascia com margin-top 0 abaixo do .two-col e os cartoes encostavam (0px); na aula 19 (PR #2595) o bloco revelado encostava no cartao seguinte. Nenhum gate estatico ve isso: MEDE NO CHROMIUM, tela a tela, com os blocos recolhidos abertos. Cartao = fundo, borda ou sombra com largura de bloco; encosto = menos de 2px entre dois cartoes sobrepostos na horizontal que nao se contem. Linhas de uma mesma lista (mesmo pai, mesma classe) e celulas de tabela ficam fora pela forma. Sonda --todas em 15/09/2026: 0 pares em 293 telas das 28 aulas. Escopo pelo carimbo de geracao."
+  },
+  "check_deck_declarado.py": {
+   "gate": 76,
+   "tipo": "anatomia",
+   "escopo": {
+    "marcador": "_build/consultivo/{slug}/aula{n}/geracao.json gen>=1"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O GATE 45 tirou do autor o HTML de atividade no pre/post-class e avisava que o deck ficou de fora. As aulas 19-21 da Gabriela, exemplo do Dan em 15/09/2026, ja declaram toda atividade fechada do deck; o molde tinha ZERO <!--BLOCOS: no deck. Numa aula gen>=1 o slides.html nao tem grade, lista de marcar, par, ordenar, lacuna, acervo, linha de frase nem data-ok escritos a mao. Marcas lidas do GATE 45 (uma lista so), menos a caixa do quadro de devolutiva e o player de escuta, que nao tem emissor. Sonda --todas: 15 achados, 14 no molde e 1 na aula 9 da Joice. Escopo pelo carimbo de geracao."
   }
  }
 }
