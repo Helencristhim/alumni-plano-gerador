@@ -1,28 +1,31 @@
 {
-  goals:'<strong>To report what happened in a class you observed, keeping the scene apart from the event and the description apart from the judgment.</strong><ul>'+
+  goals:'<strong>To report what happened in a class she observed, keeping the scene apart from the event and the description apart from her reading of it.</strong><ul>'+
         '<li>To say what was already going on when something else happened.</li>'+
-        '<li>To hold both past forms in the same sentence, under the load of narrating and evaluating at once.</li>'+
-        '<li>To mark an evaluation as an evaluation, so the teacher can disagree with it.</li>'+
-        '<li>To report five moments in sequence without the account turning into a verdict.</li></ul>',
-  product:'Five moments from an observed class, reported in sequence to a colleague who was not in the room. Each moment separates what was going on from what happened, and any reading of it is marked as a reading. You listen as the colleague and ask for detail twice &mdash; the questions are written out in the note on that screen.',
-  criteria:'<ol><li>Uses the two past forms contrastively in at least three of the five moments.</li>'+
-           '<li>Keeps description and evaluation in separate clauses.</li>'+
-           '<li>Marks at least one evaluation as her own reading.</li>'+
-           '<li>Holds the forms when the second question forces her to narrate and evaluate together.</li></ol>'+
-           '<p>Criterion 4 is the diagnostic one. The forms are not the difficulty; carrying them under load is.</p>',
-  prep:'<ul><li><strong>Stage 1 is a diagnostic, and you do not correct it.</strong> She describes one moment with no support. What she produces there is what the lesson works on &mdash; correcting early erases the evidence.</li>'+
-       '<li><strong>The third point of the profile is measured here.</strong> The hypothesis is that the continuous does not disappear for lack of form, but under load &mdash; when she narrates and evaluates at once. Stage 1 narrates; stage 7 narrates and evaluates. Compare the two.</li>'+
-       '<li>The clarification in stage 4 covers meaning, form and pronunciation <strong>in the proportion the lesson needs</strong>. Do not present the whole system of English past forms: this lesson needs two of them.</li>'+
-       '<li>If she already produces both forms correctly in stage 1, the lesson does not lose its object: the axis moves to the second half &mdash; scene against verdict &mdash; which is what lesson 4 will demand.</li>'+
-       '<li><strong>Pacing.</strong> Stages 5 and 6 are short on purpose. The production in stage 7 is what cannot shrink.</li></ul>',
-  language:'<strong>The scene:</strong> <em>They were working in pairs&hellip;</em> &middot; <em>Two of them were still finishing when&hellip;</em><br><strong>The event:</strong> <em>&hellip;when you gave the instruction.</em> &middot; <em>&hellip;and the back table went quiet.</em><br><strong>Marking a reading:</strong> <em>What I noticed was&hellip;</em> &middot; <em>The way I read it&hellip;</em> &middot; <em>I might be wrong about this, but&hellip;</em><br>Pronunciation: the weak <em>were</em> /w&#601;/ in <em>they were working</em>. Stressed, it sounds like a correction of something the other person said; unstressed, it disappears into the scene &mdash; which is where it belongs.',
-  transcript:'There is no recorded audio in this lesson. The model sentences in stage 5 have a listen button each, and the transcript is the sentence itself, on screen. Nothing to open, nothing to keep closed.',
-  difficulties:'<ul><li><strong>The continuous under load.</strong> She has the form. Watch what happens in stage 7 when the second question makes her narrate and judge in the same breath &mdash; that is where it goes.</li>'+
-       '<li><strong>Verdict in the description.</strong> <em>The instruction was confusing</em> is a verdict wearing the clothes of a description. The test: could the teacher who taught it disagree with the sentence? If yes, it is a reading, and it has to say so.</li>'+
-       '<li><strong>Over-correcting into the continuous.</strong> After the clarification some learners put every verb in the continuous. Stage 6 is where that surfaces; the rule is not &ldquo;use it more&rdquo;, it is &ldquo;use it for the scene&rdquo;.</li></ul>',
-  scaffolding:'<strong>If the learner needs support:</strong> in stage 7, offer the first clause of each moment and let her complete it. If both forms collapse, drop to two moments instead of five &mdash; the criterion is contrastive use, not quantity.<br><strong>Challenge:</strong> if the five moments come out clean, ask for the sixth without preparation: <em>and what would you have done differently?</em> &mdash; which forces an unreal past she has not been taught, and shows how much of the form is available.',
-  feedback:'Two points from what she actually said. The likely one is the verdict that arrived inside a description. The retask is one moment, rebuilt with the reading marked &mdash; not the whole sequence.',
-  evidence:'Record: how many of the five moments used both forms contrastively; whether the collapse happened when the load rose; whether any evaluation was marked as hers; and what the sentence looked like before and after the retask. This is the second observation for <strong>H3</strong> and the first for the mitigation gap &mdash; neither is decided here.',
-  prepost:'The pre-class puts the two forms in front of her in someone else&rsquo;s writing and asks what each one is doing &mdash; it never asks her to produce them. That is deliberate: producing them before the lesson would spend the diagnostic. The post-class offers a reference on English past forms and a listening on observing teachers, both optional.',
-  key:'<strong>Stage 3:</strong> scene &mdash; 1, 4, 6; event &mdash; 2, 5; evaluation &mdash; 3. <strong>Stage 4:</strong> the contrast is aspect, not time: both happened, one is being looked at from inside. <strong>Stage 5:</strong> any sentence where the scene verb is continuous and the event verb is simple. <strong>Stage 6 and 7:</strong> no single answer; the criteria are the four above.'
+        '<li>To use the two past forms in the same sentence, while telling and evaluating at once.</li>'+
+        '<li>To mark a reading as a reading, so the teacher can disagree with it.</li>'+
+        '<li>To tell several moments in sequence to someone who was not there, and to answer questions about them.</li></ul>',
+  product:'Her account of a class on screen 9 (option A, a class she observed, or option B, the class in the observation note), told from her notes to a colleague who was not there, with the sentence starters closed: each moment with the scene and the event apart, and her reading marked. Then, on screen 10, her answers to two questions from the colleague and one question of her own.',
+  criteria:'<ul><li>She uses the two past forms contrastively in most of the moments.</li>'+
+           '<li>She keeps description and reading in separate clauses.</li>'+
+           '<li>She marks at least one reading as her own.</li>'+
+           '<li>The forms hold when the questions on screen 10 make her describe and evaluate together.</li></ul>',
+  prep:'<ul><li>Screen 2 is the version she already has, before any model. Write down one sentence she says there, word for word: she places it in the table on screen 6.</li>'+
+       '<li>The table on screen 6 covers the two forms this lesson needs. Other past forms are for another lesson.</li>'+
+       '<li>If she already uses both forms well on screen 2, the lesson keeps its object: the work moves to the second half, keeping the scene apart from the verdict, which lesson 4 needs.</li>'+
+       '<li>The questions for screen 10 are written in the note on that screen.</li></ul>',
+  language:'<strong>The scene:</strong> <em>They were working in pairs&hellip;</em> &middot; <em>Two of them were still finishing when&hellip;</em><br><strong>The event:</strong> <em>&hellip;when he gave the instruction.</em> &middot; <em>&hellip;and the back table went quiet.</em><br><strong>Marking a reading:</strong> <em>What I noticed was&hellip;</em> &middot; <em>The way I read it&hellip;</em> &middot; <em>I might be wrong about this, but&hellip;</em><br>Pronunciation: the weak <em>were</em> /w&#601;/ in <em>they were working</em>. Said strong, it sounds like a correction.',
+  transcript:'There is no recorded conversation in this lesson. The three model sentences on screen 7 each have a listen button, and the sentence itself is on screen.',
+  difficulties:'<ul><li><strong>The continuous may disappear under load.</strong> She may have the form and lose it when she tells and evaluates in the same breath &mdash; screen 9 and the second question on screen 10 are where to listen.</li>'+
+       '<li><strong>A verdict inside a description.</strong> <em>The instruction was confusing</em> sounds like a description and is a judgment. The test on screen 5: could the teacher who taught it disagree with the sentence?</li>'+
+       '<li><strong>Every verb in the continuous.</strong> After screen 6 she may put everything in the continuous. Screen 7 is where it shows; the form is for the scene, not for more verbs.</li></ul>',
+  scaffolding:'The sentence starters on screens 9 and 10 are behind a closed button: open them only if she stops, let her look, and close them again. Her notes from screen 8 stay in front of her on screen 9. If five moments are too many, three are enough.<br><br>'+
+    'If the account on screen 9 comes out clean, the challenge on screen 10 is to disagree with her reading and let her keep what she saw.',
+  feedback:'One point on screen 11, taken from the sentence you noted on screen 9, and then the replay: the same moment told to the teacher who taught the class. The point to improve is most likely a verdict inside a description, or a scene in the past simple.<br><br>'+
+    'Leave corrections for screen 11, except on screen 7, where correcting the form is the point.',
+  evidence:'<ul><li><strong>How many moments on screen 9 kept the scene and the event apart.</strong> It is the main record of the lesson.</li>'+
+    '<li>Her sentence from screen 2 and the version she said on screen 6.</li>'+
+    '<li>Whether the continuous held on screen 10, when the questions made her describe and evaluate together.</li>'+
+    '<li>Whether she marked a reading as hers without being asked, and asked a question of her own.</li></ul>',
+  prepost:'The pre-class shows the two forms in someone else&rsquo;s writing and asks what each one is doing. It never asks her to produce them, so screen 2 still shows the version she already has. The post-class has an optional recording, an optional written note, and two resources about past forms and observing teachers.',
+  key:'<strong>Screen 4:</strong> the scene &mdash; working in pairs, four hands still up, two still finishing; the event &mdash; he gave the next instruction, the back table went quiet; my reading &mdash; the instruction was confusing. <strong>Screen 5:</strong> the teacher could disagree with <em>The instruction was confusing</em>, and not with the others. <strong>Screen 7:</strong> were reading &middot; were still writing &middot; asked &middot; moved on.'
 }

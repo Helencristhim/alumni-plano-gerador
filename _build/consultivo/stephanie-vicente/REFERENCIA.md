@@ -35,6 +35,9 @@ carimbo — sem ele o builder recusa (`scripts/consultivo/geracao.py`).
 | Escuta com as perguntas lidas antes do Play, e o transcript só depois da checagem | aula 2, telas 4 e 5 (`wq2`) | aula 20, telas 4–6 (PR #2605: "Before pressing play" no `exact`) |
 | Conversa depois da tarefa gravada: o interlocutor faz duas perguntas escritas no `exact` | aula 2, tela 10 (Marta depois da call) | aula 19, tela 12; aula 21, tela 11 |
 | Replay com nova condição: outra pessoa responde e discorda | aula 2, tela 11 (Peter responde) | aula 19, tela 13 |
+| Lacuna de forma verbal declarada (`kind: lacuna`, `nu`), com o verbo entre parênteses para a resposta ser única, sem banco | aula 3, tela 7 (`cz3`) | aula 21, telas 4–6 (a mecânica tem de ser a que diz ser, PR #2618) |
+| Preparação em papel antes do turno longo (opção A/B + notas), sem campos de digitação na tela | aula 3, tela 8 | aula 21, tela 10 (escreve três perguntas e as faz sem ler na tela 11) |
+| A frase da aluna no diagnóstico volta mais tarde na aula, e o guia diz onde | aula 3, telas 2 → 6 → 11 | aula 21, telas 2 → 9 ("Your first six questions again") |
 
 ## O que NÃO copiar da Gabriela
 
