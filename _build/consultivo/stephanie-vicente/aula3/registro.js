@@ -2,8 +2,8 @@
     tema:'The scene and the verdict',      temaPre:'Five moments, before you tell them',
     canonico:'syllabus', statusKey:'af_l3_status',
     nav:['Lesson opening','Tell me what you saw','How they wrote it','What each form does',
-         'The rule you were using','Saying it out loud','Your own class','Five moments',
-         'What just happened','Today and next'],
+         'The one that is different','The rule you were using','Saying it out loud','Your own class',
+         'Five moments','Your colleague asks','What just happened','Today and next'],
     stages:[
       {n:'Communicative diagnostic',min:6},
       {n:'Contextualized input',min:5},
