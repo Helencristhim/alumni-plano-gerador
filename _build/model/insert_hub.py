@@ -273,6 +273,16 @@ def remove_lesson_blocks(s, n, slug, is_aluno):
             if not found:
                 break
     s, _ = _strip_enclosing(s, f'id="stamp{n}"')              # stamp do header
+    # CABEÇALHO ÓRFÃO dos Complementares. Tirar os wrappers `data-media="l{n}-" deixa para
+    # trás o par <h4>Lesson {n} — TÍTULO ANTIGO</h4> + <div class="media-grid"></div> VAZIO,
+    # que a inserção nova não reaproveita (ela escreve o seu próprio par). Resultado visível
+    # na tela do aluno: um título da versão substituída, sozinho, sem card nenhum embaixo.
+    # Só remove quando a grade ficou de fato VAZIA — um <h4> com cards embaixo é de outra
+    # aula e nunca se toca.
+    s = re.sub(
+        r'\n*<h4[^>]*>Lesson %d\s*(?:&mdash;|—|-)[^<]*</h4>\s*'
+        r'<div class="media-grid">\s*</div>\n*' % n,
+        '\n\n', s)
     # audioMap: some com as entradas pcN_/[order-lN] da versão ANTIGA. O merge_audiomap
     # recoloca, logo em seguida, exatamente as da versão nova — então tirar aqui é
     # idempotente. Antes de 25/08/2026 estas chaves ficavam para trás como "órfãs
