@@ -607,6 +607,32 @@ jobs:
         # Ele PROÍBE em vez de conferir: contar dá o número certo de outra coisa.
         run: python3 scripts/consultivo/check_conta_o_audio.py
 
+      - name: "GATE 74 — selftest: prova que o gate do tempo na tela ainda morde"
+        run: python3 scripts/consultivo/check_tempo_na_tela.py --selftest
+
+      - name: "GATE 74 — o tempo de produção da aluna não vai para a tela projetada"
+        # A02 §3 e a revisão das aulas 19 e 20 da Gabriela (09 e 11/09/2026): "You have
+        # five seconds", "Three seconds are yours" saíram da tela. Mede só o tempo preso
+        # à ação da aluna; tempo autêntico da tarefa se declara no guia (`tempo_na_tela`).
+        # Escopo: aulas com geracao.json gen>=1 — nenhuma aula anterior a 15/09 é medida.
+        run: python3 scripts/consultivo/check_tempo_na_tela.py
+
+      - name: "GATE 75 — selftest: prova que o gate dos cartões encostados ainda morde"
+        run: python3 scripts/consultivo/check_cartoes_encostados.py --selftest
+
+      - name: "GATE 75 — dois cartões da mesma tela não encostam (medido no chromium)"
+        # Revisão da aula 21 da Gabriela (PR #2626): o .word-bank encostava no .two-col
+        # (0px). Só aparece com a tela desenhada e os recolhidos abertos.
+        run: python3 scripts/consultivo/check_cartoes_encostados.py
+
+      - name: "GATE 76 — selftest: prova que o gate do deck declarado ainda morde"
+        run: python3 scripts/consultivo/check_deck_declarado.py --selftest
+
+      - name: "GATE 76 — no deck, a atividade fechada vem do emissor (blocos.json)"
+        # O GATE 45 cobre pre/post-class e avisa que o deck ficou de fora. As aulas 19-21
+        # da Gabriela declaram o deck inteiro; o molde tinha zero <!--BLOCOS: no deck.
+        run: python3 scripts/consultivo/check_deck_declarado.py
+
       - name: "GATE 73 — selftest: prova que o gate do Back to top ainda morde"
         run: python3 scripts/consultivo/check_ao_topo_no_fim.py --selftest
 
