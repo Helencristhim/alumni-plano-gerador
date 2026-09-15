@@ -34,6 +34,7 @@ O QUE ELE GARANTE
 
 USO
     python3 _build/model/patch_extras_progress.py --hub public/aluno/<slug>.html [--dry-run]
+        [--aba SLOT:SELETOR ...]   (sem --aba: as abas do Diego, bloco identico ao publicado)
 """
 import argparse
 import re
@@ -48,12 +49,7 @@ BLOCO = ABRE + '''
    Gospel). Mesma conta do Pre-class, em atributos proprios `data-extra-*`.
    Ver _build/model/patch_extras_progress.py. */
 (function () {
-  var ABAS = [
-    { tab: 'xpractice', cards: '.lesson-card[id^="xp-lesson-"]' },
-    { tab: 'uslife',    cards: '.lesson-card[id^="us-lesson-"]' },
-    { tab: 'gospel',    cards: '.media-card-wrapper[data-media^="gs-song-"]' },
-    { tab: 'expressions', cards: '.lesson-card[id^="ae-group-"]' }
-  ];
+@@ABAS@@
 
   // MESMAS unidades que o updateProgress() do hub conta numa aula do Pre-class,
   // para que 60% numa aba queira dizer o mesmo que 60% numa aula.
@@ -125,11 +121,11 @@ BLOCO = ABRE + '''
   // Rede de seguranca: exercicio que nao passe pelo updateProgress (um check
   // que so muda classe, o checkbox da musica) mesmo assim redesenha a barra.
   document.addEventListener('click', function (ev) {
-    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel, #tab-expressions') : null;
+    var alvo = ev.target && ev.target.closest ? ev.target.closest(@@SEL@@) : null;
     if (alvo) setTimeout(updateExtrasProgress, 60);
   }, true);
   document.addEventListener('change', function (ev) {
-    var alvo = ev.target && ev.target.closest ? ev.target.closest('#tab-xpractice, #tab-uslife, #tab-gospel, #tab-expressions') : null;
+    var alvo = ev.target && ev.target.closest ? ev.target.closest(@@SEL@@) : null;
     if (alvo) setTimeout(updateExtrasProgress, 60);
   }, true);
 
@@ -141,11 +137,41 @@ BLOCO = ABRE + '''
 ''' + FECHA
 
 
+# Abas do Diego, o primeiro aluno com extras. Sem --abas, o bloco sai BYTE A BYTE
+# igual ao que ja esta no hub dele.
+ABAS_PADRAO = [('xpractice', '.lesson-card[id^="xp-lesson-"]'),
+               ('uslife', '.lesson-card[id^="us-lesson-"]'),
+               ('gospel', '.media-card-wrapper[data-media^="gs-song-"]'),
+               ('expressions', '.lesson-card[id^="ae-group-"]')]
+_ABAS_PADRAO_JS = '''  var ABAS = [
+    { tab: 'xpractice', cards: '.lesson-card[id^="xp-lesson-"]' },
+    { tab: 'uslife',    cards: '.lesson-card[id^="us-lesson-"]' },
+    { tab: 'gospel',    cards: '.media-card-wrapper[data-media^="gs-song-"]' },
+    { tab: 'expressions', cards: '.lesson-card[id^="ae-group-"]' }
+  ];'''
+_SEL_PADRAO_JS = "'#tab-xpractice, #tab-uslife, #tab-gospel, #tab-expressions'"
+
+
+def monta_bloco(abas):
+    """O bloco para uma lista de (slot, seletor dos cards). Padrao = Diego."""
+    if abas == ABAS_PADRAO:
+        abas_js, sel_js = _ABAS_PADRAO_JS, _SEL_PADRAO_JS
+    else:
+        abas_js = ('  var ABAS = [\n' + ',\n'.join(
+            "    { tab: '%s', cards: '%s' }" % (t, c) for t, c in abas) + '\n  ];')
+        sel_js = "'" + ', '.join('#tab-' + t for t, _ in abas) + "'"
+    return BLOCO.replace('@@ABAS@@', abas_js).replace('@@SEL@@', sel_js)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--hub', required=True)
     ap.add_argument('--dry-run', action='store_true')
+    ap.add_argument('--aba', action='append', metavar='SLOT:SELETOR',
+                    help='aba a medir (repetivel). Sem nenhuma, usa as abas do Diego.')
     args = ap.parse_args()
+    abas = [tuple(a.split(':', 1)) for a in args.aba] if args.aba else ABAS_PADRAO
+    bloco = monta_bloco(abas)
 
     with open(args.hub, encoding='utf-8') as f:
         html = f.read()
@@ -157,7 +183,7 @@ def main():
 
     velho = re.search(re.escape(ABRE) + r'.*?' + re.escape(FECHA), html, re.S)
     if velho:
-        html = html[:velho.start()] + BLOCO + html[velho.end():]
+        html = html[:velho.start()] + bloco + html[velho.end():]
         acao = 'substituido'
     else:
         # Depois das libs, imediatamente antes de </body>: e o que garante que o
@@ -165,7 +191,7 @@ def main():
         if '</body>' not in html:
             sys.exit('ERRO: %s nao tem </body>.' % args.hub)
         i = html.rindex('</body>')
-        html = html[:i] + BLOCO + '\n' + html[i:]
+        html = html[:i] + bloco + '\n' + html[i:]
         acao = 'inserido'
 
     # O hub so pode crescer, e nada fora do bloco pode ter mudado.
