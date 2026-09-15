@@ -1,29 +1,31 @@
 {
-  goals:'<strong>To give observation feedback to a teacher from another country, in a way he can disagree with &mdash; and to hold it when he does.</strong><ul>'+
+  goals:'<strong>To give observation feedback to a teacher from another country, in a way he can disagree with &mdash; and to keep it when he does.</strong><ul>'+
         '<li>To open with what was seen, before any evaluation of it.</li>'+
         '<li>To make a recommendation that leaves room for an answer.</li>'+
         '<li>To say where she might be wrong without withdrawing the point.</li>'+
         '<li>To ask what he was trying to do, and to use the answer.</li>'+
-        '<li>To close with one thing he can act on this week.</li></ul>',
-  product:'The feedback conversation, twice. In round one the teacher accepts and asks for detail. In round two he disagrees head on &mdash; and he is partly right, which is the point. She holds the recommendation without hardening it and without dropping it.',
-  criteria:'<ol><li>Opens with an observation, not with a judgment.</li>'+
-           '<li>Makes at least one recommendation in a form he could refuse.</li>'+
-           '<li>Answers the disagreement by using what he says, not by repeating herself.</li>'+
-           '<li>Ends with something concrete, agreed or explicitly left open.</li></ol>'+
-           '<p>Criterion 3 is the one this cycle exists for, and it is the first time it is measured under real disagreement.</p>',
-  prep:'<ul><li><strong>Stage 2 is the first attempt and it comes before any model.</strong> She gives the feedback as she would give it today. Observe and do not correct: it is the baseline against which stage 6 is read &mdash; the first production comes before the support when the repertoire is there.</li>'+
-       '<li><strong>H1 of the profile is decided here, crossed with lesson 3.</strong> The hypothesis is that the recommendation comes out as an order for lack of mitigation language, not by choice of register. If the repertoire appears in stage 5 and stage 6 changes, H1 is confirmed.</li>'+
-       '<li>Choose the two lines for the observed teacher before the lesson &mdash; round one (accepts, asks for detail) and round two (disagrees). Both are written out in the notes on screens 7 and 9.</li>'+
-       '<li><strong>The pressure comes from the situation, never from the tone.</strong> He disagrees with an argument, and he is partly right: he did ask a checking question, and she did not see it.</li>'+
-       '<li>No real school data enters the lesson. The case is fictional and the material says so.</li></ul>',
-  language:'<strong>Opening with the observation:</strong> <em>What I noticed was&hellip;</em> &middot; <em>From where I was sitting&hellip;</em><br><strong>Recommending so it can be refused:</strong> <em>One thing you might try is&hellip;</em> &middot; <em>It might be worth&hellip;</em> &middot; <em>Have you thought about&hellip;?</em><br><strong>Holding it under disagreement:</strong> <em>That is fair &mdash; and the part I would still look at is&hellip;</em> &middot; <em>I might be wrong about the reason. What I saw was&hellip;</em><br><strong>Asking, and meaning it:</strong> <em>What were you trying to do at that point?</em> &middot; <em>How did that feel from where you were?</em><br>Pronunciation: falling intonation on <em>might</em>. Rising, it turns a suggestion into a request for permission.',
-  transcript:'There is no recorded audio in this lesson. The model in stage 3 is written on screen and has a listen button per line; the text is the transcript. Nothing to open, nothing to keep closed.',
-  difficulties:'<ul><li><strong>The recommendation as an order.</strong> <em>You have to give the instruction before they start</em> is the form she has. It is not rudeness &mdash; it is the only structure available, and stage 5 is where the alternatives arrive.</li>'+
-       '<li><strong>Withdrawing under disagreement.</strong> The opposite failure: he pushes, and the recommendation disappears entirely. Holding it means keeping the observation and conceding the reason.</li>'+
-       '<li><strong>Answering the argument she expected.</strong> When his objection is partly right, the temptation is to repeat the original point louder. The criterion is using what he said.</li></ul>',
-  scaffolding:'<strong>If the learner needs support:</strong> in round one, let her keep the three-line note from stage 5. If the recommendation comes out as an order, do not correct it live &mdash; note it and rebuild it in stage 7, with her sentence.<br><strong>Challenge:</strong> if round two goes well, add the third line &mdash; <em>so what would you have done, in my place?</em> &mdash; which asks her to hold the recommendation while imagining the constraint he had.',
-  feedback:'Two points from her own formulation. The likely one is the shape of the recommendation. The upgrade is one sentence, and round two is where it gets used &mdash; not a separate exercise.',
-  evidence:'Record: the form of the recommendation in stage 2 and in stage 6, side by side; whether she used what he said in the disagreement; whether the observation survived the pushback. This is the deciding observation for <strong>H1</strong> and it closes block 1 &mdash; the lesson that closes the block reads these four lessons together.',
-  prepost:'The pre-class gives her the case and the vocabulary and asks her to sort other people&rsquo;s sentences by how answerable they are. It never asks her to write her own feedback: that is the first attempt, and it belongs to the lesson. The post-class offers a reading on observing teachers and a listening on feedback after observation, both optional.',
-  key:'<strong>Stage 4:</strong> answerable &mdash; 2, 4, 6; not answerable &mdash; 1, 3, 5. The test is whether the teacher could say <em>no, because&hellip;</em> and still be talking about the same thing. <strong>Stage 5:</strong> any form that leaves the decision with him. <strong>Stages 6 and 8:</strong> no single answer; the criteria are the four above.'
+        '<li>To close with one thing he can try this week.</li></ul>',
+  product:'The feedback conversation, twice. In round one (screens 8 and 9) she chooses what to give feedback on &mdash; the instructions or the checking question &mdash; and the teacher listens and asks for detail. In round two (screen 11) he disagrees, and he is partly right. She keeps the recommendation without hardening it and without dropping it.',
+  criteria:'<ul><li>She opens with an observation, not with a judgment.</li>'+
+           '<li>At least one recommendation comes in a form he could refuse.</li>'+
+           '<li>She answers the disagreement by using what he says, not by repeating herself.</li>'+
+           '<li>The conversation ends with something concrete, agreed or openly left for later.</li></ul>',
+  prep:'<ul><li>Screen 3 is the feedback she gives today, before any model. Write down her recommendation word for word: it goes next to the round-one version on screen 10.</li>'+
+       '<li>The lines you say as the teacher are written in the notes on screens 8, 9 and 11, for both options.</li>'+
+       '<li>In round two the pressure comes from what he says, not from the tone. He disagrees with an argument, and part of it is right.</li>'+
+       '<li>The case is fictional. If she asks, confirm it.</li></ul>',
+  language:'<strong>Opening with the observation:</strong> <em>What I noticed was&hellip;</em> &middot; <em>From where I was sitting&hellip;</em><br><strong>Recommending so it can be refused:</strong> <em>One thing you might try is&hellip;</em> &middot; <em>It might be worth&hellip;</em> &middot; <em>Have you thought about&hellip;?</em><br><strong>Keeping it under disagreement:</strong> <em>That is fair &mdash; and the part I would still look at is&hellip;</em> &middot; <em>I might be wrong about the reason. What I saw was&hellip;</em><br><strong>Asking, and meaning it:</strong> <em>What were you trying to do at that point?</em><br>Pronunciation: falling intonation on <em>might</em>. Rising, it turns a suggestion into a request for permission.',
+  transcript:'There is no recorded conversation in this lesson. The model on screen 4 is written on screen, with a listen button for each line.',
+  difficulties:'<ul><li><strong>The recommendation as an order.</strong> <em>You have to give the instruction before they start</em> may be the form she has. It is a gap in repertoire, not rudeness, and screens 5 to 7 bring the alternatives.</li>'+
+       '<li><strong>Dropping the point under disagreement.</strong> The opposite difficulty: he pushes, and the recommendation disappears. Keeping it means keeping the observation and conceding the reason.</li>'+
+       '<li><strong>Answering the argument she expected.</strong> When his objection is partly right, she may repeat the original point more strongly. The criterion is using what he said.</li></ul>',
+  scaffolding:'The sentence starters on screens 8, 9 and 11 are behind a closed button: open them only if she stops, let her look, and close them again. If the recommendation comes out as an order in round one, note it and rebuild it on screen 10 with her own sentence.<br><br>'+
+    'If round two goes well, add a second objection about the slower pairs and see whether the observation still stands.',
+  feedback:'Screen 10 puts her recommendation from screen 3 next to the one from round one. One point to improve, and one sentence for round two. The likely point is the form of the recommendation.',
+  evidence:'<ul><li><strong>The recommendation on screen 3 and on screen 8, side by side.</strong> It is the main record of the lesson.</li>'+
+    '<li>Whether her answers on screen 9 stayed with what she saw, and whether she asked a question of her own.</li>'+
+    '<li>What of her feedback was still there after the disagreement on screen 11.</li>'+
+    '<li>The option she chose on screen 8.</li></ul>',
+  prepost:'The pre-class gives her the observation notes and the vocabulary, and asks her to sort other people&rsquo;s sentences by how answerable they are. It never asks her to write her own feedback, so screen 3 still shows the version she already has. The post-class has an optional recording, an optional written note, and two resources about observing teachers and giving feedback.',
+  key:'<strong>Screen 5:</strong> he can answer it &mdash; <em>One thing you might try&hellip;</em>, <em>Have you thought about&hellip;?</em>, <em>It might be worth&hellip; what do you think?</em>; he can only accept it &mdash; <em>You have to&hellip;</em>, <em>Please give&hellip;</em>, <em>The instruction needs to come first</em>. <strong>Screen 7:</strong> might try &middot; Have you thought about &middot; might be worth &middot; might be wrong.'
 }
