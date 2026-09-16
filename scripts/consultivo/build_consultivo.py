@@ -56,6 +56,7 @@ import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
 import voz  # noqa: E402  a MESMA lista que o GATE 51 usa
 import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de render.py
 import geracao  # noqa: E402  o carimbo que escopa os gates de material novo
+import checkpoint_ciclo  # noqa: E402  as aulas do painel de checkpoint (tambem lidas por voz.py e pelo gate)
 
 CAMPOS_GUIA = ["goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
@@ -801,6 +802,10 @@ def monta(cfg, base_frag):
     # O modo de apoio vale para TODA a emissao deste material -- e por isso e configurado
     # aqui, uma vez, antes de a primeira atividade ser emitida.
     render.configura(apoio_de(cfg))
+    # o intervalo do checkpoint vem do ciclo; sem ele, recusa antes de montar qualquer coisa
+    _, erro_cp = checkpoint_ciclo.intervalo(cfg.get("ciclo"))
+    if erro_cp:
+        return "", 0, [erro_cp]
 
     # ---- registro
     lessons, guides, slides, erros = [], [], [], []
@@ -1022,6 +1027,9 @@ def monta(cfg, base_frag):
     js = js[:ib] + boot + js[fb:]
 
     html = cabeca + js
+    # o painel de checkpoint: os numeros de aula saem do ciclo deste aluno (checkpoint_ciclo)
+    html, erros_cp = checkpoint_ciclo.preenche(html, cfg["ciclo"])
+    erros += erros_cp
 
     # ---- regioes de conteudo
     # A ABA PLANNING TEM DUAS METADES, E A DO ALUNO NAO PODE FALTAR.

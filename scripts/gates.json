@@ -615,6 +615,15 @@
    "caminho": "scripts/consultivo",
    "nota": "INT-002 do catalogo do auditor (25/08/2026), e o defeito era REAL: o molde publicado trazia na aba Feedback os botoes 'Lesson 19' e 'Lesson 20' e os titulos do artefato do Marcos, num ciclo de aulas 1 a 4 -- nos DOIS arquivos, e a aba e do ALUNO. Nenhum gate viu porque todos olhavam o que o builder EMITE, e este e do que ele NAO emitia: a regiao ficou intacta, valida e de outro aluno. Dai a pergunta deste gate nao ser 'o builder emitiu certo?' e sim 'o arquivo publicado fala de aula que nao existe neste ciclo?'. Le o intervalo do proprio var LESSONS. Comentario de HTML/CSS/JS e data-teacher NAO contam: o primeiro nao chega ao olho de ninguem e o segundo pode citar outra aula de proposito."
   },
+  "check_checkpoint_do_ciclo.py": {
+   "gate": 78,
+   "tipo": "integridade",
+   "escopo": {
+    "marcador": "alumni-anatomia=consultivo"
+   },
+   "caminho": "scripts/consultivo",
+   "nota": "O painel de checkpoint do Registro pos-aula saiu do artefato do Marcos com 'Checkpoint da aula 22', 'Decisao sobre as aulas 23-38' e 'as aulas 19 a 22' escritos em texto, e os oito materiais do consultivo carregavam isso (16/09/2026): na Adriana, ciclo 4-23, o professor decidia sobre as aulas 23-38. O JS ja derivava a aula do checkpoint de CICLO, entao o painel liberava na aula certa e anunciava a errada; o GATE 39 nao via porque procura 'Aula N' maiusculo e singular. Conserto: marcadores no shell (extrai_shell.CORRECOES checkpoint-*) preenchidos pelo builder a partir do ciclo do config (checkpoint_ciclo.py). Mede no arquivo do professor, contra o config: var CICLO igual ao config, painel presente, todo intervalo 'aulas X-Y'/'X a Y' do painel e da lista var CP e o bloco 1 ou o restante do ciclo, toda aula rotulada como a do checkpoint e a ultima do bloco 1; e nenhum marcador {{CP_...}} sobrando nos dois arquivos. NAO mede as citacoes soltas dos exemplos da secao C ('a aula 29 se confirma como Grammar'), que sao do syllabus do Marcos e nao tem dado no config para ser escritas certo."
+  },
   "validate_consultivo.py": {
    "gate": 37,
    "tipo": "anatomia",
