@@ -1096,6 +1096,59 @@ function exRefaz(btn,id){
  ("ordenar-arrastando-js",
   ANCORA_JS_SORT,
   JS_ORDENAR),
+
+ # ---- O PAINEL DE CHECKPOINT FALA DAS AULAS DO ALUNO (16/09/2026)
+ #
+ # O painel de checkpoint do Registro pos-aula saiu do artefato com os numeros do ciclo do
+ # Marcos cravados em texto: "Checkpoint da aula 22", "Decisao sobre as aulas 23-38", "as
+ # aulas 19 a 22 continuam registradas". O JS ja derivava a aula do checkpoint de CICLO
+ # (`cpAula()`), entao o painel LIBERAVA na aula certa e ANUNCIAVA a errada: na Adriana
+ # (bloco 4-7, ciclo 4-23) a professora decidia sobre "as aulas 23-38", quinze delas fora do
+ # contrato. Os oito materiais do consultivo sairam assim.
+ #
+ # O numero vira MARCADOR aqui e o builder preenche a partir do `ciclo` do config
+ # (`checkpoint_ciclo.preenche`, chamado por `build_consultivo.monta`). Os quatro marcadores:
+ #     {{CP_PRIMEIRA}}  primeira aula do ciclo (= primeira do bloco 1)
+ #     {{CP_AULA}}      ultima aula do bloco 1, a do checkpoint
+ #     {{CP_RESTO}}     primeira aula depois do checkpoint
+ #     {{CP_FIM}}       ultima aula do ciclo
+ # Quem trava e o GATE 78 (`check_checkpoint_do_ciclo.py`).
+ #
+ # FICAM DE FORA, de proposito: "a aula 29 se confirma como Grammar" e "nao se sustentar na
+ # aula 19" (secao C). Sao exemplos escritos sobre o syllabus do Marcos -- a posicao de
+ # Grammar e a aula de listening multi-speaker DELE --, e nenhum campo do config diz qual
+ # aula do outro aluno ocupa esse lugar. Trocar so o numero produziria exemplo falso.
+ ("checkpoint-titulo",
+  """<h3 class="sub">Checkpoint da aula 22</h3>""",
+  """<h3 class="sub">Checkpoint da aula {{CP_AULA}}</h3>"""),
+
+ ("checkpoint-aviso",
+  """Disponível depois do registro da aula 22.</p>""",
+  """Disponível depois do registro da aula {{CP_AULA}}.</p>"""),
+
+ ("checkpoint-decisao-select",
+  """<label for="cp-decisao">Decisão sobre as aulas 23–38</label><select id="cp-decisao" data-k="cp_decisao" onchange="persSave(this)"><option value="" selected="selected">Ainda não decidido</option><option value="Confirmar">Confirmar as aulas 23–38</option><option value="Ajustar">Ajustar parcialmente as aulas 23–38</option><option value="Reconfigurar">Reconfigurar as aulas 23–38</option></select>""",
+  """<label for="cp-decisao">Decisão sobre as aulas {{CP_RESTO}}–{{CP_FIM}}</label><select id="cp-decisao" data-k="cp_decisao" onchange="persSave(this)"><option value="" selected="selected">Ainda não decidido</option><option value="Confirmar">Confirmar as aulas {{CP_RESTO}}–{{CP_FIM}}</option><option value="Ajustar">Ajustar parcialmente as aulas {{CP_RESTO}}–{{CP_FIM}}</option><option value="Reconfigurar">Reconfigurar as aulas {{CP_RESTO}}–{{CP_FIM}}</option></select>"""),
+
+ ("checkpoint-checklist-titulo",
+  """<h4>Checklist do professor — aula 22</h4>""",
+  """<h4>Checklist do professor — aula {{CP_AULA}}</h4>"""),
+
+ ("checkpoint-checklist-item-html",
+  """<span>Decisão registrada: confirmar, ajustar parcialmente ou reconfigurar as aulas 23–38</span>""",
+  """<span>Decisão registrada: confirmar, ajustar parcialmente ou reconfigurar as aulas {{CP_RESTO}}–{{CP_FIM}}</span>"""),
+
+ ("checkpoint-checklist-item-js",
+  """ "Decisão registrada: confirmar, ajustar parcialmente ou reconfigurar as aulas 23–38"\n];""",
+  """ "Decisão registrada: confirmar, ajustar parcialmente ou reconfigurar as aulas {{CP_RESTO}}–{{CP_FIM}}"\n];"""),
+
+ ("checkpoint-decisao-titulo",
+  """<h3 class="sub">C · Decisão sobre as aulas 23–38</h3>""",
+  """<h3 class="sub">C · Decisão sobre as aulas {{CP_RESTO}}–{{CP_FIM}}</h3>"""),
+
+ ("checkpoint-preservacao",
+  """as aulas 19 a 22 continuam \nregistradas como aprendizagem válida e evidência diagnóstica. Só as \naulas 23 a 38 são redesenhadas.""",
+  """as aulas {{CP_PRIMEIRA}} a {{CP_AULA}} continuam \nregistradas como aprendizagem válida e evidência diagnóstica. Só as \naulas {{CP_RESTO}} a {{CP_FIM}} são redesenhadas."""),
 ]
 
 

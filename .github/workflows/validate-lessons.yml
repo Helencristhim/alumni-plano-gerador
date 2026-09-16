@@ -492,6 +492,15 @@ jobs:
       - name: "GATE 39 — o material fala só das aulas do próprio ciclo"
         run: python3 scripts/consultivo/check_ciclo_limpo.py
 
+      - name: "GATE 78 — selftest: prova que o gate do painel de checkpoint ainda morde"
+        run: python3 scripts/consultivo/check_checkpoint_do_ciclo.py --selftest
+
+      # Sem `if:`, como o GATE 39: escopa pelo carimbo e varre os materiais do consultivo
+      # inteiros -- o defeito (aulas 23–38 do artefato no painel) estava em arquivos que o PR
+      # nao tocava, e so muda quando o SHELL muda.
+      - name: "GATE 78 — o painel de checkpoint fala das aulas do ciclo do aluno"
+        run: python3 scripts/consultivo/check_checkpoint_do_ciclo.py
+
       - name: "GATE 40 — selftest: prova que o gate do áudio oficial ainda morde"
         run: python3 scripts/consultivo/check_audio_oficial.py --selftest
 

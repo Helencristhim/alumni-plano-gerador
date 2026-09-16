@@ -27,6 +27,10 @@ import html as _html
 import json
 import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import checkpoint_ciclo  # noqa: E402  o painel de checkpoint do shell vem com marcadores
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SHELL = os.path.join(RAIZ, "_build", "model", "shells", "consultivo.html")
@@ -96,13 +100,24 @@ def superficie(c):
     return corpo + "\n" + teacher + "\n" + js
 
 
-def shell_superficie():
-    """Os rotulos fixos da interface, que sao do molde e nao do autor da aula."""
+def shell_superficie(ciclo=None):
+    """Os rotulos fixos da interface, que sao do molde e nao do autor da aula.
+
+    O painel de checkpoint do shell traz MARCADORES no lugar dos numeros de aula
+    (`checkpoint_ciclo`), e o material os recebe preenchidos. Sem preencher aqui com o ciclo
+    do MESMO material, "Checkpoint da aula {{CP_AULA}}" e "Checkpoint da aula 7" seriam
+    janelas diferentes, e o rotulo do shell passaria por texto do autor."""
     global _shell_cache
     if _shell_cache is None:
-        _shell_cache = (superficie(open(SHELL, encoding="utf-8", errors="replace").read())
-                        if os.path.exists(SHELL) else "")
-    return _shell_cache
+        _shell_cache = {}
+    chave = tuple(sorted((ciclo or {}).items()))
+    if chave not in _shell_cache:
+        bruto = (open(SHELL, encoding="utf-8", errors="replace").read()
+                 if os.path.exists(SHELL) else "")
+        if ciclo:
+            bruto, _ = checkpoint_ciclo.preenche(bruto, ciclo, exige_marcadores=False)
+        _shell_cache[chave] = superficie(bruto)
+    return _shell_cache[chave]
 
 
 def janelas(texto, rx):
@@ -117,9 +132,9 @@ def janelas(texto, rx):
     return saida
 
 
-def do_autor(s, rx):
+def do_autor(s, rx, ciclo=None):
     """As ocorrencias que o AUTOR acrescentou, subtraindo o que ja vem do shell."""
-    do_shell = set(janelas(shell_superficie(), rx))
+    do_shell = set(janelas(shell_superficie(ciclo), rx))
     return [j for j in janelas(s, rx) if j not in do_shell]
 
 
@@ -313,10 +328,11 @@ def confere(html_do_material, slug=None, tratamento="", de_artefato=False):
     `slug` e `tratamento` vem do config: sem eles, a regra de aluno e a de genero nao tem
     contra o que medir e sao puladas."""
     s = superficie(html_do_material)
+    ciclo = checkpoint_ciclo.ciclo_do_material(html_do_material)
     fora = []
 
     for rid, texto, rx in REGRAS:
-        achou = do_autor(s, rx)
+        achou = do_autor(s, rx, ciclo)
         if achou:
             fora.append(f"VOZ DO MATERIAL ({rid}, {len(achou)}x): {texto} "
                         f"Primeira: “...{achou[0]}...”")
@@ -334,8 +350,8 @@ def confere(html_do_material, slug=None, tratamento="", de_artefato=False):
                     f"nome; se e observacao interna, ela nao vai para a tela.")
 
     decl = (tratamento or "").strip().lower()
-    fem = do_autor(s, MARCADO_F)
-    masc = do_autor(s, MARCADO_M)
+    fem = do_autor(s, MARCADO_F, ciclo)
+    masc = do_autor(s, MARCADO_M, ciclo)
     if fem and "professora" not in decl:
         fora.append(
             f"GENERO DO DOCENTE: o material trata quem da a aula no feminino ({len(fem)}x) "
