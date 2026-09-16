@@ -53,7 +53,7 @@ ANTERIORES = frozenset({
     "caio-de-souza-amante/aula1", "caio-de-souza-amante/aula2",
     "caio-de-souza-amante/aula3", "caio-de-souza-amante/aula4",
     "gabriela-pires/aula19", "gabriela-pires/aula20",
-    "gabriela-pires/aula21", "gabriela-pires/aula22",
+    "gabriela-pires/aula21",
     "joice-lopes-leite/aula9", "joice-lopes-leite/aula10",
     "joice-lopes-leite/aula11", "joice-lopes-leite/aula12",
     "lucia-nishiyama-serra/aula3", "lucia-nishiyama-serra/aula4",
