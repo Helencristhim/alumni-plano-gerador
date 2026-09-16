@@ -1114,10 +1114,10 @@ function exRefaz(btn,id){
  #     {{CP_FIM}}       ultima aula do ciclo
  # Quem trava e o GATE 78 (`check_checkpoint_do_ciclo.py`).
  #
- # FICAM DE FORA, de proposito: "a aula 29 se confirma como Grammar" e "nao se sustentar na
- # aula 19" (secao C). Sao exemplos escritos sobre o syllabus do Marcos -- a posicao de
- # Grammar e a aula de listening multi-speaker DELE --, e nenhum campo do config diz qual
- # aula do outro aluno ocupa esse lugar. Trocar so o numero produziria exemplo falso.
+ # Os exemplos da secao C ("a aula 29 se confirma como Grammar", "nao se sustentar na aula
+ # 19") nao viram marcador: sao do syllabus do Marcos, e nenhum campo do config diz qual aula
+ # do outro aluno ocupa aquela posicao. Trocar so o numero produziria exemplo falso. Eles
+ # viram texto sem numero no bloco "checkpoint-exemplo-*" abaixo.
  ("checkpoint-titulo",
   """<h3 class="sub">Checkpoint da aula 22</h3>""",
   """<h3 class="sub">Checkpoint da aula {{CP_AULA}}</h3>"""),
@@ -1145,6 +1145,66 @@ function exRefaz(btn,id){
  ("checkpoint-decisao-titulo",
   """<h3 class="sub">C · Decisão sobre as aulas 23–38</h3>""",
   """<h3 class="sub">C · Decisão sobre as aulas {{CP_RESTO}}–{{CP_FIM}}</h3>"""),
+
+ # ---- O PAINEL DE CHECKPOINT NAO FALA DO PERFIL DO MARCOS (16/09/2026)
+ #
+ # Alem dos numeros, o painel trazia texto escrito para o perfil dele, e os oito materiais o
+ # herdavam: o exemplo da secao C cita a aula 29 (Grammar) e a aula 19 (listening
+ # multi-speaker) do syllabus dele; a secao D oferece "Novo ciclo em B1 / Modulo B1+ /
+ # Modulo B2" a quem e A1 ou A2; a leitura da progressao diz que interaction e speaking sao os
+ # objetivos declarados; o checklist pede interferencia "do espanhol", "repertorio tecnico" e
+ # afirma que escrita "nao e objetivo do bloco 1". Nada disso tem campo no config.
+ #
+ # Troca-se por instrucao ao professor que vale para qualquer aluno: sem numero de aula, sem
+ # nivel, mantendo o que cada exemplo ensina a decidir. Quem trava e o GATE 78: numero de aula
+ # fora do ciclo e nivel CEFR diferente do `ciclo.nivel` do config reprovam no painel.
+ ("checkpoint-exemplo-ajustar",
+  """Ex.:\n se a precisão estrutural continuar comprometendo a clareza, a aula 29 \nse confirma como Grammar; se não, aquela posição vira Listening ou Personalized Real-World English.""",
+  """Ex.:\n se a precisão estrutural continuar comprometendo a clareza, a aula de Grammar \ndo próximo bloco se confirma; se não, aquela posição vira Listening ou Personalized Real-World English."""),
+
+ ("checkpoint-exemplo-reconfigurar",
+  """Ex.: se o listening multi-speaker não se \nsustentar na aula 19, o bloco 2 inteiro muda de função.""",
+  """Ex.: se a compreensão de conversa entre mais de um falante \nnão se sustentar na aula de Listening, o bloco seguinte inteiro muda de função."""),
+
+ ("checkpoint-rota-novo-ciclo",
+  """<td><strong>Novo ciclo em B1</strong></td>""",
+  """<td><strong>Novo ciclo no nível confirmado</strong></td>"""),
+
+ ("checkpoint-rota-modulo-transicao",
+  """<td><strong>Módulo B1+</strong></td>""",
+  """<td><strong>Módulo de transição para o nível seguinte</strong></td>"""),
+
+ ("checkpoint-rota-modulo-seguinte",
+  """<td><strong>Módulo B2</strong></td>""",
+  """<td><strong>Módulo no nível seguinte</strong></td>"""),
+
+ ("checkpoint-leitura-progressao",
+  """\nInteraction e speaking recebem atenção específica por estarem \ndiretamente ligados aos objetivos declarados. Desempenho receptivo \nsuperior não compensa lacuna nas habilidades prioritárias.""",
+  """\nAs habilidades ligadas aos objetivos declarados do aluno recebem atenção \nespecífica. Desempenho superior nas demais habilidades não compensa \nlacuna nas habilidades prioritárias."""),
+
+ ("checkpoint-checklist-interferencia-html",
+  """<span>Interferência do português e do espanhol registrada como frequência, não como falha</span>""",
+  """<span>Interferência do português e de outras línguas que o aluno fale, registrada como frequência, não como falha</span>"""),
+
+ ("checkpoint-checklist-interferencia-js",
+  """ "Interferência do português e do espanhol registrada como frequência, não como falha",\n""",
+  """ "Interferência do português e de outras línguas que o aluno fale, registrada como frequência, não como falha",\n"""),
+
+ ("checkpoint-checklist-transferencia-html",
+  """<span>Transferência do repertório técnico para situação fora dele, com evidência de mais de uma aula</span>""",
+  """<span>Transferência do repertório trabalhado no ciclo para situação fora dele, com evidência de mais de uma aula</span>"""),
+
+ ("checkpoint-checklist-transferencia-js",
+  """ "Transferência do repertório técnico para situação fora dele, com evidência de mais de uma aula",\n""",
+  """ "Transferência do repertório trabalhado no ciclo para situação fora dele, com evidência de mais de uma aula",\n"""),
+
+ ("checkpoint-checklist-escrita-html",
+  """<span>Escrita: indeterminada neste checkpoint. Só se avalia com amostra própria, e ela não é objetivo do bloco 1</span>""",
+  """<span>Escrita: avaliada só com amostra própria do aluno; sem amostra, fica registrada como indeterminada neste checkpoint</span>"""),
+
+ ("checkpoint-checklist-escrita-js",
+  """ "Escrita: indeterminada neste checkpoint. Só se avalia com amostra própria, e ela não é objetivo do bloco 1",\n""",
+  """ "Escrita: avaliada só com amostra própria do aluno; sem amostra, fica registrada como indeterminada neste checkpoint",\n"""),
 
  ("checkpoint-preservacao",
   """as aulas 19 a 22 continuam \nregistradas como aprendizagem válida e evidência diagnóstica. Só as \naulas 23 a 38 são redesenhadas.""",

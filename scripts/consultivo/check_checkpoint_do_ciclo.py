@@ -29,15 +29,22 @@ Contra o `ciclo` do config do aluno (a fonte), e nao contra o proprio arquivo:
          checkpoint) ou o restante do ciclo (checkpoint+1 ao fim);
        - toda aula ROTULADA como a do checkpoint ("Checkpoint da aula N", "registro da aula
          N", "Checklist do professor — aula N") e a ultima do bloco 1;
-  4. nenhum marcador `{{CP_...}}` sobrou, nos dois arquivos.
+  4. nenhum marcador `{{CP_...}}` sobrou, nos dois arquivos;
+  5. no painel INTEIRO -- do titulo ate o fim da secao D (o botao "Voltar ao topo") -- e na
+     lista `var CP`:
+       - toda aula citada ("aula N", "aulas N a M", "lesson N"), rotulada ou solta, esta
+         dentro do ciclo do config (primeira a ultima);
+       - todo nivel CEFR escrito (A0..C2, com ou sem "+") e o `ciclo.nivel` do config.
 
-O QUE ELE NAO MEDE, e por que
------------------------------
-As citacoes de aula SOLTAS dentro dos exemplos da secao C ("a aula 29 se confirma como
-Grammar", "nao se sustentar na aula 19") sao exemplos escritos sobre o syllabus do Marcos:
-nenhum campo do config diz que aula do outro aluno ocupa aquela posicao. Elas ficaram fora do
-conserto de 16/09 e estao reportadas para decisao; medi-las aqui reprovaria os oito materiais
-por um texto que o builder nao tem como escrever certo.
+DE ONDE VEIO O ITEM 5 (16/09/2026, mesmo dia)
+---------------------------------------------
+Depois dos marcadores, o painel ainda carregava texto do perfil do Marcos: "a aula 29 se
+confirma como Grammar", "nao se sustentar na aula 19", e a secao D oferecendo "Novo ciclo em
+B1 / Modulo B1+ / Modulo B2" a alunas A1. O shell passou a trazer texto sem numero e sem
+nivel (`extrai_shell.CORRECOES` `checkpoint-exemplo-*`, `checkpoint-rota-*`). O item 5 mede
+dado contra dado -- numero contra o intervalo do ciclo, codigo CEFR contra o do config --, e
+nao uma lista de palavras: exemplo escrito para outro aluno SEM numero e SEM nivel ("do
+espanhol") nao e mensuravel assim, e o A05 §10.2 rejeita detector lexical.
 
 Comentario de HTML/JS nao conta (nao chega ao olho de ninguem).
 
@@ -65,6 +72,11 @@ RX_FIM = re.compile(r'<h3 class="sub">D ·')
 RX_INTERVALO = re.compile(r"\baulas\s+(\d+)\s*(?:–|—|-|a)\s*(\d+)\b")
 RX_ROTULADA = re.compile(r"(?:Checkpoint da aula|registro da aula|"
                          r"Checklist do professor\s*—\s*aula)\s+(\d+)\b")
+# Item 5. O fim do painel e o botao que fecha a area, logo depois da secao D.
+RX_FIM_PAINEL = re.compile(r'<div class="btn-bar ao-topo">')
+RX_AULA_CITADA = re.compile(r"\b(?:aulas?|lessons?)\s+(\d+)(?:\s*(?:–|—|-|a|to)\s*(\d+))?\b",
+                            re.I)
+RX_CEFR = re.compile(r"(?<![A-Za-z0-9#])([ABC][0-2])(\+?)(?![A-Za-z0-9])")
 
 
 def carimbo(c):
@@ -156,6 +168,27 @@ def confere(caminho, cfgs, texto=None):
         if (a, b) not in ((pri, cp), (resto, fim)):
             erros.append(f"o painel fala das aulas {a}–{b}; o bloco 1 e {pri}–{cp} e o "
                          f"restante do ciclo e {resto}–{fim}.")
+
+    # 5. o painel inteiro, ate o fim da secao D
+    fim_p = RX_FIM_PAINEL.search(limpo, fim_m.end())
+    if not fim_p:
+        return erros + ["painel de checkpoint sem o fechamento da area (botao 'Voltar ao "
+                        "topo' depois da secao D): nao ha onde a secao D termina."]
+    painel = limpo[ini.start():fim_p.start()] + "\n" + m_cp.group(1)
+    for m in RX_AULA_CITADA.finditer(painel):
+        for n in (m.group(1), m.group(2)):
+            if n is not None and not (pri <= int(n) <= fim):
+                erros.append(f"o painel cita '{m.group(0)}'; o ciclo do config vai da aula "
+                             f"{pri} a {fim}. Exemplo escrito para o syllabus de outro aluno.")
+                break
+    nivel = str((cfg.get("ciclo") or {}).get("nivel") or "").strip().upper()
+    visivel = re.sub(r"<[^>]+>", " ", painel)
+    for m in RX_CEFR.finditer(visivel):
+        achado = m.group(1) + m.group(2)
+        if achado != nivel:
+            erros.append(f"o painel escreve o nivel {achado}; o `ciclo.nivel` do config e "
+                         f"{nivel or '(ausente)'}. Rota ou exemplo escrito para o nivel de "
+                         f"outro aluno.")
     return erros
 
 
@@ -231,6 +264,19 @@ def selftest():
         ("painel sumiu",
          lambda s: s.replace('<h3 class="sub">Checkpoint da aula 4</h3>', "<h3>x</h3>", 1),
          "ausente"),
+        ("item 5: exemplo da secao C com aula solta de outro syllabus",
+         lambda s: s.replace("a aula de Grammar \ndo próximo bloco se confirma",
+                             "a aula 29 \nse confirma como Grammar", 1),
+         "aula 29"),
+        ("item 5: rota da secao D com nivel que nao e o do config",
+         lambda s: s.replace("Novo ciclo no nível confirmado", "Novo ciclo em A2", 1),
+         "nivel A2"),
+        ("item 5: nivel na lista JS do checklist",
+         lambda s: s.replace('"Complexidade tolerada e', '"Em B2, complexidade tolerada e', 1),
+         "nivel B2"),
+        ("item 5: o nivel DO config escrito no painel — nao pode reprovar",
+         lambda s: s.replace("Novo ciclo no nível confirmado", "Novo ciclo em B1", 1),
+         None),
         ("intervalo antigo em COMENTARIO dentro do painel — nao pode reprovar",
          lambda s: s.replace('<h3 class="sub">C · Decisão', '<!-- era aulas 23–38 no artefato -->'
                              '<h3 class="sub">C · Decisão', 1),
@@ -255,7 +301,9 @@ def selftest():
     if falhou:
         print("SELFTEST FALHOU — o gate parou de morder, ou passou a morder demais.")
         return 1
-    print(f"SELFTEST OK — {len(casos)} casos: {len(casos) - 1} defeitos pegos, 1 comentario poupado.")
+    poupados = sum(1 for c in casos if c[2] is None)
+    print(f"SELFTEST OK — {len(casos)} casos: {len(casos) - poupados} defeitos pegos, "
+          f"{poupados} poupados como devem.")
     return 0
 
 
