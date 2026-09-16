@@ -4,7 +4,7 @@
         '<li>To notice what comes after <em>because</em>, <em>so</em>, <em>but</em> and <em>when</em> in a short message.</li>'+
         '<li>To see that <em>because</em> and <em>so</em> put the reason and the result in opposite orders, and that <em>because of</em> takes a noun.</li>'+
         '<li>To choose the right word in controlled sentences and in pairs of facts.</li>'+
-        '<li>To explain a problem to her manager and answer follow-up questions with connected ideas.</li></ul>',
+        '<li>To explain a problem to the CEO and answer follow-up questions with connected ideas.</li></ul>',
   product:'The explanation on screen 9, said live to Paula (you): what happened, why, what she did and what happens next, with at least two connecting words. Then, on screen 10, her answers to two questions and one question of her own. Her sentences from screen 2 and from screen 9 side by side are the record of the lesson.',
   criteria:'<ul><li>She joins the reason and the result in one sentence, in the right order.</li>'+
            '<li>She uses <em>because</em> with a subject and a verb, and <em>because of</em> with a noun.</li>'+
