@@ -1,5 +1,5 @@
 {
-  goals:'<strong>To follow part of a team meeting, understand the new dates and the decision, and ask questions when something is not clear &mdash; hearing it again, checking one detail, or confirming what she understood.</strong><ul>'+
+  goals:'<strong>To follow part of a management meeting, understand the new dates and the decision, and ask questions when something is not clear &mdash; hearing it again, checking one detail, or confirming what she understood.</strong><ul>'+
         '<li>To understand the main news and the decision from one listening, without the transcript.</li>'+
         '<li>To listen again for days, times and numbers.</li>'+
         '<li>To notice three kinds of questions for unclear information, and what Paula repeats in hers.</li>'+
@@ -10,7 +10,7 @@
            '<li>She chooses a question that fits what she did not get: hearing it again, or checking one detail.</li>'+
            '<li>She confirms the main point at the end with “So &hellip;, right?”.</li>'+
            '<li>She asks for repetition when she does not understand a question about her update.</li></ul>',
-  prep:'<ul><li>Listen to the audio before the lesson. It is a meeting of about one minute with three voices: Paula, the manager; Ryan, the coordinator from lesson 1; and Nora, from IT.</li>'+
+  prep:'<ul><li>Listen to the audio before the lesson. It is a meeting of about one minute with three voices: Paula, the CEO; Ryan, the coordinator from lesson 1; and Nora, from IT. Ryan and Nora are on her team.</li>'+
        '<li>The transcript opens on screen 5 only, after the activity is checked. Screen 4 is the first listening, and it happens without text.</li>'+
        '<li>The updates for screens 8, 9 and 11 are written in the note on each screen. On screen 9 one detail is unclear on purpose; on screen 11 one detail changes.</li>'+
        '<li>If she did the last pre-class activity, read what she wrote for her call to Sam: it shows which questions she already has.</li></ul>',

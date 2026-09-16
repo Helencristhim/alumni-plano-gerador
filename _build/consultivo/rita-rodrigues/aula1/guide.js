@@ -1,5 +1,5 @@
 {
-  goals:'<strong>To read a short work update, separate what happened, why it is a problem, the options and what is needed, and explain it to a manager before a meeting &mdash; then answer her questions.</strong><ul>'+
+  goals:'<strong>To read a short work update, separate what happened, why it is a problem, the options and what is needed, and explain it to the CEO before a meeting &mdash; then answer her questions.</strong><ul>'+
         '<li>To read an email once for the main point, before the details.</li>'+
         '<li>To find the line that supports a statement, and to notice what the email does not say.</li>'+
         '<li>To notice the four parts of an update and the words that open each part.</li>'+
@@ -22,7 +22,7 @@
        '<li><strong>Pronunciation may make a word hard to follow.</strong> Note it as she said it and leave it for screen 11.</li></ul>',
   scaffolding:'The email is on screen 4 and behind the <em>Show the email</em> button on screen 5. On screen 8 she hears situation A with the words hidden, and then says situation B from notes that are key words, not sentences, so she builds the sentence herself. On screens 9 and 10 the sentence starters are behind a closed button: open them if she stops, let her look, and close them again.<br><br>'+
     'If screen 9 is easy for her, the challenge is to add one sentence about which option she prefers and why.',
-  feedback:'One point on screen 11, taken from her own sentence, then the replay: the same explanation to the sales manager, who is worried about the training. The point to improve is likely to be the order of the parts, a missing opening, or a word that was hard to understand.<br><br>'+
+  feedback:'One point on screen 11, taken from her own sentence, then the replay: the same explanation to the sales director, who is worried about the training. The point to improve is likely to be the order of the parts, a missing opening, or a word that was hard to understand.<br><br>'+
     'Leave corrections for screen 11. Stopping her in the middle of the explanation costs the sentences that were still coming.',
   evidence:'<ul><li><strong>How many sentences she produced on screen 9 with the support closed, and which of the four parts were there.</strong> It is the main record of the lesson and the first of the block.</li>'+
     '<li>Which openings she used without looking at the screen.</li>'+
