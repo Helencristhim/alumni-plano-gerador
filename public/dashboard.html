@@ -448,14 +448,31 @@
     // O cache vive no sessionStorage (some ao fechar a aba) e guarda SO positivos: material que
     // ainda nao existe continua sendo perguntado ao servidor, senao um deploy recem-feito
     // nunca apareceria.
+    //
+    // A CHAVE E O ARQUIVO CONFERIDO, NAO O ALUNO. O mesmo aluno resolve para arquivos
+    // diferentes em cada aba (arquivoDoAluno: `{id}` no imersivo, `{id}-ciclo1` no
+    // consultivo), e a sessao e a mesma nas duas. Com a chave so pelo id (ate 16/09/2026), a
+    // aba vista primeiro decidia pela outra: a Rita Rodrigues, que so tem o extra no imersivo,
+    // ficava gravada como {p:0} e na aba consultivo o card saia "Criar Material" -- e a
+    // varredura nem conferia o ciclo1, porque pula quem ja esta no cache. No sentido oposto,
+    // um {p:1} do consultivo desenharia no imersivo um botao para `/professor/{id}.html`
+    // que nao existe.
+    //
+    // O sessionStorage antigo ('alumni-dash-materiais', chave = id) fica ignorado: nao ha
+    // como saber de qual aba veio cada registro. Quem ja estava com a aba aberta perde so o
+    // atalho, e a varredura refaz a conta (o indice responde sem rede).
+    function chaveMaterial(id) {
+        return arquivoDoAluno(id, 'professor') + '|' + arquivoDoAluno(id, 'aluno');
+    }
     const confirmedMaterials = new Map(function() {
-        try { return JSON.parse(sessionStorage.getItem('alumni-dash-materiais') || '[]'); }
+        try { return JSON.parse(sessionStorage.getItem('alumni-dash-materiais-v2') || '[]'); }
         catch(e) { return []; }
     }());
     function rememberMaterial(id, rec) {
-        confirmedMaterials.set(id, rec);
-        try { sessionStorage.setItem('alumni-dash-materiais', JSON.stringify(Array.from(confirmedMaterials))); } catch(e) {}
+        confirmedMaterials.set(chaveMaterial(id), rec);
+        try { sessionStorage.setItem('alumni-dash-materiais-v2', JSON.stringify(Array.from(confirmedMaterials))); } catch(e) {}
     }
+    function materialConfirmado(id) { return confirmedMaterials.get(chaveMaterial(id)); }
 
     // ══════════════════════════════════════
     // TOAST NOTIFICATIONS
@@ -1170,7 +1187,7 @@
             var profUrl='/professor/'+escAttr(arquivoDoAluno(a.id,'professor'))+'.html',
                 alunoUrl=location.origin+'/aluno/'+escAttr(arquivoDoAluno(a.id,'aluno'))+'.html';
             // undefined = ainda nao checado. O card so promete o que a varredura confirmou.
-            var rec = confirmedMaterials.get(a.id);
+            var rec = materialConfirmado(a.id);
             var alreadyConfirmed = !!rec;
             var btn1=hasPerfil?'<a href="perfil.html?id='+escAttr(a.id)+'" class="s-btn s-btn--primary">Perfil 360</a>':'<a href="index.html" class="s-btn s-btn--ghost">Criar Perfil</a>';
             var btn2, btn3;
@@ -1324,7 +1341,7 @@
 
             cards.forEach(function(card) {
                 var id = card.getAttribute('data-id');
-                if (confirmedMaterials.has(id)) return;
+                if (materialConfirmado(id)) return;
 
                 var foco = card.getAttribute('data-foco');
                 var legacy = card.getAttribute('data-legacy');
