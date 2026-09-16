@@ -1,34 +1,33 @@
 {
-  goals:'<strong>To present the cost of a turnover problem to leaders in the US &mdash; from a number of people to a cost in dollars &mdash; with one request, and to answer questions she did not prepare for.</strong><ul>'+
-        '<li>To show, before any model, how she presents a cost today.</li>'+
-        '<li>To compare her version with a model and name what each sentence does for the listener.</li>'+
-        '<li>To say a total so that it can be kept after one hearing: what the number is, rounded first, exact after.</li>'+
-        '<li>To separate cash from lost value when asked.</li>'+
-        '<li>To present the case again when a figure changes, and to say what changed and why.</li></ul>',
-  product:'The presentation in two rounds. Round one, on screen 8: the case she chose on screen 3, with the questions you ask as the VP of HR and the CFO. Round two, on screen 10: the same case with the cost per exit updated by Finance, and the CEO on the call, asking for the total first.',
-  criteria:'<ul><li>The total comes rounded first, with how it was reached.</li>'+
-           '<li>She says what a number is before the number.</li>'+
-           '<li>When a question can mean two things, she checks it before answering.</li>'+
-           '<li>In round two she says what changed, the new total, and whether the request stays.</li></ul>',
-  prep:'<ul><li>Screen 3 is her presentation today, before any model. Write down one sentence with a number as she says it: it goes into the third board on screen 9.</li>'+
-       '<li>The Norvale figures: 48 exits at Guarulhos and 23 at Campinas in the second quarter (71); about $4,870 per exit ($1,150 recruiting, $920 training, $2,800 lost productivity); $345,770 in total, roughly $346,000; a request of $120,000 for a six-month pilot. Round two: $5,320 per exit, $377,720 in total.</li>'+
-       '<li>Ask at the start whether she has started at the US company. At the consultation in August it was close and not confirmed. If she has, option B can use her real situation with changed numbers.</li>'+
-       '<li>The questions for rounds one and two are written in the notes on screens 8 and 10.</li></ul>',
-  language:'<strong>What happened:</strong> <em>We lost 71 people across the two sites in the second quarter.</em><br><strong>The total:</strong> <em>At about $4,870 each, that comes to roughly $346,000.</em> &middot; <em>$345,770, to be exact.</em><br><strong>Cash and lost value:</strong> <em>Most of it is lost productivity, not cash.</em><br><strong>The request:</strong> <em>What I am asking for is&hellip;</em><br><strong>Recycled:</strong> the check from lesson 4 (<em>Just so I answer the right question&hellip;</em>) and the verb for the period from lesson 5 (<em>Since the last version, the cost has gone up&hellip;</em>).<br>Numbers in full: <em>three hundred forty-five thousand seven hundred seventy dollars</em>.',
-  transcript:'The audio in this lesson is the five model sentences on screen 4.',
-  difficulties:'<ul><li><strong>The exact number may come first and alone.</strong> She may say <em>three hundred forty-five thousand&hellip;</em> and lose the rest. Screen 6 works on this.</li>'+
-       '<li><strong>The total may come without its calculation.</strong> A CFO is likely to ask where it comes from.</li>'+
-       '<li><strong>The question she did not expect.</strong> It is the point she named at the consultation. Portuguese may appear there.</li>'+
-       '<li><strong>Round two changes a figure she has just used.</strong> She may keep the old total out of habit.</li></ul>',
-  scaffolding:'The case is on screen 3 and the figures on screen 7. On screens 8 and 10 the sentence starters are behind a closed button: open them only if she stops, let her look, and close them again. Round two keeps the round-one figures on screen next to the new ones.<br><br>'+
-    'If a number stalls on screen 7, say what it is and let her say the number. If round one is clean, the challenge on screen 8 asks her to say when the pilot would pay for itself.',
-  feedback:'Screen 9: what worked, what held up under questions, and one sentence with a number made clearer. The point to improve is taken from round one, not decided in advance. Then round two, which is a new task: a figure changes and a new listener joins.<br><br>'+
-    'Leave corrections for screen 9. Interrupting the presentation for language costs the rest of it.',
-  evidence:'<ul><li><strong>What changed from screen 3 to round two, in how she gives the total.</strong> It is the main record of the lesson and closes the block.</li>'+
-    '<li>Whether she checked the ambiguous question in round one (lesson 4) without support.</li>'+
-    '<li>Whether the verb matched the period when she explained what changed in round two (lesson 5).</li>'+
-    '<li>Whether estimates stayed marked as estimates (lesson 3).</li>'+
-    '<li>Her answer about the US company, if she gave one.</li></ul>',
-  prepost:'The pre-class reads a cost slide from another company, separates cash from lost value, chooses openings a CFO can follow, and writes large numbers in words. It does not use the Norvale figures or the model presentation. The post-class has an optional recording, an optional follow-up email, an article about the parts of turnover cost, a talk about the structure of persuasive talks, and a language reference.',
-  key:'<strong>Screen 5:</strong> says what happened &mdash; &ldquo;We lost 71 people across the two sites in the second quarter.&rdquo;; gives the total, or how it was reached &mdash; &ldquo;At about $4,870 each, that comes to roughly $346,000.&rdquo; and &ldquo;$345,770, to be exact.&rdquo;; separates cash from lost value &mdash; &ldquo;Most of it, about $2,800 per person, is lost productivity, not cash.&rdquo;; asks for a decision &mdash; &ldquo;What I am asking for is $120,000 for a six-month pilot of a new shift model.&rdquo; <strong>Screen 6:</strong> version 2. <strong>Screen 7:</strong> Campinas roughly $112,000; Guarulhos roughly $234,000; the pilot $20,000 a month.'
+  goals:'<strong>To give an update on how three numbers have changed, choosing the past simple for a period that is over and the present perfect for a period that is still open, and to answer questions about when things changed.</strong><ul>'+
+        '<li>To show, before any model, how she describes changes in numbers now.</li>'+
+        '<li>To notice that the time words in a sentence tell whether the period is over.</li>'+
+        '<li>To state the pattern in her own words and check it against examples.</li>'+
+        '<li>To say the forms out loud with <em>from</em>, <em>to</em>, <em>by</em> and <em>at</em>.</li>'+
+        '<li>To use both forms in an update from her notes, and to correct a question built on something that did not happen.</li></ul>',
+  product:'Her update on screen 9 (option A, three indicators from her work, or option B, the Guarulhos dashboard), given from her notes to Alison (you), who asks when things changed. Then, on screen 10, her answers to two questions from Greg, one of them based on something that did not happen, and one question of her own.',
+  criteria:'<ul><li>A change in a period that is over comes in the past simple.</li>'+
+           '<li>A change that continues until now comes in the present perfect.</li>'+
+           '<li>Each number comes with its period and with <em>from</em>, <em>to</em>, <em>by</em> or <em>at</em> where needed.</li>'+
+           '<li>The sentence she said on screen 2 comes out differently on screen 11.</li></ul>',
+  prep:'<ul><li>Screen 2 is the diagnostic. She describes the dashboard before any model. Write down one sentence as she says it: it comes back on screen 6 and in the third board on screen 11.</li>'+
+       '<li>The pattern appears in five of her recorded lessons: <em>I had have led</em>, <em>I haven&rsquo;t used yet</em>, and <em>This quarter is the highest</em> for <em>has been the highest in three years</em>.</li>'+
+       '<li>If she already uses both forms well on screen 2, the lesson keeps its object: the work moves to <em>from</em>, <em>to</em>, <em>by</em> and <em>at</em>, and to answering &ldquo;since when?&rdquo; without a pause.</li>'+
+       '<li>The questions for screens 9 and 10 are written in the notes on those screens.</li></ul>',
+  language:'<strong>A period that is over:</strong> <em>Turnover rose to 14.6% in the second quarter.</em> &middot; <em>We hired 40 people in May.</em><br><strong>A period still open:</strong> <em>It has gone up again since July.</em> &middot; <em>So far, 22 of them have stayed.</em><br><strong>The change:</strong> <em>from 9.2% to 14.6%</em> &middot; <em>by 5.4 points</em> &middot; <em>has stayed at around 31</em><br>Pronunciation: <em>has</em> is usually weak (<em>it&rsquo;s gone up</em>). Said strong, it can sound like a correction.',
+  transcript:'The audio in this lesson is the three model sentences on screen 7.',
+  difficulties:'<ul><li><strong>The present perfect may disappear at speed.</strong> She may use the past simple for everything when she talks fast, or say <em>is</em> where the period needs <em>has been</em>.</li>'+
+       '<li><strong>The present perfect may appear with a closed period.</strong> <em>It has risen in the second quarter</em> is a likely mix once the form is fresh.</li>'+
+       '<li><strong>From and for.</strong> In an earlier lesson she said <em>from 12 for 0</em>. It may come back on screen 9.</li>'+
+       '<li><strong>The false premise on screen 10.</strong> She may answer Greg&rsquo;s question as if the thing had happened.</li></ul>',
+  scaffolding:'The dashboard is on screen 2, and the email on screen 3. On screens 9 and 10 the sentence starters are behind a closed button: open them only if she stops, let her look, and close them again. Her notes from screen 8 stay in front of her on screen 9.<br><br>'+
+    'If the form does not come on screen 7, say the time words first (<em>since July&hellip;</em>) and let her finish the sentence. If both forms are clean, the challenge on screen 9 asks for a number that went up, then down, in two periods.',
+  feedback:'One point on screen 11, taken from her own sentence, and then the replay: the same update to Greg, who only asks about money.<br><br>'+
+    'Leave corrections for screen 11, except on screen 7, where correcting the form is the point of the screen.',
+  evidence:'<ul><li><strong>Her sentence from screen 2 and the same sentence on screen 11.</strong> It is the main record of the lesson.</li>'+
+    '<li>How many of her period changes on screen 9 came with the matching form, without help.</li>'+
+    '<li>Whether <em>from</em>, <em>to</em> and <em>by</em> came with the numbers.</li>'+
+    '<li>What she did with Greg&rsquo;s false premise on screen 10.</li></ul>',
+  prepost:'The pre-class reads a monthly note about another team, notices that some time words close a period and others bring it up to today, and practices <em>from</em>, <em>to</em>, <em>of</em> and <em>at</em> with numbers. It does not ask her to choose between the two verb forms. The post-class has an optional recording, an optional written note, an HR news article with figures over several years, a talk about numbers over time, and a language reference.',
+  key:'<strong>Screen 3:</strong> turnover is still going up (15.1% since July); of the 40 people hired in May, 22 have stayed. <strong>Screen 4:</strong> a period that is over &mdash; &ldquo;Turnover rose from 9.2% to 14.6% in the second quarter.&rdquo;, &ldquo;We hired 40 people in May.&rdquo;, &ldquo;Overtime went from 13 to 30 hours a week between January and June.&rdquo;; a period still open &mdash; &ldquo;It has gone up again since July.&rdquo;, &ldquo;So far, 22 of them have stayed.&rdquo;, &ldquo;Absenteeism has not moved much this year.&rdquo; <strong>Screen 7:</strong> rose &middot; has gone up &middot; hired &middot; have stayed &middot; went.'
 }
