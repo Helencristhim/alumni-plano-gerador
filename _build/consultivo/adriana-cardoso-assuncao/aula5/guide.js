@@ -1,33 +1,33 @@
 {
-  goals:'<strong>To give an update on how three numbers have changed, choosing the past simple for a period that is over and the present perfect for a period that is still open, and to answer questions about when things changed.</strong><ul>'+
-        '<li>To show, before any model, how she describes changes in numbers now.</li>'+
-        '<li>To notice that the time words in a sentence tell whether the period is over.</li>'+
-        '<li>To state the pattern in her own words and check it against examples.</li>'+
-        '<li>To say the forms out loud with <em>from</em>, <em>to</em>, <em>by</em> and <em>at</em>.</li>'+
-        '<li>To use both forms in an update from her notes, and to correct a question built on something that did not happen.</li></ul>',
-  product:'Her update on screen 9 (option A, three indicators from her work, or option B, the Guarulhos dashboard), given from her notes to Alison (you), who asks when things changed. Then, on screen 10, her answers to two questions from Greg, one of them based on something that did not happen, and one question of her own.',
-  criteria:'<ul><li>A change in a period that is over comes in the past simple.</li>'+
-           '<li>A change that continues until now comes in the present perfect.</li>'+
-           '<li>Each number comes with its period and with <em>from</em>, <em>to</em>, <em>by</em> or <em>at</em> where needed.</li>'+
-           '<li>The sentence she said on screen 2 comes out differently on screen 11.</li></ul>',
-  prep:'<ul><li>Screen 2 is the diagnostic. She describes the dashboard before any model. Write down one sentence as she says it: it comes back on screen 6 and in the third board on screen 11.</li>'+
-       '<li>The pattern appears in five of her recorded lessons: <em>I had have led</em>, <em>I haven&rsquo;t used yet</em>, and <em>This quarter is the highest</em> for <em>has been the highest in three years</em>.</li>'+
-       '<li>If she already uses both forms well on screen 2, the lesson keeps its object: the work moves to <em>from</em>, <em>to</em>, <em>by</em> and <em>at</em>, and to answering &ldquo;since when?&rdquo; without a pause.</li>'+
-       '<li>The questions for screens 9 and 10 are written in the notes on those screens.</li></ul>',
-  language:'<strong>A period that is over:</strong> <em>Turnover rose to 14.6% in the second quarter.</em> &middot; <em>We hired 40 people in May.</em><br><strong>A period still open:</strong> <em>It has gone up again since July.</em> &middot; <em>So far, 22 of them have stayed.</em><br><strong>The change:</strong> <em>from 9.2% to 14.6%</em> &middot; <em>by 5.4 points</em> &middot; <em>has stayed at around 31</em><br>Pronunciation: <em>has</em> is usually weak (<em>it&rsquo;s gone up</em>). Said strong, it can sound like a correction.',
-  transcript:'The audio in this lesson is the three model sentences on screen 7.',
-  difficulties:'<ul><li><strong>The present perfect may disappear at speed.</strong> She may use the past simple for everything when she talks fast, or say <em>is</em> where the period needs <em>has been</em>.</li>'+
-       '<li><strong>The present perfect may appear with a closed period.</strong> <em>It has risen in the second quarter</em> is a likely mix once the form is fresh.</li>'+
-       '<li><strong>From and for.</strong> In an earlier lesson she said <em>from 12 for 0</em>. It may come back on screen 9.</li>'+
-       '<li><strong>The false premise on screen 10.</strong> She may answer Greg&rsquo;s question as if the thing had happened.</li></ul>',
-  scaffolding:'The dashboard is on screen 2, and the email on screen 3. On screens 9 and 10 the sentence starters are behind a closed button: open them only if she stops, let her look, and close them again. Her notes from screen 8 stay in front of her on screen 9.<br><br>'+
-    'If the form does not come on screen 7, say the time words first (<em>since July&hellip;</em>) and let her finish the sentence. If both forms are clean, the challenge on screen 9 asks for a number that went up, then down, in two periods.',
-  feedback:'One point on screen 11, taken from her own sentence, and then the replay: the same update to Greg, who only asks about money.<br><br>'+
-    'Leave corrections for screen 11, except on screen 7, where correcting the form is the point of the screen.',
-  evidence:'<ul><li><strong>Her sentence from screen 2 and the same sentence on screen 11.</strong> It is the main record of the lesson.</li>'+
-    '<li>How many of her period changes on screen 9 came with the matching form, without help.</li>'+
-    '<li>Whether <em>from</em>, <em>to</em> and <em>by</em> came with the numbers.</li>'+
-    '<li>What she did with Greg&rsquo;s false premise on screen 10.</li></ul>',
-  prepost:'The pre-class reads a monthly note about another team, notices that some time words close a period and others bring it up to today, and practices <em>from</em>, <em>to</em>, <em>of</em> and <em>at</em> with numbers. It does not ask her to choose between the two verb forms. The post-class has an optional recording, an optional written note, an HR news article with figures over several years, a talk about numbers over time, and a language reference.',
-  key:'<strong>Screen 3:</strong> turnover is still going up (15.1% since July); of the 40 people hired in May, 22 have stayed. <strong>Screen 4:</strong> a period that is over &mdash; &ldquo;Turnover rose from 9.2% to 14.6% in the second quarter.&rdquo;, &ldquo;We hired 40 people in May.&rdquo;, &ldquo;Overtime went from 13 to 30 hours a week between January and June.&rdquo;; a period still open &mdash; &ldquo;It has gone up again since July.&rdquo;, &ldquo;So far, 22 of them have stayed.&rdquo;, &ldquo;Absenteeism has not moved much this year.&rdquo; <strong>Screen 7:</strong> rose &middot; has gone up &middot; hired &middot; have stayed &middot; went.'
+  goals:'<strong>To follow a three-way call in which two directors interrupt a turnover presentation, to understand what each question wants, and to check a question that can mean two things before answering it.</strong><ul>'+
+        '<li>To follow who asks what, and what the presenter asks for at the end.</li>'+
+        '<li>To hear numbers that sound alike (fourteen and forty) and ask for them again.</li>'+
+        '<li>To tell what a question wants: a number again, an explanation, a choice between two things, or a request.</li>'+
+        '<li>To name the two meanings of an ambiguous question and let the other person choose.</li>'+
+        '<li>To answer an interruption and go back to the update, and to keep talking after the call.</li></ul>',
+  product:'Her turnover update on screen 9 (option A, a site she knows, or option B, Norvale&rsquo;s second site), with the interruptions you make as Greg and Alison: she checks the ambiguous question, says a number again when asked, and goes back to the update. Then, on screen 10, her answers to two questions from Alison and one question of her own.',
+  criteria:'<ul><li>When the question can mean two things, she names the two before answering.</li>'+
+           '<li>She says a number again with the stress in the right place, or with the digits.</li>'+
+           '<li>Her answer is to the question that was chosen, not to the other meaning.</li>'+
+           '<li>After the interruption she goes back to the update.</li></ul>',
+  prep:'<ul><li>Listen to the whole call before the lesson. Renata (HR) presents; Greg (finance) and Alison (operations, US) ask the questions. The line the lesson examines is Renata&rsquo;s check: <em>Just so I answer the right question, do you mean the total, or how we get to the total?</em> It is the subject of screen 7 and is not named before that.</li>'+
+       '<li>In an earlier lesson she took <em>break it down</em> to mean dividing a number. It is the expression Greg uses here. If she mentions it, it is useful on screen 7.</li>'+
+       '<li>The interruptions for screen 9 and the two questions for screen 10 are written in the notes on those screens, for both options.</li>'+
+       '<li>The transcript opens on screen 5, after the first listening.</li></ul>',
+  language:'<strong>Checking the question:</strong> <em>Just so I answer the right question, do you mean&hellip; or&hellip;?</em> &middot; <em>Are you asking about&hellip; or about&hellip;?</em> &middot; <em>Compared with what: last year, or the market?</em><br><strong>A number again:</strong> <em>Sorry, was that thirteen or thirty?</em> &middot; <em>Fourteen. One four.</em><br><strong>Taking a moment and going back:</strong> <em>Let me think about that for a second.</em> &middot; <em>So, going back to the numbers,&hellip;</em><br>Pronunciation: the stress in <em>fourTEEN</em> and <em>FORty</em>, <em>fifTEEN</em> and <em>FIFty</em>. In a fast call the stress is often what can still be heard.',
+  transcript:'The call has a transcript, behind the button on screen 5. The first listening, on screen 4, is without it. The five model sentences on screen 8 are separate audio.',
+  difficulties:'<ul><li><strong>She may answer one meaning straight away.</strong> On a call, that can produce a good answer to a question nobody asked.</li>'+
+       '<li><strong>Numbers that sound alike.</strong> <em>Fourteen</em> and <em>forty</em> may blur at normal speed. The slower setting helps on screens 5 and 6.</li>'+
+       '<li><strong>Portuguese may appear under pressure.</strong> In recent lessons it came when a question was not the one she expected.</li>'+
+       '<li><strong>Checking may seem like losing time.</strong> On screen 7 Renata checks and still keeps the call moving.</li></ul>',
+  scaffolding:'The call can be played at the slower speed on screens 4, 5 and 6; screen 6 also plays two parts of the call separately. On screens 9 and 10 the sentence starters are behind a closed button: open them only if she stops, let her look, and close them again.<br><br>'+
+    'If the check does not come on screen 8, say its first words (<em>Just so I answer&hellip;</em>) and let her finish. If she checks cleanly from the first question on screen 9, add a question that sounds clear and is not, from the challenge in the note.',
+  feedback:'One point on screen 11, taken from one of her answers on screen 9, and then the replay: the update from the other option, with one question she has not heard yet.<br><br>'+
+    'Leave corrections for screen 11. Interrupting her update for language costs the rest of it.',
+  evidence:'<ul><li><strong>How many of the ambiguous questions on screen 9 she checked before answering, and her words for the check.</strong> It is the main record of the lesson.</li>'+
+    '<li>Whether she answered the meaning that was chosen.</li>'+
+    '<li>Which numbers she asked for again or said again, and whether the stress was in place.</li>'+
+    '<li>Whether she went back to the update after each interruption, and whether Portuguese appeared.</li></ul>',
+  prepost:'The pre-class prepares the situation and the vocabulary of the call and has two short listenings that are not in the call: a voice message about two numbers that sound alike, and a site update with five numbers. It does not contain the call, Renata&rsquo;s check, or any of the questions in the call. The post-class has an optional recording, an optional written message, an article about paraphrasing a question before answering it, a talk about listening, and a language reference.',
+  key:'<strong>Screen 4:</strong> Alison and Greg ask the questions, and Renata answers all of them, one after checking; at the end she asks for a decision on the shift model before the end of the month. <strong>Screen 5:</strong> true &mdash; turnover at Guarulhos went up to 14.6%; forty-eight people left in three months; Greg wants to know how the total was calculated. <strong>Screen 6:</strong> to hear a number again &mdash; &ldquo;Was that fourteen or forty?&rdquo;; to get an explanation &mdash; &ldquo;Can you break that down for me?&rdquo;; to choose between two things &mdash; &ldquo;Is that money we actually spent, or money we lost?&rdquo; and &ldquo;Do you mean the total, or how we get to the total?&rdquo;; to find out what someone needs &mdash; &ldquo;What would you need from us to bring it down?&rdquo;.'
 }
