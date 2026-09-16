@@ -120,6 +120,13 @@ jobs:
           pip install pyyaml --quiet
           python3 scripts/check_workflows.py
 
+      # O painel guarda na sessao o material confirmado de cada card e a varredura pula
+      # quem ja esta la. Com a chave so pelo id, a aba vista primeiro decidia pela outra:
+      # Rita Rodrigues saia "Criar Material" em Alunos Consultivo com o ciclo1 no ar, e no
+      # sentido oposto o imersivo oferecia /professor/{id}.html que da 404 (16/09/2026).
+      - name: "GATE 77 — painel: cache de material separado por aba (imersivo x consultivo)"
+        run: node scripts/check_dashboard_cache_aba.mjs
+
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ GATE M — o MOLDE passa em TODO gate, em TODO PR. Sem excecao.        ║
       # ╚══════════════════════════════════════════════════════════════════════╝
