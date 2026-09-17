@@ -5,7 +5,7 @@
         '<li>To say a total so that it can be kept after one hearing: what the number is, rounded first, exact after.</li>'+
         '<li>To separate cash from lost value when asked.</li>'+
         '<li>To present the case again when a figure changes, and to say what changed and why.</li></ul>',
-  product:'The presentation in two rounds. Round one, on screen 8: the case she chose on screen 3, with the questions you ask as the VP of HR and the CFO. Round two, on screen 10: the same case with the cost per exit updated by Finance, and the CEO on the call, asking for the total first.',
+  product:'The presentation in two rounds. Round one, on screen 8: the case she chose on screen 3, with the questions you ask as the CFO. Round two, on screen 10: the same case with the cost per exit updated by Finance, and new questions from you, starting with the total.',
   criteria:'<ul><li>The total comes rounded first, with how it was reached.</li>'+
            '<li>She says what a number is before the number.</li>'+
            '<li>When a question can mean two things, she checks it before answering.</li>'+
@@ -15,14 +15,14 @@
        '<li>Ask at the start whether she has started at the US company. At the consultation in August it was close and not confirmed. If she has, option B can use her real situation with changed numbers.</li>'+
        '<li>The questions for rounds one and two are written in the notes on screens 8 and 10.</li></ul>',
   language:'<strong>What happened:</strong> <em>We lost 71 people across the two sites in the second quarter.</em><br><strong>The total:</strong> <em>At about $4,870 each, that comes to roughly $346,000.</em> &middot; <em>$345,770, to be exact.</em><br><strong>Cash and lost value:</strong> <em>Most of it is lost productivity, not cash.</em><br><strong>The request:</strong> <em>What I am asking for is&hellip;</em><br><strong>Recycled:</strong> the check from lesson 5 (<em>Just so I answer the right question&hellip;</em>) and the verb for the period from lesson 6 (<em>Since the last version, the cost has gone up&hellip;</em>).<br>Numbers in full: <em>three hundred forty-five thousand seven hundred seventy dollars</em>.',
-  transcript:'The audio in this lesson is the five model sentences on screen 4.',
+  transcript:'The audio in this lesson is the five model sentences on screen 4. Their words are hidden: open them with <em>Show the words</em> only if she needs to read a sentence after two listens.',
   difficulties:'<ul><li><strong>The exact number may come first and alone.</strong> She may say <em>three hundred forty-five thousand&hellip;</em> and lose the rest. Screen 6 works on this.</li>'+
        '<li><strong>The total may come without its calculation.</strong> A CFO is likely to ask where it comes from.</li>'+
        '<li><strong>The question she did not expect.</strong> It is the point she named at the consultation. Portuguese may appear there.</li>'+
        '<li><strong>Round two changes a figure she has just used.</strong> She may keep the old total out of habit.</li></ul>',
   scaffolding:'The case is on screen 3 and the figures on screen 7. On screens 8 and 10 the sentence starters are behind a closed button: open them only if she stops, let her look, and close them again. Round two keeps the round-one figures on screen next to the new ones.<br><br>'+
     'If a number stalls on screen 7, say what it is and let her say the number. If round one is clean, the challenge on screen 8 asks her to say when the pilot would pay for itself.',
-  feedback:'Screen 9: what worked, what held up under questions, and one sentence with a number made clearer. The point to improve is taken from round one, not decided in advance. Then round two, which is a new task: a figure changes and a new listener joins.<br><br>'+
+  feedback:'Screen 9: what worked, what held up under questions, and one sentence with a number made clearer. The point to improve is taken from round one, not decided in advance. Then round two, which is a new task: a figure changes and the questions are new.<br><br>'+
     'Leave corrections for screen 9. Interrupting the presentation for language costs the rest of it.',
   evidence:'<ul><li><strong>What changed from screen 3 to round two, in how she gives the total.</strong> It is the main record of the lesson and closes the block.</li>'+
     '<li>Whether she checked the ambiguous question in round one (lesson 5) without support.</li>'+
