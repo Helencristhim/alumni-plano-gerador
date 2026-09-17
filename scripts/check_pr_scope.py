@@ -96,7 +96,15 @@ def main():
         if new_st < old_st:
             errors.append(f'REGRESSAO stamps em {path}: {old_st} -> {new_st}')
         if len(old) > 50_000 and len(new) < len(old) * 0.9:
-            errors.append(f'ENCOLHEU >10% {path}: {len(old)} -> {len(new)} bytes (aula apagada?)')
+            # A MESMA excecao do GATE 3: reducao DECLARADA por transicao exata em
+            # _build/model/shrink_allowlist.json (arquivo + metrica + de + para).
+            # Sem isto, uma aula reescrita de proposito (a rota nova do Fernando,
+            # 09/2026) reprovava aqui e passava no gate do CI -- e a contradicao
+            # ensina a ignorar o aviso, que e o pior resultado possivel.
+            if declarado_no_allowlist(path, len(old), len(new)):
+                print(f'  ~ {path}: encolheu {len(old)} -> {len(new)}, DECLARADO no shrink_allowlist')
+            else:
+                errors.append(f'ENCOLHEU >10% {path}: {len(old)} -> {len(new)} bytes (aula apagada?)')
 
     if errors:
         print('\n'.join('  ✗ ' + e for e in errors))
@@ -104,6 +112,23 @@ def main():
         return 1
     print(f'✅ check_pr_scope OK — {len(changed)} arquivo(s), tudo no escopo de {slug}, sem regressão')
     return 0
+
+
+def declarado_no_allowlist(path, de, para):
+    """A reducao de bytes foi declarada em _build/model/shrink_allowlist.json?
+
+    Mesma fonte que o `check_no_regression.py` (GATE 3) consulta, e pela mesma
+    regra: a excecao vale para UMA transicao exata (arquivo + de + para), nunca
+    para o arquivo inteiro.
+    """
+    import json as _json
+    caminho = ROOT / '_build' / 'model' / 'shrink_allowlist.json'
+    try:
+        regras = _json.loads(caminho.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    return any(r.get('path') == path and r.get('metrica') == 'bytes'
+               and r.get('de') == de and r.get('para') == para for r in regras)
 
 
 if __name__ == '__main__':
