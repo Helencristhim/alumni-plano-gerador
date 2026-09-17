@@ -187,14 +187,40 @@ def r_bloco1_diagnostico(c, ctx):
 
 
 def r_ciclo_declarado(c, ctx):
-    """ANA-003 — ciclo diferente de 20 aulas."""
+    """ANA-003 — ciclo diferente de 20 aulas.
+
+    O 02 §2 diz "salvo decisao diferente explicita e REGISTRADA", e ate 17/09/2026 esta
+    regra cobrava a decisao sem oferecer onde registra-la: qualquer ciclo != 20 reprovava,
+    fosse ele um descuido do config ou o pacote que o aluno de fato comprou. Gate que exige
+    uma declaracao impossivel so tem duas saidas, e as duas sao piores que o defeito --
+    declarar 20 aulas que nao existem, ou desligar o gate.
+
+    Entao a decisao mora na TELA, onde a professora a le, e nao num campo de config que
+    ninguem abre: um bloco de decisao registrada que diz quantas aulas o pacote tem e por
+    que. O numero dentro dele tem de ser o MESMO do `var CICLO` -- decisao que nao bate com
+    o material nao e decisao, e a divergencia e exatamente o descuido que a regra pega.
+
+    Duas grafias do mesmo bloco porque sao duas telas: a do professor e em portugues, a do
+    aluno e em ingles (GATE 55), e a decisao tem de estar nas DUAS -- quem da a aula e quem
+    tem aula precisam saber do mesmo tamanho de pacote.
+
+    A primeira foi a Stella Nassar (12 aulas, 17/09/2026): pacote de 12 contratado, nao um
+    ciclo de 20 pela metade."""
     m = re.search(r"var CICLO=\{[^}]*aulas:(\d+)", c)
     if not m:
         return ["ANA-003: sem var CICLO — nao da para saber de que ciclo este material e."]
-    if int(m.group(1)) != 20:
-        return [f"ANA-003: o ciclo declara {m.group(1)} aulas, e o ciclo regular tem 20 "
-                f"(02 §1). Pacote fora disso precisa de decisao registrada."]
-    return []
+    n = int(m.group(1))
+    if n == 20:
+        return []
+    decl = re.search(r"(?:Pacote fora do ciclo regular|Package outside the regular cycle)"
+                     r"(.{0,600})", ctx["tela"], re.S)
+    if decl and re.search(r"\b%d\b" % n, re.sub(r"<[^>]+>", " ", decl.group(1))):
+        return []
+    rotulo = "Package outside the regular cycle" if not ctx["professor"] else \
+             "Pacote fora do ciclo regular"
+    return [f"ANA-003: o ciclo declara {n} aulas, e o ciclo regular tem 20 (02 §1). Pacote "
+            f"fora disso precisa de decisao registrada: um bloco '{rotulo}' na tela, "
+            f"dizendo {n} aulas e por que."]
 
 
 def r_metadado_interno(c, ctx):
