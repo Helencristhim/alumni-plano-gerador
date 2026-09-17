@@ -3,7 +3,7 @@
     canonico:'chart', statusKey:'af_l6_status',
     nav:['Lesson opening','Tell me what changed','The update Alison sent','Closed or still open',
          'The time words decide','The rule you were using','Saying it out loud','Your three numbers',
-         'Your update','Greg asks','What just happened','Today and next'],
+         'Your update','More questions','What just happened','Today and next'],
     stages:[
       {n:'Communicative diagnostic',min:6},
       {n:'Contextualized input',min:5},
