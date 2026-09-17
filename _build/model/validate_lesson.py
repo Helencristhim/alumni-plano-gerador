@@ -1852,6 +1852,24 @@ def validate(path):
         if not os.path.exists(os.path.join(root, 'public', 'aluno', f'{slug}-aula{N}.html')):
             fails.append(f'falta o espelho public/aluno/{slug}-aula{N}.html (REGRA 34)')
         hub = os.path.join(root, 'public', 'professor', f'{slug}.html')
+        # DEPOIS DE UM CUTOVER, O HUB DA AULA IMERSIVA E O HUB PRESERVADO.
+        #
+        # Quando um aluno troca de anatomia (GATE 47), `{slug}.html` passa a ser consultivo
+        # e o hub imersivo e preservado em `{slug}-anterior.html`, no MESMO PR. As aulas
+        # standalone que ja estavam publicadas continuam onde estao — e de repente cada uma
+        # "perde" pre-class, stamp e complementares, porque o hub que se olhava nao e mais o
+        # hub delas. Foram 48 defeitos de uma vez no cutover da Stella (12 aulas x 4), num PR
+        # que nao encostou em nenhuma delas.
+        #
+        # Nao e regressao: e a pergunta feita ao arquivo errado. O hub daquelas aulas passou a
+        # ser o `-anterior`, que carrega pre-class, stamps e complementares intactos — e por
+        # isso a checagem continua valendo INTEIRA, so que contra ele. Se o `-anterior` nao
+        # existir, nada muda: cobra-se o hub de sempre, e a aula orfa reprova como antes.
+        anterior = os.path.join(root, 'public', 'professor', f'{slug}-anterior.html')
+        if os.path.exists(anterior) and os.path.exists(hub):
+            cabeca = open(hub, encoding='utf-8').read(6000)
+            if 'name="alumni-anatomia" content="consultivo"' in cabeca:
+                hub = anterior
         if os.path.exists(hub):
             hc = open(hub, encoding='utf-8').read()
             if f'{slug}-aula{N}.html' not in hc and f'id="ex-lesson-{N}"' not in hc:
