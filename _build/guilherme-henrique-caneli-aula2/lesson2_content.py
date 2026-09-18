@@ -570,3 +570,59 @@ WRITING_MODEL = (
     "the party would commit you to more than you can deliver. If it appears anywhere else, it is a habit, not a "
     "choice."
 )
+
+# ── 13. FOLLOW-UP E OS DOIS DEBATES (o que faltava do modelo do professor) ────
+# O modelo w11_l11e.html do professor encadeia LONG TURN -> follow-up curto ->
+# DOIS debates for/against. A primeira versao desta aula parou no long turn e num
+# debate so. Estas tres pecas fecham a sequencia de fala do modelo.
+#
+# Nada aqui pede audio novo: sao tarefas de producao oral. O lexico e o mesmo da
+# aula (nenhum termo novo) e a gramatica cobrada e a desta aula -- causative have
+# / get contra a passiva, que e exatamente o que a pergunta 2 do follow-up expoe.
+
+FOLLOW_UP_INTRO = (
+    "The examiner does not thank you and move on. Immediately after the two minutes come four short "
+    "questions, and they are the real test: not what you prepared, but whether you can be pushed off it "
+    "and stay precise. Answer each in two or three sentences. No restarting the long turn."
+)
+FOLLOW_UP = [
+    ("You told me the risk moved. If that party walked away tomorrow morning, who is holding it by the "
+     "afternoon, and what does it cost by then?"),
+    ("Twice you said something &ldquo;was arranged&rdquo;. Name the party you left out each time, and tell me "
+     "whether leaving them out was a choice or a habit."),
+    ("Which of the protections you described would you not be willing to defend to the schoolteacher whose "
+     "pension is paying for it?"),
+    ("Say the whole thing again in one sentence, for a minister who has never read a term sheet, and without "
+     "using the word <i>risk</i>."),
+]
+FOLLOW_UP_TEACHER = (
+    "Follow-up (3 min): faca as quatro na sequencia, sem elogiar entre uma e outra. A pergunta 2 e a da "
+    "gramatica da aula: se ele nao souber dizer quem sumiu na propria frase, a passiva dele ainda e habito, "
+    "nao escolha. A pergunta 4 e a mais dura e vale por ela mesma: quem depende do jargao nao sobrevive a ela."
+)
+
+# Dois debates, como no modelo. O primeiro cobra repertorio dos dois lados; o
+# segundo cobra concessao, que e o que falta a quem e fluente e nunca precisou
+# negociar em ingles.
+DEBATE_1_MOTION = (
+    "Public money should never take the first loss on a private infrastructure project."
+)
+DEBATE_1_RULES = (
+    "Ninety seconds <b>for</b>. Then ninety seconds <b>against</b>. Same speaker, no notes, and no repeating "
+    "an argument you have already used."
+)
+DEBATE_2_MOTION = (
+    "A fiduciary duty is a reason to stay out of infrastructure, not a reason to go into it."
+)
+DEBATE_2_RULES = (
+    "Your teacher gives you the side; you do not choose it. Ninety seconds. Then, before you close, you must "
+    "concede out loud the single strongest point against you, name it accurately, and say why you are still "
+    "not moved. A concession that misstates the other side does not count."
+)
+DEBATE_2_TEACHER = (
+    "Segundo debate (4 min): de a ele o lado que ele NAO defenderia -- normalmente o \"stay out\", "
+    "porque contraria o proprio trabalho dele. O alvo aqui nao e argumento, e concessao: exija que ele "
+    "reformule o ponto mais forte do outro lado com as palavras do outro lado antes de responder. Se a "
+    "concessao sair caricata (\"some people say it is risky\"), devolva e peca de novo. Esta e a "
+    "linguagem que falta a quem negocia em ingles sem nunca ter cedido em ingles."
+)

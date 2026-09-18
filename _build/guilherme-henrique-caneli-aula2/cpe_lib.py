@@ -262,3 +262,85 @@ def typed_gaps(items, bank_label=''):
     conteudo e cobrado sem esse falso positivo.
     """
     return fill_items(items)
+
+
+# ── nota por atividade e nota final ───────────────────────────────────────────
+# POR QUE ISTO EXISTE
+# O modelo do professor (w11_l11e.html) poe um contador "Correct: 0/6" em CIMA de
+# cada atividade e fecha a licao com um painel de nota. A primeira versao desta
+# aula nao tinha nada disso: quem media era a barra de progresso do hub, que conta
+# quanto ele FEZ, nao quanto ele ACERTOU. Para um aluno que quer saber se esta
+# pronto para uma prova, "4 de 6 no gapped text" vale mais que "78% da aula feita".
+#
+# COMO FUNCIONA, E POR QUE MUDA A MECANICA
+# No modelo do professor a questao TRAVA na primeira resposta: ela conta o acerto,
+# revela a correta e nao deixa tentar de novo. As primitivas do hub fazem o
+# contrario -- deixam repetir ate acertar, o que e certo para treino e inutil para
+# nota (a nota sempre fecharia 100%). Por isso todo bloco marcado como exame passa
+# a valer UMA tentativa, e so dentro dele: fora dos blocos .cpe-exam nada muda,
+# nem nesta aula nem nas outras sete do mesmo hub.
+#
+# O progresso continua sendo progresso: item respondido ganha .correct (contado
+# por updateProgress como feito) e, se estiver errado, ganha tambem .cpe-miss, que
+# vence no CSS e pinta de vermelho. Barra = quanto fez; nota = quanto acertou.
+
+def exam(block_id, paper, total, body, label=''):
+    """Envelopa uma atividade como tarefa de prova, com contador de acertos.
+
+    block_id: chave da atividade no localStorage (nao pode mudar depois, senao a
+              nota que o aluno ja tirou some).
+    paper:    o papel da prova, e a linha do painel de nota (Reading, Listening...).
+    total:    quantas questoes valem nota neste bloco.
+    """
+    cap = ('<span class="cpe-count-label">%s</span>' % label) if label else ''
+    return ('<div class="cpe-exam" data-exam="%s" data-paper="%s" data-total="%d">'
+            '<div class="cpe-count">%s<span class="cpe-count-n">Correct '
+            '<b>0</b> / %d</span><span class="cpe-count-state">one attempt each</span></div>'
+            '%s</div>' % (esc(block_id), esc(paper), total, cap, total, body))
+
+
+def grade_panel(papers, note=''):
+    """O painel de nota no fim da licao. papers: [(nome do papel, total)].
+
+    As linhas nascem prontas com zero: se o JS nao rodar, o aluno ve o painel
+    vazio em vez de um buraco -- e o professor ve que algo nao carregou.
+    """
+    rows = []
+    for name, total in papers:
+        rows.append('<div class="cpe-grade-row" data-paper="%s">'
+                    '<span class="cpe-grade-name">%s</span>'
+                    '<span class="cpe-grade-bar"><span class="cpe-grade-fill" style="width:0%%"></span></span>'
+                    '<span class="cpe-grade-n"><b>0</b> / %d</span></div>' % (esc(name), name, total))
+    tot = sum(t for _, t in papers)
+    return ('<div class="cpe-grade" id="cpe-grade-l2" data-total="%d">'
+            '<div class="cpe-grade-head"><h4>Final Grade</h4>'
+            '<span class="cpe-grade-sub">Indicative only. Cambridge grades a real paper on a scale, '
+            'not on a percentage.</span></div>'
+            '%s'
+            '<div class="cpe-grade-total"><span>Total</span>'
+            '<span class="cpe-grade-score"><b>0</b> / %d</span>'
+            '<span class="cpe-grade-pct">0%%</span></div>'
+            '<div class="cpe-grade-band">Nothing answered yet.</div>'
+            '<div class="cpe-grade-note">%s</div></div>'
+            % (tot, ''.join(rows), tot, note))
+
+
+# ── tarefas de fala sem gravacao ──────────────────────────────────────────────
+# .think-card so fecha com gravacao (updateProgress). Preparacao para tarefa que
+# acontece NA AULA nao pode entrar como think-card, senao a aula nunca chega a
+# 100% -- e a mesma armadilha que ja tinha tirado o Writing do think-card.
+
+def prompt_list(items, numbered=True):
+    out = ['<div class="cpe-prompts">']
+    for i, q in enumerate(items, 1):
+        n = ('<span class="cpe-prompt-n">%d</span>' % i) if numbered else '<span class="cpe-prompt-n">&bull;</span>'
+        out.append('<div class="cpe-prompt">%s<span>%s</span></div>' % (n, q))
+    out.append('</div>')
+    return '\n'.join(out)
+
+
+def motion_card(n, motion, rules):
+    """O cartao de um debate: a mocao e as regras da rodada."""
+    return ('<div class="cpe-motion"><div class="cpe-motion-head">Motion %d</div>'
+            '<p class="cpe-motion-text">&ldquo;%s&rdquo;</p>'
+            '<p class="cpe-motion-rules">%s</p></div>' % (n, motion, rules))

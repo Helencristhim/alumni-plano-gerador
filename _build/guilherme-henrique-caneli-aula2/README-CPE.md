@@ -60,6 +60,7 @@ ALUNO (o `gen_audio` e o `validate_lesson` ja leem esse override). O
 python3 _build/guilherme-henrique-caneli-aula2/build_preclass_cpe.py   # gera preclass.html
 python3 _build/guilherme-henrique-caneli-aula2/build_slides_cpe.py    # gera slides.html
 python3 _build/guilherme-henrique-caneli-aula2/inject_shell_l2.py     # player + reveal no hub do ALUNO
+python3 _build/guilherme-henrique-caneli-aula2/inject_score_l2.py     # nota por atividade nos 2 hubs
 python3 _build/guilherme-henrique-caneli-aula2/patch_hub_l2.py        # troca o card da aula 2 nos 2 hubs
 python3 _build/guilherme-henrique-caneli-aula2/patch_deck_l2.py       # troca o deck + espelha o aluno
 python3 _build/guilherme-henrique-caneli-aula2/patch_complementary_l2.py
@@ -88,6 +89,55 @@ ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py \
    microfone; se fosse `.think-card`, a aula nunca chegaria a 100%.
 6. **Texto de leitura longo estoura a tela projetada.** O artigo foi dividido em
    quatro telas (medido no Chrome headless a 1400x900 e 1280x800).
+
+## Segunda rodada: o que faltava do modelo do professor (18/09/2026)
+
+Comparando tarefa por tarefa com o `w11_l11e.html`, a estrutura batia inteira
+(plano com tempos, lead-in falado, collocation bank, gap-fill, gapped text,
+multiple choice, word formation, transformations, sentence completion, multiple
+matching com duas tarefas, collaborative task, long turn, gabarito e transcricao
+na tela). Faltavam TRES coisas, agora fechadas:
+
+**1. Nota por atividade e nota final.** Cada bloco de prova virou um `.cpe-exam`
+com contador ("Correct 0 / 6") e a licao fecha num painel de nota por papel
+(`cpe_lib.exam` e `cpe_lib.grade_panel`). Nao e enfeite: no modelo do professor a
+questao TRAVA na primeira resposta e so a primeira conta. Por isso o
+`inject_score_l2.py` embrulha `checkBlank`, `selectQuiz`, `checkMatch` e
+`verifyAllMatches` -- delegando para as originais fora dos blocos de prova, de
+modo que as aulas 1 e 3 a 8 do mesmo hub nao mudaram em nada. Barra de progresso
+= quanto ele fez; nota = quanto ele acertou. Sao duas perguntas diferentes, e o
+aluno precisa das duas.
+
+**2. Follow-up depois do long turn.** Quatro perguntas de examinador, no deck
+(slide 51) e na Pre-class (Stage 2.13). A pergunta 2 e a da gramatica da aula:
+obriga a nomear o agente que ele mesmo apagou.
+
+**3. Segundo debate.** O modelo tem dois; a aula tinha um. O novo (`DEBATE_2_*`)
+da o lado ao aluno em vez de deixar escolher, e cobra CONCESSAO: reformular o
+ponto mais forte do outro lado antes de responder.
+
+Armadilhas desta rodada:
+
+- **O contador poderia mentir.** `confere_totais()` no `build_preclass_cpe.py`
+  barra bloco cujo `data-total` nao bate com as questoes que existem dentro dele,
+  e painel de nota que nao soma o mesmo que as atividades.
+- **Errar nao pode travar a aula em 99%.** Item errado ganha `.correct` (que e o
+  que `updateProgress` conta) MAIS `.cpe-miss`, que vence no CSS e pinta de
+  vermelho. Sem isso, quem errasse uma questao nunca fecharia a licao.
+- **A nota vive por INDICE do item dentro do bloco.** Aula que ganhar ou perder
+  questao precisa de `data-exam` novo, senao a nota antiga gruda na questao errada.
+- **O percentual e sobre o RESPONDIDO, nao sobre a prova inteira.** Com 8 de 75
+  feitas, "7%" se lia como reprovacao quando era so aula pela metade.
+- **Nota ao professor vira atributo `data-teacher`**, e o `esc_attr` do deck
+  escapa `&`: entidade HTML ali sai como texto cru. Aspas nessas strings sao
+  aspas mesmo.
+- **O injetor precisa poder rodar DE NOVO.** Os blocos injetados tem marca de
+  inicio e de fim, e o `inject_score_l2.py` substitui em vez de duplicar. A
+  primeira versao nao tinha marca de fim e obrigou a refazer os hubs do zero.
+
+Provado em navegador (playwright, Supabase bloqueado pela regra do
+[hub-teste-local]): 31 checagens, incluindo a regressao de que a aula 1 continua
+deixando tentar de novo. O teste esta no scratchpad da sessao, nao no repo.
 
 ## Proximo passo
 
