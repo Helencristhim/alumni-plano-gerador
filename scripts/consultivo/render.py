@@ -321,6 +321,28 @@ def opcoes_traduzidas(b):
     return (f'      <div class="item-why item-pt" lang="pt-BR">{pares}</div>\n')
 
 
+def mw(t):
+    """O rotulo da linha do `match-grid` -- e o PESO dele, que depende do que ha DENTRO.
+
+    `.match-word` e `--peso-medio` (600) no shell: certo para a PALAVRA de um matching, que e
+    um rotulo curto. Errado para uma FRASE com destaque interno, e nao por gosto: a pagina
+    nao carrega webfont, a face de reserva (Arial/Liberation) nao tem 600, e o navegador
+    resolve 600 e 700 na MESMA face bold -- a linha inteira e o `<strong>` saem
+    indistinguiveis. A tela pede "what comes after the word in bold" e o que aparece e a
+    frase toda em negrito (aula 3 da Rita, revisao de 18/09/2026; o mesmo par classe->peso
+    que o #2745 corrigiu em `.phrase-en`).
+
+    Quando o texto traz destaque proprio, a linha cai para `--peso-corpo` e o `<strong>`
+    volta a ser o unico negrito da linha. O `bolder` que o navegador da ao `<strong>`
+    resolve em 700 a partir de 400 -- nao ha CSS novo, nem classe nova, nem shell mexido.
+
+    Inerte onde nao ha destaque: sem `<strong>` no texto, sai o mesmo span de antes.
+    """
+    corpo = esc(t)
+    peso = ' style="font-weight:var(--peso-corpo)"' if "<strong>" in corpo else ""
+    return f'<span class="match-word"{peso}>{corpo}</span>'
+
+
 def r_classificar(b, ident):
     """Cada item recebe UMA classificacao, de uma lista fixa de opcoes.
 
@@ -344,7 +366,7 @@ def r_classificar(b, ident):
         alts = ''.join(f'<option value="{LETRAS[i]}">{esc(o)}</option>'
                        for i, o in enumerate(ops))
         linhas.append(
-            f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
+            f'      <div class="match-row">{mw(it["t"])}'
             f'<select data-ok="{idx[it["ok"]]}">'
             f'<option value="" selected="selected">&mdash;</option>{alts}</select>'
             + porque(it) + traducao(it) + '</div>')
@@ -463,7 +485,7 @@ def r_completar(b, ident):
         ops = ''.join(f'<option value="{LETRAS[i]}">{esc(o)}</option>'
                       for i, o in enumerate(alts))
         linhas.append(
-            f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
+            f'      <div class="match-row">{mw(it["t"])}'
             f'<select data-ok="{LETRAS[alts.index(it["ok"])]}">'
             f'<option value="" selected="selected">&mdash;</option>{ops}</select>'
             + porque(it) + traducao(it) + '</div>')
@@ -577,6 +599,42 @@ def r_frases(b, ident):
                      f'</div>' for f in b["itens"])
 
 
+def _aud_js(t):
+    """A frase como STRING JS dentro de um atributo HTML -- delimitador escolhido pelo texto.
+
+    O apostrofo do ingles (`don't`, `it's`) e o caso que quebra: o navegador desescapa a
+    entidade ANTES de compilar o handler, a string fecha no lugar errado e o botao morre
+    calado (REGRA 7.1 do imersivo, 324 botoes mortos em 48 arquivos). A saida NAO e escapar
+    o apostrofo: e nao usar o apostrofo como delimitador. O `&quot;` chega ao JS como `"` e
+    delimita sem ambiguidade, e o `audio_surface` le os dois formatos."""
+    if "'" not in t:
+        return "'" + t + "'"
+    if '"' not in t:
+        return "&quot;" + t + "&quot;"
+    raise SystemExit(f"a frase {t[:40]!r} tem apostrofo E aspa: nao ha delimitador que "
+                     f"sobreviva aos dois. Reescreva a frase.")
+
+
+def aud_frase(texto, rate="0.9"):
+    """A barra de audio de UMA frase: acionador, Stop e estado -- o formato do shell.
+
+    O `audBuild()` do shell monta Stop e estado sozinho a partir de qualquer botao que chame
+    `say`/`sayAs`/`playTalk`, mas ele marca o PAI do botao como grupo -- e o pai, dentro de
+    um exercicio, seria a propria linha da frase. Emitindo o grupo fechado, a linha continua
+    sendo so a frase, e o HTML fica igual ao das barras escritas a mao nos fragmentos.
+
+    Sem classe nova: o layout vai em estilo inline, como o resto do que este emissor produz.
+    Classe nova exigiria CSS no shell, e CSS no shell reconstroi TODOS os materiais da
+    anatomia (GATE 50) -- preco alto demais para tres botoes."""
+    return (f'<span data-audgrupo="1" style="display:inline-flex;gap:var(--space-1h);'
+            f'align-items:center;margin-left:var(--space-2h);vertical-align:middle">'
+            f'<button class="audio-btn-sm ghost" onclick="say({_aud_js(texto)},{rate})" '
+            f'data-aud-uni="1" data-rot="&#9654;">&#9654;</button>'
+            f'<button type="button" class="audio-btn-sm aud-stop" onclick="audStop(this)">'
+            f'&#9632; Stop</button>'
+            f'<span class="aud-estado" role="status" aria-live="polite"></span></span>')
+
+
 def r_lacuna(b, ident, vocab=None):
     """Completar a frase. A lacuna vai ENTRE CHAVES, no meio do texto:
 
@@ -687,7 +745,24 @@ def r_lacuna(b, ident, vocab=None):
                 "\x00", f'<input class="blank-input" data-ok="{resp}" '
                          f'style="min-width:{larg or b.get("largura", "170px")}" '
                          f'placeholder="...">', 1)
-        linhas.append(f'      <p class="chunk-line">{montado}</p>'
+        # ---- O AUDIO DA FRASE COMPLETA, LINHA POR LINHA (revisao da Rita, 18/09/2026)
+        #
+        # A professora perguntou qual era o proposito das duas frases com audio no fim da
+        # tela 7 da aula 3: eram DUAS das cinco do proprio exercicio, repetidas embaixo, sem
+        # nada dizer por que aquelas. O pedido dela: "apos cada frase do exercicio ter um
+        # audio, ja com a frase completa com a resposta".
+        #
+        # UMA FONTE. A frase falada e DERIVADA do item -- a lacuna trocada pela resposta que
+        # ja esta declarada dentro dela. Nao existe um segundo texto para divergir do
+        # exercicio, e quem escreve a aula nao precisa lembrar de nada: liga
+        # `audio_por_linha` e as frases saem completas. Mudar a resposta muda o audio -- e,
+        # porque o nome do MP3 e o hash do transcript, muda o arquivo.
+        audio = ""
+        if b.get("audio_por_linha"):
+            completa = re.sub(r"\{([^}]+)\}",
+                              lambda m: m.group(1).partition("|")[0].strip(), frase)
+            audio = aud_frase(completa)
+        linhas.append(f'      <p class="chunk-line">{montado}{audio}</p>'
                       + (f'\n      <div class="item-why item-pt" lang="pt-BR">'
                          f'{crua(ptt)}</div>' if ptt else ""))
     # O de GRAMATICA sai sem o banco -- e nao com um banco vazio, que ocuparia espaco
@@ -1121,6 +1196,8 @@ def seccao(b, i, vocab=None):
     CONHECIDOS = {"kind", "id", "n", "nu", "titulo", "badge", "abertura", "instr", "itens",
                   "opcoes", "nota", "rationale", "prompt", "largura", "rotulo_banco",
                   "banco", "barra", "pt", "chave", "rotulo",
+                  # o audio da frase completa em cada linha do gap-fill (`lacuna`)
+                  "audio_por_linha",
                   # os dois titulos de coluna do `ordenar`
                   "rotulos",
                   # o apoio em portugues do material real-beginner
