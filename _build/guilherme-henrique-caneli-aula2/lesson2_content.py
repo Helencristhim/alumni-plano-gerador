@@ -89,14 +89,22 @@ COLLOC_BANK = [
     "a duty <b>owed to</b> the members",
     "to <b>sit</b> at the top of the waterfall",
 ]
-COLLOC_OPTS = ["rank", "take", "crowd", "wrap", "ring-fence", "compress"]
+COLLOC_OPTS = [
+    "rank behind the senior lenders",
+    "take the first loss",
+    "crowd in private capital",
+    "wrap the bond with a guarantee",
+    "ring-fence the revenue",
+    "compress the yields to single digits",
+]
 COLLOC_ROWS = [
-    ("The subordinated tranche will ___ behind the development bank's loan.", "rank"),
-    ("A first-loss guarantee is there to ___ in private money.", "crowd"),
-    ("The lawyers will ___ the revenue so that it cannot be diverted to the parent company.", "ring-fence"),
-    ("The monoline agreed to ___ the bond with a guarantee.", "wrap"),
-    ("Somebody has to ___ the first loss, or the pension funds will not come at all.", "take"),
-    ("Too much money chasing the same operating roads will ___ yields to single digits.", "compress"),
+    ("A first-loss guarantee exists to ___", "crowd in private capital"),
+    ("The subordinated tranche will ___", "rank behind the senior lenders"),
+    ("The lawyers will ___, so that it cannot be diverted to the parent company.",
+     "ring-fence the revenue"),
+    ("The monoline agreed to ___", "wrap the bond with a guarantee"),
+    ("Somebody has to ___, or the pension funds will not come at all.", "take the first loss"),
+    ("Too much money chasing the same operating roads will ___", "compress the yields to single digits"),
 ]
 
 # ── 4. Cloze com um item a mais (o banco inteiro em cada lacuna) ──────────────
@@ -105,17 +113,34 @@ CLOZE_BANK = [
     "blended finance", "a currency hedge", "an anchor investor",
     "yield compression", "fiduciary duty", "capital deployment",
 ]
-CLOZE_TEXT = [
-    ("A fund that manages teachers' pensions cannot simply buy the most exciting asset on the table: its ", "fiduciary duty"),
-    (" makes the defensible choice the compulsory one. The sponsor's work, then, is to remove the reasons a committee can say no, one at a time. Revenue that would otherwise depend on next year's spot price is fixed by ", "an off-take agreement"),
-    (", so that the buyer is committed before the plant exists. Exposure to the exchange rate is closed with ", "a currency hedge"),
-    (". A development bank agrees to lend below market terms, and that ", "concessional lending"),
-    (" is not charity but arithmetic: public money on worse terms is what makes private money on ordinary terms possible, a structure the sector calls ", "blended finance"),
-    (". A guarantee wrapped around the bond delivers ", "credit enhancement"),
-    (", and the project borrows two notches cheaper. What is still missing is the first signature: until ", "an anchor investor"),
-    (" commits publicly, every other committee has a reason to wait. And when they all arrive at once, the market produces its familiar result, ", "yield compression"),
-    (", which leaves the safe asset earning less than it did a decade ago.", None),
+CLOZE_ITEMS = [
+    dict(before='1. A fund that manages teachers\' pensions cannot simply buy the most exciting asset on '
+                'the table: its ', after=' makes the defensible choice the compulsory one.',
+         answer='fiduciary duty', hint='Two words. The obligation is owed to the members, not chosen by the fund.'),
+    dict(before='2. Revenue that would otherwise depend on next year\'s spot price is fixed by ',
+         after=', so that the buyer is committed before the plant exists.',
+         answer='an off-take agreement', alt='off-take agreement',
+         hint='Three words, with the article.'),
+    dict(before='3. Exposure to the exchange rate is closed with ', after='.',
+         answer='a currency hedge', alt='currency hedge', hint='Three words, with the article.'),
+    dict(before='4. A development bank agrees to lend below market terms, and that ',
+         after=' is not charity but arithmetic.',
+         answer='concessional lending', hint='Two words. Not "blended finance": that is the structure, this is the money.'),
+    dict(before='5. Public money on worse terms is what makes private money on ordinary terms possible, a '
+                'structure the sector calls ', after='.',
+         answer='blended finance', hint='Two words. The name of the whole arrangement.'),
+    dict(before='6. A guarantee wrapped around the bond delivers ',
+         after=', and the project borrows two notches cheaper.',
+         answer='credit enhancement', hint='Two words. Not "de-risking mechanism": this one is about the rating.'),
+    dict(before='7. What is still missing is the first signature: until ',
+         after=' commits publicly, every other committee has a reason to wait.',
+         answer='an anchor investor', alt='anchor investor', hint='Three words, with the article.'),
+    dict(before='8. And when they all arrive at once, the market produces its familiar result, ',
+         after=', which leaves the safe asset earning less than it did a decade ago.',
+         answer='yield compression', hint='Two words.'),
 ]
+CLOZE_NOT_NEEDED = 'capital deployment'
+
 
 
 # ── 5. READING Part A -- gapped text (Paper 1, Part 6) ────────────────────────

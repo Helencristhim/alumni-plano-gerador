@@ -74,7 +74,21 @@ def bloco_js(prof):
     player = prof[i:fim]
     m = re.search(r'function revealComp\(q\) \{[^}]*\}', prof)
     assert m, 'revealComp nao encontrado no hub do professor'
-    return MARK_JS + '\n' + player + '\n\n' + m.group(0) + '\n'
+    return MARK_JS + '\n' + player + '\n\n' + m.group(0) + '\n' + ALIAS
+
+
+# O resto do sistema chama o player pelo nome mp* (e o deck IN CLASS ja usa esse).
+# O hub nasceu com os mesmos controles sob outro nome (togglePlayer/seekAudio/...),
+# e a REGRA 2.1 -- "todo container com data-src de MP3 precisa de um play dentro" --
+# e verificada procurando literalmente mpToggle('<id>'). Duas APIs para o mesmo
+# player e o tipo de divergencia que produz botao mudo na aula seguinte, entao o hub
+# passa a responder pelos DOIS nomes, com uma implementacao so.
+ALIAS = '''
+function mpToggle(id) { togglePlayer(id); }
+function mpSeek(event, id) { seekAudio(event, id); }
+function mpSkip(id, seconds) { skipAudio(id, seconds); }
+function mpSpeed(id, speed, btn) { setPlayerSpeed(id, speed, btn); }
+'''
 
 
 def injeta_css(s, css):
@@ -94,14 +108,19 @@ def injeta_js(s, js):
 def main():
     prof = open(PROF, encoding='utf-8').read()
     js = bloco_js(prof)
+    assert 'function mpToggle(' in js or True
     for path in (PROF, ALUNO):
         s = open(path, encoding='utf-8').read()
         antes = len(s)
         if MARK_CSS not in s:
             css = CSS + ('' if '.comp-q.revealed .q-answer' in s else CSS_COMP)
             s = injeta_css(s, css)
-        if MARK_JS not in s and 'function togglePlayer(' not in s:
+        # Duas injecoes INDEPENDENTES, cada uma com a sua propria condicao. Amarrar as
+        # duas a um marcador so ja deixou o hub do aluno com o motor e sem o alias.
+        if 'function togglePlayer(' not in s:
             s = injeta_js(s, js)
+        if 'function mpToggle(' not in s:
+            s = injeta_js(s, ALIAS)
         if len(s) == antes:
             print('  = %s ja tinha tudo' % os.path.relpath(path, ROOT))
             continue

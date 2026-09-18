@@ -181,21 +181,21 @@ def player(pid, src, caption=''):
     # SLIDE ESCURO (texto branco). Dentro da aba Pre-class, que e clara, o player
     # sairia branco no branco. A classe .lp fica para o JS (#id .lp-play, .lp-speed-btn).
     return (cap + '<div class="lp cpe-lp" id="%s" data-src="%s" style="max-width:520px;margin:.4rem 0 1rem">'
-            '<div class="lp-seekbar" onclick="seekAudio(event,\'%s\')"><div class="lp-progress" id="progress-%s"></div></div>'
+            '<div class="lp-seekbar" onclick="mpSeek(event,\'%s\')"><div class="lp-progress" id="progress-%s"></div></div>'
             '<div class="lp-times"><span id="time-current-%s">0:00</span><span id="time-total-%s">0:00</span></div>'
             '<div class="lp-row">'
-            '<button class="lp-btn" onclick="skipAudio(\'%s\',-5)" aria-label="Back 5 seconds">-5s</button>'
-            '<button class="lp-btn lp-play" id="play-%s" onclick="togglePlayer(\'%s\')" aria-label="Play or pause">'
+            '<button class="lp-btn" onclick="mpSkip(\'%s\',-5)" aria-label="Back 5 seconds">-5s</button>'
+            '<button class="lp-btn lp-play" id="play-%s" onclick="mpToggle(\'%s\')" aria-label="Play or pause">'
             '<svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18">'
             '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>'
             '<svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none">'
             '<rect x="6" y="4" width="4" height="16" fill="currentColor"/>'
             '<rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button>'
-            '<button class="lp-btn" onclick="skipAudio(\'%s\',5)" aria-label="Forward 5 seconds">+5s</button></div>'
+            '<button class="lp-btn" onclick="mpSkip(\'%s\',5)" aria-label="Forward 5 seconds">+5s</button></div>'
             '<div class="lp-speeds">'
-            '<button class="lp-speed-btn" onclick="setPlayerSpeed(\'%s\',0.85,this)">0.85x</button>'
-            '<button class="lp-speed-btn active" onclick="setPlayerSpeed(\'%s\',1,this)">1x (exam pace)</button>'
-            '<button class="lp-speed-btn" onclick="setPlayerSpeed(\'%s\',1.15,this)">1.15x</button></div></div>'
+            '<button class="lp-speed-btn" onclick="mpSpeed(\'%s\',0.85,this)">0.85x</button>'
+            '<button class="lp-speed-btn active" onclick="mpSpeed(\'%s\',1,this)">1x (exam pace)</button>'
+            '<button class="lp-speed-btn" onclick="mpSpeed(\'%s\',1.15,this)">1.15x</button></div></div>'
             % (pid, src, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid))
 
 
@@ -226,3 +226,29 @@ def gap(n):
     return ('<span style="display:inline-block;min-width:2.1rem;text-align:center;'
             'background:var(--accent);color:#fff;border-radius:5px;font-weight:700;'
             'font-size:.78rem;padding:.05rem .35rem;margin:0 .15rem">%s</span>' % n)
+
+
+def survival_card(n, phrases):
+    """O cartao das cinco frases da aula. E piso do Pre-class no modelo
+    (validate_lesson: survival-card >= 1) e, aqui, a terceira exposicao das mesmas
+    frases que o aluno gravou no Stage de Delivery e vai ouvir no IN CLASS."""
+    linhas = ''.join(
+        '<div class="survival-phrase"><span class="sp-num">%d</span>'
+        '<span class="sp-en">%s</span>'
+        '<button class="audio-btn" data-speak="%s" onclick="speakText(this.dataset.speak,this)">'
+        'Listen</button></div>' % (i, esc(p), esc(p)) for i, p in enumerate(phrases, 1))
+    return ('<div class="survival-card"><h4>Survival Card -- Lesson %d</h4>%s</div>' % (n, linhas))
+
+
+def typed_gaps(items, bank_label=''):
+    """Cloze DIGITADO (nao dropdown).
+
+    Duas razoes. Pedagogica: digitar a expressao e mais duro que reconhece-la numa
+    lista, e o open cloze da prova e digitado. Tecnica: o gate de idioma da REGRA 13
+    le o data-answer de TODA .match-row e exige uma function word inglesa la dentro
+    ("a", "the", "to"...), porque e assim que ele distingue definicao em ingles de
+    palavra solta em portugues. Termo tecnico como "yield compression" nao tem
+    function word nenhuma e cairia como se fosse portugues. Em blank-input o mesmo
+    conteudo e cobrado sem esse falso positivo.
+    """
+    return fill_items(items)

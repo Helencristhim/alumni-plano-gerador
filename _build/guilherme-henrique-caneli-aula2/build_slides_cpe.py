@@ -18,6 +18,7 @@ So usa blocos que o deck ja sabe renderizar e validar:
 USO (da raiz): python3 _build/guilherme-henrique-caneli-aula2/build_slides_cpe.py
 """
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -209,23 +210,25 @@ def deck():
           'credit enhancement x de-risking mechanism e concessional lending x blended finance. Se ele '
           'errar, nao de a resposta: peca a diferenca entre as duas opcoes que ele considerou.')
 
-    cloze_txt, n = [], 0
-    for chunk, ans in C.CLOZE_TEXT:
-        cloze_txt.append(chunk)
-        if ans:
-            n += 1
-            cloze_txt.append('<span class="ic-blank">&nbsp;&nbsp;<span class="ic-n">%d</span></span>' % n)
+    # As oito frases do cloze, com a lacuna marcada. O banco fica a vista: na aula a
+    # tarefa nao e lembrar a palavra, e justificar por que so uma serve.
+    cloze_linhas = ''.join(
+        '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s'
+        '<span class="ic-blank">&nbsp;&nbsp;</span>%s</span></div>'
+        % (i, re.sub(r'^\d+\.\s*', '', it['before']), it['after'])
+        for i, it in enumerate(C.CLOZE_ITEMS, 1))
     slide(2, head('In Context', 'Put the Lexis to', 'Work') +
           card('One expression in the bank is not needed',
-               '<div class="ic-gaptext">%s</div><div class="ic-bank ic-soft">%s</div>' % (
-                   ''.join(cloze_txt), ''.join('<span class="ic-b">%s</span>' % b for b in C.CLOZE_BANK)) +
+               '<div class="ic-lf-list">%s</div><div class="ic-bank ic-soft">%s</div>' % (
+                   cloze_linhas, ''.join('<span class="ic-b">%s</span>' % b for b in C.CLOZE_BANK)) +
                reveal('Reveal the key',
                       '1 fiduciary duty &middot; 2 an off-take agreement &middot; 3 a currency hedge &middot; '
                       '4 concessional lending &middot; 5 blended finance &middot; 6 credit enhancement &middot; '
-                      '7 an anchor investor &middot; 8 yield compression. <b>Not needed:</b> capital deployment.')),
-          'Cloze (4 min): ele ja fez isto em casa. Aqui a tarefa e OUTRA: peca a JUSTIFICATIVA de duas '
-          'lacunas -- por que 4 nao pode ser blended finance, por que 6 nao pode ser de-risking. E peca '
-          'que ele diga qual sobrou e por que sobrou.')
+                      '7 an anchor investor &middot; 8 yield compression. <b>Not needed:</b> %s.'
+                      % C.CLOZE_NOT_NEEDED)),
+          'Cloze (4 min): ele ja digitou isto em casa. Aqui a tarefa e OUTRA: peca a JUSTIFICATIVA de '
+          'duas lacunas -- por que a 4 nao pode ser blended finance, por que a 6 nao pode ser de-risking '
+          'mechanism. E peca que ele diga qual sobrou e por que sobrou.')
 
     slide(2, choices('Which of these would a native speaker in this sector <b>not</b> say?', [
         ('a', 'The tranche ranks behind the senior loan.', False),
@@ -281,6 +284,30 @@ def deck():
     slide(3, head('The Text', 'Paragraphs Five and', 'Six') + artigo(C.ARTICLE[4:6], '5 and 6'),
           'Leitura (3 min): aqui entram os instrumentos. Se ele ja souber tudo isso do trabalho, otimo: '
           'a tarefa nao e entender o conteudo, e achar a frase que falta.')
+
+    # Slide de TAREFA antes da ultima tela de texto (REGRA 2.2, bloqueante). Ele tem
+    # de trazer TRES coisas, e o gate cobra as tres:
+    #   data-task-for="reading"  a marca de que e o slide de tarefa
+    #   .ic-predict              o aluno arrisca antes de ser exposto
+    #   a MESMA pergunta         que o slide de checagem seguinte vai cobrar,
+    #                            em <div class="q-text">, e SEM a resposta
+    # Fica de proposito sem .comp-q e sem ic-choices: com qualquer um dos dois ele
+    # seria lido como slide de CHECAGEM do texto anterior, e a regra passaria a
+    # cobrar uma tarefa antes daquele tambem, em cascata.
+    slide(3, head('Before the Last Paragraph', 'Predict, Then', 'Place') +
+          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;All of which the language of '
+          'the sector is beautifully designed to obscure.&rdquo;</div>'
+          '<div class="ic-predict-q">That is how the last paragraph opens, and it is the only one with '
+          'no gap in it. Does the writer end by summarising, by conceding, or by accusing?</div></div>'
+          '<div class="ic-card" style="margin-top:1rem"><div class="ic-card-h3">Then the task you have '
+          'been reading for</div><div class="q-text">Gap 1 -- which sentence belongs here?</div>'
+          '<p style="font-size:.92rem;color:var(--text-mid);margin:.6rem 0 0">Six gaps, seven sentences, '
+          'one of them useless. Decide each one by what the text points back to, not by what sounds '
+          'true.</p></div>',
+          'Tarefa (2 min): ele responde a predicao PRIMEIRO, em uma palavra -- summarise, concede ou '
+          'accuse. Depois diz de qual lacuna menos tem certeza. Anote: quase sempre e a 6, e a ultima '
+          'frase do artigo e o que resolve.',
+          extra=' data-task-for="reading"')
 
     slide(3, head('The Text', 'The Last', 'Paragraph') + artigo(C.ARTICLE[6:], 'no gap') +
           '<p style="margin-top:.9rem;font-size:.95rem;color:var(--text-mid)">No gap here. Read it '

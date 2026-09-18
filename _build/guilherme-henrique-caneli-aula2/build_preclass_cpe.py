@@ -81,39 +81,34 @@ def s_collocation():
     rows = [('<span style="font-size:.9rem">%s</span>' % q, a) for q, a in C.COLLOC_ROWS]
     body = (L.collocation_bank(C.COLLOC_BANK) +
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1rem 0 .6rem;font-style:italic">'
-            'Now the verb. Only one of the six is idiomatic in each sentence; the others are what a very good '
-            'non-native speaker says.</p>' +
+            'Now the whole chunk, not the verb on its own. Only one of the six is idiomatic in each '
+            'sentence; the others are what a very good non-native speaker says.</p>' +
             L.match_grid('match-l2-colloc', rows, opts, left_style=' style="flex:2"'))
     return L.section('Stage 2.3 -- Words That Travel Together', 'Practice', 'badge badge-practice',
                      rubric=paper('Collocation &middot; 4 min') +
-                     'Read the bank aloud once. Then choose the verb that belongs.',
+                     'Read the bank aloud once. Then complete each sentence with the whole expression, '
+                     'not just the verb: a collocation is remembered as a block or it is not remembered.',
                      body=body)
 
 
 def s_cloze():
-    bank = '<div style="font-size:.86rem;background:var(--bg-elevated);border:1px solid var(--border);'\
-           'border-radius:8px;padding:.7rem .9rem;margin-bottom:1rem"><b>Bank:</b> %s</div>' % ' &middot; '.join(
-               C.CLOZE_BANK)
-    text, rows, n = [], [], 0
-    for chunk, ans in C.CLOZE_TEXT:
-        text.append(chunk)
-        if ans:
-            n += 1
-            text.append(L.gap(n))
-            rows.append(('<b>%d</b>' % n, ans))
-    body = (bank +
-            '<div class="context-text" style="line-height:2.1">%s</div>' % ''.join(text) +
-            L.match_grid('match-l2-cloze', rows, [(o, o) for o in C.CLOZE_BANK],
-                         left_style=' style="flex:0 0 2rem"'))
+    bank = ('<div style="font-size:.86rem;background:var(--bg-elevated);border:1px solid var(--border);'
+            'border-radius:8px;padding:.7rem .9rem;margin-bottom:1rem"><b>Bank:</b> %s</div>'
+            % ' &middot; '.join(C.CLOZE_BANK))
+    body = bank + L.typed_gaps(C.CLOZE_ITEMS) + L.reveal(
+        'Which one was not needed?',
+        'The passage never needs <b>%s</b>. Money that has been raised is not money that has been '
+        'deployed, and nothing in this paragraph is about the difference.' % C.CLOZE_NOT_NEEDED)
     return L.section('Stage 2.4 -- Put the Lexis to Work', 'Practice', 'badge badge-practice',
-                     rubric=paper('Word-bank cloze &middot; 4 min') +
-                     'Complete the passage using <b>only</b> the expressions in the bank. Each gap offers the '
-                     'whole bank; one expression is <b>not needed</b>. Meaning decides, and so does the grammar '
-                     'of the sentence around the gap.',
+                     rubric=paper('Word-bank cloze &middot; 5 min') +
+                     'Complete each sentence with an expression from the bank. <b>Type it</b>, do not '
+                     'choose it: the open cloze in the exam is typed, and recognising a term is easier '
+                     'than producing it. One expression is <b>not needed</b>.',
                      body=body)
 
 
 def s_reading_gapped():
+    letras = {k: v for k, v in C.GAP_OPTIONS}
     paras = []
     for before, n, after in C.ARTICLE:
         if n:
@@ -132,8 +127,13 @@ def s_reading_gapped():
             '<div class="context-text" style="line-height:1.95;text-align:justify">%s</div>' % ''.join(paras) +
             '<p style="font-size:.84rem;font-weight:700;margin:1.2rem 0 .2rem">Choose from these sentences '
             '(one is not used):</p>' + opts +
-            L.match_grid('match-l2-gapped', [('<b>Gap %s</b>' % k, v) for k, v in C.GAP_ANSWERS],
-                         [(k, '%s -- %s' % (k, v[:58] + '...')) for k, v in C.GAP_OPTIONS],
+            # O VALOR da opcao e a frase inteira, nao a letra. Duas razoes: o HTML passa a
+            # dizer o que a resposta e (conferivel sem gabarito), e o gate de idioma da
+            # REGRA 13, que le o data-answer de toda match-row, ve uma frase em ingles em
+            # vez de um "C" solto, que ele nao teria como distinguir de palavra em outra lingua.
+            L.match_grid('match-l2-gapped',
+                         [('<b>Gap %s</b>' % k, letras[r]) for k, r in C.GAP_ANSWERS],
+                         [(v, '%s -- %s' % (k, v[:58] + '...')) for k, v in C.GAP_OPTIONS],
                          left_style=' style="flex:0 0 4rem"') +
             L.reveal('Reveal &amp; explain -- why each sentence fits only where it fits', C.GAP_KEY))
     return L.section('Stage 2.5 -- Gapped Text', 'Reading', 'badge badge-quiz',
@@ -199,13 +199,16 @@ def s_listening_matching():
     players = []
     for s in C.SPEAKERS:
         players.append(L.player('lp-l2-mm%d' % s['n'], AUDIO + s['file'], '<b>Speaker %d</b>' % s['n']))
+    o1 = {k: v for k, v in C.TASK1_OPTS}
+    o2 = {k: v for k, v in C.TASK2_OPTS}
+    # mesmo motivo do gapped text: o valor e o texto inteiro, nao a letra.
     t1 = L.match_grid('match-l2-mm1',
-                      [('<b>Speaker %d</b>' % s['n'], s['task1']) for s in C.SPEAKERS],
-                      [(k, '%s -- %s' % (k, v)) for k, v in C.TASK1_OPTS],
+                      [('<b>Speaker %d</b>' % s['n'], o1[s['task1']]) for s in C.SPEAKERS],
+                      [(v, '%s -- %s' % (k, v)) for k, v in C.TASK1_OPTS],
                       left_style=' style="flex:0 0 6rem"')
     t2 = L.match_grid('match-l2-mm2',
-                      [('<b>Speaker %d</b>' % s['n'], s['task2']) for s in C.SPEAKERS],
-                      [(k, '%s -- %s' % (k, v)) for k, v in C.TASK2_OPTS],
+                      [('<b>Speaker %d</b>' % s['n'], o2[s['task2']]) for s in C.SPEAKERS],
+                      [(v, '%s -- %s' % (k, v)) for k, v in C.TASK2_OPTS],
                       left_style=' style="flex:0 0 6rem"')
     def optlist(title, opts):
         return ('<p style="font-size:.84rem;font-weight:700;margin:1.1rem 0 .3rem">%s</p>'
@@ -307,7 +310,7 @@ def build():
     parts = [HEADER, plan_at_a_glance(), s_lead_in(), s_vocab(), s_matching(), s_collocation(), s_cloze(),
              s_reading_gapped(), s_reading_mcq(), s_word_formation(), s_transformations(),
              s_listening_completion(), s_listening_matching(), s_grammar(), s_delivery(), s_speaking(),
-             s_writing(), '  </div>\n</div>\n']
+             s_writing(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
     return '\n'.join(parts)
 
 
