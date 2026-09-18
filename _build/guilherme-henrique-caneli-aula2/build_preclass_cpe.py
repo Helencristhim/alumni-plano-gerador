@@ -28,7 +28,7 @@ def plan_at_a_glance():
         ("Use of English", "18 min", "Word formation (Part 3) and key-word transformations (Part 4)."),
         ("Listening", "24 min", "Sentence completion (Paper 3, Part 2) and multiple matching, two tasks at once (Part 4). Each heard twice."),
         ("Grammar", "10 min", "Agency: four ways to name the party who acted, and two ways to lose them."),
-        ("Speaking &amp; Writing", "in class", "Long turn, collaborative task, and a briefing note of 280&ndash;320 words."),
+        ("Speaking &amp; Writing", "in class", "Long turn and follow-up, collaborative task, two for/against debates, and a briefing note of 280&ndash;320 words."),
     ]
     out = ['<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:.2rem 0 1.4rem">']
     for i, (a, b, c) in enumerate(rows):
@@ -73,7 +73,9 @@ def s_matching():
                      rubric=paper('Vocabulary &middot; Part 1 &middot; 4 min') +
                      'These are not the definitions from the cards above. Each one is a distinction, and the '
                      'distractors are close enough to be tempting. Every meaning is used exactly once.',
-                     body=L.match_grid('match-l2-discriminate', C.MATCH_ROWS, opts))
+                     body=L.exam('l2-discriminate', 'Vocabulary', len(C.MATCH_ROWS),
+                                 L.match_grid('match-l2-discriminate', C.MATCH_ROWS, opts),
+                                 label='Which one is it, exactly'))
 
 
 def s_collocation():
@@ -83,7 +85,9 @@ def s_collocation():
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1rem 0 .6rem;font-style:italic">'
             'Now the whole chunk, not the verb on its own. Only one of the six is idiomatic in each '
             'sentence; the others are what a very good non-native speaker says.</p>' +
-            L.match_grid('match-l2-colloc', rows, opts, left_style=' style="flex:2"'))
+            L.exam('l2-colloc', 'Vocabulary', len(C.COLLOC_ROWS),
+                   L.match_grid('match-l2-colloc', rows, opts, left_style=' style="flex:2"'),
+                   label='Collocation in a sentence'))
     return L.section('Stage 2.3 -- Words That Travel Together', 'Practice', 'badge badge-practice',
                      rubric=paper('Collocation &middot; 4 min') +
                      'Read the bank aloud once. Then complete each sentence with the whole expression, '
@@ -95,7 +99,8 @@ def s_cloze():
     bank = ('<div style="font-size:.86rem;background:var(--bg-elevated);border:1px solid var(--border);'
             'border-radius:8px;padding:.7rem .9rem;margin-bottom:1rem"><b>Bank:</b> %s</div>'
             % ' &middot; '.join(C.CLOZE_BANK))
-    body = bank + L.typed_gaps(C.CLOZE_ITEMS) + L.reveal(
+    body = bank + L.exam('l2-cloze', 'Vocabulary', len(C.CLOZE_ITEMS),
+                         L.typed_gaps(C.CLOZE_ITEMS), label='Word-bank cloze') + L.reveal(
         'Which one was not needed?',
         'The passage never needs <b>%s</b>. Money that has been raised is not money that has been '
         'deployed, and nothing in this paragraph is about the difference.' % C.CLOZE_NOT_NEEDED)
@@ -131,10 +136,12 @@ def s_reading_gapped():
             # dizer o que a resposta e (conferivel sem gabarito), e o gate de idioma da
             # REGRA 13, que le o data-answer de toda match-row, ve uma frase em ingles em
             # vez de um "C" solto, que ele nao teria como distinguir de palavra em outra lingua.
-            L.match_grid('match-l2-gapped',
-                         [('<b>Gap %s</b>' % k, letras[r]) for k, r in C.GAP_ANSWERS],
-                         [(v, '%s -- %s' % (k, v[:58] + '...')) for k, v in C.GAP_OPTIONS],
-                         left_style=' style="flex:0 0 4rem"') +
+            L.exam('l2-gapped', 'Reading', len(C.GAP_ANSWERS),
+                   L.match_grid('match-l2-gapped',
+                                [('<b>Gap %s</b>' % k, letras[r]) for k, r in C.GAP_ANSWERS],
+                                [(v, '%s -- %s' % (k, v[:58] + '...')) for k, v in C.GAP_OPTIONS],
+                                left_style=' style="flex:0 0 4rem"'),
+                   label='Paper 1, Part 6') +
             L.reveal('Reveal &amp; explain -- why each sentence fits only where it fits', C.GAP_KEY))
     return L.section('Stage 2.5 -- Gapped Text', 'Reading', 'badge badge-quiz',
                      rubric=paper('Paper 1 &middot; Part 6 &middot; 14 min') +
@@ -146,7 +153,8 @@ def s_reading_gapped():
 
 
 def s_reading_mcq():
-    body = L.quiz(C.MCQ) + L.reveal('Reveal answers &amp; reasoning', C.MCQ_KEY)
+    body = (L.exam('l2-mcq', 'Reading', len(C.MCQ), L.quiz(C.MCQ), label='Paper 1, Part 5') +
+            L.reveal('Reveal answers &amp; reasoning', C.MCQ_KEY))
     return L.section('Stage 2.6 -- Multiple Choice', 'Reading', 'badge badge-quiz',
                      rubric=paper('Paper 1 &middot; Part 5 &middot; 11 min') +
                      'Now the text is whole, answer on it. Choose the option the writer\'s argument actually '
@@ -160,7 +168,8 @@ def s_word_formation():
                      rubric=paper('Paper 1 &middot; Part 3 &middot; 8 min') +
                      'Use the word in capitals to form a word that fits the gap. Watch for negative prefixes, '
                      'for part of speech, and for the internal change some of these words make.',
-                     body=L.fill_items(C.WORD_FORMATION))
+                     body=L.exam('l2-wordform', 'Use of English', len(C.WORD_FORMATION),
+                                 L.fill_items(C.WORD_FORMATION), label='Paper 1, Part 3'))
 
 
 def s_transformations():
@@ -171,7 +180,9 @@ def s_transformations():
                 'margin-bottom:.3rem">%s</div>' % (t['lead'], t['key']))
         items.append(dict(before=lead + t['before'], after=t['after'], answer=t['answer'],
                           alt=t.get('alt'), hint=t['hint']))
-    body = L.fill_items(items) + L.reveal('Reveal the answer key', C.TRANSFORM_KEY)
+    body = (L.exam('l2-transform', 'Use of English', len(C.TRANSFORMATIONS),
+                   L.fill_items(items), label='Paper 1, Part 4') +
+            L.reveal('Reveal the answer key', C.TRANSFORM_KEY))
     return L.section('Stage 2.8 -- Key-word Transformations', 'Use of English', 'badge badge-grammar',
                      rubric=paper('Paper 1 &middot; Part 4 &middot; 10 min') +
                      'Complete the second sentence so that it means the same as the first, using the word given. '
@@ -184,7 +195,8 @@ def s_listening_completion():
     body = (L.player('lp-l2-talk', AUDIO + C.TALK_FILE,
                      'An infrastructure investment director, speaking at an investor evening. '
                      'In the exam you hear it <b>twice</b> -- press play a second time before you check.') +
-            L.fill_items(C.TALK_ITEMS) +
+            L.exam('l2-listen-complete', 'Listening', len(C.TALK_ITEMS),
+                   L.fill_items(C.TALK_ITEMS), label='Paper 3, Part 2') +
             L.reveal('Show transcript (only after your second listening)',
                      '<span style="font-weight:400;line-height:1.8">%s</span>' % C.TALK_TEXT))
     return L.section('Stage 2.9 -- Sentence Completion', 'Listening', 'badge badge-quiz',
@@ -202,14 +214,14 @@ def s_listening_matching():
     o1 = {k: v for k, v in C.TASK1_OPTS}
     o2 = {k: v for k, v in C.TASK2_OPTS}
     # mesmo motivo do gapped text: o valor e o texto inteiro, nao a letra.
-    t1 = L.match_grid('match-l2-mm1',
+    t1 = L.exam('l2-mm1', 'Listening', len(C.SPEAKERS), label='Task One', body=L.match_grid('match-l2-mm1',
                       [('<b>Speaker %d</b>' % s['n'], o1[s['task1']]) for s in C.SPEAKERS],
                       [(v, '%s -- %s' % (k, v)) for k, v in C.TASK1_OPTS],
-                      left_style=' style="flex:0 0 6rem"')
-    t2 = L.match_grid('match-l2-mm2',
+                      left_style=' style="flex:0 0 6rem"'))
+    t2 = L.exam('l2-mm2', 'Listening', len(C.SPEAKERS), label='Task Two', body=L.match_grid('match-l2-mm2',
                       [('<b>Speaker %d</b>' % s['n'], o2[s['task2']]) for s in C.SPEAKERS],
                       [(v, '%s -- %s' % (k, v)) for k, v in C.TASK2_OPTS],
-                      left_style=' style="flex:0 0 6rem"')
+                      left_style=' style="flex:0 0 6rem"'))
     def optlist(title, opts):
         return ('<p style="font-size:.84rem;font-weight:700;margin:1.1rem 0 .3rem">%s</p>'
                 '<div style="font-size:.85rem;line-height:1.7;margin-bottom:.6rem">%s</div>' % (
@@ -246,10 +258,14 @@ def s_grammar():
     body = (table +
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1.2rem 0 .6rem;font-style:italic">'
             'Five items on the difference the form makes. Every option is grammatical; only one is what the '
-            'sentence means.</p>' + L.quiz(C.GRAMMAR_QUIZ) +
+            'sentence means.</p>' +
+            L.exam('l2-grammar-choice', 'Grammar', len(C.GRAMMAR_QUIZ),
+                   L.quiz(C.GRAMMAR_QUIZ), label='What the form does') +
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1.2rem 0 .6rem;font-style:italic">'
             'Now produce the structure, not a single word. Listen first if you want the rhythm of the whole '
-            'sentence.</p>' + L.fill_items(C.GRAMMAR_PRODUCTION))
+            'sentence.</p>' +
+            L.exam('l2-grammar-produce', 'Grammar', len(C.GRAMMAR_PRODUCTION),
+                   L.fill_items(C.GRAMMAR_PRODUCTION), label='Produce the structure'))
     return L.section('Stage 2.11 -- Who Made It Happen', 'Grammar', 'badge badge-grammar',
                      rubric=paper('Grammar in focus &middot; 10 min') +
                      'Four structures you already produce. The question is no longer how to form them, but what '
@@ -267,13 +283,35 @@ def s_delivery():
 
 
 def s_speaking():
+    # O follow-up e os debates acontecem NA AULA: entram como prompt estatico, nao
+    # como .think-card. Todo .think-card so fecha com gravacao, e quatro gravacoes
+    # numa aba de preparacao deixariam a aula presa abaixo dos 100% para sempre.
+    followup = ('<div style="margin:1.2rem 0 .4rem"><div style="font-size:.74rem;letter-spacing:.12em;'
+                'text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:.35rem">'
+                'Follow-up &middot; immediately after the two minutes</div>'
+                '<p style="font-size:.86rem;color:var(--text-dim);font-style:italic;margin-bottom:.7rem">'
+                '%s</p>%s</div>' % (C.FOLLOW_UP_INTRO, L.prompt_list(C.FOLLOW_UP)))
     body = (L.think_card(C.LONG_TURN, 'think-result-l2') +
+            followup +
             '<div style="height:.8rem"></div>' +
             L.think_card(C.COLLAB_TASK, 'think-result-l2b'))
-    return L.section('Stage 2.13 -- Long Turn and Collaborative Task', 'Speaking', 'badge badge-speak',
+    return L.section('Stage 2.13 -- Long Turn, Follow-up and Collaborative Task', 'Speaking',
+                     'badge badge-speak',
                      rubric=paper('Paper 5 &middot; Parts 2&ndash;3 &middot; in class') +
                      'Record the long turn before the lesson so that you hear yourself once before anyone else '
-                     'does. The collaborative task is for the lesson itself.',
+                     'does. The four follow-up questions and the collaborative task are for the lesson itself: '
+                     'read them now, prepare nothing, and let them be difficult.',
+                     body=body)
+
+
+def s_debates():
+    body = (L.motion_card(1, C.DEBATE_1_MOTION, C.DEBATE_1_RULES) +
+            L.motion_card(2, C.DEBATE_2_MOTION, C.DEBATE_2_RULES))
+    return L.section('Stage 2.14 -- Two Debates', 'Speaking', 'badge badge-speak',
+                     rubric=paper('Paper 5 &middot; Part 3 &middot; in class') +
+                     'Two motions, both in the lesson. The first asks you to hold each side for ninety seconds; '
+                     'the second gives you the side you would not have chosen and asks for something harder than '
+                     'an argument, which is a concession that the other side would recognise as their own.',
                      body=body)
 
 
@@ -284,11 +322,28 @@ def s_writing():
     body = ('<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;'
             'padding:1rem 1.1rem;font-size:.92rem;line-height:1.7">%s</div>' % C.WRITING_TASK +
             L.reveal('What a strong answer does (open only after you have written yours)', C.WRITING_MODEL))
-    return L.section('Stage 2.14 -- The Briefing Note', 'Writing', 'badge badge-think',
+    return L.section('Stage 2.15 -- The Briefing Note', 'Writing', 'badge badge-think',
                      rubric=paper('Paper 2 &middot; Part 2 &middot; after class') +
                      'Bring it to the next lesson. It will be read for the argument first and the language '
                      'second, which is the order the fund reads in too.',
                      body=body)
+
+
+def grade():
+    """O painel de nota final. Os totais vem do CONTEUDO, nao de numero escrito a
+    mao: se uma tarefa ganhar ou perder uma questao, o painel acompanha sozinho."""
+    papers = [
+        ('Vocabulary', len(C.MATCH_ROWS) + len(C.COLLOC_ROWS) + len(C.CLOZE_ITEMS)),
+        ('Reading', len(C.GAP_ANSWERS) + len(C.MCQ)),
+        ('Use of English', len(C.WORD_FORMATION) + len(C.TRANSFORMATIONS)),
+        ('Listening', len(C.TALK_ITEMS) + 2 * len(C.SPEAKERS)),
+        ('Grammar', len(C.GRAMMAR_QUIZ) + len(C.GRAMMAR_PRODUCTION)),
+    ]
+    return L.grade_panel(
+        papers,
+        'Speaking and Writing are not scored here: they are judged in the lesson and on the note you bring. '
+        'This panel counts only what has a right answer, and it counts your <b>first</b> answer, which is the '
+        'only one the exam counts.')
 
 
 HEADER = '''<div class="lesson-card" data-gen="3" id="ex-lesson-2">
@@ -310,12 +365,37 @@ def build():
     parts = [HEADER, plan_at_a_glance(), s_lead_in(), s_vocab(), s_matching(), s_collocation(), s_cloze(),
              s_reading_gapped(), s_reading_mcq(), s_word_formation(), s_transformations(),
              s_listening_completion(), s_listening_matching(), s_grammar(), s_delivery(), s_speaking(),
-             s_writing(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
+             s_debates(), s_writing(), grade(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
     return '\n'.join(parts)
+
+
+def confere_totais(html):
+    """O contador nao pode mentir: o data-total declarado tem de bater com o numero
+    de questoes que existem DENTRO do bloco. Se alguem tirar uma questao e esquecer
+    o total, o aluno ve "5 / 6" com 5 questoes na tela e acha que perdeu uma."""
+    import re
+    for m in re.finditer(r'<div class="cpe-exam" data-exam="([^"]+)" data-paper="[^"]+" data-total="(\d+)">', html):
+        depth, i, corpo = 0, m.start(), ''
+        for t in re.finditer(r'<div\b|</div\s*>', html[i:]):
+            depth += 1 if t.group(0).startswith('<div') else -1
+            if depth == 0:
+                corpo = html[i:i + t.end()]
+                break
+        n = (len(re.findall(r'class="match-row"', corpo)) +
+             len(re.findall(r'class="fill-blank-item"', corpo)) +
+             len(re.findall(r'class="quiz-item"', corpo)))
+        assert n == int(m.group(2)), ('bloco %s diz %s questoes e tem %d'
+                                      % (m.group(1), m.group(2), n))
+    # e o painel de nota tem de somar exatamente o mesmo
+    blocos = sum(int(x) for x in re.findall(r'class="cpe-exam"[^>]*data-total="(\d+)"', html))
+    painel = int(re.search(r'class="cpe-grade" id="cpe-grade-l2" data-total="(\d+)"', html).group(1))
+    assert blocos == painel, 'painel de nota diz %d e as atividades somam %d' % (painel, blocos)
+    return blocos
 
 
 if __name__ == '__main__':
     out = os.path.join(HERE, 'preclass.html')
     html = build()
+    print('nota: %d questoes valendo' % confere_totais(html))
     open(out, 'w', encoding='utf-8').write(html)
     print('preclass.html: %d KB' % (len(html) // 1024))

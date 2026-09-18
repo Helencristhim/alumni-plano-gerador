@@ -204,7 +204,7 @@ def deck():
             ('Use of English', '8 min', 'Word formation and key-word transformations, said aloud first.'),
             ('Listening', '14 min', 'Multiple matching: five speakers, two tasks at the same time.'),
             ('The Agent', '7 min', 'Causative and passive: who is named, who is hidden, and why.'),
-            ('Speaking', '5 min', 'Long turn, then a debate you are expected to lose politely.'),
+            ('Speaking', '9 min', 'Long turn and follow-up, then two debates, and in the second one you do not choose your side.'),
         ])
     slide(1, head('The Shape of Today', 'Every Task Is an', 'Exam Task') +
           card('Cambridge C2 Proficiency format, on your material', plan),
@@ -617,6 +617,15 @@ def deck():
           'erro de lexico, um momento em que o agente sumiu sem intencao, e a melhor frase dele. '
           'Devolva as tres no fim, nessa ordem.')
 
+    # O modelo do professor nao para no long turn: vem o follow-up, que e onde se
+    # ve se ele so recitou o que preparou. Quatro perguntas, na ordem.
+    slide(7, head('Follow-up', 'Four Questions,', 'No Restarting') +
+          card('Straight after the two minutes, without praise in between',
+               '<div class="ic-lf-list">%s</div>' % ''.join(
+                   '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s</span></div>' % (i, q)
+                   for i, q in enumerate(C.FOLLOW_UP, 1))),
+          C.FOLLOW_UP_TEACHER)
+
     slide(7, head('Collaborative Task', 'One Hundred Million,', 'Four Ways') +
           card('Talk it through, then decide',
                '<div class="ic-lf-list">%s</div>' % ''.join(
@@ -630,14 +639,20 @@ def deck():
           'obrigue-o a te convencer. Exija linguagem de discordancia diplomatica -- e o que falta a '
           'quem e fluente e nunca precisou negociar em ingles.')
 
-    slide(7, head('Debate', 'Defend the Side You', 'Disagree With') +
-          '<div class="ic-scenario"><div class="ic-who">Motion</div><p>"Public money should never take '
-          'the first loss on a private infrastructure project."</p></div>'
-          '<p style="margin-top:.8rem;font-size:.95rem">Ninety seconds <b>for</b>. Then ninety seconds '
-          '<b>against</b>. Same speaker, no notes, and no repeating an argument you already used.</p>',
+    slide(7, head('Debate I', 'Defend the Side You', 'Disagree With') +
+          '<div class="ic-scenario"><div class="ic-who">Motion 1</div><p>"%s"</p></div>'
+          '<p style="margin-top:.8rem;font-size:.95rem">%s</p>' % (C.DEBATE_1_MOTION, C.DEBATE_1_RULES),
           'Debate (4 min): esta e a tarefa que ele nao consegue improvisar. Obrigue a troca de lado: '
           'defender a posicao contraria e o que expoe o repertorio real. Se ele repetir argumento, '
           'interrompa e peca outro.')
+
+    # Segundo debate, como no modelo. O primeiro cobra repertorio dos dois lados;
+    # este cobra CONCESSAO, que e o que falta a quem e fluente e nunca precisou
+    # ceder terreno em ingles.
+    slide(7, head('Debate II', 'The Side You', 'Were Given') +
+          '<div class="ic-scenario"><div class="ic-who">Motion 2</div><p>"%s"</p></div>'
+          '<p style="margin-top:.8rem;font-size:.95rem">%s</p>' % (C.DEBATE_2_MOTION, C.DEBATE_2_RULES),
+          C.DEBATE_2_TEACHER)
 
     slide(7, head('Survival', 'Five Sentences for the', 'Investor Table') +
           '<div class="ic-lf-list">%s</div>' % ''.join(
