@@ -56,6 +56,14 @@ CSS = MARK_CSS + '''
 .cpe-lp .lp-speed-btn.active { background:var(--accent);border-color:var(--accent);color:#fff; }
 '''
 
+CSS_KEY = '''/* === CPE: painel de gabarito (irmao do botao) === */
+.cpe-reveal { margin-top:1rem; }
+.cpe-reveal .comp-q { margin-top:0; }
+.cpe-key { display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;background:var(--bg-elevated);padding:.9rem 1.2rem;font-size:.88rem;line-height:1.75;color:var(--text); }
+.comp-q.revealed + .cpe-key { display:block; }
+.slide-dark .cpe-key { background:#fff;color:#1a1a2e; }
+'''
+
 # O reveal do gabarito e POR STYLESHEET: o alvo NAO pode nascer com display:none
 # inline, senao o inline vence a folha e nada aparece no clique (GATE 10).
 CSS_COMP = '''.comp-q { background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.95rem;margin-top:1rem; }
@@ -112,9 +120,12 @@ def main():
     for path in (PROF, ALUNO):
         s = open(path, encoding='utf-8').read()
         antes = len(s)
+        # Cada bloco com a SUA condicao: o hub pode ja ter um e nao o outro.
         if MARK_CSS not in s:
             css = CSS + ('' if '.comp-q.revealed .q-answer' in s else CSS_COMP)
             s = injeta_css(s, css)
+        if '.comp-q.revealed + .cpe-key' not in s:
+            s = injeta_css(s, CSS_KEY)
         # Duas injecoes INDEPENDENTES, cada uma com a sua propria condicao. Amarrar as
         # duas a um marcador so ja deixou o hub do aluno com o motor e sem o alias.
         if 'function togglePlayer(' not in s:

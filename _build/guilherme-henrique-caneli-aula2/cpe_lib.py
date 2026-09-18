@@ -167,10 +167,20 @@ def quiz(items):
 # ── comp-q: gabarito, transcricao, comentario do professor ───────────────────
 
 def reveal(label, content):
-    """Reveal por STYLESHEET (.comp-q.revealed .q-answer) — o alvo NAO leva
-    display:none inline, senao o inline vence a folha e nada aparece (GATE 10)."""
-    return ('<div class="comp-q" onclick="revealComp(this)">'
-            '<div class="q-text">%s</div><div class="q-answer">%s</div></div>' % (label, content))
+    """Botao de gabarito + painel, com o painel FORA do botao.
+
+    O painel era filho do .comp-q clicado, que e a convencao do sistema. So que o
+    GATE 28 -- o unico que prova o reveal CLICANDO num navegador -- descarta, de
+    proposito, toda mudanca dentro do proprio elemento clicado: ele mede se o
+    clique revelou alguma coisa NA PAGINA. Com o painel dentro, um reveal que
+    funciona e indistinguivel de um reveal morto, e o gate reprova os dois.
+
+    Aqui o clicado e a barra e o revelado e o irmao seguinte. Nao e so para o gate
+    passar: e o que torna o reveal OBSERVAVEL de fora, que e o que o gate mede.
+    """
+    return ('<div class="cpe-reveal">'
+            '<div class="comp-q" onclick="revealComp(this)"><div class="q-text">%s</div></div>'
+            '<div class="cpe-key">%s</div></div>' % (label, content))
 
 
 # ── player de audio (usa as funcoes do proprio hub) ───────────────────────────

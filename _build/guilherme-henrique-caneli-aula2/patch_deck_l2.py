@@ -34,6 +34,15 @@ def troca(s, abre_re, novo):
     raise AssertionError('bloco nao fecha: %s' % abre_re)
 
 
+CSS_KEY = """/* === CPE: painel de gabarito (irmao do botao) === */
+.cpe-reveal { margin-top:1rem; }
+.cpe-reveal .comp-q { margin-top:0; }
+.cpe-key { display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;background:var(--bg-elevated);padding:.9rem 1.2rem;font-size:.88rem;line-height:1.7;color:var(--text); }
+.comp-q.revealed + .cpe-key { display:block; }
+.slide-dark .cpe-key { background:#fff;color:#1a1a2e; }
+"""
+
+
 def main():
     novo = open(os.path.join(HERE, 'slides.html'), encoding='utf-8').read()
     partes = re.search(r'(<div class="phase-bar".*?</div>)\s*(<div class="phase-labels".*?</div>)\s*'
@@ -72,6 +81,9 @@ def main():
     fns = set(re.findall(r'function ([a-zA-Z0-9_]+)\(', s))
     usados = set(re.findall(r'on\w+="([a-zA-Z0-9_]+)\(', container))
     assert usados <= fns, 'handler sem funcao no deck: %s' % sorted(usados - fns)
+    if '.comp-q.revealed + .cpe-key' not in s:
+        k = s.rindex('</style>')
+        s = s[:k] + '\n' + CSS_KEY + '\n' + s[k:]
     open(PROF, 'w', encoding='utf-8').write(s)
     print('  + professor: %d -> %d slides' % (antes_slides, depois_slides))
 

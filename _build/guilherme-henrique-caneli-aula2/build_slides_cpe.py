@@ -102,8 +102,12 @@ def matching(title, hint, pairs):
 
 
 def reveal(label, content):
-    return ('<div class="comp-q" onclick="revealComp(this)"><div class="q-text">%s</div>'
-            '<div class="q-answer">%s</div></div>' % (label, content))
+    """Painel FORA do botao: o GATE 28 clica de verdade e descarta, de proposito,
+    toda mudanca dentro do elemento clicado. Com o gabarito como filho, um reveal
+    que funciona fica indistinguivel de um morto."""
+    return ('<div class="cpe-reveal">'
+            '<div class="comp-q" onclick="revealComp(this)"><div class="q-text">%s</div></div>'
+            '<div class="cpe-key">%s</div></div>' % (label, content))
 
 
 def player(pid, src, caption=''):
