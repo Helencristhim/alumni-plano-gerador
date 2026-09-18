@@ -7,7 +7,6 @@
     <meta name="alumni-level" content="B1">
     <meta name="alumni-framework" content="imersivo-prototipo">
     <meta name="alumni-gen" content="2">
-    <meta name="alumni-contrato" content="imersivo-prototipo@1">
 <meta name="robots" content="noindex, nofollow">
 <title>Student -- Adriana Cardoso Assun&#231;&#227;o | Lesson 5 -- The Question You Did Not Prepare</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -709,6 +708,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -719,7 +728,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="logo-bar">
   <img src="/assets/logo-alumni.png" alt="Alumni by Better">
   <span class="prof-badge">Student</span>
-  <span class="slide-counter" id="slideCounter">01 / 27</span>
+  <span class="slide-counter" id="slideCounter">01 / 13</span>
 </div>
 
 <div class="main-content">
@@ -786,7 +795,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">05</div>
-      <div><div style="font-weight:600;font-size:.95rem">The Question You Did <span class="accent">Not Prepare</span></div><div style="font-size:.8rem;color:var(--text-dim)">Asking back instead of freezing: question forms and indirect questions -- 33 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">The Question You Did <span class="accent">Not Prepare</span></div><div style="font-size:.8rem;color:var(--text-dim)">The hot seat: buy three seconds, ask back, and answer what was asked -- 13 slides</div></div>
     </div>
   </div>
 </div>
@@ -809,422 +818,70 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="phase-segment upcoming" data-phase="4"></div>
   <div class="phase-segment upcoming" data-phase="5"></div>
   <div class="phase-segment upcoming" data-phase="6"></div>
-  <div class="phase-segment upcoming" data-phase="7"></div>
 </div>
 <div class="phase-labels" id="phaseLabels">
-  <span class="phase-label current" data-phase="1" data-name="The Silence">The Silence</span>
-  <span class="phase-label" data-phase="2" data-name="The Words You Need">The Words You Need</span>
-  <span class="phase-label" data-phase="3" data-name="The Code">The Code</span>
-  <span class="phase-label" data-phase="4" data-name="The Room">The Room</span>
-  <span class="phase-label" data-phase="5" data-name="Practice">Practice</span>
-  <span class="phase-label" data-phase="6" data-name="Your Turn">Your Turn</span>
-  <span class="phase-label" data-phase="7" data-name="Wrap-up">Wrap-up</span>
+  <span class="phase-label current" data-phase="1" data-name="The Question">The Question</span>
+  <span class="phase-label" data-phase="2" data-name="Two Voices">Two Voices</span>
+  <span class="phase-label" data-phase="3" data-name="The Conversation">The Conversation</span>
+  <span class="phase-label" data-phase="4" data-name="Three Seconds">Three Seconds</span>
+  <span class="phase-label" data-phase="5" data-name="The Hot Seat">The Hot Seat</span>
+  <span class="phase-label" data-phase="6" data-name="Wrap-Up">Wrap-Up</span>
 </div>
 
 <div class="slides-container" id="slidesContainer">
-<!-- ========== SLIDE 1: TITLE ========== -->
-<div class="slide slide-image active" data-slide="1" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Lesson 5 &middot; The Silence</div>
-    <h1 class="slide-heading" style="font-size:2.5rem;color:#fff">The Question You Did <span class="accent">Not Prepare</span></h1>
-    <p style="color:rgba(255,255,255,.82);font-size:1.1rem;margin-top:1rem">Three seconds sound like thirty inside your head, and like nothing in the room.</p>
-  </div>
+<div class="slide slide-image active" data-slide="1" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.80),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Lesson 5 &middot; Conversation</div><h1 class="slide-heading" style="font-size:2.5rem;color:#fff">Three Seconds <span class="accent">Before You Answer</span></h1><p style="color:rgba(255,255,255,.85);font-size:1.1rem;margin-top:.8rem">Today: one conversation. You talk, I listen.</p></div>
 </div>
 
-<!-- ========== SLIDE 2: WARM-UP + CALLBACK ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.84),rgba(24,16,48,0.93)),url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 1: The Silence</div>
-    <h2 class="slide-heading" style="color:#fff">What Is the Hardest Question <span class="accent">Anyone Has Asked You?</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:1rem;max-width:640px;margin-left:auto;margin-right:auto">Not the one you could not answer. The one you could answer, and did not, because it came in the wrong language at the wrong second.</p>
-  </div>
+<div class="slide slide-light" data-slide="2" data-phase="1">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Question</div><h2 class="slide-heading">The Silence <span class="accent">After the Question</span></h2><div style="max-width:720px;margin:1.3rem auto 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem"><p style="font-size:1.12rem;line-height:1.6">Thursday, the global leadership call. You present for eight minutes. Then the vice president asks something you did not prepare, and says nothing for a long time. Fifteen people are on the call.</p><p style="font-size:1.25rem;line-height:1.6;margin-top:.6rem"><strong>What are the first words out of your mouth?</strong></p></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Could you tell me which period you are asking about?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Before I answer that, may I give you some context?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Two things there. First&hellip;, second&hellip;</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 3: FRAMING ========== -->
-<div class="slide slide-light" data-slide="3" data-phase="1">
-  <div class="slide-inner">
-    <div class="chapter-label">Where You Start</div>
-    <h2 class="slide-heading">You Do Not Answer Faster. You <span class="accent">Ask First.</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;max-width:700px;margin:1.5rem auto 0">
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">Buy two seconds</p><p style="font-size:.78rem;color:var(--text-dim)">One fixed sentence, said calmly, that costs you nothing</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">Ask before you answer</p><p style="font-size:.78rem;color:var(--text-dim)">Half of hard questions are hard only because they are vague</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">Say what you do not know</p><p style="font-size:.78rem;color:var(--text-dim)">With a date attached, it is competence, not weakness</p></div>
-    </div>
-    <p style="text-align:center;font-size:.95rem;font-weight:600;color:var(--accent);margin-top:1.4rem;max-width:620px;margin-left:auto;margin-right:auto">A question you ask back is not a delay. It is the first half of the answer.</p>
-  </div>
+<div class="slide slide-dark" data-slide="3" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices &middot; 1 of 2</div><h2 class="slide-heading" style="color:#fff">Voice 1: <span class="accent">Paul</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.15rem;margin-top:.6rem">Paul coaches executives. Listen. <strong>What does he tell them to do in the first three seconds?</strong></p><div class="mock-player lp" id="mp-paul" data-src="/audio/adriana-cardoso-assuncao/a5_conv_paul.mp3" style="max-width:520px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-paul')"><div class="lp-progress" id="progress-mp-paul"></div></div><div class="lp-times"><span id="time-current-mp-paul">0:00</span><span id="time-total-mp-paul">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-paul',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-paul" onclick="mpToggle('mp-paul')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-paul',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-paul',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-paul',1,this)">1x</button></div></div>
+    <div class="ts-box" id="ts-mp-paul"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-paul" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-paul"><p>I coach executives, and the question people ask me about most is the one they did not prepare. Here is my rule. Buy three seconds and ask something back. Three seconds feels like thirty in your head and like nothing in the room. The question back is not weakness, it is information. Which period are they asking about? Which site? Which number? Half the time the question changes when they say it again. Could you tell me what you are really asking? That one sentence has saved more careers than any answer. And if you do not have the figure, say so and give a date. Never invent a number when somebody in the room has the real one.</p></div></div></div>
 </div>
 
-<!-- ========== SLIDE 4: TODAY'S GOAL ========== -->
-<div class="slide slide-light" data-slide="4" data-phase="1">
-  <div class="slide-inner">
-    <div class="chapter-label">Today's Goal</div>
-    <h2 class="slide-heading">Three <span class="accent">Missions</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;max-width:700px;margin:1.5rem auto 0">
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">1. The Words</p><p style="font-size:.78rem;color:var(--text-dim)">to clarify, to probe, assumption, candid, blind spot...</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">2. Two Question Forms</p><p style="font-size:.78rem;color:var(--text-dim)">The direct one, and the polite one that changes the word order</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">3. Six in a Row</p><p style="font-size:.78rem;color:var(--text-dim)">Six unexpected questions, no notes, and you never stop</p></div>
-    </div>
-  </div>
+<div class="slide slide-dark" data-slide="4" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices &middot; 2 of 2</div><h2 class="slide-heading" style="color:#fff">Voice 2: <span class="accent">Erica</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.15rem;margin-top:.6rem">Erica is the one asking the questions. Listen. <strong>How many questions back does she accept, and in which order does she want the answer?</strong></p><div class="mock-player lp" id="mp-erica" data-src="/audio/adriana-cardoso-assuncao/a5_conv_erica.mp3" style="max-width:520px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-erica')"><div class="lp-progress" id="progress-mp-erica"></div></div><div class="lp-times"><span id="time-current-mp-erica">0:00</span><span id="time-total-mp-erica">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-erica',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-erica" onclick="mpToggle('mp-erica')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-erica',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-erica',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-erica',1,this)">1x</button></div></div>
+    <div class="ts-box" id="ts-mp-erica"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-erica" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-erica"><p>I sit on the other side of that table, so let me be honest with you. Ask me a question back once and I think you are careful. Ask me twice and I think you do not know your own numbers. Here is what works with me. Answer the part you are sure about first, in one sentence. Then say what you are not sure about. Then ask your question. In that order. And do not tell me the method, tell me the number. When somebody starts with the method, I already know the answer is bad. Three seconds of silence is fine. Three questions back is not.</p></div></div></div>
 </div>
 
-<!-- ========== SLIDE 5: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="5" data-phase="2" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 2: The Words You Need</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Words of a <span class="accent">Hard Conversation</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">8 words you need when the question is not the one you rehearsed</p>
-  </div>
+<div class="slide slide-light" data-slide="5" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices</div><h2 class="slide-heading">Paul <span class="accent">or</span> Erica?</h2><div style="max-width:700px;margin:1.3rem auto 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem"><p style="font-size:1.25rem;line-height:1.6"><strong>Ask back, or answer first? Who is right about your room?</strong></p></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I agree with&hellip;, because in my company&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">If I ask back twice, they will&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I see it differently&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to clarify</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to probe</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an assumption</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a blind spot</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">candid</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 6: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Vocabulary</div>
-    <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount1">0 / 4 words revealed</span></p>
-    <div class="vocab-grid" id="vocabGrid1">
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#0f4c5c,#3f9bb0)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><div class="card-hint">To make something clearer when it was not understood</div></div>
-        <div class="card-body"><div class="card-word">To clarify</div><div class="card-def">To make something clearer when it was not understood</div><div class="card-example">"Let me clarify what I meant by early attrition."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To clarify" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#5a3a0a,#8a6a1a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M5 20h14"/></svg><div class="card-hint">To ask more questions to get to what is underneath</div></div>
-        <div class="card-body"><div class="card-word">To probe</div><div class="card-def">To ask more questions to get to what is underneath</div><div class="card-example">"He is not attacking you. He is probing to see if the number holds."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To probe" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#4a1f3d,#8e3b76)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3a7 7 0 00-4 12.7V18h8v-2.3A7 7 0 0012 3z"/><path d="M10 21h4"/></svg><div class="card-hint">Something you believe is true without checking it</div></div>
-        <div class="card-body"><div class="card-word">Assumption</div><div class="card-def">Something you believe is true without checking it</div><div class="card-example">"That is an assumption. The data says something else."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Assumption" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#14532d,#4ea36b)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h7"/><circle cx="19" cy="16" r="3"/></svg><div class="card-hint">To check later that something has actually happened</div></div>
-        <div class="card-body"><div class="card-word">To follow up</div><div class="card-def">To check later that something has actually happened</div><div class="card-example">"I will follow up with the exact figure by Friday."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To follow up" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="6" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; You</div><h2 class="slide-heading">About <span class="accent">You</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. What is the hardest question anybody has ever asked you at work?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. You did not have the figure. What did you say, and what did you do afterwards?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. Which question do you hope nobody asks you on Thursday?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">The hardest one was&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I did not have it, so I said&hellip; and I followed up&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to follow up</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a takeaway</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to hedge</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">candid</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 7: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Vocabulary</div>
-    <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount2">0 / 4 words revealed</span></p>
-    <div class="vocab-grid" id="vocabGrid2">
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#3d2a6e,#7c5bc0)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><path d="M4 4l16 16"/></svg><div class="card-hint">Something everyone else can see that you cannot</div></div>
-        <div class="card-body"><div class="card-word">Blind spot</div><div class="card-def">Something everyone else can see that you cannot</div><div class="card-example">"Every leadership team has a blind spot. Ours is the night shift."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Blind spot" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#0c5c4f,#22a58c)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l8 4v6c0 4-3.4 6.8-8 8-4.6-1.2-8-4-8-8V7z"/><path d="M12 8v5"/><circle cx="12" cy="16" r="1.2" fill="#fff"/></svg><div class="card-hint">Honest, even when it is uncomfortable</div></div>
-        <div class="card-body"><div class="card-word">Candid</div><div class="card-def">Honest, even when it is uncomfortable</div><div class="card-example">"Let me be candid: we are still in the middle of that process."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Candid" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#5f2a12,#a3541f)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 12h6"/><path d="M14 12h6"/><path d="M9 8l3 4-3 4"/></svg><div class="card-hint">To make an answer less certain on purpose</div></div>
-        <div class="card-body"><div class="card-word">To hedge</div><div class="card-def">To make an answer less certain on purpose</div><div class="card-example">"I am not hedging. I genuinely do not have the number today."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To hedge" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#7c1d42,#b03a6a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg><div class="card-hint">The one thing people remember after the conversation</div></div>
-        <div class="card-body"><div class="card-word">Takeaway</div><div class="card-def">The one thing people remember after the conversation</div><div class="card-example">"If there is one takeaway from this meeting, it is the two sites."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Takeaway" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="7" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; Your Company</div><h2 class="slide-heading">About <span class="accent">Your Company</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. In your company, who probes and who only listens? What does that change for you?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. What is the assumption behind &ldquo;our turnover is high because of salaries&rdquo;?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. What is the blind spot in your own numbers, the one you would rather nobody found?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">They always ask about&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">The assumption is that&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to probe</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an assumption</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a blind spot</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">turnover</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a benchmark</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Review</div>
-    <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:500px;margin:1.2rem auto 0">
-      <div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Clarify</span><button class="audio-btn-sm" data-speak="Clarify" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Assumption</span><button class="audio-btn-sm" data-speak="Assumption" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Candid</span><button class="audio-btn-sm" data-speak="Candid" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Takeaway</span><button class="audio-btn-sm" data-speak="Takeaway" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="8" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; The Market</div><h2 class="slide-heading">About <span class="accent">the Market</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. A candidate asks you a question in the interview that you cannot answer. What do you say?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. Is it better to be candid about a bad number, or to hedge until you have the full picture?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. 12.5% of the grievances last year were about workload. What is the first question a journalist asks you about that?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I would rather be candid, because&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">That number means&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">candid</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to hedge</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a takeaway</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">headcount</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 9: VOCAB IN CONTEXT ========== -->
-<div class="slide slide-light" data-slide="9" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">In Context</div>
-    <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say the missing word first, then click to check</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Let me <span class="fill-blank">___</span> what I meant by early attrition.</span><span class="fill-answer">clarify</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">He is not attacking you. He wants to <span class="fill-blank">___</span> until the number holds.</span><span class="fill-answer">probe</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">That is an <span class="fill-blank">___</span>. The data says something else.</span><span class="fill-answer">assumption</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Every leadership team has a <span class="fill-blank">___</span>. Ours is the night shift.</span><span class="fill-answer">blind spot</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Let me be <span class="fill-blank">___</span>: we are still in the middle of that process.</span><span class="fill-answer">candid</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">If there is one <span class="fill-blank">___</span> from this meeting, it is the two sites.</span><span class="fill-answer">takeaway</span></div>
-    </div>
-    <div class="ic-bank ic-soft"><span class="ic-b">probe</span><span class="ic-b">blind spot</span><span class="ic-b">takeaway</span><span class="ic-b">clarify</span><span class="ic-b">assumption</span><span class="ic-b">candid</span></div>
-  </div>
+<div class="slide slide-image" data-slide="9" data-phase="4" style="background-image:linear-gradient(rgba(24,16,48,0.80),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Three Seconds</div><h2 class="slide-heading" style="color:#fff">Three Seconds <span class="accent">Are Free</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.1rem;margin-top:.6rem;max-width:660px;margin-left:auto;margin-right:auto">The pause is not a gap. It is the first move. Use it to decide which question you are answering.</p><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Could you tell me which period you are asking about?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Before I answer that, may I give you some context?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Let me clarify. What I mean is&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I do not have that figure with me. I will follow up by Friday.</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 10: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="10" data-phase="3" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 3: The Code</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Two Ways to <span class="accent">Ask</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">The direct question, and the one that opens with a frame</p>
-  </div>
+<div class="slide slide-light" data-slide="10" data-phase="5">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Hot Seat</div><h2 class="slide-heading">The Hot Seat <span class="accent">Fifteen People Listening</span></h2><div class="roleplay-body" style="max-width:800px;margin:1rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.3rem 1.5rem;text-align:left"><p class="roleplay-scenario" style="font-size:1rem;line-height:1.6;margin-bottom:.6rem">You have presented for eight minutes. Now the room asks. I do not warn you, and I do not repeat myself the same way twice.</p><ul style="font-size:.95rem;line-height:1.6;margin:0 0 .9rem 1.2rem"><li style="margin-bottom:.35rem"><strong>1.</strong> <em>Why is your attrition so high?</em></li><li style="margin-bottom:.35rem"><strong>2.</strong> <em>How much did this cost us last year?</em></li><li style="margin-bottom:.35rem"><strong>3.</strong> <em>Can you break it down by site?</em></li><li style="margin-bottom:.35rem"><strong>4.</strong> <em>Who signed off on that decision?</em></li><li style="margin-bottom:.35rem"><strong>5.</strong> <em>Is that number measured, or estimated?</em></li><li style="margin-bottom:.35rem"><strong>6.</strong> <em>Would you do the same thing again?</em></li></ul><div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.9rem;text-align:center"><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>Round 1</strong> &middot; 5 min<br>I ask. You buy three seconds and ask back.</span><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>Round 2</strong> &middot; 4 min<br>You ask me. Build the questions.</span><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>The One You Cannot Answer</strong> &middot; 3 min<br>Say so, and give a date.</span></div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Could you tell me whether you mean the site or the region?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Before I answer that, may I give you one number?</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I do not have that with me. I will follow up by Friday.</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Let me clarify. What I mean is&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to clarify</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to probe</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an assumption</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a blind spot</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to follow up</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a takeaway</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 11: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3">
-  <div class="slide-inner" data-grammar="question formation and indirect questions">
-    <div class="chapter-label">Grammar Discovery</div>
-    <h2 class="slide-heading">What Changes Between the <span class="accent">Two?</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:660px;margin:1.3rem auto 0">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem"><span class="vocab-highlight">What is</span> the attrition rate? &nbsp;&rarr;&nbsp; Could you tell me <span class="vocab-highlight">what the attrition rate is</span>?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem"><span class="vocab-highlight">Which period are</span> you asking about? &nbsp;&rarr;&nbsp; May I ask <span class="vocab-highlight">which period you are</span> asking about?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem"><span class="vocab-highlight">Did the pilot work</span>? &nbsp;&rarr;&nbsp; I was wondering <span class="vocab-highlight">whether the pilot worked</span>.</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem"><span class="vocab-highlight">Who owns</span> this initiative? &nbsp;&rarr;&nbsp; Do you know <span class="vocab-highlight">who owns</span> this initiative?</div>
-    </div>
-    <div class="comp-q" onclick="revealComp(this)" style="max-width:660px;margin:1.2rem auto 0">
-      <div class="q-text">Click to reveal the rule</div>
-      <div class="q-answer">A <strong>direct question</strong> inverts: <em>What <strong>is</strong> the rate?</em> · <em><strong>Did</strong> the pilot work?</em> An <strong>indirect question</strong> puts a frame in front (<em>Could you tell me…, May I ask…, I was wondering…, Do you know…</em>) and then the sentence goes back to <strong>normal order</strong>: subject before verb, and <strong>no do/does/did</strong>. So it is <em>what the rate <strong>is</strong></em>, never <em>what is the rate</em>; and <em>whether the pilot <strong>worked</strong></em>, never <em>whether did the pilot work</em>. For yes/no questions the connector is <strong>whether</strong> or <strong>if</strong>. Two exceptions worth knowing: when the question word IS the subject (<em>who owns</em>, <em>what happened</em>) nothing moves; and the indirect version ends with a period when the frame is a statement (<em>I was wondering whether the pilot worked.</em>).</div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="11" data-phase="6">
+  <style>.conv-edit{min-height:2.6rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .75rem;font-size:.95rem;text-align:left;outline:none}.conv-edit:focus{border-color:var(--accent)}.conv-edit:empty:before{content:attr(data-ph);color:var(--text-dim);font-style:italic}.conv-better{border-color:var(--accent)}@media(max-width:600px){.conv-cards>div{grid-template-columns:1fr!important}}</style><div class="slide-inner" style="text-align:center"><div class="chapter-label">Wrap-Up</div><h2 class="slide-heading">Your Sentences, <span class="accent">Upgraded</span></h2><p style="font-size:.95rem;color:var(--text-mid);margin-top:.4rem">Say the stronger version once, with a real example of yours.</p><div class="conv-cards" style="max-width:760px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.55rem"><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div></div></div>
 </div>
 
-<!-- ========== SLIDE 12: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3">
-  <div class="slide-inner">
-    <div class="chapter-label">Grammar Practice</div>
-    <h2 class="slide-heading">Say It, Then <span class="accent">Check</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Turn each direct question into a polite one, out loud, before you click</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"What is the attrition rate?" &rarr; Could you tell me <span class="fill-blank">___</span>?</span><span class="fill-answer">what the attrition rate is</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Which period are you asking about?" &rarr; May I ask <span class="fill-blank">___</span>?</span><span class="fill-answer">which period you are asking about</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Did the pilot work?" &rarr; I was wondering <span class="fill-blank">___</span>.</span><span class="fill-answer">whether the pilot worked</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Where does this number come from?" &rarr; Do you know <span class="fill-blank">___</span>?</span><span class="fill-answer">where this number comes from</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"How many people left last quarter?" &rarr; Could you tell me <span class="fill-blank">___</span>?</span><span class="fill-answer">how many people left last quarter</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Who owns this initiative?" &rarr; Do you know <span class="fill-blank">___</span>?</span><span class="fill-answer">who owns this initiative</span></div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="12" data-phase="6">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">What I Can Do</div><h2 class="slide-heading">Today You <span class="accent">Can</span></h2><div class="checklist" style="max-width:620px;margin:1.3rem auto 0"><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Buy three seconds without apologizing for them.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Ask one question back before answering, in the polite form.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Say I do not have that figure, and give a date.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Answer the question that was asked, not the one I prepared.</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 4: The Room</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Three People, Three Ways of <span class="accent">Asking</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">The silence, the interruption, and the same question twice</p>
-  </div>
+<div class="slide slide-dark" data-slide="13" data-phase="6">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label" style="color:rgba(255,255,255,.6)">Lesson 5 &middot; Complete</div><h2 class="slide-heading" style="color:#fff">The Question <span class="accent">You Hope Nobody Asks</span></h2><p style="color:rgba(255,255,255,.9);font-size:1.15rem;line-height:1.6;max-width:700px;margin:.9rem auto 0">Thursday, somebody asks it. What are your first seven words?</p><p style="color:var(--accent-light);font-size:.9rem;margin-top:1.2rem">Next lesson: your own project told as a case study, in the voice a report is written in.</p></div>
 </div>
-
-<!-- ========== SLIDE 14: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-predict-for="audio">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Listening</div>
-    <h2 class="slide-heading" style="color:#fff">Before You <span class="accent">Listen</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;I coach executives for a living, and the thing people ask me about most is the question they did not prepare.&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this audio is going to be about?</div></div>
-    <div class="mock-player lp" id="mp-pred1" data-src="/audio/adriana-cardoso-assuncao/a5_listening1.mp3" style="max-width:460px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-pred1')"><div class="lp-progress" id="progress-mp-pred1"></div></div><div class="lp-times"><span id="time-current-mp-pred1">0:00</span><span id="time-total-mp-pred1">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-pred1',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-pred1" onclick="mpToggle('mp-pred1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-pred1',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-pred1',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',1.25,this)">1.25x</button></div></div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="15" data-phase="4">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 1</div>
-    <h2 class="slide-heading" style="color:#fff">Three Seconds Are <span class="accent">Nothing</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
-    <div class="mock-player lp" id="mp-a1" data-src="/audio/adriana-cardoso-assuncao/a5_listening1.mp3" data-questions="listening1Qs" style="max-width:520px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a1')"><div class="lp-progress" id="progress-mp-a1"></div></div><div class="lp-times"><span id="time-current-mp-a1">0:00</span><span id="time-total-mp-a1">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a1',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a1" onclick="mpToggle('mp-a1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a1',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a1',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',1.25,this)">1.25x</button></div></div>
-    <div class="comp-questions" id="listening1Qs" style="max-width:560px;margin:1.2rem auto 0;text-align:left">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What does he say about the silence after a hard question?</div><div class="q-answer">That it is never as long as it feels: three seconds sound like thirty inside your head and like nothing in the room.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why does asking before answering make the answer better?</div><div class="q-answer">Because half of the hard questions in a meeting are hard only because they are vague.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What should you do when you genuinely do not know?</div><div class="q-answer">Say it and give a date &mdash; "I do not have that number with me, and I will send it to you by Friday."</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 15: ARTEFACT ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label">Artefact</div>
-    <h2 class="slide-heading">The Card Beside Your <span class="accent">Screen</span></h2>
-    <div style="max-width:470px;margin:1.2rem auto 0;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.14)">
-      <div style="background:#4B2E83;padding:.9rem 1.1rem;color:#fff;text-align:center">
-        <p style="font-size:.72rem;letter-spacing:1.5px;opacity:.85">KEEP THIS OPEN &middot; MEETINGS IN ENGLISH</p>
-        <p style="font-size:.82rem;font-weight:700;margin-top:.2rem">WHEN THE QUESTION SURPRISES YOU</p>
-      </div>
-      <div style="padding:1.2rem 1.1rem;display:flex;flex-direction:column;gap:.55rem">
-        <p style="font-size:.85rem;line-height:1.6"><strong>Buy time:</strong> "That is a fair question. Let me think for a second."</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>Ask back:</strong> "Could you tell me which period you are asking about?"</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>Reframe:</strong> "Before I answer that, may I give you some context?"</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>Be candid:</strong> "I do not have that number with me. I will follow up by Friday."</p>
-      </div>
-      <div style="background:var(--bg-elevated);padding:.7rem;text-align:center;border-top:1px solid var(--border)">
-        <p style="font-size:.72rem;color:var(--text-dim);letter-spacing:1px">FOUR SENTENCES &middot; SAY THEM UNTIL THEY ARE AUTOMATIC</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 16: DIALOGUE ========== -->
-<div class="slide slide-light" data-slide="17" data-phase="4" data-task-for="dialogue">
-  <div class="slide-inner">
-    <div class="chapter-label">Before you listen</div>
-    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;Adriana, why is your attrition so high?&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this conversation is going to be about?</div></div>
-    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
-      <div class="comp-q comp-q-task"><div class="q-text">1. What does he assume the cause of the attrition is?</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">2. What has he seen in the other regions?</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">3. What is the last thing he wants to know?</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="18" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Global leadership call, twenty minutes in</div>
-    <h2 class="slide-heading" style="color:#fff">Asking <span class="accent">Back</span></h2>
-    <div class="dialogue-box" id="dialogueBox">
-      <div class="dialogue-line visible" data-line="1" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">Adriana, why is your attrition so high? <span class="audio-inline" data-speak="Adriana, why is your attrition so high?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="2" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">That is a fair question. Could you tell me which period you are asking about? The last quarter and the last three years look very different. <span class="audio-inline" data-speak="That is a fair question. Could you tell me which period you are asking about? The last quarter and the last three years look very different." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">The last quarter. And I am assuming it is about pay. <span class="audio-inline" data-speak="The last quarter. And I am assuming it is about pay." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="4" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">That is the assumption everybody starts with, and it is our blind spot. May I ask what you have seen in the other regions? <span class="audio-inline" data-speak="That is the assumption everybody starts with, and it is our blind spot. May I ask what you have seen in the other regions?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">The same pattern, honestly. So what is your answer? <span class="audio-inline" data-speak="The same pattern, honestly. So what is your answer?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="6" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">Let me be candid. The first month is where we lose people, and the two sites with the most overtime are the two sites we lose them from. <span class="audio-inline" data-speak="Let me be candid. The first month is where we lose people, and the two sites with the most overtime are the two sites we lose them from." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">And how much has that cost us this year? <span class="audio-inline" data-speak="And how much has that cost us this year?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="8" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">I do not have that figure with me, and I am not going to guess in front of this group. I will follow up by Friday with the cost per exit. <span class="audio-inline" data-speak="I do not have that figure with me, and I am not going to guess in front of this group. I will follow up by Friday with the cost per exit." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-    </div>
-    <button class="next-line-btn" onclick="nextDialogueLine()">Next Line</button>
-  </div>
-</div>
-
-<!-- ========== SLIDE 17: DIALOGUE COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label">Comprehension</div>
-    <h2 class="slide-heading">About <span class="accent">Michael</span></h2>
-    <div class="comp-questions" style="max-width:640px;margin:1.2rem auto 0">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What does he assume the cause of the attrition is?</div><div class="q-answer">Pay &mdash; he says he is assuming it is about pay.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What has he seen in the other regions?</div><div class="q-answer">The same pattern.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What is the last thing he wants to know?</div><div class="q-answer">How much the attrition has cost the company this year.</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="20" data-phase="5" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 5: Practice</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Six Questions, None of Them <span class="accent">Prepared</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">Answer, or ask back &mdash; but do not stop</p>
-  </div>
-</div>
-
-<!-- ========== SLIDE 19: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="21" data-phase="5" data-predict-for="audio">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Listening</div>
-    <h2 class="slide-heading" style="color:#fff">Before You <span class="accent">Listen</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;Adriana, quick one before Thursday.&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this audio is going to be about?</div></div>
-    <div class="mock-player lp" id="mp-pred2" data-src="/audio/adriana-cardoso-assuncao/a5_listening2.mp3" style="max-width:460px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-pred2')"><div class="lp-progress" id="progress-mp-pred2"></div></div><div class="lp-times"><span id="time-current-mp-pred2">0:00</span><span id="time-total-mp-pred2">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-pred2',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-pred2" onclick="mpToggle('mp-pred2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-pred2',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-pred2',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',1.25,this)">1.25x</button></div></div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="22" data-phase="5">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 2</div>
-    <h2 class="slide-heading" style="color:#fff">How That Room <span class="accent">Works</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
-    <div class="mock-player lp" id="mp-a2" data-src="/audio/adriana-cardoso-assuncao/a5_listening2.mp3" data-questions="listening2Qs" style="max-width:520px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a2')"><div class="lp-progress" id="progress-mp-a2"></div></div><div class="lp-times"><span id="time-current-mp-a2">0:00</span><span id="time-total-mp-a2">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a2',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a2" onclick="mpToggle('mp-a2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a2',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a2',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',1.25,this)">1.25x</button></div></div>
-    <div class="comp-questions" id="listening2Qs" style="max-width:560px;margin:1.2rem auto 0;text-align:left">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What does the vice president do after he asks a question, and why?</div><div class="q-answer">He says nothing for a long time. He is waiting to see whether you add something you were not asked.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why does the finance director interrupt?</div><div class="q-answer">Not to attack &mdash; he is checking whether you know the number well enough to keep going.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What is the last thing she tells you, and what does it mean?</div><div class="q-answer">That nobody in that room will ask about your English &mdash; it is a conversation only you are having.</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 20: QUICK FIRE ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="5">
-  <div class="slide-inner">
-    <div class="chapter-label">Quick Fire</div>
-    <h2 class="slide-heading">What Do You <span class="accent">Say?</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Answer out loud first, then click to compare</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Why is your attrition so high?"</span><span class="fill-answer">That is a fair question. Could you tell me which period you are asking about?</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"How much has this cost us?"</span><span class="fill-answer">I do not have that figure with me. I will follow up by Friday.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Is this a pay problem?"</span><span class="fill-answer">That is the assumption everybody starts with. May I ask what you have seen in the other regions?</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Can you be quick about this?"</span><span class="fill-answer">Of course. If there is one takeaway, it is the two sites.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"I am not sure I understood your point."</span><span class="fill-answer">Let me clarify. What I mean is that the first month is where we lose people.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Are you avoiding my question?"</span><span class="fill-answer">Not at all. I want to make sure I answer the one you are actually asking.</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 21: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="5">
-  <div class="slide-inner">
-    <div class="chapter-label">Detective</div>
-    <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="errorScore">0 / 4 errors found</span></p>
-    <div class="error-grid" id="errorGrid">
-      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">"Could you tell me what is the attrition rate?"</div><div class="error-fix">"Could you tell me what the attrition rate is?"</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"May I ask which period are you talking about?"</div><div class="error-fix">"May I ask which period you are talking about?"</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"I was wondering whether did the pilot work."</div><div class="error-fix">"I was wondering whether the pilot worked."</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"Do you know where does this number come from?"</div><div class="error-fix">"Do you know where this number comes from?"</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="25" data-phase="6" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 6: Your Turn</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Three Rounds, <span class="accent">Less Help Each Time</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">And in the last one, nothing on the screen at all</p>
-  </div>
-</div>
-
-<!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Guided</div>
-    <h2 class="slide-heading">Four Vague Questions, Four <span class="accent">Questions Back</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Your teacher is a new colleague asking four very vague questions about your area. Before you answer any of them, ask one indirect question back to find out what they actually want to know.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem">
-        <span class="oral-situation">Could you tell me...?</span><span class="oral-situation">May I ask...?</span><span class="oral-situation">I was wondering whether...</span><span class="oral-situation">Do you know...?</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 24: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Semi-free</div>
-    <h2 class="slide-heading">The Silence After the <span class="accent">Question</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Your teacher is the vice president. He asks one hard question and then says nothing for five seconds. Answer once, completely, and then stop talking. Do not add anything you were not asked.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem">
-        <span class="oral-situation">Let me think for a second</span><span class="oral-situation">blind spot</span><span class="oral-situation">let me be candid</span><span class="oral-situation">the takeaway is</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 25: ROLE-PLAY FREE ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Free</div>
-    <h2 class="slide-heading">Six in a Row, No <span class="accent">Stopping</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Your teacher asks six questions in a row, with no pause between them, about your career, your numbers and your policy. Answer or ask back &mdash; but do not stop, and do not apologize for your English.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="7" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 7: Wrap-up</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Five Sentences to <span class="accent">Take With You</span></h2>
-  </div>
-</div>
-
-<!-- ========== SLIDE 27: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="30" data-phase="7">
-  <div class="slide-inner">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Survival Card</div>
-    <h2 class="slide-heading" style="color:#fff">Lesson 5 &mdash; <span class="accent">Five Sentences</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:660px;margin:1.3rem auto 0">
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">Could you tell me which period you are asking about?</span><button class="audio-btn-sm" data-speak="Could you tell me which period you are asking about?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">Before I answer that, may I give you some context?</span><button class="audio-btn-sm" data-speak="Before I answer that, may I give you some context?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">Let me clarify. What I mean is that the first month is the problem.</span><button class="audio-btn-sm" data-speak="Let me clarify. What I mean is that the first month is the problem." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">I do not have that figure with me. I will follow up by Friday.</span><button class="audio-btn-sm" data-speak="I do not have that figure with me. I will follow up by Friday." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">If there is one takeaway, it is the two sites.</span><button class="audio-btn-sm" data-speak="If there is one takeaway, it is the two sites." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 28: WHAT I LEARNED ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="7">
-  <div class="slide-inner">
-    <div class="chapter-label">What I Learned</div>
-    <h2 class="slide-heading">Today You <span class="accent">Can</span></h2>
-    <div class="checklist" style="max-width:600px;margin:1.3rem auto 0">
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Build an indirect question without inverting the word order</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Buy two seconds with a fixed sentence instead of freezing</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Ask what the question means before you answer it</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Say you do not know, with a date attached</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Stay silent after your answer, without filling the gap</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 29: CLOSING ========== -->
-<div class="slide slide-dark" data-slide="32" data-phase="7">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Lesson 5 &mdash; Complete</div>
-    <h2 class="slide-heading" style="color:#fff">Five Down, <span class="accent">Forty-Nine to Go</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:1rem;max-width:600px;margin-left:auto;margin-right:auto">Next class: the written half of the job &mdash; the English that says what is done without saying who does it.</p>
-  </div>
-</div>
-
 </div><!-- /slides-container -->
 <!-- Navigation Bar (IN CLASS) -->
 <div class="nav-bar" style="justify-content:space-between;">
@@ -1331,8 +988,8 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 32;
-var slidePhases = {1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:3,11:3,12:3,13:4,14:4,15:4,16:4,17:4,18:4,19:4,20:5,21:5,22:5,23:5,24:5,25:6,26:6,27:6,28:6,29:7,30:7,31:7,32:7};
+var totalSlides = 13;
+var slidePhases = {1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:3,9:4,10:5,11:6,12:6,13:6};
 
 function changeSlide(dir) {
   var next = currentSlide + dir;
@@ -1807,6 +1464,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

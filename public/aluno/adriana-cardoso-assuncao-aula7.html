@@ -7,7 +7,6 @@
     <meta name="alumni-level" content="B1">
     <meta name="alumni-framework" content="imersivo-prototipo">
     <meta name="alumni-gen" content="2">
-    <meta name="alumni-contrato" content="imersivo-prototipo@1">
 <meta name="robots" content="noindex, nofollow">
 <title>Student -- Adriana Cardoso Assun&#231;&#227;o | Lesson 7 -- What They Actually Said</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -709,6 +708,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -719,7 +728,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="logo-bar">
   <img src="/assets/logo-alumni.png" alt="Alumni by Better">
   <span class="prof-badge">Student</span>
-  <span class="slide-counter" id="slideCounter">01 / 27</span>
+  <span class="slide-counter" id="slideCounter">01 / 13</span>
 </div>
 
 <div class="main-content">
@@ -786,7 +795,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">07</div>
-      <div><div style="font-weight:600;font-size:.95rem">What They <span class="accent">Actually Said</span></div><div style="font-size:.8rem;color:var(--text-dim)">Minutes, escalations and the follow-up: reported speech -- 33 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">What They <span class="accent">Actually Said</span></div><div style="font-size:.8rem;color:var(--text-dim)">The live debrief: report the room you were in, and decide what goes on record -- 13 slides</div></div>
     </div>
   </div>
 </div>
@@ -809,422 +818,70 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="phase-segment upcoming" data-phase="4"></div>
   <div class="phase-segment upcoming" data-phase="5"></div>
   <div class="phase-segment upcoming" data-phase="6"></div>
-  <div class="phase-segment upcoming" data-phase="7"></div>
 </div>
 <div class="phase-labels" id="phaseLabels">
-  <span class="phase-label current" data-phase="1" data-name="The Debrief">The Debrief</span>
-  <span class="phase-label" data-phase="2" data-name="The Words You Need">The Words You Need</span>
-  <span class="phase-label" data-phase="3" data-name="The Code">The Code</span>
-  <span class="phase-label" data-phase="4" data-name="The Escalation">The Escalation</span>
-  <span class="phase-label" data-phase="5" data-name="Practice">Practice</span>
-  <span class="phase-label" data-phase="6" data-name="Your Turn">Your Turn</span>
-  <span class="phase-label" data-phase="7" data-name="Wrap-up">Wrap-up</span>
+  <span class="phase-label current" data-phase="1" data-name="The Question">The Question</span>
+  <span class="phase-label" data-phase="2" data-name="Two Voices">Two Voices</span>
+  <span class="phase-label" data-phase="3" data-name="The Conversation">The Conversation</span>
+  <span class="phase-label" data-phase="4" data-name="On the Record">On the Record</span>
+  <span class="phase-label" data-phase="5" data-name="The Debrief">The Debrief</span>
+  <span class="phase-label" data-phase="6" data-name="Wrap-Up">Wrap-Up</span>
 </div>
 
 <div class="slides-container" id="slidesContainer">
-<!-- ========== SLIDE 1: TITLE ========== -->
-<div class="slide slide-image active" data-slide="1" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Lesson 7 &middot; The Debrief</div>
-    <h1 class="slide-heading" style="font-size:2.5rem;color:#fff">What They <span class="accent">Actually Said</span></h1>
-    <p style="color:rgba(255,255,255,.82);font-size:1.1rem;margin-top:1rem">The minutes are not what happened. They are what somebody wrote down afterwards.</p>
-  </div>
+<div class="slide slide-image active" data-slide="1" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.80),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Lesson 7 &middot; Conversation</div><h1 class="slide-heading" style="font-size:2.5rem;color:#fff">What They <span class="accent">Actually Said</span></h1><p style="color:rgba(255,255,255,.85);font-size:1.1rem;margin-top:.8rem">Today: one conversation. You talk, I listen.</p></div>
 </div>
 
-<!-- ========== SLIDE 2: WARM-UP + CALLBACK ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" style="background-image:linear-gradient(rgba(24,16,48,0.84),rgba(24,16,48,0.93)),url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 1: The Debrief</div>
-    <h2 class="slide-heading" style="color:#fff">Tell Me About a Meeting <span class="accent">I Missed</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:1rem;max-width:640px;margin-left:auto;margin-right:auto">Not the agenda. Who said what, who agreed to what, and the one thing that was said which nobody wrote down.</p>
-  </div>
+<div class="slide slide-light" data-slide="2" data-phase="1">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Question</div><h2 class="slide-heading">Four Versions, <span class="accent">One Document</span></h2><div style="max-width:720px;margin:1.3rem auto 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem"><p style="font-size:1.12rem;line-height:1.6">You were not in the meeting. Four people were, and each of them tells you a different version. By six o&rsquo;clock the minutes go out with your name at the bottom, and a decision has an owner and a date.</p><p style="font-size:1.25rem;line-height:1.6;margin-top:.6rem"><strong>What goes in, and what stays out?</strong></p></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">He said that&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">She told me to&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">She asked whether&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">That was said off the record, so&hellip;</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 3: FRAMING ========== -->
-<div class="slide slide-light" data-slide="3" data-phase="1">
-  <div class="slide-inner">
-    <div class="chapter-label">Where You Start</div>
-    <h2 class="slide-heading">Whoever Writes the Minutes <span class="accent">Decides What Was Said</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;max-width:700px;margin:1.5rem auto 0">
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">The tense moves back</p><p style="font-size:.78rem;color:var(--text-dim)">What was present becomes past, one step, every time</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">The verb is a judgement</p><p style="font-size:.78rem;color:var(--text-dim)">said, confirmed, claimed, denied, warned &mdash; none of them is neutral</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">Some things stay out</p><p style="font-size:.78rem;color:var(--text-dim)">Off the record is a decision, and it is yours to make</p></div>
-    </div>
-    <p style="text-align:center;font-size:.95rem;font-weight:600;color:var(--accent);margin-top:1.4rem;max-width:620px;margin-left:auto;margin-right:auto">In a labor dispute, the minutes are the evidence. That is why the grammar matters here.</p>
-  </div>
+<div class="slide slide-dark" data-slide="3" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices &middot; 1 of 2</div><h2 class="slide-heading" style="color:#fff">Voice 1: <span class="accent">Sonia</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.15rem;margin-top:.6rem">Sonia takes the minutes. Listen. <strong>What is her rule for what goes in?</strong></p><div class="mock-player lp" id="mp-sonia" data-src="/audio/adriana-cardoso-assuncao/a7_conv_sonia.mp3" style="max-width:520px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-sonia')"><div class="lp-progress" id="progress-mp-sonia"></div></div><div class="lp-times"><span id="time-current-mp-sonia">0:00</span><span id="time-total-mp-sonia">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-sonia',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-sonia" onclick="mpToggle('mp-sonia')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-sonia',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-sonia',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-sonia',1,this)">1x</button></div></div>
+    <div class="ts-box" id="ts-mp-sonia"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-sonia" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-sonia"><p>I take the minutes for our committee, and my rule is simple. If it changed the decision, it goes in. Somebody said the budget had already been approved, and three people heard it. That sentence changed the meeting, so it is in the minutes, with the name. People tell me it was off the record. Off the record is for the corridor, not for a room with fifteen people and a decision at the end. Six months later nobody remembers who said what, and the only thing left is my document. If it is not written, it did not happen.</p></div></div></div>
 </div>
 
-<!-- ========== SLIDE 4: TODAY'S GOAL ========== -->
-<div class="slide slide-light" data-slide="4" data-phase="1">
-  <div class="slide-inner">
-    <div class="chapter-label">Today's Goal</div>
-    <h2 class="slide-heading">Three <span class="accent">Missions</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;max-width:700px;margin:1.5rem auto 0">
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">1. The Words</p><p style="font-size:.78rem;color:var(--text-dim)">minutes, agenda, action item, to escalate, debrief, deadlock...</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">2. One Shift</p><p style="font-size:.78rem;color:var(--text-dim)">Statements, questions and instructions, all moved one tense back</p></div><div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">3. The Whole Meeting</p><p style="font-size:.78rem;color:var(--text-dim)">Four speakers, from memory, in two minutes</p></div>
-    </div>
-  </div>
+<div class="slide slide-dark" data-slide="4" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices &middot; 2 of 2</div><h2 class="slide-heading" style="color:#fff">Voice 2: <span class="accent">Marcus</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.15rem;margin-top:.6rem">Marcus has written minutes for twenty years. Listen. <strong>What does he leave out, and what does he do with it instead?</strong></p><div class="mock-player lp" id="mp-marcus" data-src="/audio/adriana-cardoso-assuncao/a7_conv_marcus.mp3" style="max-width:520px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-marcus')"><div class="lp-progress" id="progress-mp-marcus"></div></div><div class="lp-times"><span id="time-current-mp-marcus">0:00</span><span id="time-total-mp-marcus">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-marcus',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-marcus" onclick="mpToggle('mp-marcus')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-marcus',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-marcus',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-marcus',1,this)">1x</button></div></div>
+    <div class="ts-box" id="ts-mp-marcus"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-marcus" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-marcus"><p>I have written minutes for twenty years, and I write less than I hear. Minutes are not a recording. Minutes are a decision, an owner and a date. If I put every sentence in, two things happen. People stop talking in the meeting, and they start talking before it, where I cannot hear them. So I write what was agreed, who agreed to it and by when. What somebody said off the record I do not write, but I do report it, by voice, and only to the person in charge. That is not hiding it. That is choosing where it lands.</p></div></div></div>
 </div>
 
-<!-- ========== SLIDE 5: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="5" data-phase="2" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 2: The Words You Need</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Words of a <span class="accent">Meeting</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">8 words that decide what happens after everybody leaves the room</p>
-  </div>
+<div class="slide slide-light" data-slide="5" data-phase="2">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Two Voices</div><h2 class="slide-heading">Sonia <span class="accent">or</span> Marcus?</h2><div style="max-width:700px;margin:1.3rem auto 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem"><p style="font-size:1.25rem;line-height:1.6"><strong>Everything on record, or a decision with an owner? Which minutes protect your people?</strong></p></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I agree with&hellip;, because in HR&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">If everything is written down, people will&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I see it differently&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">the minutes</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an agenda</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an action item</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">off the record</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a deadlock</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 6: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Vocabulary</div>
-    <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount1">0 / 4 words revealed</span></p>
-    <div class="vocab-grid" id="vocabGrid1">
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#3d2a6e,#7c5bc0)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 3h12v18H6z"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h3"/></svg><div class="card-hint">The written record of what was decided in a meeting</div></div>
-        <div class="card-body"><div class="card-word">Minutes</div><div class="card-def">The written record of what was decided in a meeting</div><div class="card-example">"I want the minutes written by somebody who was not involved."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Minutes" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#0f4c5c,#3f9bb0)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M8 12h8"/><path d="M8 16h5"/></svg><div class="card-hint">The list of points a meeting is going to cover</div></div>
-        <div class="card-body"><div class="card-word">Agenda</div><div class="card-def">The list of points a meeting is going to cover</div><div class="card-example">"Your case study is on the agenda for October."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Agenda" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#14532d,#4ea36b)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l2 2 4-4"/><path d="M7 15h10"/></svg><div class="card-hint">One task, with one owner and one date, agreed in a meeting</div></div>
-        <div class="card-body"><div class="card-word">Action item</div><div class="card-def">One task, with one owner and one date, agreed in a meeting</div><div class="card-example">"He told me to send you the list of action items today."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Action item" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#7c1d42,#b03a6a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/><path d="M4 20h16"/></svg><div class="card-hint">To take a problem to somebody with more authority</div></div>
-        <div class="card-body"><div class="card-word">To escalate</div><div class="card-def">To take a problem to somebody with more authority</div><div class="card-example">"I am escalating this, and I want it on record."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To escalate" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="6" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; You</div><h2 class="slide-heading">About <span class="accent">You</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. Tell me about a meeting you had to report to somebody who was not there. What did you leave out?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. Somebody told you something off the record and it mattered. What did you do?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. What was the last instruction you were given that you disagreed with?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">He said that&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">She told me to&hellip;, but I&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I left it out, because&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">the minutes</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">off the record</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to escalate</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a debrief</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 7: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Vocabulary</div>
-    <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount2">0 / 4 words revealed</span></p>
-    <div class="vocab-grid" id="vocabGrid2">
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#0c5c4f,#22a58c)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8"/><path d="M8 12h5"/></svg><div class="card-hint">A short meeting after an event to say what happened</div></div>
-        <div class="card-body"><div class="card-word">Debrief</div><div class="card-def">A short meeting after an event to say what happened</div><div class="card-example">"I want a debrief with the three of us in the room this week."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Debrief" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#4a1f3d,#8e3b76)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><path d="M4 4l16 16"/></svg><div class="card-hint">Said in confidence, not to be written down or repeated</div></div>
-        <div class="card-body"><div class="card-word">Off the record</div><div class="card-def">Said in confidence, not to be written down or repeated</div><div class="card-example">"He told me, off the record, that he had already decided to leave."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Off the record" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#5a3a0a,#8a6a1a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/><path d="M9 12h6"/></svg><div class="card-hint">To say again, in short, what has been agreed</div></div>
-        <div class="card-body"><div class="card-word">To recap</div><div class="card-def">To say again, in short, what has been agreed</div><div class="card-example">"Let me recap what we agreed before we close."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="To recap" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-      <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#5f2a12,#a3541f)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg><div class="card-hint">The point where two sides cannot agree and nothing moves</div></div>
-        <div class="card-body"><div class="card-word">Deadlock</div><div class="card-def">The point where two sides cannot agree and nothing moves</div><div class="card-example">"We were in a deadlock until somebody agreed to own it."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Deadlock" onclick="event.stopPropagation();speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
-      </div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="7" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; Your Company</div><h2 class="slide-heading">About <span class="accent">Your Company</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. Who writes the minutes in your meetings, and who reads them afterwards?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. An action item has no owner and no date. What happens to it?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. Two areas are in deadlock and both have told you they are right. What do you report upwards?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">The minutes are written by&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Operations said that&hellip;, and Finance said that&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">the minutes</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an agenda</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an action item</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a deadlock</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to escalate</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">Review</div>
-    <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:500px;margin:1.2rem auto 0">
-      <div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Minutes</span><button class="audio-btn-sm" data-speak="Minutes" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Agenda</span><button class="audio-btn-sm" data-speak="Agenda" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Escalate</span><button class="audio-btn-sm" data-speak="Escalate" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1.1rem;font-weight:600">Deadlock</span><button class="audio-btn-sm" data-speak="Deadlock" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="8" data-phase="3">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Conversation &middot; The Market</div><h2 class="slide-heading">About <span class="accent">the Market</span></h2><div class="conv-questions" style="display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:1.2rem auto 0;text-align:left"><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">1. Meetings are recorded and transcribed by software now. Does that make people more honest, or quieter?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">2. A manager says one thing to the team and another thing to you. Which version goes in your report?</div><div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.85rem 1.1rem;font-size:1.08rem;line-height:1.5">3. Last year the channel received 37 grievances. What do you say about them to somebody outside the company?</div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">It makes people&hellip;, because&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">I would report&hellip;, and I would leave out&hellip;</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">off the record</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to recap</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a debrief</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to escalate</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 9: VOCAB IN CONTEXT ========== -->
-<div class="slide slide-light" data-slide="9" data-phase="2">
-  <div class="slide-inner">
-    <div class="chapter-label">In Context</div>
-    <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say the missing word first, then click to check</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">I want the <span class="fill-blank">___</span> written by somebody who was not involved.</span><span class="fill-answer">minutes</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Your case study is on the <span class="fill-blank">___</span> for October.</span><span class="fill-answer">agenda</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Every <span class="fill-blank">___</span> has one owner and one date.</span><span class="fill-answer">action item</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">I want a <span class="fill-blank">___</span> with the three of us in the room this week.</span><span class="fill-answer">debrief</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Let me <span class="fill-blank">___</span> what we agreed before we close.</span><span class="fill-answer">recap</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">We were in a <span class="fill-blank">___</span> until somebody agreed to own it.</span><span class="fill-answer">deadlock</span></div>
-    </div>
-    <div class="ic-bank ic-soft"><span class="ic-b">agenda</span><span class="ic-b">debrief</span><span class="ic-b">deadlock</span><span class="ic-b">minutes</span><span class="ic-b">action item</span><span class="ic-b">recap</span></div>
-  </div>
+<div class="slide slide-image" data-slide="9" data-phase="4" style="background-image:linear-gradient(rgba(24,16,48,0.80),rgba(24,16,48,0.92)),url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">On the Record</div><h2 class="slide-heading" style="color:#fff">On the Record, <span class="accent">Off the Record</span></h2><p style="color:rgba(255,255,255,.88);font-size:1.1rem;margin-top:.6rem;max-width:660px;margin-left:auto;margin-right:auto">Three sentences were said in the same room. One is a fact, one is a decision, one was said off the record. Only two of them are yours to write.</p><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">He said that the budget had already been approved.</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">She asked whether we had considered April.</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">She told me to send the owner list by Friday.</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">That was said off the record, so it does not go in the minutes.</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 10: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="10" data-phase="3" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 3: The Code</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">One Step <span class="accent">Back</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">Statements, questions and instructions, all reported</p>
-  </div>
+<div class="slide slide-light" data-slide="10" data-phase="5">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">The Debrief</div><h2 class="slide-heading">The Live Debrief <span class="accent">You Were Not There</span></h2><div class="roleplay-body" style="max-width:800px;margin:1rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.3rem 1.5rem;text-align:left"><p class="roleplay-scenario" style="font-size:1rem;line-height:1.6;margin-bottom:.6rem">I play the meeting out loud, one voice at a time. You take notes. Then you report it to somebody who was not in the room.</p><ul style="font-size:.95rem;line-height:1.6;margin:0 0 .9rem 1.2rem"><li style="margin-bottom:.35rem"><strong>1.</strong> <strong>Finance</strong>: the budget had already been approved. Nobody else knew.</li><li style="margin-bottom:.35rem"><strong>2.</strong> <strong>Operations</strong>: no people can be released in March.</li><li style="margin-bottom:.35rem"><strong>3.</strong> <strong>Operations</strong>, again: <em>had we considered starting in April?</em></li><li style="margin-bottom:.35rem"><strong>4.</strong> <strong>Your director</strong>: send the owner list by Friday.</li><li style="margin-bottom:.35rem"><strong>5.</strong> <strong>Somebody, quietly</strong>: the site manager has been saying the training is finished since July.</li></ul><div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.9rem;text-align:center"><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>Round 1</strong> &middot; 5 min<br>I speak. You report it, live.</span><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>Round 2</strong> &middot; 4 min<br>You run the debrief. I ask for the parts you left out.</span><span style="flex:1 1 180px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem"><strong>The Escalation</strong> &middot; 3 min<br>Three versions, three weeks. What goes on record?</span></div></div><div class="conv-lang" style="max-width:760px;margin:1.3rem auto 0;text-align:left;background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem"><p style="font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem">Language you can use</p><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.55rem"><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Finance said that&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Operations asked whether&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">My director told me to&hellip;</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">That one was off the record, so I am telling you, not writing it.</span><span style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem;font-style:italic">Let me recap what was agreed before we close.</span></div><div style="display:flex;flex-wrap:wrap;gap:.45rem"><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">the minutes</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an agenda</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">an action item</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to escalate</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a debrief</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">off the record</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">to recap</span><span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .75rem;font-size:.82rem">a deadlock</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 11: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3">
-  <div class="slide-inner" data-grammar="reported speech">
-    <div class="chapter-label">Grammar Discovery</div>
-    <h2 class="slide-heading">What Happened to the <span class="accent">Verb?</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:660px;margin:1.3rem auto 0">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem">"The budget <span class="vocab-highlight">is</span> approved." &nbsp;&rarr;&nbsp; He said the budget <span class="vocab-highlight">was</span> approved.</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem">"We <span class="vocab-highlight">have finished</span> the training." &nbsp;&rarr;&nbsp; She said they <span class="vocab-highlight">had finished</span> the training.</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem">"<span class="vocab-highlight">Have you considered</span> April?" &nbsp;&rarr;&nbsp; He asked <span class="vocab-highlight">whether we had considered</span> April.</div><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.95rem">"<span class="vocab-highlight">Send</span> the list today." &nbsp;&rarr;&nbsp; He <span class="vocab-highlight">told me to send</span> the list that day.</div>
-    </div>
-    <div class="comp-q" onclick="revealComp(this)" style="max-width:660px;margin:1.2rem auto 0">
-      <div class="q-text">Click to reveal the rule</div>
-      <div class="q-answer"><strong>Reported speech</strong>: the verb moves <strong>one tense back</strong>. Present &rarr; past (<em>is</em> &rarr; <em>was</em>), past and present perfect &rarr; past perfect (<em>finished / have finished</em> &rarr; <em>had finished</em>), <em>will</em> &rarr; <em>would</em>, <em>can</em> &rarr; <em>could</em>. Time words move too: <em>today</em> &rarr; <em>that day</em>, <em>yesterday</em> &rarr; <em>the day before</em>, <em>next week</em> &rarr; <em>the following week</em>. <strong>Questions</strong> lose the inversion and the question mark, and take <strong>whether / if</strong> when there is no question word &mdash; exactly like the indirect questions of Lesson 5. <strong>Instructions</strong> become <strong>told somebody to + verb</strong>. And the difference that matters in writing: <strong>say</strong> takes no person (<em>he said that…</em>), <strong>tell</strong> always does (<em>he told me that…</em>).</div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="11" data-phase="6">
+  <style>.conv-edit{min-height:2.6rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.55rem .75rem;font-size:.95rem;text-align:left;outline:none}.conv-edit:focus{border-color:var(--accent)}.conv-edit:empty:before{content:attr(data-ph);color:var(--text-dim);font-style:italic}.conv-better{border-color:var(--accent)}@media(max-width:600px){.conv-cards>div{grid-template-columns:1fr!important}}</style><div class="slide-inner" style="text-align:center"><div class="chapter-label">Wrap-Up</div><h2 class="slide-heading">Your Sentences, <span class="accent">Upgraded</span></h2><p style="font-size:.95rem;color:var(--text-mid);margin-top:.4rem">Say the stronger version once, with a real example of yours.</p><div class="conv-cards" style="max-width:760px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.55rem"><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem"><div class="conv-edit conv-said" contenteditable="true" data-ph="You said&hellip;"></div><div class="conv-edit conv-better" contenteditable="true" data-ph="Stronger&hellip;"></div></div></div></div>
 </div>
 
-<!-- ========== SLIDE 12: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3">
-  <div class="slide-inner">
-    <div class="chapter-label">Grammar Practice</div>
-    <h2 class="slide-heading">Say It, Then <span class="accent">Check</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Report each sentence out loud before you click</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"The budget is approved." &rarr; He said <span class="fill-blank">___</span>.</span><span class="fill-answer">the budget was approved</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"We have finished the training." &rarr; She said <span class="fill-blank">___</span>.</span><span class="fill-answer">they had finished the training</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"I cannot release my people in March." &rarr; He said <span class="fill-blank">___</span>.</span><span class="fill-answer">he could not release his people in March</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Have you considered April?" &rarr; He asked <span class="fill-blank">___</span>.</span><span class="fill-answer">whether we had considered April</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Send the list today." &rarr; He told me <span class="fill-blank">___</span>.</span><span class="fill-answer">to send the list that day</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"I will present it next week." &rarr; She said <span class="fill-blank">___</span>.</span><span class="fill-answer">she would present it the following week</span></div>
-    </div>
-  </div>
+<div class="slide slide-light" data-slide="12" data-phase="6">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">What I Can Do</div><h2 class="slide-heading">Today You <span class="accent">Can</span></h2><div class="checklist" style="max-width:620px;margin:1.3rem auto 0"><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Report what four people said, without mixing in what I think.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Move the verb one tense back without stopping.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Report a question and an instruction, in the right order.</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Say what stays out of the minutes, and say why.</span></div></div></div>
 </div>
 
-<!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 4: The Escalation</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">When It Goes on <span class="accent">Record</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">Three statements that cannot all be true</p>
-  </div>
+<div class="slide slide-dark" data-slide="13" data-phase="6">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label" style="color:rgba(255,255,255,.6)">Lesson 7 &middot; Complete</div><h2 class="slide-heading" style="color:#fff">Six O&rsquo;Clock, <span class="accent">Your Name at the Bottom</span></h2><p style="color:rgba(255,255,255,.9);font-size:1.15rem;line-height:1.6;max-width:700px;margin:.9rem auto 0">The minutes go out with your name on them. What is the one line you will not write?</p><p style="color:var(--accent-light);font-size:.9rem;margin-top:1.2rem">Next lesson: the news that moves the business, and the English to say what it changes.</p></div>
 </div>
-
-<!-- ========== SLIDE 14: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-predict-for="audio">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Listening</div>
-    <h2 class="slide-heading" style="color:#fff">Before You <span class="accent">Listen</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;Adriana, you missed the meeting, so here is what happened.&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this audio is going to be about?</div></div>
-    <div class="mock-player lp" id="mp-pred1" data-src="/audio/adriana-cardoso-assuncao/a7_listening1.mp3" style="max-width:460px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-pred1')"><div class="lp-progress" id="progress-mp-pred1"></div></div><div class="lp-times"><span id="time-current-mp-pred1">0:00</span><span id="time-total-mp-pred1">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-pred1',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-pred1" onclick="mpToggle('mp-pred1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-pred1',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-pred1',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred1',1.25,this)">1.25x</button></div></div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="15" data-phase="4">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 1</div>
-    <h2 class="slide-heading" style="color:#fff">The Meeting You <span class="accent">Missed</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
-    <div class="mock-player lp" id="mp-a1" data-src="/audio/adriana-cardoso-assuncao/a7_listening1.mp3" data-questions="listening1Qs" style="max-width:520px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a1')"><div class="lp-progress" id="progress-mp-a1"></div></div><div class="lp-times"><span id="time-current-mp-a1">0:00</span><span id="time-total-mp-a1">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a1',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a1" onclick="mpToggle('mp-a1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a1',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a1',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',1.25,this)">1.25x</button></div></div>
-    <div class="comp-questions" id="listening1Qs" style="max-width:560px;margin:1.2rem auto 0;text-align:left">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What did the finance director say, and why was it a surprise?</div><div class="q-answer">He said the budget had already been approved, which was news to everybody in the room.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What did the head of operations ask, and what was the answer?</div><div class="q-answer">He asked whether they had considered starting in April instead. Nobody answered.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What was said off the record, and why does it matter?</div><div class="q-answer">The operations director had already decided to leave the company &mdash; so he should not be made the owner of the initiative.</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 15: ARTEFACT ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label">Artefact</div>
-    <h2 class="slide-heading">The <span class="accent">Minutes</span></h2>
-    <div style="max-width:490px;margin:1.2rem auto 0;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.14)">
-      <div style="background:#4B2E83;padding:.9rem 1.1rem;color:#fff;text-align:center">
-        <p style="font-size:.72rem;letter-spacing:1.5px;opacity:.85">REGIONAL PEOPLE COMMITTEE</p>
-        <p style="font-size:.82rem;font-weight:700;margin-top:.2rem">MINUTES &mdash; 14 MARCH</p>
-      </div>
-      <div style="padding:1.2rem 1.1rem;display:flex;flex-direction:column;gap:.55rem">
-        <p style="font-size:.85rem;line-height:1.6"><strong>1.</strong> Finance <strong>confirmed</strong> that the budget had already been approved.</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>2.</strong> Operations <strong>said</strong> they could not release people in March, and <strong>asked</strong> whether April had been considered.</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>3.</strong> The VP <strong>told</strong> the committee to appoint one owner, not three.</p>
-        <p style="font-size:.85rem;line-height:1.6"><strong>Action item:</strong> A. Cardoso to circulate the owner list by Friday.</p>
-      </div>
-      <div style="background:var(--bg-elevated);padding:.7rem;text-align:center;border-top:1px solid var(--border)">
-        <p style="font-size:.72rem;color:var(--text-dim);letter-spacing:1px">CONFIRMED &middot; SAID &middot; ASKED &middot; TOLD</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 16: DIALOGUE ========== -->
-<div class="slide slide-light" data-slide="17" data-phase="4" data-task-for="dialogue">
-  <div class="slide-inner">
-    <div class="chapter-label">Before you listen</div>
-    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;You were not there. Give me the short version before I read the minutes.&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this conversation is going to be about?</div></div>
-    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
-      <div class="comp-q comp-q-task"><div class="q-text">1. What does he ask for at the beginning?</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">2. What had he told the committee about the owner?</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">3. What does he decide about the off-the-record information?</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="18" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Debrief, twenty minutes after the meeting</div>
-    <h2 class="slide-heading" style="color:#fff">What Goes in the <span class="accent">Minutes</span></h2>
-    <div class="dialogue-box" id="dialogueBox">
-      <div class="dialogue-line visible" data-line="1" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">You were not there. Give me the short version before I read the minutes. <span class="audio-inline" data-speak="You were not there. Give me the short version before I read the minutes." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="2" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">Finance said the budget had already been approved, which nobody in the room knew. Operations said they could not release people in March. <span class="audio-inline" data-speak="Finance said the budget had already been approved, which nobody in the room knew. Operations said they could not release people in March." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">Did anybody propose an alternative? <span class="audio-inline" data-speak="Did anybody propose an alternative?" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="4" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">Operations asked whether we had considered April. Nobody answered, so we left the meeting in a deadlock on the date. <span class="audio-inline" data-speak="Operations asked whether we had considered April. Nobody answered, so we left the meeting in a deadlock on the date." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">And the owner? I told them I wanted one name. <span class="audio-inline" data-speak="And the owner? I told them I wanted one name." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="6" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">That is the part I want to talk about before I write anything. Somebody told me, off the record, that the person we were about to name has already decided to leave. <span class="audio-inline" data-speak="That is the part I want to talk about before I write anything. Somebody told me, off the record, that the person we were about to name has already decided to leave." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar michael">M</div><div class="dialogue-bubble michael-bubble">Then that does not go in the minutes. But the decision does. <span class="audio-inline" data-speak="Then that does not go in the minutes. But the decision does." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="8" data-voice="ellen"><div class="dialogue-avatar adriana">A</div><div class="dialogue-bubble adriana-bubble">Agreed. Let me recap what I am writing: the budget was confirmed, the date is open, and the owner will be named by Friday. <span class="audio-inline" data-speak="Agreed. Let me recap what I am writing: the budget was confirmed, the date is open, and the owner will be named by Friday." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-    </div>
-    <button class="next-line-btn" onclick="nextDialogueLine()">Next Line</button>
-  </div>
-</div>
-
-<!-- ========== SLIDE 17: DIALOGUE COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4">
-  <div class="slide-inner">
-    <div class="chapter-label">Comprehension</div>
-    <h2 class="slide-heading">About <span class="accent">Michael</span></h2>
-    <div class="comp-questions" style="max-width:640px;margin:1.2rem auto 0">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What does he ask for at the beginning?</div><div class="q-answer">The short version of the meeting, before he reads the minutes.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What had he told the committee about the owner?</div><div class="q-answer">That he wanted one name, not three.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does he decide about the off-the-record information?</div><div class="q-answer">That it does not go in the minutes, but the decision does.</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="20" data-phase="5" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 5: Practice</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Six Things Somebody <span class="accent">Said</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">Report them, with the verb that says what you mean</p>
-  </div>
-</div>
-
-<!-- ========== SLIDE 19: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="21" data-phase="5" data-predict-for="audio">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Listening</div>
-    <h2 class="slide-heading" style="color:#fff">Before You <span class="accent">Listen</span></h2>
-    <div class="ic-predict"><div class="ic-predict-line">&ldquo;Hello, this is Peter from the regional office.&rdquo;</div><div class="ic-predict-q">This is the first line. What do you think this audio is going to be about?</div></div>
-    <div class="mock-player lp" id="mp-pred2" data-src="/audio/adriana-cardoso-assuncao/a7_listening2.mp3" style="max-width:460px;margin:1.4rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-pred2')"><div class="lp-progress" id="progress-mp-pred2"></div></div><div class="lp-times"><span id="time-current-mp-pred2">0:00</span><span id="time-total-mp-pred2">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-pred2',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-pred2" onclick="mpToggle('mp-pred2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-pred2',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-pred2',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-pred2',1.25,this)">1.25x</button></div></div>
-  </div>
-</div>
-
-<div class="slide slide-dark" data-slide="22" data-phase="5">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 2</div>
-    <h2 class="slide-heading" style="color:#fff">Three Statements, One <span class="accent">Escalation</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
-    <div class="mock-player lp" id="mp-a2" data-src="/audio/adriana-cardoso-assuncao/a7_listening2.mp3" data-questions="listening2Qs" style="max-width:520px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a2')"><div class="lp-progress" id="progress-mp-a2"></div></div><div class="lp-times"><span id="time-current-mp-a2">0:00</span><span id="time-total-mp-a2">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a2',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a2" onclick="mpToggle('mp-a2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a2',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a2',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',1.25,this)">1.25x</button></div></div>
-    <div class="comp-questions" id="listening2Qs" style="max-width:560px;margin:1.2rem auto 0;text-align:left">
-      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What are the three things the site manager said, and when?</div><div class="q-answer">Three weeks ago, that the training had been completed. Last week, that it was almost finished. Yesterday, that he had never received the material.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What does Peter say he is not interested in?</div><div class="q-answer">Which of the three statements is a lie.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does he want, and who has he already asked?</div><div class="q-answer">A debrief with the three of them this week, with minutes written by somebody not involved. He has asked the compliance officer whether she can take them.</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 20: QUICK FIRE ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="5">
-  <div class="slide-inner">
-    <div class="chapter-label">Quick Fire</div>
-    <h2 class="slide-heading">How Do You <span class="accent">Report It?</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Report it out loud first, then click to compare</p>
-    <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"The budget is approved." (finance, and it is true)</span><span class="fill-answer">Finance confirmed that the budget had been approved.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"The training is finished." (and you doubt it)</span><span class="fill-answer">He claimed that the training had been finished.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"I never received the material." (his words, no judgement)</span><span class="fill-answer">He said that he had never received the material.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Send me the owner list by Friday." (an instruction to you)</span><span class="fill-answer">She told me to send her the owner list by Friday.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"Have you considered April?" (a question in the meeting)</span><span class="fill-answer">He asked whether we had considered April.</span></div><div class="fill-item" onclick="revealFill(this)"><span class="fill-text">"This will fail without buy-in." (a warning)</span><span class="fill-answer">She warned that it would fail without buy-in.</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 21: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="5">
-  <div class="slide-inner">
-    <div class="chapter-label">Detective</div>
-    <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="errorScore">0 / 4 errors found</span></p>
-    <div class="error-grid" id="errorGrid">
-      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">"He said me that the budget was approved."</div><div class="error-fix">"He told me that the budget was approved."</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"She said they have finished the training."</div><div class="error-fix">"She said they had finished the training."</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"He asked whether had we considered April."</div><div class="error-fix">"He asked whether we had considered April."</div></div><div class="error-card" onclick="revealError(this)"><div class="error-sentence">"She told me send the list on Friday."</div><div class="error-fix">"She told me to send the list on Friday."</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="25" data-phase="6" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 6: Your Turn</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Three Rounds, <span class="accent">Less Help Each Time</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">And in the last one, the whole meeting from memory</p>
-  </div>
-</div>
-
-<!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Guided</div>
-    <h2 class="slide-heading">Four Speakers, Four <span class="accent">Reporting Verbs</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Your teacher arrived late to the meeting and asks what he missed. Report four things that were said, using a different reporting verb for each one, and say who said what.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem">
-        <span class="oral-situation">confirmed that</span><span class="oral-situation">asked whether</span><span class="oral-situation">told the committee to</span><span class="oral-situation">warned that</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 24: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Semi-free</div>
-    <h2 class="slide-heading">"That Is Not What <span class="accent">I Said"</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Your teacher disagrees with a line in the minutes you wrote. Hold the record without arguing: say what was said, offer to correct it formally if he can say what is wrong, and keep the action item alive.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem">
-        <span class="oral-situation">what I wrote was</span><span class="oral-situation">may I ask which line</span><span class="oral-situation">I will circulate a correction</span><span class="oral-situation">the action item stands</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 25: ROLE-PLAY FREE ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="6">
-  <div class="slide-inner">
-    <div class="chapter-label">Free</div>
-    <h2 class="slide-heading">The Whole Meeting, from <span class="accent">Memory</span></h2>
-    <div class="roleplay-body" style="max-width:580px;margin:1.2rem auto 0;background:linear-gradient(135deg,var(--accent-dim),var(--accent-glow));border:1px solid var(--accent);border-radius:12px;padding:1.4rem">
-      <p class="roleplay-scenario" style="font-size:.9rem;line-height:1.7">Report the whole meeting to somebody who was not there: four speakers, what each of them said, what was asked, what you were told to do, and what you decided to leave out. Two minutes, no notes.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="7" style="background-image:linear-gradient(rgba(24,16,48,0.78),rgba(24,16,48,0.91)),url('https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1400&q=80');background-size:cover;background-position:center">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label">Chapter 7: Wrap-up</div>
-    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Five Sentences to <span class="accent">Take With You</span></h2>
-  </div>
-</div>
-
-<!-- ========== SLIDE 27: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="30" data-phase="7">
-  <div class="slide-inner">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Survival Card</div>
-    <h2 class="slide-heading" style="color:#fff">Lesson 7 &mdash; <span class="accent">Five Sentences</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:660px;margin:1.3rem auto 0">
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">Finance confirmed that the budget had already been approved.</span><button class="audio-btn-sm" data-speak="Finance confirmed that the budget had already been approved." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">He asked whether we had considered April.</span><button class="audio-btn-sm" data-speak="He asked whether we had considered April." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">She told me to send the owner list by Friday.</span><button class="audio-btn-sm" data-speak="She told me to send the owner list by Friday." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">That was said off the record, so it does not go in the minutes.</span><button class="audio-btn-sm" data-speak="That was said off the record, so it does not go in the minutes." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem"><span style="color:#fff;font-size:.95rem">Let me recap what we agreed before we close.</span><button class="audio-btn-sm" data-speak="Let me recap what we agreed before we close." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 28: WHAT I LEARNED ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="7">
-  <div class="slide-inner">
-    <div class="chapter-label">What I Learned</div>
-    <h2 class="slide-heading">Today You <span class="accent">Can</span></h2>
-    <div class="checklist" style="max-width:600px;margin:1.3rem auto 0">
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Move the tense one step back when you report what was said</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Report a question without the inversion, with whether or if</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Report an instruction with told somebody to</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Choose between said, confirmed, claimed and warned on purpose</span></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Decide what was off the record and keep it out of the minutes</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 29: CLOSING ========== -->
-<div class="slide slide-dark" data-slide="32" data-phase="7">
-  <div class="slide-inner" style="text-align:center">
-    <div class="chapter-label" style="color:rgba(255,255,255,.6)">Lesson 7 &mdash; Complete</div>
-    <h2 class="slide-heading" style="color:#fff">Seven Down, <span class="accent">Forty-Seven to Go</span></h2>
-    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:1rem;max-width:600px;margin-left:auto;margin-right:auto">Next class: out of the office and into the news &mdash; the events that move a business, and how to talk about them over coffee.</p>
-  </div>
-</div>
-
 </div><!-- /slides-container -->
 <!-- Navigation Bar (IN CLASS) -->
 <div class="nav-bar" style="justify-content:space-between;">
@@ -1331,8 +988,8 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 32;
-var slidePhases = {1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:3,11:3,12:3,13:4,14:4,15:4,16:4,17:4,18:4,19:4,20:5,21:5,22:5,23:5,24:5,25:6,26:6,27:6,28:6,29:7,30:7,31:7,32:7};
+var totalSlides = 13;
+var slidePhases = {1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:3,9:4,10:5,11:6,12:6,13:6};
 
 function changeSlide(dir) {
   var next = currentSlide + dir;
@@ -1807,6 +1464,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
