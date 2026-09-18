@@ -101,6 +101,51 @@ def matching(title, hint, pairs):
                words, defs))
 
 
+ICONE = ('<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">'
+         '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>')
+
+
+def vocab_grid(gid, cid, itens):
+    """Reveal de vocabulario do shell (.vocab-card + revealVocab).
+
+    Aqui ele nao e reconhecimento: a FRENTE do card e a definicao e a palavra e o
+    que esta escondido. O aluno PRODUZ o termo e so entao revela para conferir --
+    que e o uso util de um reveal para quem ja tem o vocabulario passivo.
+    """
+    cards = ''.join(
+        '<div class="vocab-card" onclick="revealVocab(this)">'
+        '<div class="card-icon" style="background:linear-gradient(135deg,#1e3a5f,#2f6690)">%s'
+        '<div class="card-hint">%s</div></div>'
+        '<div class="card-body"><div class="card-word">%s</div><div class="card-def">%s</div>'
+        '<div class="card-example">&ldquo;%s&rdquo;</div><div class="card-audio">'
+        '<button class="audio-btn-sm" data-speak="%s" '
+        'onclick="event.stopPropagation();speakText(this.dataset.speak,this)">Listen</button>'
+        '</div></div></div>' % (ICONE, d, w, d, ex, w) for w, d, ex in itens)
+    return ('<p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">'
+            '<span id="%s">0 / %d words revealed</span></p>'
+            '<div class="vocab-grid" id="%s">%s</div>' % (cid, len(itens), gid, cards))
+
+
+def roleplay(cenario, chips):
+    chips_html = ''.join(
+        '<span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;'
+        'padding:.3rem .7rem;font-size:.8rem">%s</span>' % c for c in chips)
+    return ('<div class="roleplay-body" style="max-width:620px;margin:1rem auto 0;'
+            'background:linear-gradient(135deg,var(--accent-dim),rgba(30,77,92,.05));'
+            'border:1px solid var(--accent);border-radius:12px;padding:1.5rem">'
+            '<p class="roleplay-scenario" style="font-size:.95rem;margin-bottom:1rem">'
+            '<strong>Scenario:</strong> %s</p>'
+            '<p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Keyword chips:</p>'
+            '<div style="display:flex;flex-wrap:wrap;gap:.4rem">%s</div></div>' % (cenario, chips_html))
+
+
+def checklist(itens):
+    return ''.join(
+        '<div class="check-item" onclick="toggleCheck(this)"><div class="check-box">'
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+        '<polyline points="20 6 9 17 4 12"/></svg></div>%s</div>' % t for t in itens)
+
+
 def reveal(label, content):
     """Painel FORA do botao: o GATE 28 clica de verdade e descarta, de proposito,
     toda mudanca dentro do elemento clicado. Com o gabarito como filho, um reveal
@@ -205,6 +250,18 @@ def deck():
           'usando "patient capital" e "construction risk". Se sair sem esforco, suba: exija "crowd in" '
           'e "bankability" na mesma frase.')
 
+    slide(2, head('Produce It', 'The Definition Is the', 'Front of the Card') +
+          vocab_grid('vocabGrid1', 'vocabCount1', C.VOCAB[:5]),
+          'Reveal 1-5 (4 min): a definicao esta na frente e a PALAVRA e o que esta escondido. Ele '
+          'produz o termo em voz alta antes de revelar. Para quem ja tem o vocabulario passivo, o '
+          'reveal so vale nesse sentido. CCQ de risk-adjusted return: "is fifteen percent always '
+          'better than nine?".')
+
+    slide(2, head('Produce It', 'Five', 'More') +
+          vocab_grid('vocabGrid2', 'vocabCount2', C.VOCAB[5:10]),
+          'Reveal 6-10 (4 min): mesma rotina. As duas que costumam sair trocadas sao credit '
+          'enhancement e de-risking mechanism: pergunte qual delas mexe no RATING.')
+
     pares = [(str(i + 1), w, 'abcdefgh'[i], m) for i, (w, m) in enumerate(C.MATCH_ROWS)]
     slide(2, head('Precision', 'Which One Is It,', 'Exactly') +
           matching('Match each term to the distinction it makes',
@@ -304,7 +361,9 @@ def deck():
           '<div class="ic-predict-q">That is how the last paragraph opens, and it is the only one with '
           'no gap in it. Does the writer end by summarising, by conceding, or by accusing?</div></div>'
           '<div class="ic-card" style="margin-top:1rem"><div class="ic-card-h3">Then the task you have '
-          'been reading for</div><div class="q-text">Gap 1 -- which sentence belongs here?</div>'
+          'been reading for</div>'
+          '<div class="comp-q comp-q-task"><div class="q-text">Gap 1 -- which sentence belongs here?'
+          '</div></div>'
           '<p style="font-size:.92rem;color:var(--text-mid);margin:.6rem 0 0">Six gaps, seven sentences, '
           'one of them useless. Decide each one by what the text points back to, not by what sounds '
           'true.</p></div>',
@@ -536,6 +595,17 @@ def deck():
           'escolheria cada uma. E aqui que a aula fecha: o passivo deixa de ser registro e vira decisao.')
 
     # ── FASE 7 — Speaking & Wrap ──────────────────────────────────────────────
+    slide(7, head('Role-play -- Guided', 'Brief the Fund in', 'Two Minutes') +
+          roleplay('A sovereign wealth fund manager has your term sheet in front of her and two minutes '
+                   'before her next meeting. Walk her through what is offered, how the revenue is '
+                   'secured, and who arranged each protection.',
+                   ['an equity stake', 'subordinated debt', 'an off-take agreement', 'a currency hedge',
+                    'we had it audited', 'we got them to approve']),
+          'Role-play guiado (4 min): voce e a gestora do fundo, sem pressa de ser simpatica. Cronometre '
+          'os dois minutos. Este e o degrau GUIADO: com chips na tela. O long turn logo a seguir e o '
+          'mesmo conteudo sem apoio nenhum, e a diferenca entre os dois e o que voce devolve como '
+          'feedback.')
+
     slide(7, head('Long Turn', 'Two Minutes,', 'Uninterrupted') +
           '<div class="ic-scenario"><div class="ic-who">Opening a session at an investor roundtable</div>'
           '<p>"Whose risk is it, really?"</p></div>'
@@ -580,14 +650,12 @@ def deck():
 
     slide(7, head('Self-Assessment', 'What I Can Do', 'Now') +
           card('Tick only what is true',
-               '<div class="ic-lf-list">%s</div>' % ''.join(
-                   '<div class="ic-lf" onclick="toggleCheck(this)"><span class="ic-lbl">&#10003;</span>'
-                   '<span>%s</span></div>' % t for t in [
-                       'I can read a gapped text and justify each choice by reference, not by topic.',
-                       'I can spot the option that is true and still wrong.',
-                       'I can hear five speakers and separate what they are from what they argue.',
-                       'I choose between naming and hiding the agent, and I can say why I chose.',
-                       'I can hold a two-minute turn on the capital stack without notes.'])),
+               checklist([
+                   'I can read a gapped text and justify each choice by reference, not by topic.',
+                   'I can spot the option that is true and still wrong.',
+                   'I can hear five speakers and separate what they are from what they argue.',
+                   'I choose between naming and hiding the agent, and I can say why I chose.',
+                   'I can hold a two-minute turn on the capital stack without notes.'])),
           'Autoavaliacao (2 min): peca uma PROVA oral de cada item que ele marcar. O item que ele nao '
           'marcar entra como foco da aula 3.')
 
