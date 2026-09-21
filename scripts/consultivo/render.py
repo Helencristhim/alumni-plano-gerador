@@ -1246,7 +1246,17 @@ def seccao(b, i, vocab=None):
     # Ele nao entra como mais um paragrafo da abertura: solto no meio ficaria sempre aberto,
     # e em A1 a aluna leria so ele. Vem RECOLHIDO atras de "Ver em portugues", e quem decide
     # abrir e ela. Usa o `toggleEl` que o shell ja tem.
+    #
+    # ---- A POSICAO E DECLARAVEL (revisao da Rita, 21/09/2026)
+    #
+    # O apoio saia sempre DEPOIS da abertura inteira, e a revisao pediu o contrario: no
+    # "Speak More" ele vai depois da lista do "You could cover", ANTES do "Language you might
+    # use" e do gravador; no "Write More", depois da tabela e antes das caixas de escrita. A
+    # abertura ja e uma sequencia em que cada item diz o que E -- entao a posicao do apoio se
+    # declara ali, com `{"apoio_pt": true}`, e nao se adivinha. Quem nao declara continua
+    # saindo no fim, byte a byte igual.
     pt_texto = b.get("pt")
+    pt_emitido = False
 
     for item in b.get("abertura", b.get("instr", [])):
         if isinstance(item, str):
@@ -1414,10 +1424,23 @@ def seccao(b, i, vocab=None):
             partes.append(f'    <div class="callout rule-box doc-block">\n'
                           f'      <strong>{esc(item["titulo"])}</strong><br>\n'
                           f'      {crua(item["texto"])}\n    </div>')
+        elif "apoio_pt" in item:
+            # A MARCA DE POSICAO do apoio em portugues. Ela nao carrega texto: o texto e o
+            # `pt` do bloco, um so, para nao haver duas versoes do mesmo apoio divergindo.
+            if not (pt_texto or "").strip():
+                raise SystemExit(f"{ident}: `apoio_pt` na abertura sem `pt` no bloco -- a "
+                                 f"marca diz ONDE o apoio entra, o texto continua sendo o "
+                                 f"`pt` da atividade.")
+            if pt_emitido:
+                raise SystemExit(f"{ident}: `apoio_pt` declarado duas vezes. O apoio e um "
+                                 f"por atividade, e dois botoes com o mesmo id deixariam o "
+                                 f"segundo inerte.")
+            partes.append(apoio_pt(crua(pt_texto), f"{ident}-pt"))
+            pt_emitido = True
         else:
             raise SystemExit(f"{ident}: item de abertura sem tipo conhecido: "
                              f"{sorted(item)}")
-    if pt_texto:
+    if pt_texto and not pt_emitido:
         partes.append(apoio_pt(crua(pt_texto), f"{ident}-pt"))
     if kind is not None:
         # ---- UM COMPONENTE, NUNCA DOIS (09/09/2026)
