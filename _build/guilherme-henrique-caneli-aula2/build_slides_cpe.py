@@ -71,27 +71,46 @@ def card(title, body):
     return '<div class="ic-card"><div class="ic-card-h3">%s</div>%s</div>' % (title, body)
 
 
-def choices(question, opts, kind='gist'):
-    """opts: (letra, texto, certa?) -- valida no clique, sem dizer qual antes."""
+def choices(question, opts, kind='gist', cls=''):
+    """opts: (letra, texto, certa?) -- valida no clique, sem dizer qual antes.
+
+    cls='cpe-long' aperta a lista para as sete frases da Part 6, que sao longas:
+    no tamanho padrao, sete frases INTEIRAS cortam a ultima num projetor de
+    1280x800 -- e frase cortada foi exatamente a reclamacao do professor.
+
+    O modificador vai num ATRIBUTO do cartao, nunca numa classe a mais no
+    .ic-choices: os gates (validate_lesson 751/1530, build_from_model 1180)
+    procuram a string class="ic-choices" ao pe da letra, e uma segunda classe ali
+    faz o slide deixar de ser visto como checagem -- sem erro, so um aviso novo.
+    """
     rows = ''.join(
         '<div class="ic-choice" data-right="%s" onclick="icPickGist(this)">'
         '<span class="ic-opt">%s</span><span>%s</span>'
         '<span class="ic-badge">&#10003;</span></div>' % ('true' if ok else 'false', k, t)
         for k, t, ok in opts)
-    return ('<div data-kind="%s" class="ic-card"><div class="ic-card-h3">%s</div>'
-            '<div class="ic-choices">%s</div></div>' % (kind, question, rows))
+    return ('<div data-kind="%s" class="ic-card"%s><div class="ic-card-h3">%s</div>'
+            '<div class="ic-choices">%s</div></div>'
+            % (kind, ' data-dense="1"' if cls else '', question, rows))
 
 
-def matching(title, hint, pairs):
-    """pairs: (n, esquerda, letra, direita) -- gabarito no data-match da esquerda."""
+def matching(title, hint, pairs, opts=None):
+    """pairs: (n, esquerda, letra, direita) -- gabarito no data-match da esquerda.
+
+    opts: a lista (letra, texto) COMPLETA, quando a tarefa tem distratores. Sem
+    ela a coluna da direita desenha so as opcoes usadas -- que e o defeito que a
+    Part 4 deste deck tinha: dizia "three of the eight are not used" e mostrava
+    cinco. Os tres distratores existem no conteudo e estao na pre-class; eram os
+    unicos que nunca chegavam a tela projetada.
+    """
     words = ''.join(
         '<div class="ic-chip ic-word" role="button" tabindex="0" data-k="%s" data-match="%s" '
         'onclick="icPickMatch(this)"><span class="ic-k">%s</span><span>%s</span>'
         '<span class="ic-pair"></span></div>' % (n, k, n, left) for n, left, k, _r in pairs)
+    lista = opts if opts is not None else [(k, r) for _n, _l, k, r in pairs]
     defs = ''.join(
         '<div class="ic-chip ic-def" role="button" tabindex="0" data-k="%s" '
         'onclick="icPickMatch(this)"><span class="ic-k">%s</span><span>%s</span>'
-        '<span class="ic-pair"></span></div>' % (k, k, right) for _n, _l, k, right in pairs)
+        '<span class="ic-pair"></span></div>' % (k, k, right) for k, right in lista)
     return ('<div data-kind="matching" class="ic-card"><div class="ic-card-h3">%s</div>'
             '<p class="ic-match-hint">%s</p><div class="ic-match-score">0 / %d matched</div>'
             '<div class="ic-match" data-interactive="1">'
@@ -177,6 +196,25 @@ def player(pid, src, caption=''):
             '<button class="lp-speed-btn lp-speed-active" onclick="mpSpeed(\'%s\',1,this)">1x</button>'
             '<button class="lp-speed-btn" onclick="mpSpeed(\'%s\',1.15,this)">1.15x</button></div></div>'
             % (pid, src, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid))
+
+
+def player_mini(pid, src, rotulo):
+    """Botao de play e so isso, para os cinco falantes caberem numa tira unica.
+
+    Usa o MESMO mpToggle do player grande: ele so precisa do elemento com
+    data-src e do botao play-<id> com os dois icones. O id e proprio
+    (mp-l2-mmx<n>) porque os falantes ja tem player nos slides individuais, e id
+    repetido faria mpIcon pintar sempre o primeiro do documento.
+    """
+    return ('<div class="cpe-mini lp" id="%s" data-src="%s">'
+            '<button class="lp-btn lp-play cpe-mini-btn" id="play-%s" onclick="mpToggle(\'%s\')" '
+            'aria-label="Play or pause %s">'
+            '<svg class="lp-icon-play" viewBox="0 0 24 24" width="15" height="15">'
+            '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>'
+            '<svg class="lp-icon-pause" viewBox="0 0 24 24" width="15" height="15" style="display:none">'
+            '<rect x="6" y="4" width="4" height="16" fill="currentColor"/>'
+            '<rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button>'
+            '<span class="cpe-mini-lbl">%s</span></div>' % (pid, src, pid, pid, rotulo, rotulo))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -330,6 +368,28 @@ def deck():
                 '<div class="ic-src">%s &middot; gaps %s</div></div>'
                 % (C.ARTICLE_TITLE, ''.join(out), C.ARTICLE_STANDFIRST, gaps))
 
+    # ── A TELA DAS SETE FRASES ────────────────────────────────────────────────
+    # Pedido do professor Andre, 21/09/2026: "tira uma foto dessas frases e nos
+    # vamos lendo o texto incluindo; eu posso ir passando as paginas". O texto
+    # continua paginado (ele disse que isso ele manobra); o que NAO pode ficar
+    # espalhado sao as opcoes. Entao elas ganham uma tela so delas, inteiras,
+    # ANTES do texto -- e e essa a tela que ele fotografa.
+    #
+    # Sem .comp-q e sem ic-choices de proposito: e uma tela de referencia, nao de
+    # checagem. Com qualquer um dos dois ela seria lida como checagem do slide
+    # anterior e a REGRA 2.2 passaria a cobrar um slide de tarefa antes dela.
+    frases = ''.join(
+        '<div class="cpe-sent"><span class="cpe-sent-k">%s</span><span>%s</span></div>' % (k, v)
+        for k, v in C.GAP_OPTIONS)
+    slide(3, head('Paper 1, Part 6', 'The Seven', 'Sentences') +
+          '<div class="ic-card cpe-sent-card"><div class="ic-card-h3">Six gaps, seven sentences. '
+          'One of them fits nowhere.</div><div class="cpe-sents">%s</div>'
+          '<p class="cpe-sent-foot">Keep these in front of you while you read. Decide each gap by '
+          'what the text points back to, not by what sounds true.</p></div>' % frases,
+          'ESTA e a tela da foto (1 min). Antes de comecar a leitura, peca que ele fotografe a tela: '
+          'as sete frases ficam com ele enquanto o texto passa pagina a pagina. Nao discuta nenhuma '
+          'delas aqui -- so leia em voz alta a letra de cada uma e siga.')
+
     # O texto vai em QUATRO telas, nao em duas: medido no Chrome a 1400x900, dois
     # blocos de tres paragrafos cortavam a ultima linha -- e a ultima linha do
     # artigo ("It is a negotiating position") e a ponte para a gramatica da aula.
@@ -379,20 +439,22 @@ def deck():
           'alta e diga o que ela acusa. E dela que sai o capitulo da gramatica.')
 
     letras = {k: v for k, v in C.GAP_OPTIONS}
-    def curto(k):
-        t = letras[k]
-        return t if len(t) < 105 else t[:102] + '...'
 
+    # As sete frases vao INTEIRAS. Antes eram cortadas em 102 caracteres com
+    # reticencias, e uma frase cortada nao e uma opcao: metade delas so se decide
+    # pelo fim ("...a promise made in 1994", "...the same committees that
+    # hesitated"). O professor pediu justamente isso -- as frases completas, e
+    # todas na mesma imagem.
     for gap_n, right in C.GAP_ANSWERS:
-        opts = [(k, curto(k), k == right) for k, _v in C.GAP_OPTIONS]
-        slide(3, choices('Gap %s -- which sentence belongs here?' % gap_n, opts),
+        opts = [(k, letras[k], k == right) for k, _v in C.GAP_OPTIONS]
+        slide(3, choices('Gap %s -- which sentence belongs here?' % gap_n, opts, cls='cpe-long'),
               'Gap %s (2 min): a resposta e %s. Exija a PROVA antes do clique: qual palavra da frase '
               'seguinte aponta para tras. Se ele acertar por eliminacao, pergunte por que cada '
               'descartada foi descartada.' % (gap_n, right))
 
     slide(3, choices('One sentence fits <b>no</b> gap at all. Which one, and what is wrong with it?', [
-        ('A', curto('A'), False), ('B', curto('B'), False),
-        ('D', curto('D'), True), ('G', curto('G'), False)]) +
+        ('A', letras['A'], False), ('B', letras['B'], False),
+        ('D', letras['D'], True), ('G', letras['G'], False)], cls='cpe-long') +
         reveal('Why D is the distractor',
                'D is true, on topic, and would sit comfortably in a conversation about this article. '
                'What it never does is answer a reference or complete an argument. That is the whole '
@@ -516,32 +578,51 @@ def deck():
               'Falante %d (2 min): mesma rotina. O falante 4 e o mais dificil de identificar pela funcao '
               'e o mais facil pelo argumento; o 5 e o contrario.' % s['n'], kind='dark')
 
+    # ── A PAGINA DE PROVA DA PART 4 ───────────────────────────────────────────
+    # Pedido do professor Andre, 21/09/2026: "e um audio e duas atividades ao
+    # mesmo tempo; o aluno tem que ver TODAS as opcoes e escolher -- Speaker One
+    # falou daquela categoria e B daquela outra. Se fica tudo espalhado (...)
+    # essa parte das opcoes tem que estar tudo junto."
+    #
+    # Eram duas telas, uma por tarefa, e cada uma mostrava so as cinco opcoes
+    # usadas. Agora e UMA tela: as oito da Task One, as oito da Task Two, os
+    # cinco falantes com as duas respostas e os cinco audios na mesma tira. E a
+    # imagem que ele fotografa, e e tambem como a pagina cai na prova de verdade.
     t1 = {k: v for k, v in C.TASK1_OPTS}
-    slide(5, matching('Task One -- what each speaker <b>is</b>',
+    t2 = {k: v for k, v in C.TASK2_OPTS}
+    tira = ''.join(player_mini('mp-l2-mmx%d' % sp['n'], AUDIO + sp['file'], 'Speaker %d' % sp['n'])
+                   for sp in C.SPEAKERS)
+    caixa1 = matching('Task One &mdash; what each speaker <b>is</b>',
                       'Three of the eight roles are not used.',
-                      [(str(s['n']), 'Speaker %d' % s['n'], s['task1'], t1[s['task1']])
-                       for s in C.SPEAKERS]) +
-          reveal('Key, and what gives each one away',
+                      [(str(sp['n']), 'Speaker %d' % sp['n'], sp['task1'], t1[sp['task1']])
+                       for sp in C.SPEAKERS], opts=C.TASK1_OPTS)
+    caixa2 = matching('Task Two &mdash; the main point each one <b>makes</b>',
+                      'Three of the eight points are not used.',
+                      [(str(sp['n']), 'Speaker %d' % sp['n'], sp['task2'], t2[sp['task2']])
+                       for sp in C.SPEAKERS], opts=C.TASK2_OPTS)
+    slide(5, head('Paper 3, Part 4', 'Two Tasks,', 'One Page') +
+          '<p class="cpe-exam-intro">Five speakers, heard twice. <b>Task One:</b> what each speaker '
+          '<i>is</i>. <b>Task Two:</b> the main point each one <i>makes</i>. Three letters in each '
+          'list are not used.</p>'
+          '<div class="cpe-mini-row">%s</div><div class="cpe-two">%s%s</div>' % (tira, caixa1, caixa2),
+          'A pagina inteira (8 min): toque os cinco seguidos, sem parar, com as duas listas na tela. '
+          'Na primeira passada ele fecha a Task One; na segunda, a Task Two. Nao separe as tarefas em '
+          'duas telas de novo -- fazer as duas ao mesmo tempo E o que a Part 4 mede.')
+
+    slide(5, head('Part 4', 'What Gave Each One', 'Away') +
+          reveal('Task One &mdash; key, and the word that decides it',
                  '1 B (&ldquo;every asset we are <i>permitted</i> to buy&rdquo; = a mandate) &middot; '
                  '2 D (&ldquo;when <i>we</i> take the first five years&rdquo;) &middot; '
                  '3 C (&ldquo;the risk <i>we</i> are paid to hold&rdquo;) &middot; '
                  '4 A (&ldquo;presents as a safer <i>credit</i>&rdquo;) &middot; '
-                 '5 F (&ldquo;<i>we</i> reopened one concession&rdquo;).'),
-          'Task One (4 min): a pista nunca e o assunto, e o PRONOME e o verbo. Faca ele apontar a '
-          'palavra exata que identificou cada falante. Se ele acertar sem saber por que, o acerto nao '
-          'conta.')
-
-    t2 = {k: v for k, v in C.TASK2_OPTS}
-    slide(5, matching('Task Two -- the main point each one <b>makes</b>',
-                      'Three of the eight points are not used.',
-                      [(str(s['n']), 'Speaker %d' % s['n'], s['task2'], t2[s['task2']])
-                       for s in C.SPEAKERS]) +
-          reveal('Key', '1 E &middot; 2 A &middot; 3 D &middot; 4 B &middot; 5 C. '
-                        'The unused options (F, G, H) are all things these people might plausibly believe. '
-                        'None of them is what any of them said.'),
-          'Task Two (4 min): cobre a diferenca entre "o que ele diria" e "o que ele disse". As tres '
-          'opcoes que sobram existem exatamente para pegar quem responde pelo perfil do falante, e nao '
-          'pelo texto ouvido.')
+                 '5 F (&ldquo;<i>we</i> reopened one concession&rdquo;).') +
+          reveal('Task Two &mdash; key, and why the extra three are there',
+                 '1 E &middot; 2 A &middot; 3 D &middot; 4 B &middot; 5 C. '
+                 'The unused options (F, G, H) are all things these people might plausibly believe. '
+                 'None of them is what any of them said.'),
+          'Correcao (5 min): a pista da Task One nunca e o assunto, e o PRONOME e o verbo -- faca ele '
+          'apontar a palavra exata. Na Task Two, cobre a diferenca entre "o que ele diria" e "o que ele '
+          'disse": as tres opcoes que sobram existem para pegar quem responde pelo perfil do falante.')
 
     # ── FASE 6 — The Agent ────────────────────────────────────────────────────
     slide(6, '<div class="chapter-label">Chapter 6</div>\n'

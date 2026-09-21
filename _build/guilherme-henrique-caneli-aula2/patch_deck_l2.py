@@ -34,13 +34,49 @@ def troca(s, abre_re, novo):
     raise AssertionError('bloco nao fecha: %s' % abre_re)
 
 
-CSS_KEY = """/* === CPE: painel de gabarito (irmao do botao) === */
+# O bloco tem marca de INICIO e de FIM porque o injetor precisa poder rodar de
+# novo: sem elas, a segunda rodada ou duplicava a regra ou (com a guarda antiga,
+# que so testava um seletor) silenciosamente NAO atualizava o resto do bloco.
+CSS_INI = '/* === CPE aula 2: inicio (gerado por patch_deck_l2.py) === */'
+CSS_FIM = '/* === CPE aula 2: fim === */'
+CSS_ANTIGO = '/* === CPE: painel de gabarito (irmao do botao) === */'
+CSS_ANTIGO_FIM = '.slide-dark .cpe-key { background:#fff;color:#1a1a2e; }'
+
+CSS_KEY = CSS_INI + """
+/* --- painel de gabarito (irmao do botao) --- */
 .cpe-reveal { margin-top:1rem; }
 .cpe-reveal .comp-q { margin-top:0; }
 .cpe-key { display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;background:var(--bg-elevated);padding:.9rem 1.2rem;font-size:.88rem;line-height:1.7;color:var(--text); }
 .comp-q.revealed + .cpe-key { display:block; }
 .slide-dark .cpe-key { background:#fff;color:#1a1a2e; }
-"""
+
+/* --- Part 6: as sete frases numa tela so, inteiras (pedido do professor) --- */
+.cpe-sent-card { padding:1.1rem 1.3rem; }
+.cpe-sents { display:flex;flex-direction:column;gap:.38rem; }
+.cpe-sent { display:flex;gap:.6rem;align-items:flex-start;background:var(--bg-elevated);border:1px solid var(--border);border-radius:9px;padding:.42rem .75rem;font-size:.87rem;line-height:1.34;color:var(--text); }
+.cpe-sent-k { flex:0 0 1.2rem;font-weight:700;color:var(--accent); }
+.cpe-sent-foot { margin:.6rem 0 0;font-size:.8rem;line-height:1.4;color:var(--text-mid); }
+
+/* --- Part 4: as duas tarefas e as dezesseis opcoes na MESMA tela --- */
+.cpe-exam-intro { margin:0 0 .4rem;font-size:.82rem;line-height:1.42;color:var(--text-mid); }
+.cpe-mini-row { display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:.45rem; }
+.cpe-mini { display:flex;align-items:center;gap:.4rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:.22rem .7rem .22rem .25rem; }
+.cpe-mini-btn { width:24px;height:24px;min-width:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0; }
+.cpe-mini-lbl { font-size:.76rem;font-weight:600;color:var(--text);white-space:nowrap; }
+.cpe-two { display:grid;grid-template-columns:1fr 1.32fr;gap:.7rem;align-items:start; }
+.cpe-two .ic-card { margin-bottom:0;padding:.7rem .8rem; }
+.cpe-two .ic-card-h3 { font-size:.92rem;margin-bottom:.25rem; }
+.cpe-two .ic-match-hint { font-size:.72rem;margin-bottom:.15rem; }
+.cpe-two .ic-match-score { font-size:.72rem;margin-bottom:.32rem; }
+.cpe-two .ic-match { grid-template-columns:auto 1fr;gap:.6rem; }
+.cpe-two .ic-match-col h4 { font-size:.66rem;margin-bottom:.28rem; }
+.cpe-two .ic-chip { font-size:.72rem;line-height:1.24;padding:.24rem .42rem;margin-bottom:.19rem;border-radius:7px; }
+
+/* --- Part 6: sete frases INTEIRAS numa lista de escolha, sem cortar --- */
+.ic-card[data-dense] .ic-choices { gap:.35rem; }
+.ic-card[data-dense] .ic-choice { font-size:.82rem;line-height:1.33;padding:.42rem .7rem;gap:.6rem;align-items:flex-start;border-radius:9px; }
+.ic-card[data-dense] .ic-opt { margin-top:.05rem; }
+""" + CSS_FIM
 
 
 def main():
@@ -81,9 +117,18 @@ def main():
     fns = set(re.findall(r'function ([a-zA-Z0-9_]+)\(', s))
     usados = set(re.findall(r'on\w+="([a-zA-Z0-9_]+)\(', container))
     assert usados <= fns, 'handler sem funcao no deck: %s' % sorted(usados - fns)
-    if '.comp-q.revealed + .cpe-key' not in s:
+    if CSS_INI in s and CSS_FIM in s:
+        a, b = s.index(CSS_INI), s.index(CSS_FIM) + len(CSS_FIM)
+        s = s[:a] + CSS_KEY + s[b:]
+    elif CSS_ANTIGO in s:
+        # deck que ja recebeu a primeira versao do bloco, ainda sem marca
+        a = s.index(CSS_ANTIGO)
+        b = s.index(CSS_ANTIGO_FIM, a) + len(CSS_ANTIGO_FIM)
+        s = s[:a] + CSS_KEY + s[b:]
+    else:
         k = s.rindex('</style>')
         s = s[:k] + '\n' + CSS_KEY + '\n' + s[k:]
+    assert s.count(CSS_INI) == 1, 'bloco de CSS duplicado'
     open(PROF, 'w', encoding='utf-8').write(s)
     print('  + professor: %d -> %d slides' % (antes_slides, depois_slides))
 

@@ -139,6 +139,63 @@ Provado em navegador (playwright, Supabase bloqueado pela regra do
 [hub-teste-local]): 31 checagens, incluindo a regressao de que a aula 1 continua
 deixando tentar de novo. O teste esta no scratchpad da sessao, nao no repo.
 
+## Terceira rodada: o layout, pelo feedback do professor (21/09/2026)
+
+Andre aprovou o CONTEUDO ("ficou bom, algo mais profundo, o aluno vai se sentir
+desafiado no nivel") e reprovou o LAYOUT do deck, em dois pontos:
+
+> "Nessa parte da leitura, o aluno tem que incluir as frases, entao cada slide
+> tem alguma coisa, a leitura ficou quebrada. (...) E a mesma coisa dos audios:
+> e um audio e DUAS atividades ao mesmo tempo. Teria que ser pelo menos a
+> imagem da atividade toda junta, porque o aluno tem que ver todas as opcoes e
+> escolher. (...) Tira uma foto dessas frases e nos vamos lendo o texto
+> incluindo; eu posso ir passando as paginas."
+
+Ele ficou so no deck (IN CLASS). A pre-class e o hub ja mostravam tudo junto,
+porque sao pagina que rola: o defeito era exclusivo da tela projetada.
+
+**1. Part 6 -- as sete frases numa imagem so.** Tela nova, `The Seven
+Sentences`, antes do texto: as sete inteiras, e e essa a tela que ele fotografa.
+O texto continua paginado, que foi o que ele disse que manobra.
+
+**2. As frases eram CORTADAS em 102 caracteres com reticencias.** So no deck. A
+tarefa era impossivel de responder ali: metade das opcoes so se decide pelo fim
+da frase ("...a predictable income in 2050"). Agora vao inteiras nas seis telas
+de lacuna e na do distrator.
+
+**3. Part 4 -- as duas tarefas numa imagem so.** Eram duas telas, uma por
+tarefa. Viraram `Two Tasks, One Page`: os cinco audios numa tira de botoes, a
+Task One e a Task Two lado a lado, os cinco falantes com as duas respostas. O
+gabarito das duas foi para a tela seguinte (`What Gave Each One Away`).
+
+**4. O deck anunciava oito opcoes e desenhava cinco.** `matching()` so recebia
+as opcoes USADAS, entao os tres distratores de cada tarefa nunca chegavam ao
+projetor -- embora o texto da propria tela dissesse "three of the eight are not
+used", e embora eles existissem no conteudo e na pre-class. Agora `matching()`
+aceita `opts=` com a lista completa.
+
+Armadilhas desta rodada:
+
+- **Classe a mais no `.ic-choices` faz o slide sumir dos gates.** O
+  `validate_lesson` (751 e 1530) e o `build_from_model` (1180) procuram a string
+  `class="ic-choices"` ao pe da letra. `class="ic-choices cpe-long"` nao falha
+  nada -- so faz o slide deixar de contar como checagem, e aparece um aviso novo
+  que nao existia. O modificador de densidade virou `data-dense` NO CARTAO.
+- **Id de audio repetido nao da erro, da botao mudo.** Os cinco falantes ja tem
+  player nos slides individuais; a tira usa `mp-l2-mmx1..5`, porque com o mesmo
+  id o `mpIcon` pintaria sempre o primeiro do documento.
+- **Frase inteira estoura onde a cortada cabia.** Com as sete completas no
+  tamanho padrao, a lista cortava 144px a 1280x800. Medido no Chrome a 1400x900
+  e 1280x800: agora nenhuma tela desta aula corta.
+- **O injetor de CSS nao era re-executavel.** A guarda antiga testava um unico
+  seletor, entao a segunda rodada nao atualizava o resto do bloco. Agora tem
+  marca de inicio e de fim, e o patcher roda duas vezes byte a byte igual.
+
+**Fica em aberto, e NAO e desta rodada:** os slides 7, 8, 9 e 10 (o vocabulario)
+cortam 127, 127, 118 e 306px a 1400x900 -- e 227, 227, 218 e 406px a 1280x800.
+Ja cortavam antes desta aula virar prova, o professor nao falou deles, e por
+isso nao foram tocados. Mas o slide 10 perde um terco da tela.
+
 ## Proximo passo
 
 Se o professor aprovar, as aulas 3 a 8 seguem o mesmo caminho: escrever o
