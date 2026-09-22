@@ -626,3 +626,300 @@ DEBATE_2_TEACHER = (
     "concessao sair caricata (\"some people say it is risky\"), devolva e peca de novo. Esta e a "
     "linguagem que falta a quem negocia em ingles sem nunca ter cedido em ingles."
 )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CONTEUDO EXCLUSIVO DA PRE-CLASS  (sufixo _PC)
+# ══════════════════════════════════════════════════════════════════════════════
+# Pedido do professor Andre, 22/09/2026: "dei uma olhada no pre class e esta
+# exatamente a mesma coisa; pre class e licao sao exatamente a mesma coisa".
+# Estava mesmo: 53 dos 69 itens eram identicos nas duas telas, porque as duas
+# superficies liam as MESMAS constantes deste arquivo.
+#
+# O criterio que ele deu, stage a stage:
+#   ate o 2.3  fica como esta ("e so matching de vocabulario")
+#   do 2.4     manter o formato, trocar as frases, E TROCAR NO PRE CLASS
+#   2.5 + 2.6  viram um: outro reading com as mesmas palavras + comprehension
+#   2.9 + 2.10 viram um: uma atividade so, listen + choose
+#   2.12 a 2.15 saem do pre class (acontecem na aula)
+#
+# Por que constantes NOVAS em vez de trocar no lugar: o deck IN CLASS le as
+# antigas e nao pode mudar um byte. Separar por sufixo e o que garante isso.
+# Os 14 termos e o grammar_point NAO aparecem aqui porque nao mudam: sao a
+# espinha do programa, e as aulas vizinhas e os MP3 dependem deles.
+
+# ── PC 2.4 -- word-bank cloze, frases novas ──────────────────────────────────
+# Mesmo banco de nove termos do CLOZE_BANK. O que muda, alem das frases, e QUAL
+# sobra: na aula sobra "capital deployment", aqui sobra "yield compression".
+# Sem isso o aluno decora a sobra em casa e acerta a da aula sem ler.
+CLOZE_ITEMS_PC = [
+    dict(before='1. The trustees turned down the higher return because their ',
+         after=' points in one direction only: the member who retires in 2050.',
+         answer='fiduciary duty', hint='Two words. The obligation is owed, not chosen.'),
+    dict(before='2. Nothing about the desert had changed, but ',
+         after=' turned a price forecast into a signed commitment.',
+         answer='an off-take agreement', alt='off-take agreement',
+         hint='Three words, with the article. Somebody agreed to buy the output.'),
+    dict(before='3. The plant earns in local currency and repays in dollars, so ',
+         after=' was bought to cover the first eight years.',
+         answer='a currency hedge', alt='currency hedge', hint='Three words, with the article.'),
+    dict(before='4. The development bank lent below market terms and said so in public: ',
+         after=' is an instrument, not a favour.',
+         answer='concessional lending',
+         hint='Two words. Not "blended finance": that is the whole arrangement, this is the money.'),
+    dict(before='5. Public money on worse terms so that private money can arrive on ordinary terms is the '
+                'arrangement the sector calls ', after='.',
+         answer='blended finance', hint='Two words. The name of the structure, not of the money.'),
+    dict(before='6. A partial guarantee lifted the bond two notches, and that ',
+         after=' was what finally unlocked the pension funds.',
+         answer='credit enhancement', hint='Two words. This one is about the rating.'),
+    dict(before='7. The fund that takes a quarter of the issue and asks for nothing extra is acting as ',
+         after=': what it contributes is the signature, not the cash.',
+         answer='an anchor investor', alt='anchor investor', hint='Three words, with the article.'),
+    dict(before='8. The committee has stopped arguing about whether to invest; it now reports quarterly on '
+                'the pace of its ', after='.',
+         answer='capital deployment', hint='Two words. The rate at which the money actually goes out.'),
+]
+CLOZE_NOT_NEEDED_PC = 'yield compression'
+
+# ── PC 2.5 -- leitura nova + compreensao (funde o 2.5 e o 2.6) ───────────────
+# "Pode fazer outro reading com as mesmas palavras e fazer comprehension
+# questions. So pra ler e entender e reforcar o vocabulario." Entao: texto
+# NARRATIVO, sem lacuna e sem frase removida. Os 14 termos aparecem todos, em
+# contexto, e as perguntas cobram compreensao -- nao discriminacao de prova, que
+# e o que a aula faz.
+ARTICLE_PC_TITLE = "How One Solar Cluster Got Built"
+ARTICLE_PC_STANDFIRST = "A case note written for an investment committee &middot; ~490 words"
+ARTICLE_PC = [
+    "In 2019 a consortium put forward a four-hundred-megawatt solar cluster on the dry plateau of a "
+    "mid-sized economy. The engineering was the least interesting part of it. Panels are panels, and the "
+    "contractor had already built three similar plants on two continents. What took two years to solve was "
+    "everything that had to happen before the first panel arrived, and all of it was financial.",
+
+    "The sponsors began by removing the question nobody could answer, which was what the electricity would "
+    "eventually be worth. A twenty-year <b>off-take agreement</b> with the national utility fixed the price "
+    "per megawatt-hour for the life of the plant. Nothing about the desert had changed, but a forecast had "
+    "become a contract, and a contract is something a lender can lend against.",
+
+    "That single document rearranged the whole structure. The senior banks agreed to advance seventy per "
+    "cent of the cost, a <b>leverage ratio</b> the sector would have called optimistic for an unbuilt "
+    "project five years earlier. The remaining thirty was divided between the developer's <b>equity "
+    "stake</b>, which would be paid last and blamed first, and a layer of <b>subordinated debt</b> priced "
+    "to reward whoever was willing to stand behind the banks.",
+
+    "Even then the deal sat still for eight months. The pension funds that had been approached liked the "
+    "asset and could not buy it: their <b>fiduciary duty</b> is owed to members who will retire in 2050, "
+    "and an unbuilt plant in an unfamiliar jurisdiction does not survive that test. The regional "
+    "development bank solved it in two moves. It offered <b>concessional lending</b> for the first five "
+    "years, below market terms and openly so, and it wrapped a partial guarantee around the senior bond. "
+    "The guarantee delivered <b>credit enhancement</b> worth two notches of rating, and that was the "
+    "<b>de-risking mechanism</b> the funds had been waiting for. Public money on worse terms, so that "
+    "private money can arrive on ordinary terms, is what the sector calls <b>blended finance</b>; the bank "
+    "said plainly that it expected to be judged not by what it spent but by what arrived behind it.",
+
+    "One problem remained, and it was arithmetic rather than engineering. The plant would earn in local "
+    "currency and repay in dollars. A <b>currency hedge</b> covering the first eight years cost roughly a "
+    "fifth of the projected margin, and the sponsors bought it anyway, on the grounds that a committee "
+    "will forgive a thin return and will never forgive a surprise.",
+
+    "The book opened in March. The first commitment came from a pension fund that took a quarter of the "
+    "bond and asked for nothing extra for going first; as an <b>anchor investor</b> what it contributed "
+    "was not really money but a name on a page. Within four months the issue was three times "
+    "oversubscribed, and the <b>yield compression</b> that followed left the final pricing well below what "
+    "the sponsors had modelled. The developer's <b>risk-adjusted return</b> ended up lower than the one it "
+    "had promised its own board, and it signed regardless. Its chief executive put it plainly at the "
+    "closing dinner: two years had taught the consortium that <b>capital deployment</b> is not the hard "
+    "part of this business. Finding something worth deploying it on is.",
+]
+COMPREHENSION_PC = [
+    ("According to the first paragraph, what was the difficult part of the project?",
+     [("Building panels that would survive the climate of the plateau.", False),
+      ("Everything that had to be settled before construction could begin.", True),
+      ("Finding a contractor with experience of solar clusters.", False),
+      ("Persuading the engineers that the design would work.", False)]),
+    ("What did the off-take agreement change?",
+     [("It reduced the cost of building the plant.", False),
+      ("It turned an estimate of future revenue into a fixed commitment.", True),
+      ("It removed the need for senior lenders.", False),
+      ("It guaranteed that the plant would be finished on time.", False)]),
+    ("Why could the pension funds not buy the asset at first?",
+     [("They thought the return on offer was too low.", False),
+      ("What they owe their members rules out an unbuilt asset in an unfamiliar country.", True),
+      ("They had already committed their capital to other projects.", False),
+      ("They did not believe the technology was proven.", False)]),
+    ("What did the partial guarantee actually achieve?",
+     [("It paid the interest for the first five years.", False),
+      ("It improved the rating of the bond, which was what the funds needed.", True),
+      ("It removed the risk that the currency would move.", False),
+      ("It replaced the developer's equity stake.", False)]),
+    ("How did the development bank say it expected to be judged?",
+     [("By the amount of public money it put in.", False),
+      ("By the private money that came in behind it.", True),
+      ("By the rating the bond finally achieved.", False),
+      ("By the return the developer made.", False)]),
+    ("Why did the sponsors buy the currency hedge even though it was expensive?",
+     [("The senior banks refused to lend without it.", False),
+      ("A thin margin that is predictable is easier to approve than one that is not.", True),
+      ("It was a condition of the off-take agreement.", False),
+      ("It allowed them to raise the leverage ratio.", False)]),
+]
+COMPREHENSION_PC_KEY = (
+    "<b>1 b</b> &mdash; &ldquo;What took two years to solve was everything that had to happen before the "
+    "first panel arrived.&rdquo;<br>"
+    "<b>2 b</b> &mdash; &ldquo;a forecast had become a contract, and a contract is something a lender can "
+    "lend against.&rdquo;<br>"
+    "<b>3 b</b> &mdash; the fiduciary duty is owed to members retiring in 2050; the asset &ldquo;does not "
+    "survive that test&rdquo;.<br>"
+    "<b>4 b</b> &mdash; &ldquo;credit enhancement worth two notches of rating&rdquo;. The concessional "
+    "lending is the other move, not this one.<br>"
+    "<b>5 b</b> &mdash; &ldquo;judged not by what it spent but by what arrived behind it&rdquo;.<br>"
+    "<b>6 b</b> &mdash; &ldquo;a committee will forgive a thin return and will never forgive a "
+    "surprise.&rdquo;"
+)
+
+# ── PC 2.7 -- word formation, itens novos ────────────────────────────────────
+WORD_FORMATION_PC = [
+    dict(before="Debt that ranks behind the senior banks is ", after=" to them in every sense that matters. (SUBORDINATE)",
+         answer="subordinated", hint="Past participle used as an adjective."),
+    dict(before="The guarantee was bought for one reason, which was the credit ",
+         after=" it delivered. (ENHANCE)", answer="enhancement", hint="Noun from the verb."),
+    dict(before="The ministry's ", after=" of a twenty-five-year licence was where the whole project started. (CONCEDE)",
+         answer="concession", hint="Noun from CONCEDE. The same word names the licence itself."),
+    dict(before="What an off-take agreement really buys is ", after=": the price stops moving. (PREDICT)",
+         answer="predictability", hint="Abstract noun, not the adjective."),
+    dict(before="The ", after=" committee recommended against reopening the tariff. (ADVISE)",
+         answer="advisory", hint="Adjective from ADVISE. Watch the internal change."),
+    dict(before="A partial guarantee ", after=" the balance sheet without a cent of new equity. (STRENGTH)",
+         answer="strengthens", hint="Verb from the noun, third person singular."),
+    dict(before="Nobody disputed the figures; what they disputed was their ", after=". (RELEVANT)",
+         answer="relevance", hint="Noun from the adjective."),
+    dict(before="The sponsor was criticised for the ", after=" of the construction timetable. (STATE)",
+         answer="misstatement", alt="mis-statement",
+         hint="Prefix meaning 'wrongly' + noun from STATE."),
+]
+
+# ── PC 2.8 -- key-word transformations, itens novos ──────────────────────────
+# Mesma gramatica da aula (causativo x passiva): o grammar_point nao muda, a
+# frase muda. Palavras-chave diferentes das da aula, de proposito.
+TRANSFORMATIONS_PC = [
+    dict(lead="A specialist firm is revaluing our portfolio at the moment.", key="HAVING",
+         before="We ", after=" at the moment.",
+         answer="are having our portfolio revalued", alt="are having the portfolio revalued",
+         hint="have + object + past participle, in the present continuous."),
+    dict(lead="We persuaded the lenders to extend the deadline.", key="GOT",
+         before="We ", after=" the deadline.",
+         answer="got the lenders to extend", alt="got the lenders to agree to extend",
+         hint="get + person + to + infinitive."),
+    dict(lead="Somebody stole the consortium's traffic data last year.", key="HAD",
+         before="The consortium ", after=" last year.",
+         answer="had its traffic data stolen", alt="had their traffic data stolen",
+         hint="have + object + past participle, this time for something done TO you."),
+    dict(lead="Nobody has accepted responsibility for the delay.", key="TAKEN",
+         before="Responsibility for the delay ", after=" by anyone.",
+         answer="has not been taken", alt="has still not been taken",
+         hint="Passive in the present perfect. The agent arrives late, after 'by'."),
+    dict(lead="The fund will commit only if the guarantee is in place.", key="UNLESS",
+         before="The fund will not commit ", after=" in place.",
+         answer="unless the guarantee is", alt="unless that guarantee is",
+         hint="Negative conditional. Do not change UNLESS."),
+    dict(lead="The minister reopened the concession and did not consult the lenders.", key="WITHOUT",
+         before="The minister reopened the concession ", after=" the lenders.",
+         answer="without consulting", alt="without having consulted",
+         hint="Preposition + -ing."),
+]
+TRANSFORM_PC_KEY = (
+    "<b>1</b> are having our portfolio revalued &middot; are having the portfolio revalued<br>"
+    "<b>2</b> got the lenders to extend &middot; got the lenders to agree to extend<br>"
+    "<b>3</b> had its traffic data stolen &middot; had their traffic data stolen<br>"
+    "<b>4</b> has not been taken &middot; has still not been taken<br>"
+    "<b>5</b> unless the guarantee is &middot; unless that guarantee is<br>"
+    "<b>6</b> without consulting &middot; without having consulted<br>"
+    "<i>Three to eight words, the key word untouched, and no change of meaning. Anything outside this list "
+    "is for the teacher to judge in class.</i>"
+)
+
+# ── PC 2.9 -- listen + choose (funde o 2.9 e o 2.10) ─────────────────────────
+# "2.9 + 2.10 fazer so uma atividade listen + choose." UMA gravacao, uma voz, e
+# escolha -- nao as cinco vozes com duas tarefas, que e a tarefa DA AULA.
+# Voz 'ellen': nao e a do talk da aula (daniel) nem a de nenhum dos cinco
+# falantes (alice, arthur, antonio, matilda, george).
+LISTEN_PC_FILE = "pc2_listen_choose.mp3"
+LISTEN_PC_VOICE = "ellen"
+LISTEN_PC_TEXT = (
+    "People ask what we look at first, and they expect me to say the numbers. We don't. By the time a "
+    "proposal reaches my desk somebody has already built a model, and the model always works, because "
+    "models are built by people who want the deal to happen. So we start somewhere else. We ask three "
+    "questions. "
+    "The first one is: who is paid before us, and who is paid after us? Not how much. In what order. If "
+    "that takes more than a minute to explain, the structure is doing something it would rather we did not "
+    "notice. "
+    "The second is: what has been promised, and by whom? A twenty-year price agreement is worth exactly "
+    "what the counterparty behind it is worth. We have seen beautiful contracts signed by utilities that "
+    "could not pay their own staff on time. So we look past the document to the balance sheet behind it. "
+    "The third question is the one people find strange. We ask what would have to go wrong for this to "
+    "fail, and then we ask who is carrying that particular danger. Very often the honest answer is that "
+    "somebody has been clever: a guarantee here, a hedge there, and the same road presents as a much safer "
+    "credit. I have no objection to any of that, as long as everybody at the table can say out loud whose "
+    "problem it becomes on a bad day. "
+    "Only after those three do we look at the return. And I will be blunt with you. The number is almost "
+    "never the reason we say no. We say no because the order of payment is unclear, or the promise is "
+    "thin, or nobody in the room can tell us who is holding the thing that might break."
+)
+LISTEN_CHOOSE_PC = [
+    ("What does the speaker say about the financial model?",
+     [("It is usually wrong about the return.", False),
+      ("It always works, because of who builds it.", True),
+      ("It is the first thing her team examines.", False),
+      ("It is produced by her own analysts.", False)]),
+    ("Her first question is about",
+     [("the size of the return on offer.", False),
+      ("the order in which the parties are paid.", True),
+      ("the experience of the contractor.", False),
+      ("the length of the contract.", False)]),
+    ("What makes her suspicious of a structure?",
+     [("A leverage ratio above seventy per cent.", False),
+      ("An explanation that takes too long to give.", True),
+      ("A counterparty in another country.", False),
+      ("An off-take agreement shorter than twenty years.", False)]),
+    ("Why does she look past a twenty-year price agreement?",
+     [("Because twenty years is too far ahead to forecast.", False),
+      ("Because the agreement is worth no more than the party that signed it.", True),
+      ("Because utilities almost never sign them.", False),
+      ("Because the price agreed is usually too low.", False)]),
+    ("What does she say about guarantees and hedges?",
+     [("They make a project genuinely safer than it was.", False),
+      ("They shift the danger to somebody else rather than removing it.", True),
+      ("She avoids any deal that relies on them.", False),
+      ("They cost more than the protection is worth.", False)]),
+    ("According to the speaker, why do they usually say no?",
+     [("The return is too low for their committee.", False),
+      ("Something in the structure cannot be explained clearly.", True),
+      ("The sponsor has no record in the sector.", False),
+      ("The currency risk has not been hedged.", False)]),
+]
+LISTEN_CHOOSE_PC_KEY = (
+    "<b>1 b</b> &middot; <b>2 b</b> &middot; <b>3 b</b> &middot; <b>4 b</b> &middot; <b>5 b</b> &middot; "
+    "<b>6 b</b><br>"
+    "<i>Question 5 is the one that separates listening from guessing: she is not against guarantees, she "
+    "is against forgetting what they did. Play that section again before you open the transcript.</i>"
+)
+
+# ── PC 2.12 -- a tarefa falada que o aluno faz EM CASA ───────────────────────
+# O professor mandou remover 2.12 a 2.15 do pre class, e todos foram. Este stage
+# volta reduzido por exigencia ESTRUTURAL do sistema, nao por preferencia: o piso
+# da anatomia imersiva (validate_lesson, REQ) cobra speech-card >= 2 e
+# think-card >= 1 no bloco de pre-class do hub, e sem eles o GATE 8 reprova a
+# aula inteira no servidor.
+#
+# O que volta nao repete a aula:
+#   - os speech-card sao as frases do Survival Card, que e obrigatorio e ja vive
+#     no pre-class. Sao pronuncia e entrega, nao tarefa de prova.
+#   - o think-card e sobre o TEXTO NOVO do 2.5, que so existe no pre class. O
+#     long turn da aula e outro ("Whose risk is it, really?", sobre um projeto
+#     que o aluno conhece) e continua acontecendo so na aula.
+THINK_PC = (
+    "<b>Sixty seconds, out loud, no notes.</b> You have just read the case note. The development bank "
+    "said it wanted to be judged not by what it spent but by what arrived behind it. On the evidence in "
+    "that text, was it right to be judged that way? Use at least four of the expressions from Stage 2.1, "
+    "and say the number that matters to your argument."
+)

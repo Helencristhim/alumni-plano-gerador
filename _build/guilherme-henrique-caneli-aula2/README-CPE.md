@@ -196,6 +196,90 @@ cortam 127, 127, 118 e 306px a 1400x900 -- e 227, 227, 218 e 406px a 1280x800.
 Ja cortavam antes desta aula virar prova, o professor nao falou deles, e por
 isso nao foram tocados. Mas o slide 10 perde um terco da tela.
 
+## Quarta rodada: a Pre-class para de ser a aula (22/09/2026)
+
+Andre aprovou a licao e olhou o pre class:
+
+> "Esta exatamente a mesma coisa. Pre class e licao sao exatamente a mesma coisa."
+
+Estava. **53 dos 69 itens de exercicio eram identicos nas duas telas**, porque as
+duas superficies liam as MESMAS constantes deste `lesson2_content.py`. O aluno
+fazia a prova em casa e refazia a mesma prova, com os mesmos itens, na aula. A
+decisao que gerou isso esta registrada no topo do `build_slides_cpe.py`, e citava
+a REGRA 1: a REGRA 1 manda repetir tema, vocabulario e gramatica, e **nao** manda
+repetir os itens. A REGRA 146 (`docs/REGRAS-138-A-146.md:184`) ja proibia isso
+com todas as letras; nenhum gate executava a proibicao.
+
+### O criterio, dado por ele stage a stage
+
+| stage | o que ele mandou |
+|---|---|
+| ate 2.3 | fica como esta, "e so matching de vocabulario" |
+| 2.4 | manter o formato, trocar as frases, **do lado do pre class** |
+| 2.5 + 2.6 | viram um: "outro reading com as mesmas palavras e comprehension questions" |
+| 2.7, 2.8 | manter a atividade, trocar as frases |
+| 2.9 + 2.10 | viram um: "so uma atividade listen + choose" |
+| 2.12 a 2.15 | removidos do pre class |
+| 2.11 | ele ainda nao falou; segue como esta ate ele responder |
+
+### Como ficou
+
+Constantes **novas** com sufixo `_PC` (`CLOZE_ITEMS_PC`, `ARTICLE_PC` +
+`COMPREHENSION_PC`, `WORD_FORMATION_PC`, `TRANSFORMATIONS_PC`, `LISTEN_PC_*`). As
+antigas ficaram intactas, e e isso que garante que **o deck nao mudou um byte**:
+o `build_slides_cpe.py` continua lendo as antigas, e o `patch_deck_l2.py` nao
+roda nesta rodada. Os 14 termos e o `grammar_point` nao mudaram: sao a espinha do
+programa.
+
+Resultado medido: **76% -> 0%**. Nenhum item de prova da aula esta no pre class.
+
+### Audio
+
+Um MP3 novo, `pc2_listen_choose.mp3`, voz `ellen` -- que nao e a voz do talk da
+aula (`daniel`) nem a de nenhum dos cinco falantes. 97 segundos, 295 palavras.
+Se a pre-class usasse os audios da aula, o aluno chegaria tendo ouvido as mesmas
+pessoas dizerem as mesmas coisas.
+
+### Armadilhas desta rodada
+
+1. **O `lesson-desc` do `HEADER` e escrito a mao** e anunciava "gapped text and
+   multiple choice (Paper 1, Parts 6 and 5)". Virou mentira no segundo em que os
+   dois sairam do pre class. O `plan_at_a_glance()` tem o mesmo problema: linhas
+   e tempos cravados, incluindo uma linha "Speaking & Writing" que deixou de
+   existir.
+2. **O Survival Card NAO pode sair.** Ele consome o conteudo do stage 2.12, que
+   foi removido, mas o `validate_lesson` exige pelo menos um survival-card por
+   aula. Ele nao e exercicio: e cartao de referencia, mesma categoria do
+   vocabulario que o professor liberou.
+3. **O `grade()` se conserta sozinho, o `confere_totais()` nao perdoa.** O painel
+   deriva os totais do tamanho das listas, entao fundir stages nao quebra a nota.
+   Mas o `data-total` de cada bloco tem de bater com as questoes dentro dele.
+4. **Testar o hub local grava no Supabase do aluno.** O teste de navegador desta
+   rodada bloqueia `http://` e `https://` no playwright antes de clicar em
+   qualquer exercicio.
+
+### O gate, e o que ele revelou
+
+`scripts/check_preclass_nao_repete.py` compara os itens de tarefa do deck com o
+bloco `ex-lesson-N` do hub, descontando vocabulario dos dois lados (que a REGRA 1
+manda repetir). **Ele e de regressao, nao de teto absoluto**, e o motivo importa:
+medido nos 1.924 pares (hub, aula) que existem hoje, a mediana e 0% e a media e
+5,2%, mas **257 pares passam de 10% e alguns marcam 100%** -- outros alunos, com
+a mesma pergunta de compreensao e as mesmas opcoes nas duas telas. Um teto
+absoluto obrigaria quem mexesse nessas aulas a consertar divida alheia antes de
+mergear. Entao: aula que ja existe reprova se PIORAR; aula nova reprova acima de
+15%.
+
+**O gate NAO entrou neste PR**, e o motivo e o GATE 17, o meta-gate do registro:
+gate novo tem de estar em `scripts/gates.json` E ser invocado em
+`.github/workflows/`. As duas coisas, ou nenhuma -- "gate que nao roda nao barra
+nada, e o registro afirma que ele barra". Como o token nao tem escopo `workflow`
+e push que toca `.github/workflows` e rejeitado, as tres pecas (script, registro
+e workflow) tem de entrar juntas, num PR proprio.
+
+Destrava com `gh auth refresh -s workflow`. O script esta pronto e testado
+(selftest + medicao dos 1.924 pares); falta so poder mexer no workflow.
+
 ## Proximo passo
 
 Se o professor aprovar, as aulas 3 a 8 seguem o mesmo caminho: escrever o
