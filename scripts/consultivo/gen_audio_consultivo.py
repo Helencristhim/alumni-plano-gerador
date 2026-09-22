@@ -63,6 +63,10 @@ import audio_surface  # noqa: E402
 API = "https://api.elevenlabs.io/v1"
 VOICE_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "style": 0.0,
                   "use_speaker_boost": True}
+# O dialogo ia para o eleven_v3 sem configuracao nenhuma, e ali o sotaque escorrega de uma
+# fala para outra (Caio, 22/09/2026: ouvido como britanico). stability=1.0 e o "Robust" do
+# v3 -- o unico valor que segura o sotaque da voz; language_code trava o ingles.
+DIALOGUE_SETTINGS = {"language_code": "en", "settings": {"stability": 1.0}}
 
 
 def key():
@@ -123,7 +127,7 @@ def gera(item, k, destino, dry):
         dados = _post(f"{API}/text-to-dialogue/with-timestamps",
                       {"inputs": [{"text": i["text"], "voice_id": i["voice_id"]}
                                   for i in item["inputs"]],
-                       "model_id": item["model_id"]}, k, binario=False)
+                       "model_id": item["model_id"], **DIALOGUE_SETTINGS}, k, binario=False)
         pacote = json.loads(dados)
         import base64
         audio = base64.b64decode(pacote["audio_base64"])
