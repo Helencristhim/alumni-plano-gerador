@@ -903,3 +903,23 @@ LISTEN_CHOOSE_PC_KEY = (
     "<i>Question 5 is the one that separates listening from guessing: she is not against guarantees, she "
     "is against forgetting what they did. Play that section again before you open the transcript.</i>"
 )
+
+# ── PC 2.12 -- a tarefa falada que o aluno faz EM CASA ───────────────────────
+# O professor mandou remover 2.12 a 2.15 do pre class, e todos foram. Este stage
+# volta reduzido por exigencia ESTRUTURAL do sistema, nao por preferencia: o piso
+# da anatomia imersiva (validate_lesson, REQ) cobra speech-card >= 2 e
+# think-card >= 1 no bloco de pre-class do hub, e sem eles o GATE 8 reprova a
+# aula inteira no servidor.
+#
+# O que volta nao repete a aula:
+#   - os speech-card sao as frases do Survival Card, que e obrigatorio e ja vive
+#     no pre-class. Sao pronuncia e entrega, nao tarefa de prova.
+#   - o think-card e sobre o TEXTO NOVO do 2.5, que so existe no pre class. O
+#     long turn da aula e outro ("Whose risk is it, really?", sobre um projeto
+#     que o aluno conhece) e continua acontecendo so na aula.
+THINK_PC = (
+    "<b>Sixty seconds, out loud, no notes.</b> You have just read the case note. The development bank "
+    "said it wanted to be judged not by what it spent but by what arrived behind it. On the evidence in "
+    "that text, was it right to be judged that way? Use at least four of the expressions from Stage 2.1, "
+    "and say the number that matters to your argument."
+)

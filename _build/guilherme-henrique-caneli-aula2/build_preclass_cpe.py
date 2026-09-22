@@ -239,15 +239,44 @@ def s_grammar():
                      body=body)
 
 
-# Os stages 2.12 (Delivery), 2.13 (Long Turn, Follow-up e Collaborative Task),
-# 2.14 (Two Debates) e 2.15 (The Briefing Note) FORAM REMOVIDOS daqui em
-# 22/09/2026, a pedido do professor. Eram prompt estatico previewando o que a
-# aula ia fazer: falar e escrever acontecem na aula, com ele na frente. As
-# constantes deles (LONG_TURN, COLLAB_TASK, DEBATE_*, WRITING_TASK, FOLLOW_UP)
-# continuam no lesson2_content.py porque o DECK as usa, nos slides 50 a 56.
+# Os stages 2.13 (Long Turn, Follow-up e Collaborative Task), 2.14 (Two Debates)
+# e 2.15 (The Briefing Note) FORAM REMOVIDOS daqui em 22/09/2026, a pedido do
+# professor. Eram prompt estatico previewando o que a aula ia fazer: falar e
+# escrever acontecem na aula, com ele na frente. As constantes deles (LONG_TURN,
+# COLLAB_TASK, DEBATE_*, WRITING_TASK, FOLLOW_UP) continuam no
+# lesson2_content.py porque o DECK as usa, nos slides 50 a 56.
 #
-# O Survival Card continua: ele nao e stage nem exercicio, e o validate_lesson
-# exige pelo menos um por aula.
+# O 2.12 VOLTOU, reduzido, por exigencia estrutural: o piso da anatomia imersiva
+# (validate_lesson, REQ) cobra speech-card >= 2 e think-card >= 1 no bloco de
+# pre-class, e sem eles o GATE 8 reprova a aula inteira -- e o GATE 8 so roda no
+# servidor, entao isso nao aparece em nenhuma checagem local.
+#
+# O Survival Card continua pelo mesmo motivo: e piso, nao stage.
+
+
+def s_delivery():
+    """Stage 2.12 reduzido: pronuncia das frases + UMA tarefa falada.
+
+    Nao repete a aula. Os speech-card sao as frases do Survival Card, que e
+    obrigatorio e ja estava no pre-class: pronuncia e entrega, nao tarefa de
+    prova. O think-card e sobre o TEXTO NOVO do 2.5, que so existe aqui; o long
+    turn da aula e outra pergunta, sobre um projeto que o aluno conhece, e
+    continua acontecendo so na aula.
+
+    O think-card tem de ser tarefa que o aluno FAZ em casa: ele so fecha com
+    gravacao, e preview de tarefa da aula deixaria a licao presa abaixo dos 100%
+    para sempre.
+    """
+    return L.section('Stage 2.12 -- Say It Before the Lesson', 'Speaking', 'badge badge-speak',
+                     rubric=paper('Delivery &amp; one spoken answer &middot; 8 min') +
+                     'Record the five sentences first: what is being judged is not the sounds but where '
+                     'the stress lands, and these are built so that the word that matters arrives last. '
+                     'Then answer the question underneath, out loud, once.',
+                     body=L.speech_cards(C.SPEECH_PHRASES) +
+                          '<p style="font-size:.84rem;color:var(--text-dim);margin:1.4rem 0 .6rem;'
+                          'font-style:italic">One question on what you read in Stage 2.5. Say it, do not '
+                          'write it.</p>' +
+                          L.think_card(C.THINK_PC, 'think-result-l2'))
 
 
 def grade():
@@ -286,7 +315,7 @@ HEADER = '''<div class="lesson-card" data-gen="3" id="ex-lesson-2">
 def build():
     parts = [HEADER, plan_at_a_glance(), s_lead_in(), s_vocab(), s_matching(), s_collocation(), s_cloze(),
              s_reading(), s_word_formation(), s_transformations(), s_listening(), s_grammar(),
-             grade(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
+             s_delivery(), grade(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
     return '\n'.join(parts)
 
 
