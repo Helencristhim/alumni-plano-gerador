@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Monta o card Pre-class da Aula 2 no formato de prova e grava preclass.html.
+"""Monta o card Pre-class da Aula 2 e grava preclass.html.
+
+A Pre-class PREPARA a aula; nao e a aula. Ate 22/09/2026 ela era: as duas
+superficies liam as mesmas constantes do lesson2_content.py, e 53 dos 69 itens
+eram identicos em casa e na tela projetada. O professor Andre viu e disse: "pre
+class e licao sao exatamente a mesma coisa".
+
+Agora os stages de prova leem as constantes _PC, que sao itens proprios sobre o
+MESMO lexico e o MESMO grammar_point (REGRA 1). O deck nao le nenhuma delas e
+por isso nao muda.
 
 USO (da raiz do repo):
     python3 _build/guilherme-henrique-caneli-aula2/build_preclass_cpe.py
@@ -24,11 +33,11 @@ AUDIO = '/audio/%s/' % A
 def plan_at_a_glance():
     rows = [
         ("Vocabulary", "13 min", "The lexis of the capital stack: meanings that discriminate, a collocation bank, and a word-bank cloze with one item too many."),
-        ("Reading", "25 min", "Gapped text (Paper 1, Part 6) and multiple choice (Part 5) on one essay."),
+        ("Reading", "14 min", "A case note on one financed project, read for understanding, with six comprehension questions."),
         ("Use of English", "18 min", "Word formation (Part 3) and key-word transformations (Part 4)."),
-        ("Listening", "24 min", "Sentence completion (Paper 3, Part 2) and multiple matching, two tasks at once (Part 4). Each heard twice."),
+        ("Listening", "10 min", "One talk, heard twice, and six choices."),
         ("Grammar", "10 min", "Agency: four ways to name the party who acted, and two ways to lose them."),
-        ("Speaking &amp; Writing", "in class", "Long turn and follow-up, collaborative task, two for/against debates, and a briefing note of 280&ndash;320 words."),
+        ("In the lesson", "&mdash;", "The exam papers themselves: gapped text, multiple choice, sentence completion, multiple matching, the long turn, the debates and the briefing note."),
     ]
     out = ['<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:.2rem 0 1.4rem">']
     for i, (a, b, c) in enumerate(rows):
@@ -99,11 +108,12 @@ def s_cloze():
     bank = ('<div style="font-size:.86rem;background:var(--bg-elevated);border:1px solid var(--border);'
             'border-radius:8px;padding:.7rem .9rem;margin-bottom:1rem"><b>Bank:</b> %s</div>'
             % ' &middot; '.join(C.CLOZE_BANK))
-    body = bank + L.exam('l2-cloze', 'Vocabulary', len(C.CLOZE_ITEMS),
-                         L.typed_gaps(C.CLOZE_ITEMS), label='Word-bank cloze') + L.reveal(
+    body = bank + L.exam('l2-cloze', 'Vocabulary', len(C.CLOZE_ITEMS_PC),
+                         L.typed_gaps(C.CLOZE_ITEMS_PC), label='Word-bank cloze') + L.reveal(
         'Which one was not needed?',
-        'The passage never needs <b>%s</b>. Money that has been raised is not money that has been '
-        'deployed, and nothing in this paragraph is about the difference.' % C.CLOZE_NOT_NEEDED)
+        'These eight sentences never need <b>%s</b>. It names what happens to a <i>price</i> when too '
+        'much money chases too few assets, and not one of these sentences is about a price.'
+        % C.CLOZE_NOT_NEEDED_PC)
     return L.section('Stage 2.4 -- Put the Lexis to Work', 'Practice', 'badge badge-practice',
                      rubric=paper('Word-bank cloze &middot; 5 min') +
                      'Complete each sentence with an expression from the bank. <b>Type it</b>, do not '
@@ -112,54 +122,32 @@ def s_cloze():
                      body=body)
 
 
-def s_reading_gapped():
-    letras = {k: v for k, v in C.GAP_OPTIONS}
-    paras = []
-    for before, n, after in C.ARTICLE:
-        if n:
-            paras.append('<p style="margin-bottom:.9rem">%s%s%s</p>' % (before, L.gap(n), after))
-        else:
-            paras.append('<p style="margin-bottom:.9rem">%s</p>' % before)
-    opts = '<div style="margin:1.2rem 0 .8rem">%s</div>' % ''.join(
-        '<div style="display:flex;gap:.6rem;padding:.5rem .7rem;border:1px solid var(--border);'
-        'border-radius:8px;margin-bottom:.4rem;font-size:.88rem;line-height:1.55">'
-        '<b style="color:var(--accent);flex:0 0 1rem">%s</b><span>%s</span></div>' % (k, v)
-        for k, v in C.GAP_OPTIONS)
+def s_reading():
+    """Stage 2.5: leitura NOVA, para entender, nao para fazer prova.
+
+    Pedido do professor (22/09/2026): "pode fazer outro reading com as mesmas
+    palavras e fazer comprehension questions; so pra ler e entender e reforcar o
+    vocabulario. Que seria juntar o 2.5 + 2.6."
+
+    Entao o gapped text (Part 6) e o multiple choice (Part 5) saem daqui e ficam
+    SO na aula, com o artigo da aula. Aqui entra um caso narrativo, os mesmos 14
+    termos em contexto, e seis perguntas de compreensao.
+    """
+    paras = ''.join('<p style="margin-bottom:.9rem">%s</p>' % t for t in C.ARTICLE_PC)
     body = ('<div style="text-align:center;margin-bottom:1rem">'
             '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:700">%s</div>'
             '<div style="font-size:.74rem;color:var(--text-dim);letter-spacing:.06em">%s</div></div>'
-            % (C.ARTICLE_TITLE, C.ARTICLE_STANDFIRST) +
-            '<div class="context-text" style="line-height:1.95;text-align:justify">%s</div>' % ''.join(paras) +
-            '<p style="font-size:.84rem;font-weight:700;margin:1.2rem 0 .2rem">Choose from these sentences '
-            '(one is not used):</p>' + opts +
-            # O VALOR da opcao e a frase inteira, nao a letra. Duas razoes: o HTML passa a
-            # dizer o que a resposta e (conferivel sem gabarito), e o gate de idioma da
-            # REGRA 13, que le o data-answer de toda match-row, ve uma frase em ingles em
-            # vez de um "C" solto, que ele nao teria como distinguir de palavra em outra lingua.
-            L.exam('l2-gapped', 'Reading', len(C.GAP_ANSWERS),
-                   L.match_grid('match-l2-gapped',
-                                [('<b>Gap %s</b>' % k, letras[r]) for k, r in C.GAP_ANSWERS],
-                                [(v, '%s -- %s' % (k, v[:58] + '...')) for k, v in C.GAP_OPTIONS],
-                                left_style=' style="flex:0 0 4rem"'),
-                   label='Paper 1, Part 6') +
-            L.reveal('Reveal &amp; explain -- why each sentence fits only where it fits', C.GAP_KEY))
-    return L.section('Stage 2.5 -- Gapped Text', 'Reading', 'badge badge-quiz',
-                     rubric=paper('Paper 1 &middot; Part 6 &middot; 14 min') +
-                     'Six sentences have been removed from the article. Choose from <b>A&ndash;G</b> the one that '
-                     'fits each gap. There is <b>one extra</b> sentence you will not need. Read the whole '
-                     'paragraph before you commit: what gives a gap away is reference, cohesion and the line of '
-                     'the argument, never a single repeated word.',
-                     body=body)
-
-
-def s_reading_mcq():
-    body = (L.exam('l2-mcq', 'Reading', len(C.MCQ), L.quiz(C.MCQ), label='Paper 1, Part 5') +
-            L.reveal('Reveal answers &amp; reasoning', C.MCQ_KEY))
-    return L.section('Stage 2.6 -- Multiple Choice', 'Reading', 'badge badge-quiz',
-                     rubric=paper('Paper 1 &middot; Part 5 &middot; 11 min') +
-                     'Now the text is whole, answer on it. Choose the option the writer\'s argument actually '
-                     'supports, not the one that repeats a word from the passage. At least one option in every '
-                     'item is <b>true and still wrong</b>.',
+            % (C.ARTICLE_PC_TITLE, C.ARTICLE_PC_STANDFIRST) +
+            '<div class="context-text" style="line-height:1.95;text-align:justify">%s</div>' % paras +
+            L.exam('l2-reading-pc', 'Reading', len(C.COMPREHENSION_PC),
+                   L.quiz(C.COMPREHENSION_PC), label='Comprehension') +
+            L.reveal('Reveal answers &amp; where the text says it', C.COMPREHENSION_PC_KEY))
+    return L.section('Stage 2.5 -- Read and Understand', 'Reading', 'badge badge-quiz',
+                     rubric=paper('Reading for understanding &middot; 14 min') +
+                     'Read it once straight through, without stopping at the terms you half know. Then read '
+                     'it again and answer. Every expression from Stage 2.1 is in here doing a job: this is '
+                     'where you find out what each one is <i>for</i>. The exam tasks on this lexis happen in '
+                     'the lesson, not here.',
                      body=body)
 
 
@@ -168,21 +156,21 @@ def s_word_formation():
                      rubric=paper('Paper 1 &middot; Part 3 &middot; 8 min') +
                      'Use the word in capitals to form a word that fits the gap. Watch for negative prefixes, '
                      'for part of speech, and for the internal change some of these words make.',
-                     body=L.exam('l2-wordform', 'Use of English', len(C.WORD_FORMATION),
-                                 L.fill_items(C.WORD_FORMATION), label='Paper 1, Part 3'))
+                     body=L.exam('l2-wordform', 'Use of English', len(C.WORD_FORMATION_PC),
+                                 L.fill_items(C.WORD_FORMATION_PC), label='Paper 1, Part 3'))
 
 
 def s_transformations():
     items = []
-    for t in C.TRANSFORMATIONS:
+    for t in C.TRANSFORMATIONS_PC:
         lead = ('<div style="font-size:.88rem;margin-bottom:.35rem">%s</div>'
                 '<div style="font-size:.74rem;letter-spacing:.1em;font-weight:800;color:var(--accent);'
                 'margin-bottom:.3rem">%s</div>' % (t['lead'], t['key']))
         items.append(dict(before=lead + t['before'], after=t['after'], answer=t['answer'],
                           alt=t.get('alt'), hint=t['hint']))
-    body = (L.exam('l2-transform', 'Use of English', len(C.TRANSFORMATIONS),
+    body = (L.exam('l2-transform', 'Use of English', len(C.TRANSFORMATIONS_PC),
                    L.fill_items(items), label='Paper 1, Part 4') +
-            L.reveal('Reveal the answer key', C.TRANSFORM_KEY))
+            L.reveal('Reveal the answer key', C.TRANSFORM_PC_KEY))
     return L.section('Stage 2.8 -- Key-word Transformations', 'Use of English', 'badge badge-grammar',
                      rubric=paper('Paper 1 &middot; Part 4 &middot; 10 min') +
                      'Complete the second sentence so that it means the same as the first, using the word given. '
@@ -191,53 +179,30 @@ def s_transformations():
                      body=body)
 
 
-def s_listening_completion():
-    body = (L.player('lp-l2-talk', AUDIO + C.TALK_FILE,
-                     'An infrastructure investment director, speaking at an investor evening. '
-                     'In the exam you hear it <b>twice</b> -- press play a second time before you check.') +
-            L.exam('l2-listen-complete', 'Listening', len(C.TALK_ITEMS),
-                   L.fill_items(C.TALK_ITEMS), label='Paper 3, Part 2') +
+def s_listening():
+    """Stage 2.9: UMA atividade, listen + choose.
+
+    Pedido do professor (22/09/2026): "2.9 + 2.10 fazer so uma atividade listen
+    + choose." Entao a sentence completion (Part 2) e o multiple matching de
+    duas tarefas (Part 4) saem daqui e ficam so na aula, com os audios da aula.
+
+    Audio proprio, voz propria: as cinco vozes dos falantes e a do talk da aula
+    nao aparecem aqui, senao o aluno chega na aula tendo ouvido a mesma pessoa
+    dizer as mesmas coisas.
+    """
+    body = (L.player('lp-l2-pc', AUDIO + C.LISTEN_PC_FILE,
+                     'The head of infrastructure at a pension fund, on what she looks at before the '
+                     'numbers. You hear it <b>twice</b>: play it a second time before you answer.') +
+            L.exam('l2-listen-pc', 'Listening', len(C.LISTEN_CHOOSE_PC),
+                   L.quiz(C.LISTEN_CHOOSE_PC), label='Listen and choose') +
+            L.reveal('Reveal answers', C.LISTEN_CHOOSE_PC_KEY) +
             L.reveal('Show transcript (only after your second listening)',
-                     '<span style="font-weight:400;line-height:1.8">%s</span>' % C.TALK_TEXT))
-    return L.section('Stage 2.9 -- Sentence Completion', 'Listening', 'badge badge-quiz',
-                     rubric=paper('Paper 3 &middot; Part 2 &middot; 12 min') +
-                     'Complete each sentence with a word or short phrase. The words you need are said, so write '
-                     'what you hear and not what you would have written. Do not open the transcript until you '
-                     'have listened twice.',
-                     body=body)
-
-
-def s_listening_matching():
-    players = []
-    for s in C.SPEAKERS:
-        players.append(L.player('lp-l2-mm%d' % s['n'], AUDIO + s['file'], '<b>Speaker %d</b>' % s['n']))
-    o1 = {k: v for k, v in C.TASK1_OPTS}
-    o2 = {k: v for k, v in C.TASK2_OPTS}
-    # mesmo motivo do gapped text: o valor e o texto inteiro, nao a letra.
-    t1 = L.exam('l2-mm1', 'Listening', len(C.SPEAKERS), label='Task One', body=L.match_grid('match-l2-mm1',
-                      [('<b>Speaker %d</b>' % s['n'], o1[s['task1']]) for s in C.SPEAKERS],
-                      [(v, '%s -- %s' % (k, v)) for k, v in C.TASK1_OPTS],
-                      left_style=' style="flex:0 0 6rem"'))
-    t2 = L.exam('l2-mm2', 'Listening', len(C.SPEAKERS), label='Task Two', body=L.match_grid('match-l2-mm2',
-                      [('<b>Speaker %d</b>' % s['n'], o2[s['task2']]) for s in C.SPEAKERS],
-                      [(v, '%s -- %s' % (k, v)) for k, v in C.TASK2_OPTS],
-                      left_style=' style="flex:0 0 6rem"'))
-    def optlist(title, opts):
-        return ('<p style="font-size:.84rem;font-weight:700;margin:1.1rem 0 .3rem">%s</p>'
-                '<div style="font-size:.85rem;line-height:1.7;margin-bottom:.6rem">%s</div>' % (
-                    title, ''.join('<div><b style="color:var(--accent)">%s</b> &nbsp;%s</div>' % (k, v)
-                                   for k, v in opts)))
-    transcripts = ''.join(
-        '<p style="margin-bottom:.7rem"><b>Speaker %d:</b> %s</p>' % (s['n'], s['text']) for s in C.SPEAKERS)
-    body = (''.join(players) +
-            optlist('Task One -- what each speaker is (A&ndash;H, three are not used)', C.TASK1_OPTS) + t1 +
-            optlist('Task Two -- the main point each one makes (A&ndash;H, three are not used)', C.TASK2_OPTS) + t2 +
-            L.reveal('Show transcripts', '<span style="font-weight:400;line-height:1.75">%s</span>' % transcripts))
-    return L.section('Stage 2.10 -- Multiple Matching: Two Tasks at Once', 'Listening', 'badge badge-quiz',
-                     rubric=paper('Paper 3 &middot; Part 4 &middot; 12 min') +
-                     'You will hear five short extracts. <b>Two tasks run at the same time</b>: what each speaker '
-                     '<i>is</i>, and the main point each one <i>makes</i>. Listen to all five once for Task One, '
-                     'then all five again for Task Two. Three options in each list are not used.',
+                     '<span style="font-weight:400;line-height:1.8">%s</span>' % C.LISTEN_PC_TEXT))
+    return L.section('Stage 2.9 -- Listen and Choose', 'Listening', 'badge badge-quiz',
+                     rubric=paper('Listening for the argument &middot; 10 min') +
+                     'One speaker, heard twice, and six questions. She is not describing a deal: she is '
+                     'describing how she decides. Listen for the order of her reasoning, not for the '
+                     'vocabulary, and do not open the transcript until you have listened twice.',
                      body=body)
 
 
@@ -274,76 +239,33 @@ def s_grammar():
                      body=body)
 
 
-def s_delivery():
-    return L.section('Stage 2.12 -- Delivery', 'Speaking', 'badge badge-speak',
-                     rubric=paper('Pronunciation &amp; stress &middot; 6 min') +
-                     'Record each one. What is being judged here is not the sounds but where the stress lands: '
-                     'these sentences are built so that the word that matters arrives last.',
-                     body=L.speech_cards(C.SPEECH_PHRASES))
-
-
-def s_speaking():
-    # O follow-up e os debates acontecem NA AULA: entram como prompt estatico, nao
-    # como .think-card. Todo .think-card so fecha com gravacao, e quatro gravacoes
-    # numa aba de preparacao deixariam a aula presa abaixo dos 100% para sempre.
-    followup = ('<div style="margin:1.2rem 0 .4rem"><div style="font-size:.74rem;letter-spacing:.12em;'
-                'text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:.35rem">'
-                'Follow-up &middot; immediately after the two minutes</div>'
-                '<p style="font-size:.86rem;color:var(--text-dim);font-style:italic;margin-bottom:.7rem">'
-                '%s</p>%s</div>' % (C.FOLLOW_UP_INTRO, L.prompt_list(C.FOLLOW_UP)))
-    body = (L.think_card(C.LONG_TURN, 'think-result-l2') +
-            followup +
-            '<div style="height:.8rem"></div>' +
-            L.think_card(C.COLLAB_TASK, 'think-result-l2b'))
-    return L.section('Stage 2.13 -- Long Turn, Follow-up and Collaborative Task', 'Speaking',
-                     'badge badge-speak',
-                     rubric=paper('Paper 5 &middot; Parts 2&ndash;3 &middot; in class') +
-                     'Record the long turn before the lesson so that you hear yourself once before anyone else '
-                     'does. The four follow-up questions and the collaborative task are for the lesson itself: '
-                     'read them now, prepare nothing, and let them be difficult.',
-                     body=body)
-
-
-def s_debates():
-    body = (L.motion_card(1, C.DEBATE_1_MOTION, C.DEBATE_1_RULES) +
-            L.motion_card(2, C.DEBATE_2_MOTION, C.DEBATE_2_RULES))
-    return L.section('Stage 2.14 -- Two Debates', 'Speaking', 'badge badge-speak',
-                     rubric=paper('Paper 5 &middot; Part 3 &middot; in class') +
-                     'Two motions, both in the lesson. The first asks you to hold each side for ninety seconds; '
-                     'the second gives you the side you would not have chosen and asks for something harder than '
-                     'an argument, which is a concession that the other side would recognise as their own.',
-                     body=body)
-
-
-def s_writing():
-    # NAO usa .think-card aqui: updateProgress conta todo .think-card como uma
-    # unidade que so fecha com gravacao. Sem microfone nesta tarefa, o card
-    # ficaria eternamente pendente e a aula nunca chegaria a 100%.
-    body = ('<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;'
-            'padding:1rem 1.1rem;font-size:.92rem;line-height:1.7">%s</div>' % C.WRITING_TASK +
-            L.reveal('What a strong answer does (open only after you have written yours)', C.WRITING_MODEL))
-    return L.section('Stage 2.15 -- The Briefing Note', 'Writing', 'badge badge-think',
-                     rubric=paper('Paper 2 &middot; Part 2 &middot; after class') +
-                     'Bring it to the next lesson. It will be read for the argument first and the language '
-                     'second, which is the order the fund reads in too.',
-                     body=body)
+# Os stages 2.12 (Delivery), 2.13 (Long Turn, Follow-up e Collaborative Task),
+# 2.14 (Two Debates) e 2.15 (The Briefing Note) FORAM REMOVIDOS daqui em
+# 22/09/2026, a pedido do professor. Eram prompt estatico previewando o que a
+# aula ia fazer: falar e escrever acontecem na aula, com ele na frente. As
+# constantes deles (LONG_TURN, COLLAB_TASK, DEBATE_*, WRITING_TASK, FOLLOW_UP)
+# continuam no lesson2_content.py porque o DECK as usa, nos slides 50 a 56.
+#
+# O Survival Card continua: ele nao e stage nem exercicio, e o validate_lesson
+# exige pelo menos um por aula.
 
 
 def grade():
     """O painel de nota final. Os totais vem do CONTEUDO, nao de numero escrito a
     mao: se uma tarefa ganhar ou perder uma questao, o painel acompanha sozinho."""
     papers = [
-        ('Vocabulary', len(C.MATCH_ROWS) + len(C.COLLOC_ROWS) + len(C.CLOZE_ITEMS)),
-        ('Reading', len(C.GAP_ANSWERS) + len(C.MCQ)),
-        ('Use of English', len(C.WORD_FORMATION) + len(C.TRANSFORMATIONS)),
-        ('Listening', len(C.TALK_ITEMS) + 2 * len(C.SPEAKERS)),
+        ('Vocabulary', len(C.MATCH_ROWS) + len(C.COLLOC_ROWS) + len(C.CLOZE_ITEMS_PC)),
+        ('Reading', len(C.COMPREHENSION_PC)),
+        ('Use of English', len(C.WORD_FORMATION_PC) + len(C.TRANSFORMATIONS_PC)),
+        ('Listening', len(C.LISTEN_CHOOSE_PC)),
         ('Grammar', len(C.GRAMMAR_QUIZ) + len(C.GRAMMAR_PRODUCTION)),
     ]
     return L.grade_panel(
         papers,
-        'Speaking and Writing are not scored here: they are judged in the lesson and on the note you bring. '
-        'This panel counts only what has a right answer, and it counts your <b>first</b> answer, which is the '
-        'only one the exam counts.')
+        'This is preparation, not the exam. The exam papers themselves &mdash; the gapped text, the multiple '
+        'choice, the sentence completion, the multiple matching, the speaking and the briefing note &mdash; '
+        'happen in the lesson. This panel counts only what has a right answer, and it counts your '
+        '<b>first</b> answer, which is the only one the exam counts.')
 
 
 HEADER = '''<div class="lesson-card" data-gen="3" id="ex-lesson-2">
@@ -352,7 +274,7 @@ HEADER = '''<div class="lesson-card" data-gen="3" id="ex-lesson-2">
     <div class="lesson-header-content">
       <div class="lesson-number">Lesson 02 -- Pre-class</div>
       <h3>The Language of Capital -- Who Made It Happen</h3>
-      <div class="lesson-desc">A sovereign fund reads your term sheet. Every sentence either names the agent or hides it, and the fund notices. Exam-format tasks throughout: gapped text and multiple choice (Paper 1, Parts 6 and 5), word formation and key-word transformations (Parts 3 and 4), sentence completion and multiple matching (Paper 3, Parts 2 and 4). Key words: A risk-adjusted return, A leverage ratio, Subordinated debt, An equity stake, Blended finance, A de-risking mechanism, An off-take agreement, Credit enhancement, Concessional lending, Yield compression, Fiduciary duty, Capital deployment, A currency hedge, An anchor investor. Structure: causative have and get versus the passive in investment language.</div>
+      <div class="lesson-desc">A sovereign fund reads your term sheet. Every sentence either names the agent or hides it, and the fund notices. Preparation for the lesson: the lexis of the capital stack, a case note read for understanding, word formation and key-word transformations (Paper 1, Parts 3 and 4), and one talk to listen to. The exam papers themselves are done in the lesson. Key words: A risk-adjusted return, A leverage ratio, Subordinated debt, An equity stake, Blended finance, A de-risking mechanism, An off-take agreement, Credit enhancement, Concessional lending, Yield compression, Fiduciary duty, Capital deployment, A currency hedge, An anchor investor. Structure: causative have and get versus the passive in investment language.</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="2" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="2">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -363,9 +285,8 @@ HEADER = '''<div class="lesson-card" data-gen="3" id="ex-lesson-2">
 
 def build():
     parts = [HEADER, plan_at_a_glance(), s_lead_in(), s_vocab(), s_matching(), s_collocation(), s_cloze(),
-             s_reading_gapped(), s_reading_mcq(), s_word_formation(), s_transformations(),
-             s_listening_completion(), s_listening_matching(), s_grammar(), s_delivery(), s_speaking(),
-             s_debates(), s_writing(), grade(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
+             s_reading(), s_word_formation(), s_transformations(), s_listening(), s_grammar(),
+             grade(), L.survival_card(2, C.SPEECH_PHRASES), '  </div>\n</div>\n']
     return '\n'.join(parts)
 
 
