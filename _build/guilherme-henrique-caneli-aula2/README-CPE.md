@@ -270,9 +270,15 @@ absoluto obrigaria quem mexesse nessas aulas a consertar divida alheia antes de
 mergear. Entao: aula que ja existe reprova se PIORAR; aula nova reprova acima de
 15%.
 
-**Falta ligar o gate no `validate-lessons.yml`.** O token nao tem escopo
-`workflow`, e push que toca `.github/workflows` e rejeitado. Destrava com
-`gh auth refresh -s workflow`.
+**O gate NAO entrou neste PR**, e o motivo e o GATE 17, o meta-gate do registro:
+gate novo tem de estar em `scripts/gates.json` E ser invocado em
+`.github/workflows/`. As duas coisas, ou nenhuma -- "gate que nao roda nao barra
+nada, e o registro afirma que ele barra". Como o token nao tem escopo `workflow`
+e push que toca `.github/workflows` e rejeitado, as tres pecas (script, registro
+e workflow) tem de entrar juntas, num PR proprio.
+
+Destrava com `gh auth refresh -s workflow`. O script esta pronto e testado
+(selftest + medicao dos 1.924 pares); falta so poder mexer no workflow.
 
 ## Proximo passo
 
