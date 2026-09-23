@@ -296,6 +296,174 @@ L = {
             ('You want the regulator to join the discussion. You say:', ['I would like to bring the regulator.', 'I would like to call the regulator to here.', 'I would like to bring in the regulator on this point.'], 2),
         ],
         'think': 'A new colleague from London joins GRI tomorrow. In ninety seconds, explain what you do, where you see the opportunity in Latin American infrastructure, and one thing that worries investors. Use at least two frames from today, and make sure the key word of each sentence comes last.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # NENHUM item daqui existe no deck: a pre-class PREPARA a aula, nao a
+        # repete. O lexico e o mesmo (REGRA 1); a tarefa e propria.
+        'reading_title': 'What the Pipeline Actually Looks Like',
+        'reading': [
+            'Ask a minister how the country&rsquo;s infrastructure programme is going and you will hear a '
+            'number: how many projects are in <b>the pipeline</b>. Ask a banker the same question and you '
+            'will get a much shorter list, because the two of them are counting different things. What the '
+            'minister counts is announcements. What the banker counts is deals a lender would actually sign.',
+
+            'The gap between those two lists is where <b>project finance</b> lives. A scheme is financed '
+            'against nothing but the cash it is expected to generate, which means the lender is buying a '
+            'forecast. That is why the first question is never how big the asset is, but how predictable it '
+            'is. <b>A toll road</b> that has been open for nine years, with nine years of traffic data '
+            'behind it, is a different proposition from one that exists on paper.',
+
+            'The sector has two words for that difference. <b>Brownfield</b> describes the asset that is '
+            'already built and already earning; <b>greenfield</b> describes the one that still has to come '
+            'out of the ground. Almost all the money wants the first and almost all the need is in the '
+            'second, and no amount of enthusiasm has yet closed that gap.',
+
+            'Who is holding the money matters as much as how much of it there is. <b>A pension fund</b> '
+            'answers to members who will retire decades from now, and its mandate is written to keep it out '
+            'of trouble rather than to make it rich. <b>A sovereign wealth fund</b> answers to a finance '
+            'ministry, and can be told to take a view a pension fund would never be allowed to take. When a '
+            'government sets out to <b>bring in</b> private capital, it has to know which of the two it is '
+            'talking to.',
+
+            'The instrument that usually does the work is <b>a concession</b>: the state keeps the asset and '
+            'hands over the right to operate it, and to collect from it, for a fixed number of years. Where '
+            'the state wants to share the risk rather than hand it over, the arrangement is called '
+            '<b>a public-private partnership</b> instead. Both stand or fall on the same thing, which is '
+            '<b>a regulatory framework</b> that will still say what it says today after the next election.',
+
+            'None of this is hard to follow once somebody is willing to <b>unpack</b> it. The difficulty in '
+            'a room of investors is rarely the content. It is that the person presenting has not decided '
+            'what the one sentence is. To <b>connect the dots</b> for a committee you have to know which dot '
+            'matters, and the number that would <b>move the needle</b> is almost never the number on the '
+            'first slide. If there is a single <b>takeaway</b> here, it is that one.',
+        ],
+        'comprehension': [
+            ('Why do the minister and the banker give different answers about the pipeline?',
+             ['The minister has better information than the banker.',
+              'They are counting different things: announcements against deals a lender would sign.',
+              'The banker is being deliberately pessimistic.',
+              'The minister includes projects in other countries.'], 1),
+            ('According to the text, what is a lender really buying in project finance?',
+             ['The asset itself, as security.',
+              'A forecast of the cash the asset is expected to produce.',
+              'A guarantee written by the government.',
+              'The land the project is built on.'], 1),
+            ('What difference does the text draw between brownfield and greenfield?',
+             ['One is more profitable than the other.',
+              'One is already built and earning; the other still has to be built.',
+              'One is public and the other is private.',
+              'One is inside a city and the other outside it.'], 1),
+            ('Why has the gap between the money and the need not closed?',
+             ['Governments have stopped announcing new projects.',
+              'The money wants assets that are already built, and the need is in the ones that are not.',
+              'Regulators will not allow foreign capital in.',
+              'Pension funds have run out of money to invest.'], 1),
+            ('What does the text say really separates a pension fund from a sovereign wealth fund?',
+             ['The amount of capital each one holds.',
+              'Who each one answers to, and therefore what it is allowed to do.',
+              'The countries each one is permitted to invest in.',
+              'The length of the contracts each one signs.'], 1),
+            ('According to the last paragraph, what is usually the problem in a room of investors?',
+             ['The content is too technical for the audience.',
+              'The presenter has not decided what the single sentence is.',
+              'The numbers presented are usually wrong.',
+              'Investors have stopped listening to presentations.'], 1),
+        ],
+        'word_formation': [
+            ('The traffic forecast in the original model turned out to be entirely ', 'unreliable',
+             '. (RELY)', 'Negative prefix + adjective from RELY.', None),
+            ('A concession is worth very little without ', 'regulatory',
+             ' certainty behind it. (REGULATE)', 'Adjective from REGULATE.', None),
+            ('The minister spoke for an hour about the country&rsquo;s ', 'attractiveness',
+             ' to long-term capital. (ATTRACT)', 'Abstract noun, from the adjective.', None),
+            ('', 'Predictably',
+             ', the fund chose the asset that was already earning. (PREDICT)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('A pension fund&rsquo;s mandate is deliberately ', 'restrictive',
+             ', and that is the point of it. (RESTRICT)', 'Adjective from RESTRICT.', None),
+            ('What the committee asked for was a plain ', 'explanation',
+             ' of where the risk sits. (EXPLAIN)', 'Noun from the verb.', None),
+            ('Greenfield projects carry a level of ', 'uncertainty',
+             ' that most mandates simply exclude. (CERTAIN)', 'Negative prefix + noun.', None),
+        ],
+        'transformations': [
+            ('The regulatory framework is what worries investors most.', 'WHAT',
+             '', 'What worries investors most is', ' the regulatory framework.',
+             'Wh-cleft: announce the subject, then land the key idea last.', None),
+            ('I find the pipeline number misleading.', 'STRIKES',
+             'What ', 'strikes me about the pipeline number is', ' that it is misleading.',
+             'Opinion frame: what ___ me about X is that ...', None),
+            ('We need predictability, not a higher return.', 'NOT',
+             'What we need is ', 'not a higher return but', ' predictability.',
+             'Wh-cleft with a contrast: not X but Y.', None),
+            ('The fund finally invested because the guarantee was in place.', 'REASON',
+             'The ', 'reason the fund finally invested was', ' that the guarantee was in place.',
+             'Noun frame: the reason ... was that ...', None),
+            ('She explained the structure very clearly.', 'DID',
+             '', 'What she did was explain', ' the structure very clearly.',
+             'Wh-cleft with DO. The verb after &ldquo;was&rdquo; is bare.', 'What she did was to explain'),
+            ('Only the traffic data convinced the committee.', 'THING',
+             'The ', 'one thing that convinced the committee was', ' the traffic data.',
+             'Noun frame with THING, to isolate a single cause.', 'thing that convinced the committee was'),
+        ],
+        'listen': {
+            'file': 'pc1_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'An investor relations adviser, on why a room stops following. She is not the '
+                       'speaker you heard in the lesson.',
+            'text': (
+                "I sit at the back of a lot of these sessions, and the mistake is almost always the same "
+                "one. It is not vocabulary. The people presenting have far more vocabulary than they need. "
+                "The mistake is where they put the important idea. "
+                "Here is what happens. Somebody stands up and says: the regulatory framework in this market "
+                "has been stable since 2011, there have been no retrospective changes to tariffs, and the "
+                "courts have upheld three concession disputes in favour of the operator. All true. All "
+                "useful. And by the time they reach the end of that sentence, half the room has stopped "
+                "following, because nobody told them what to listen for. "
+                "Now take the same content the other way round. What has kept investors in this market is "
+                "one thing: the rules have not moved. Stable since 2011, no retrospective tariff change, "
+                "and three court decisions on the operator's side. Same facts. But the first sentence tells "
+                "you what the point is, and everything after it is evidence. "
+                "That is the whole technique. You decide what the single idea is, you put it in a frame "
+                "that announces it, and then you support it. What matters here is. The reason this deal "
+                "closed was. What we are really asking for is. "
+                "I will say one more thing, because people resist this. It is not about simplifying. A "
+                "committee of sophisticated people does not want simpler content. They want to know, in the "
+                "first five seconds, which of the twelve things you are about to say is the one they should "
+                "argue with."),
+        },
+        'listen_choose': [
+            ('What does the speaker say the mistake almost always is?',
+             ['The presenters do not have enough vocabulary.',
+              'They put the important idea in the wrong place.',
+              'They speak too quickly for an international room.',
+              'They use too many numbers.'], 1),
+            ('In the first version of the sentence, what happens to the room?',
+             ['They disagree with the facts being given.',
+              'They stop following, because they were never told what to listen for.',
+              'They ask for the underlying data.',
+              'They find the sentence too short to judge.'], 1),
+            ('How is the second version different?',
+             ['It leaves out most of the facts.',
+              'It states the point first and turns the rest into evidence.',
+              'It avoids giving any dates.',
+              'It uses more formal language.'], 1),
+            ('What does the speaker say the technique consists of?',
+             ['Taking out the detail the committee will not follow.',
+              'Deciding the single idea, framing it, and then supporting it.',
+              'Slowing down and repeating the key numbers.',
+              'Putting the conclusion on the first slide.'], 1),
+            ('Why does she mention that people resist the idea?',
+             ['Because preparing this way takes much longer.',
+              'Because they think it means making the content simpler.',
+              'Because the frames sound rude in a formal room.',
+              'Because committees dislike being told the answer.'], 1),
+            ('What does she say a sophisticated committee actually wants?',
+             ['Content that has been made simpler for them.',
+              'To know quickly which of your points is the one to argue with.',
+              'More slides, with the data attached.',
+              'A written summary before the session.'], 1),
+        ],
     },
     'media': [
         {'id': 'talk', 'type': 'Talk', 'title': 'Julian Treasure &mdash; &ldquo;How to speak so that people want to listen&rdquo; (TED)',

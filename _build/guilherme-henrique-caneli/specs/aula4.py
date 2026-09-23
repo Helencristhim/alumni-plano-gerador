@@ -311,6 +311,170 @@ L = {
             ('An investor asks if the new rule affects a contract signed in 2023. You say:', ['No, it is protected by a grandfathering clause.', 'No, it is force majeure.', 'No, it is a material breach.'], 0),
         ],
         'think': 'A C-level from Singapore is considering a Brazilian highway concession. In ninety seconds, report what the regulator said this week, making clear what was decided and what was only signaled, and explain force majeure and grandfathering without legal jargon.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'What the Regulator Did Not Say',
+        'reading': [
+            'Every regulated contract is read twice: once for what it promises, and once for what it leaves '
+            'to somebody&rsquo;s judgement. The second reading is the one that sets the price. A concession '
+            'can be beautifully drafted and still be unfinanceable if too much of it rests on '
+            '<b>administrative discretion</b>.',
+
+            'The instruments themselves are not mysterious. <b>A tariff review</b> sets out when and how the '
+            'price the operator charges may be recalculated. <b>A grandfathering clause</b> protects '
+            'contracts signed under the old rules when new ones arrive. <b>A rebalancing claim</b> is what '
+            'the operator files when something outside its control has made the original arithmetic '
+            'impossible. <b>Force majeure</b> covers the events nobody could have prevented, and it is a '
+            'great deal narrower than most people assume.',
+
+            'Some of the machinery protects the state rather than the operator. <b>A step-in right</b> lets '
+            'the authority take over operation if the concessionaire fails badly enough, and what counts as '
+            'badly enough is defined by <b>a material breach</b>. Where the state ends the contract for its '
+            'own reasons, the compensation is <b>a termination payment</b>, and the formula for it is '
+            'negotiated years before anyone imagines using it.',
+
+            'Then there is what sits off the balance sheet. <b>A contingent liability</b> is an obligation '
+            'that only becomes real if something specific happens, which is precisely why finance ministries '
+            'like it, and why <b>a fiscal framework</b> written to be taken seriously puts a ceiling on how '
+            'many of them a government may carry at once.',
+
+            'The process around all of this is slower than the sector would like. <b>Environmental '
+            'licensing</b> takes as long as it takes. <b>A public consultation</b> may not change the '
+            'outcome at all and still has to be done properly, because a consultation done badly is the '
+            'commonest reason a licence is later set aside by a court.',
+
+            'Newer rules tend to arrive through <b>a regulatory sandbox</b>: a defined space in which a few '
+            'operators may test something under relaxed conditions for a fixed period, so that the regulator '
+            'learns before it legislates. None of this removes the work of <b>due diligence</b>. It only '
+            'tells you where to point it.',
+        ],
+        'comprehension': [
+            ('According to the first paragraph, what decides the price of a regulated contract?',
+             ['The length of the concession period.',
+              'How much of the contract is left to somebody&rsquo;s judgement.',
+              'The quality of the drafting.',
+              'The size of the termination payment.'], 1),
+            ('What does a rebalancing claim respond to?',
+             ['A failure by the operator to meet its obligations.',
+              'Something outside the operator&rsquo;s control that has broken the original arithmetic.',
+              'A decision by the regulator to end the contract.',
+              'An event that nobody could have prevented.'], 1),
+            ('What does the text say about force majeure?',
+             ['It covers any event the operator did not cause.',
+              'It is much narrower than most people assume.',
+              'It is the same thing as a rebalancing claim.',
+              'It only applies once the licence has been issued.'], 1),
+            ('Why do finance ministries like contingent liabilities?',
+             ['They are cheaper than direct subsidies.',
+              'They only become real if something specific happens.',
+              'They are not subject to public consultation.',
+              'They can be transferred to the operator.'], 1),
+            ('Why must a public consultation be done properly even when it changes nothing?',
+             ['Because the regulator is required to publish the responses.',
+              'Because a badly run consultation is the commonest reason a licence is later set aside.',
+              'Because the operator can otherwise file a rebalancing claim.',
+              'Because the fiscal framework requires it.'], 1),
+            ('What does the text say a regulatory sandbox is for?',
+             ['Allowing operators to avoid environmental licensing.',
+              'Letting the regulator learn from a limited test before it legislates.',
+              'Giving new entrants a permanent exemption from the rules.',
+              'Replacing due diligence with supervision.'], 1),
+        ],
+        'word_formation': [
+            ('The clause was struck out because it was found to be ', 'unenforceable',
+             ' in that jurisdiction. (ENFORCE)', 'Negative prefix + -able adjective.', 'un-enforceable'),
+            ('Too much ', 'discretion', ' in the hands of an official is itself a risk. (DISCREET)',
+             'Noun. Not "discreetness": this is the power to decide.', None),
+            ('The agency published its ', 'findings', ' after the consultation closed. (FIND)',
+             'Plural noun from the verb.', None),
+            ('', 'Regrettably', ', the licence was set aside on procedural grounds. (REGRET)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('A grandfathering clause offers a measure of ', 'protection', ' against new rules. (PROTECT)',
+             'Noun from the verb.', None),
+            ('The operator disputed the ', 'classification', ' of the event as force majeure. (CLASSIFY)',
+             'Noun from the verb. Watch the internal change.', None),
+            ('The termination formula proved almost ', 'meaningless', ' once inflation moved. (MEANING)',
+             'Noun + negative suffix.', None),
+        ],
+        'transformations': [
+            ('&ldquo;We are not going to reopen the tariff.&rdquo; (the minister)', 'RULED',
+             'The minister ', 'ruled out reopening', ' the tariff.',
+             'Reporting verb + out + -ing.', None),
+            ('&ldquo;You should file the rebalancing claim before the review.&rdquo; (the adviser)', 'ADVISED',
+             'The adviser ', 'advised us to file', ' the rebalancing claim before the review.',
+             'advise + object + to + infinitive.', 'advised them to file'),
+            ('&ldquo;It was not a material breach.&rdquo; (the operator)', 'INSISTED',
+             'The operator ', 'insisted that it was not', ' a material breach.',
+             'insist + that clause. No infinitive here.', 'insisted it was not'),
+            ('&ldquo;I am sorry we missed the consultation deadline.&rdquo; (the director)', 'APOLOGISED',
+             'The director ', 'apologised for missing', ' the consultation deadline.',
+             'apologise for + -ing.', 'apologized for missing'),
+            ('&ldquo;The licence will be issued in March.&rdquo; (the agency)', 'ANNOUNCED',
+             'The agency ', 'announced that the licence would be', ' issued in March.',
+             'Backshift: will becomes would.', None),
+            ('&ldquo;Do not sign before the due diligence is finished.&rdquo; (the lawyer)', 'WARNED',
+             'The lawyer ', 'warned us not to sign', ' before the due diligence was finished.',
+             'warn + object + not to + infinitive.', 'warned them not to sign'),
+        ],
+        'listen': {
+            'file': 'pc4_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A regulatory lawyer, on how she reads a concession. She is not a speaker you heard '
+                       'in the lesson.',
+            'text': (
+                "When a client sends me a concession to review, the first thing I do is not read it from "
+                "the beginning. I go looking for the verbs. "
+                "What I want to know is how sure everybody was. A contract that says the regulator shall "
+                "publish the revised tariff within sixty days is a different document from one that says "
+                "the regulator may publish it in due course. Shall and may are not stylistic choices. They "
+                "are the difference between an obligation and a hope, and the second one cannot be "
+                "financed. "
+                "The same applies to what people said in the room. Clients tell me the minister promised "
+                "there would be no retrospective change. When I ask what exactly was said, it usually turns "
+                "out the minister indicated that the government had no current intention of revisiting the "
+                "framework. Those are not the same sentence. One is a commitment. The other is a mood. "
+                "My second pass is for the word reasonable. Reasonable costs, reasonable endeavours, "
+                "reasonable period. Every one of those is a decision that has not been taken yet, and it "
+                "will be taken later by somebody whose incentives are not yours. Sometimes that is "
+                "unavoidable. But you should know how many of them you are carrying before you sign, "
+                "because each one is a small piece of the price you cannot calculate. "
+                "And the last thing. Read the termination clause first, not last. Nobody wants to, because "
+                "it is the unhappy part of the document. It is also the only part that tells you what the "
+                "state thinks the asset is worth."),
+        },
+        'listen_choose': [
+            ('What does the speaker do first with a new concession?',
+             ['She reads it from the beginning to the end.',
+              'She looks for the verbs, to see how binding each obligation is.',
+              'She compares it with the previous version of the contract.',
+              'She checks the financial model behind it.'], 1),
+            ('What is the difference between &ldquo;shall&rdquo; and &ldquo;may&rdquo; for her?',
+             ['One is older legal style than the other.',
+              'One creates an obligation; the other only creates a hope.',
+              'One applies to the regulator and the other to the operator.',
+              'They are interchangeable in most jurisdictions.'], 1),
+            ('What does she say about what clients report the minister promised?',
+             ['Ministers rarely say anything useful in private.',
+              'What was actually said is usually far weaker than the promise reported.',
+              'Clients invent commitments that were never made.',
+              'Promises made in the room are binding in most jurisdictions.'], 1),
+            ('What is her second pass looking for?',
+             ['Deadlines that have already passed.',
+              'The word &ldquo;reasonable&rdquo;, because it hides a decision not yet taken.',
+              'Clauses copied from another contract.',
+              'The definition of force majeure.'], 1),
+            ('Why does she say those decisions matter?',
+             ['They will be taken later by somebody whose incentives are not yours.',
+              'They always end up in court.',
+              'They cannot be challenged once the licence is issued.',
+              'They are excluded from the fiscal framework.'], 1),
+            ('Why does she read the termination clause first?',
+             ['Because it is usually the shortest part of the contract.',
+              'Because it is the only part that says what the state thinks the asset is worth.',
+              'Because it is the part most often drafted badly.',
+              'Because the lenders ask about it before anything else.'], 1),
+        ],
     },
     'media': [
         {'id': 'podcast', 'type': 'Podcast', 'title': 'Freakonomics Radio &mdash; &ldquo;Regulate This!&rdquo;',
