@@ -478,6 +478,94 @@ def render_preclass(L):
                   % (pre, esc(ans), (' data-alt="%s"' % esc(alt)) if alt else '', esc(hint), esc(phrase), post))
     section('Stage 1.5: Fill in the Blank', 'badge-practice', 'Practice', 'Complete each sentence, then check your answer.', '\n'.join(bl))
 
+    # ── Stages 1.6 a 1.9: a anatomia de preparacao de prova ───────────────────
+    # Vieram da aula 2, depois do feedback do professor Andre em 22/09/2026. Sao
+    # CONDICIONAIS: aula cujo spec ainda nao tem o conteudo continua gerando
+    # exatamente como gerava, byte a byte.
+    #
+    # Nenhum item daqui pode existir no deck: a pre-class PREPARA a aula, nao a
+    # repete. Vocabulario repete de proposito (REGRA 1); tarefa, nao.
+
+    def fill_sem_audio(itens):
+        """Igual ao Stage 1.5, MENOS o botao Listen.
+
+        O botao Listen le o audioMap pelo texto da frase (data-phrase). Estas
+        frases nao tem MP3, entao com o botao o aluno clicaria num botao mudo.
+        """
+        out_ = []
+        for pre, ans, post, hint, alt in itens:
+            out_.append('      <div class="fill-blank-item"><div class="fill-blank-sentence">%s'
+                        '<input class="blank-input" data-answer="%s"%s data-hint="%s" placeholder="___">%s</div>'
+                        '<button class="check-btn" onclick="checkBlank(this)">Check</button></div>'
+                        % (pre, esc(ans), (' data-alt="%s"' % esc(alt)) if alt else '', esc(hint), post))
+        return '\n'.join(out_)
+
+    def quiz_bloco(itens, letras='ABCD'):
+        out_ = []
+        for i, (q, opts_, right) in enumerate(itens, 1):
+            o = ''.join('<div class="quiz-option" onclick="selectQuiz(this)" data-correct="%s">'
+                        '<span class="option-letter">%s</span> %s</div>'
+                        % ('true' if j == right else 'false', letras[j], t)
+                        for j, t in enumerate(opts_))
+            out_.append('      <div class="quiz-item"><div class="quiz-question">%d. %s</div>'
+                        '<div class="quiz-options">%s</div></div>' % (i, q, o))
+        return '\n'.join(out_)
+
+    if P.get('reading'):
+        paras_r = '\n'.join('        <p%s>%s</p>' % ('' if i == 0 else ' style="margin-top:.8rem"', t)
+                            for i, t in enumerate(P['reading']))
+        section('Stage 1.6: Read and Understand', 'badge-quiz', 'Reading',
+                'Read it once straight through, then read it again and answer. Every expression from '
+                'Stage 1.1 is in here doing a job.',
+                '      <div style="text-align:center;margin-bottom:.9rem">'
+                '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;font-weight:700">%s</div></div>\n'
+                '      <div class="context-text" style="background:var(--bg-card);border:1px solid var(--border);'
+                'border-radius:10px;padding:1rem;font-size:.9rem;line-height:1.8;margin-bottom:1rem">\n%s\n      </div>\n%s'
+                % (P['reading_title'], paras_r, quiz_bloco(P['comprehension'])))
+
+    if P.get('word_formation'):
+        section('Stage 1.7: Word Formation', 'badge-grammar', 'Use of English',
+                'Use the word in capitals to form a word that fits the gap. Watch for negative prefixes, '
+                'for part of speech, and for the internal change some of these words make.',
+                fill_sem_audio(P['word_formation']))
+
+    if P.get('transformations'):
+        itens_t = []
+        for lead, key, pre, ans, post, hint, alt in P['transformations']:
+            cab = ('<div style="font-size:.88rem;margin-bottom:.35rem">%s</div>'
+                   '<div style="font-size:.74rem;letter-spacing:.1em;font-weight:800;color:var(--accent);'
+                   'margin-bottom:.3rem">%s</div>' % (lead, key))
+            itens_t.append((cab + pre, ans, post, hint, alt))
+        section('Stage 1.8: Key-word Transformations', 'badge-grammar', 'Use of English',
+                'Complete the second sentence so that it means the same as the first, using the word given. '
+                '<b>Do not change that word.</b> Use between three and eight words.',
+                fill_sem_audio(itens_t))
+
+    if P.get('listen_choose'):
+        li = P['listen']
+        pid = 'lp-pc-l%d' % n
+        player = ('      <div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.5rem">%s</div>\n'
+                  '      <div class="lp cpe-lp" id="%s" data-src="/audio/%s/%s" style="max-width:520px;margin:.4rem 0 1rem">'
+                  '<div class="lp-seekbar" onclick="mpSeek(event,\'%s\')"><div class="lp-progress" id="progress-%s"></div></div>'
+                  '<div class="lp-times"><span id="time-current-%s">0:00</span><span id="time-total-%s">0:00</span></div>'
+                  '<div class="lp-row">'
+                  '<button class="lp-btn" onclick="mpSkip(\'%s\',-5)" aria-label="Back 5 seconds">-5s</button>'
+                  '<button class="lp-btn lp-play" id="play-%s" onclick="mpToggle(\'%s\')" aria-label="Play or pause">'
+                  '<svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18">'
+                  '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>'
+                  '<svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none">'
+                  '<rect x="6" y="4" width="4" height="16" fill="currentColor"/>'
+                  '<rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button>'
+                  '<button class="lp-btn" onclick="mpSkip(\'%s\',5)" aria-label="Forward 5 seconds">+5s</button></div>'
+                  '<div class="lp-speeds">'
+                  '<button class="lp-speed-btn" onclick="mpSpeed(\'%s\',0.85,this)">0.85x</button>'
+                  '<button class="lp-speed-btn lp-speed-active" onclick="mpSpeed(\'%s\',1,this)">1x</button>'
+                  '<button class="lp-speed-btn" onclick="mpSpeed(\'%s\',1.15,this)">1.15x</button></div></div>'
+                  % (li['caption'], pid, SLUG, li['file'], pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid))
+        section('Stage 1.9: Listen and Choose', 'badge-quiz', 'Listening',
+                'One speaker, heard twice, and six questions. Play it a second time before you answer.',
+                player + '\n' + quiz_bloco(P['listen_choose']))
+
     oi = '\n'.join('        <div class="order-item" draggable="true" data-order="%d" onclick="selectOrderItem(this,\'order-l%d\')"><span class="order-num">?</span>'
                    '<span class="order-text">"%s"</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,\'order-l%d\')">&#9650;</button>'
                    '<button class="arrow-btn" onclick="moveItem(this,1,\'order-l%d\')">&#9660;</button></span></div>' % (i + 1, n, t, n, n)

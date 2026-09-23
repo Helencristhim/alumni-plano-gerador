@@ -295,6 +295,168 @@ L = {
             ('You want to invite questions from the audience. You say:', ['Now I will open the floor for questions.', 'Now the floor is opened by me.', 'Now you can make questions.'], 0),
         ],
         'think': 'You are opening the Infrastructure Americas Summit in New York tomorrow. The theme is &ldquo;Capital, Concessions and the Road to 2030.&rdquo; Record your first sixty seconds: no name, no agenda, one idea, one inversion, one show of hands and a handover.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'The First Ninety Seconds',
+        'reading': [
+            'Conference programmes are written backwards. The organisers decide who will <b>convene</b> the '
+            'session, who will deliver <b>the keynote</b> and who will sit for <b>the fireside chat</b>, and '
+            'only then does somebody ask what the event is actually for. By the time the room fills, the '
+            'answer has to arrive in the first ninety seconds or not at all.',
+
+            'That is the job of <b>a curtain-raiser</b>. It is not a welcome, and it is not a reading of the '
+            'agenda. Its function is <b>agenda-setting</b>: to tell four hundred people which of the twenty '
+            'things they could argue about this week is the one that matters. Get it right and the corridors '
+            'talk about that question for two days. Get it wrong and every panel drifts back to whatever the '
+            'room already believed before it arrived.',
+
+            'The tools are older than the conference circuit. <b>A framing device</b> is any sentence that '
+            'tells an audience how to hear what follows: a date, a number, a single contrast. '
+            '<b>A rhetorical pivot</b> is the turn that moves the room off the comfortable half of the '
+            'argument and onto the uncomfortable one, usually somewhere around the third minute.',
+
+            'Openings also carry administrative weight, and the good ones dispose of it quickly. '
+            '<b>A housekeeping note</b> about timings and microphones belongs in one sentence, not four. '
+            '<b>A show of hands</b> is a useful instrument and a dangerous habit: it wakes a room up once '
+            'and bores it twice.',
+
+            'The measure of an opening is not applause. It is whether the room begins to '
+            '<b>coalesce around</b> one question. Chairs who understand this <b>set the tone</b> on purpose, '
+            'and they choose the hardest version of the question rather than the most agreeable one, '
+            'because agreement produces nodding and disagreement produces attendance.',
+
+            'And then they stop. The hardest discipline in the first ten minutes is knowing when to '
+            '<b>open the floor</b> and when to <b>hand over to</b> the first speaker. A chair who keeps '
+            'talking past that point has already told the room that the session is about the chair. If the '
+            'sector really is at <b>an inflection point</b>, the opening is where the room finds out, and it '
+            'finds out in ninety seconds.',
+        ],
+        'comprehension': [
+            ('What does the text say about the way conference programmes are put together?',
+             ['They are built around the availability of the keynote speaker.',
+              'The format is settled before anyone asks what the event is for.',
+              'They are designed by the sponsors rather than the organisers.',
+              'They are copied from the previous year with small changes.'], 1),
+            ('What is the function of a curtain-raiser, according to the text?',
+             ['To welcome the audience and read out the agenda.',
+              'To tell the room which single question matters this week.',
+              'To summarise what was agreed at the last conference.',
+              'To introduce each of the speakers in turn.'], 1),
+            ('What does a rhetorical pivot do?',
+             ['It repeats the main number so the room remembers it.',
+              'It moves the room off the comfortable side of the argument onto the uncomfortable one.',
+              'It hands the session over to the first panellist.',
+              'It softens a disagreement between two speakers.'], 1),
+            ('What does the text say about a show of hands?',
+             ['It should be avoided in a room of more than a hundred people.',
+              'It works once and becomes tiresome if it is used again.',
+              'It is the fastest way to settle a disputed point.',
+              'It belongs at the end of a session, not the beginning.'], 1),
+            ('How is the success of an opening measured?',
+             ['By the volume of the applause it receives.',
+              'By whether the room starts to gather around one question.',
+              'By how many people stay for the fireside chat.',
+              'By how closely the session keeps to its timings.'], 1),
+            ('Why do good chairs choose the hardest version of the question?',
+             ['Because it is the version the sponsors expect.',
+              'Because agreement produces nodding and disagreement brings people.',
+              'Because it gives the keynote speaker more to work with.',
+              'Because it shortens the housekeeping note.'], 1),
+        ],
+        'word_formation': [
+            ('She ', 'emphasised', ' the number twice, and the room remembered it. (EMPHASIS)',
+             'Verb from the noun, past tense. British spelling, with an s.', 'emphasized'),
+            ('Nodding is not ', 'agreement', '; it is politeness. (AGREE)', 'Noun from the verb.', None),
+            ('The opening was short, blunt and entirely ', 'persuasive', '. (PERSUADE)',
+             'Adjective from PERSUADE. Watch the internal change.', None),
+            ('His ', 'introduction', ' ran four minutes longer than the slot allowed. (INTRODUCE)',
+             'Noun from the verb.', None),
+            ('The pivot is the moment the room becomes ', 'uncomfortable', '. (COMFORT)',
+             'Negative prefix + adjective.', None),
+            ('A show of hands loses all its force on ', 'repetition', '. (REPEAT)',
+             'Abstract noun from the verb.', None),
+            ('', 'Unusually', ', the chair finished two minutes early. (USUAL)',
+             'Negative prefix + adverb, capital letter, comma after it.', None),
+        ],
+        'transformations': [
+            ('The chair had never seen a room turn so fast.', 'NEVER',
+             '', 'Never had the chair seen', ' a room turn so fast.',
+             'Negative adverb first, then subject and verb invert.', None),
+            ('She realised the mistake only after the session had ended.', 'ONLY',
+             '', 'Only after the session had ended did she', ' realise the mistake.',
+             'Only + time phrase at the front, then inversion in the main clause.', None),
+            ('The panel did not agree on a single point.', 'NOT',
+             '', 'Not on a single point did the panel', ' agree.',
+             'Fronted negative phrase, then inversion.', None),
+            ('The audience rarely hears the real question in the first minute.', 'RARELY',
+             '', 'Rarely does the audience hear', ' the real question in the first minute.',
+             'Rarely + inversion, present simple.', None),
+            ('As soon as he sat down, the questions started.', 'SOONER',
+             'No ', 'sooner had he sat down than', ' the questions started.',
+             'No sooner ... than ... Past perfect in the first half.', None),
+            ('The chair did not look at his notes at any point.', 'ONCE',
+             'Not ', 'once did the chair look', ' at his notes.',
+             'Not once + inversion.', None),
+        ],
+        'listen': {
+            'file': 'pc3_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A conference programme director, on what she listens for in an opening. She is not '
+                       'a speaker you heard in the lesson.',
+            'text': (
+                "I have chaired about two hundred of these and I have watched a lot more, and I can tell "
+                "you within a minute whether the session is going to work. It has nothing to do with how "
+                "good the speaker is. "
+                "Here is the test. Ninety seconds in, can I say out loud what we are arguing about today? "
+                "Not the theme. Themes are useless. The theme is infrastructure and the future of cities, "
+                "which tells me nothing. The question is whether public money should be going into assets "
+                "that private money would fund anyway. That I can argue with. "
+                "Most openings fail because the chair is being polite. They thank the sponsors, they "
+                "introduce four people by reading their biographies, they mention the fire exits, and by "
+                "the time anybody says anything contestable the room is on its phones. The biographies are "
+                "in the programme. Nobody needs them read aloud. "
+                "The second failure is softer and harder to fix. The chair picks the version of the "
+                "question that everybody in the room already agrees with. You get warm nodding and a very "
+                "quiet Q and A, because there is nothing to push against. If your opening cannot produce a "
+                "disagreement, you have not opened anything. "
+                "One last thing. Stop on time. The discipline that separates a good chair from an "
+                "enthusiastic one is knowing the moment to stop talking and hand over. If you are still "
+                "speaking at minute twelve, you have told four hundred people that this session is about "
+                "you."),
+        },
+        'listen_choose': [
+            ('What does the speaker say she can tell within a minute?',
+             ['How experienced the chair is.',
+              'Whether the session is going to work.',
+              'How many people will stay to the end.',
+              'Whether the sponsors will be satisfied.'], 1),
+            ('What is her test for a good opening?',
+             ['Whether the chair keeps to the timings.',
+              'Whether she can say out loud what is being argued about.',
+              'Whether the speakers have been properly introduced.',
+              'Whether the theme has been clearly stated.'], 1),
+            ('What does she say about themes?',
+             ['They should be agreed with the sponsors in advance.',
+              'They are useless, because they tell you nothing you can argue with.',
+              'They work if they are narrow enough.',
+              'They belong in the closing session, not the opening.'], 1),
+            ('Why does she say most openings fail?',
+             ['The chair has not prepared enough material.',
+              'The chair is being polite, and nothing contestable is said in time.',
+              'The room is too large for the format.',
+              'The speakers arrive late and disrupt the timings.'], 1),
+            ('What is the second, harder failure she describes?',
+             ['The chair speaks for too long about the sponsors.',
+              'The chair picks a version of the question everybody already agrees with.',
+              'The chair asks for a show of hands too early.',
+              'The chair hands over before the room is ready.'], 1),
+            ('What discipline separates a good chair from an enthusiastic one?',
+             ['Reading the biographies quickly.',
+              'Knowing the moment to stop talking and hand over.',
+              'Keeping the Q and A short.',
+              'Rehearsing the opening word for word.'], 1),
+        ],
     },
     'media': [
         {'id': 'talk', 'type': 'Talk', 'title': 'Nancy Duarte &mdash; &ldquo;The secret structure of great talks&rdquo; (TED)',

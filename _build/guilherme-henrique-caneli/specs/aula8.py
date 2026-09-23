@@ -311,6 +311,166 @@ L = {
             ('A topic was not resolved. You say:', ['We will circle back to arbitration in June.', 'We will do the arbitration again in June.', 'We will turn around to arbitration in June.'], 0),
         ],
         'think': 'This is your capstone. Record five minutes: open a GRI panel as host with one inversion and one long noun phrase, answer a panelist who says regulatory ambiguity makes every commitment meaningless, and close with a one-sentence recap, three commitments with dates and one call to action.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'The Closing Address That Is Worth Staying For',
+        'reading': [
+            'By the last afternoon of a three-day event the room has heard forty speakers and can remember '
+            'four. <b>A closing address</b> that simply lists what happened is the reason people book '
+            'flights for five o&rsquo;clock.',
+
+            'The ones that work do three things and then stop. They <b>recap</b> without summarising: not '
+            'what each panel said, but the two or three sentences that turned out to matter. They name '
+            '<b>a through line</b> &mdash; the argument that ran underneath the whole programme, usually '
+            'visible only from the end. And they say what happens next.',
+
+            'That last part is where most closings collapse into weather. <b>A call to action</b> that asks '
+            'everybody to continue the conversation is not a call to action; it is a goodbye with a verb in '
+            'it. What makes it real is a date. By this time next year we will have published the framework. '
+            'Between now and March the working group will be meeting every month.',
+
+            'The apparatus that holds that together is dull and necessary. <b>An action item</b> has an '
+            'owner and a date, and without both of them it is a wish. <b>A roadmap</b> puts those items in '
+            'sequence, so that a room can see which one is blocking the others. <b>A scorecard</b> is what '
+            'you open at the next event to find out how many of them survived contact with the year.',
+
+            '<b>A benchmark</b> and <b>a milestone</b> are not the same thing, and the confusion is '
+            'expensive. A benchmark is a standard you are measured against, usually somebody else&rsquo;s '
+            'performance. A milestone is a point on your own route. You can hit every milestone you set and '
+            'still be behind the benchmark, and a room that has not understood the difference will applaud '
+            'the wrong chart.',
+
+            'None of it survives without a mechanism. <b>A debrief</b> within the week, while people can '
+            'still remember what was actually said. A written <b>retrospective</b> that is honest about what '
+            'did not work. An agreement to <b>circle back</b> in ninety days on the three items that '
+            'mattered, and somebody whose job it is to <b>follow through on</b> them. The purpose of the '
+            'last twenty minutes is not to make the room feel good about the week. It is to '
+            '<b>take stock</b> in public, so that the next event has something to be measured against.',
+        ],
+        'comprehension': [
+            ('What does the text say is wrong with most closing addresses?',
+             ['They are too short for the size of the event.',
+              'They list what happened, which is why people leave early.',
+              'They repeat the opening address.',
+              'They are given by someone who was not at the event.'], 1),
+            ('What does the text mean by a through line?',
+             ['The schedule that runs across the three days.',
+              'The argument running underneath the whole programme, usually visible only at the end.',
+              'The list of speakers who appeared more than once.',
+              'The single question put to every panel.'], 1),
+            ('Why is &ldquo;continue the conversation&rdquo; criticised?',
+             ['It has been used too often at this kind of event.',
+              'It is a goodbye with a verb in it, because there is no date attached.',
+              'It excludes the people who are leaving early.',
+              'It belongs in the opening, not the closing.'], 1),
+            ('What does an action item need in order to be real?',
+             ['A budget and a sponsor.',
+              'An owner and a date.',
+              'A place on the roadmap.',
+              'Agreement from the whole room.'], 1),
+            ('What is the difference between a benchmark and a milestone?',
+             ['A benchmark is set internally; a milestone is set by the regulator.',
+              'A benchmark is a standard you are measured against; a milestone is a point on your own route.',
+              'A benchmark has a date; a milestone does not.',
+              'A benchmark applies to the sector; a milestone applies to the event.'], 1),
+            ('According to the last paragraph, what is the purpose of the final twenty minutes?',
+             ['To thank the speakers and the sponsors properly.',
+              'To take stock in public, so the next event has something to measure against.',
+              'To agree the programme for the following year.',
+              'To let the room hear from the delegates who did not speak.'], 1),
+        ],
+        'word_formation': [
+            ('The retrospective was unusually ', 'honest', ' about what had gone wrong. (HONESTY)',
+             'Adjective from the noun.', None),
+            ('An action item without an owner is ', 'meaningless', '. (MEANING)',
+             'Noun + negative suffix.', None),
+            ('Her ', 'insistence', ' on a date for every item changed the tone of the room. (INSIST)',
+             'Noun from the verb.', None),
+            ('', 'Encouragingly', ', eleven of the fourteen items had been closed. (ENCOURAGE)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('The roadmap made the ', 'sequence', ' of the work obvious for the first time. (SEQUENTIAL)',
+             'Noun. The adjective is given; you need the thing itself.', None),
+            ('Nobody disputed the numbers; what they disputed was their ', 'significance', '. (SIGNIFY)',
+             'Noun. Watch the internal change.', None),
+            ('It is ', 'unrealistic', ' to close fourteen action items in ninety days. (REAL)',
+             'Negative prefix + adjective.', None),
+        ],
+        'transformations': [
+            ('The framework will be published before the end of next year.', 'HAVE',
+             'By the end of next year we ', 'will have published', ' the framework.',
+             'Future perfect: finished by a point in the future.', None),
+            ('The working group meets every month between now and March.', 'BE',
+             'Between now and March the working group ', 'will be meeting', ' every month.',
+             'Future continuous, for an arrangement that runs across a period.', None),
+            ('It is almost five years since the first roadmap was agreed.', 'HAVE',
+             'Next month it ', 'will have been five years since', ' the first roadmap was agreed.',
+             'Future perfect with &ldquo;since&rdquo;.', None),
+            ('I will finish the debrief and then send you the retrospective.', 'BY',
+             'I ', 'will have finished the debrief by', ' the time I send you the retrospective.',
+             'Future perfect with &ldquo;by the time&rdquo;.', None),
+            ('Do not call me on Thursday morning, because that is when I present.', 'PRESENTING',
+             'On Thursday morning I ', 'will be presenting', ', so do not call me then.',
+             'Future continuous for a fixed future activity.', None),
+            ('By December the team will complete every action item on the list.', 'WORKED',
+             'By December the team ', 'will have worked through', ' every action item on the list.',
+             'Future perfect with a phrasal verb.', None),
+        ],
+        'listen': {
+            'file': 'pc8_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A programme director, on what a closing address is for. She is not a speaker you '
+                       'heard in the lesson.',
+            'text': (
+                "I will tell you the test I use, and it is not a kind one. Two weeks after the event, I "
+                "call four people who were in the room and I ask them one question: what are we doing "
+                "differently? If all four give me a different answer, the closing failed, however good it "
+                "sounded on the day. "
+                "The reason is almost always the same. The person closing tried to be fair. They mentioned "
+                "every panel, thanked every sponsor, and by the end the room had twelve things to remember, "
+                "which means it had none. A closing address is not a receipt for the week. You are allowed "
+                "to leave things out. You are supposed to leave things out. "
+                "The second failure is the date. People will commit to almost anything as long as there is "
+                "no date attached, and a commitment without a date is just a sentiment in a suit. So I make "
+                "the closing speaker say the month out loud. Not soon. Not in the coming period. March. "
+                "Now, one thing people get wrong in the other direction. Do not read out the action list. "
+                "Fourteen items read aloud is a document, not a speech, and nobody is writing them down. "
+                "Name three. Put the other eleven in the email that goes out on Monday. "
+                "And do the debrief inside a week. After ten days people remember what they wish had "
+                "happened, not what did."),
+        },
+        'listen_choose': [
+            ('What is the test the speaker uses?',
+             ['She counts how many people stayed until the end.',
+              'She asks four people, two weeks later, what is being done differently.',
+              'She reads the rapporteur&rsquo;s notes against the programme.',
+              'She compares the closing with the opening address.'], 1),
+            ('What does it mean if all four give different answers?',
+             ['The event covered too many subjects.',
+              'The closing failed, however good it sounded on the day.',
+              'The action items were not written down.',
+              'The wrong people were invited.'], 1),
+            ('What does she say the person closing usually tries to do?',
+             ['Finish ahead of time.',
+              'Be fair, mentioning every panel and every sponsor.',
+              'Avoid committing the organisation to anything.',
+              'Repeat the main argument of the keynote.'], 1),
+            ('Why does she make the speaker say the month out loud?',
+             ['So the interpreters can render it accurately.',
+              'Because a commitment without a date is only a sentiment.',
+              'Because the sponsors ask for the timetable.',
+              'So it can be checked against the roadmap.'], 1),
+            ('What does she say about reading out the action list?',
+             ['It should be done slowly enough for people to write it down.',
+              'Fourteen items read aloud is a document, not a speech: name three.',
+              'It belongs at the start of the closing, not the end.',
+              'It should be handed to the rapporteur instead.'], 1),
+            ('Why must the debrief happen within a week?',
+             ['The scorecard has to be published quickly.',
+              'After ten days people remember what they wish had happened, not what did.',
+              'The organisers need it for the next programme.',
+              'Delegates stop answering emails after that.'], 1),
+        ],
     },
     'media': [
         {'id': 'podcast', 'type': 'Podcast', 'title': 'Freakonomics Radio &mdash; &ldquo;How to Change Your Mind&rdquo;',

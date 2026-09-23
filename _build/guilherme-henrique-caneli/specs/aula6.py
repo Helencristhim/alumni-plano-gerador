@@ -311,6 +311,167 @@ L = {
             ('A journalist asks for figures a fund shared privately. You say:', ['Those were shared on background, so we cannot put them on the record.', 'Those are on the record, sorry.', 'Those figures are boilerplate.'], 0),
         ],
         'think': 'The roundtable just ended. Record a ninety-second version of tonight&rsquo;s press statement as you would dictate it to your team: the lede, the two positions, the ministry&rsquo;s next step, one plan that did not happen, and the quote on the record. Use at least four connectors from today.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'The Statement Nobody Wanted to Write',
+        'reading': [
+            'Every organisation discovers, sooner or later, that it has to say something before it knows '
+            'what it thinks. The instrument for that is <b>a holding statement</b>: three sentences '
+            'confirming what is already public, declining what is not, and promising more later. It is '
+            'written in advance, it sits in a drawer, and its only job is to buy forty-eight hours.',
+
+            'The rest of the machinery is more deliberate. <b>A press statement</b> is issued by one party '
+            'in its own words. <b>A joint statement</b> is issued by several, and takes five times as long, '
+            'because every clause has to survive <b>stakeholder alignment</b> before anybody outside reads '
+            'it. The compromise is usually visible in the text.',
+
+            'Timing is governed by <b>an embargo</b>: the material goes out in advance on the condition that '
+            'nothing is published before a stated hour. It is an old convention held together by nothing '
+            'but professional habit, which is exactly why breaking one is treated so seriously.',
+
+            'What may be said, and by whom, is not a matter of taste. <b>Disclosure obligations</b> require '
+            'a listed company to publish <b>material information</b> &mdash; anything a reasonable investor '
+            'would want to know before dealing &mdash; promptly, and to everyone at the same time. A remark '
+            'made <b>on background</b>, unattributed, is still a remark; a remark made <b>on the record</b> '
+            'belongs to the journalist. <b>A spokesperson</b> who is unclear about which of the two is in '
+            'play should not be in the conversation.',
+
+            'The craft of it is small and ruthless. <b>A lede</b> that buries the news in the third line is '
+            'a lede that somebody else will rewrite, and you will not care for their version. '
+            '<b>Boilerplate</b> at the foot of the release is not decoration: it is the paragraph the legal '
+            'team fought over, and it is supposed to be dull.',
+
+            'The hardest of all is <b>forward guidance</b>, which is the art of saying what you expect '
+            'without promising it. It has to be specific enough to be useful and vague enough to survive a '
+            'bad quarter, and getting the balance wrong in either direction means the next statement is a '
+            'correction. Before any of it goes out, somebody has to be able to say <b>a key message</b> in '
+            'one sentence, out loud, without looking at the page.',
+        ],
+        'comprehension': [
+            ('What is a holding statement for?',
+             ['Announcing a decision the board has already taken.',
+              'Buying time before the organisation knows what it thinks.',
+              'Correcting something published in error.',
+              'Setting out guidance for the coming quarter.'], 1),
+            ('Why does a joint statement take so much longer?',
+             ['It has to be translated into several languages.',
+              'Every clause has to survive agreement between all the parties first.',
+              'It must be cleared by the regulator before release.',
+              'It is always longer than a press statement.'], 1),
+            ('What holds an embargo together, according to the text?',
+             ['A contract signed by every journalist.',
+              'Nothing but professional habit.',
+              'The disclosure rules for listed companies.',
+              'The threat of legal action.'], 1),
+            ('What do disclosure obligations require?',
+             ['That all comment go through a single spokesperson.',
+              'That material information be published promptly and to everyone at once.',
+              'That background remarks be recorded and kept.',
+              'That guidance be issued every quarter.'], 1),
+            ('What does the text say about boilerplate?',
+             ['It can safely be cut when space is short.',
+              'It is the paragraph the legal team fought over, and it is meant to be dull.',
+              'It is what journalists read first.',
+              'It changes with every release.'], 1),
+            ('Why is forward guidance described as the hardest part?',
+             ['It has to be cleared by more people than anything else.',
+              'It must be specific enough to be useful and vague enough to survive a bad quarter.',
+              'It cannot be issued under embargo.',
+              'It is the only part that names individuals.'], 1),
+        ],
+        'word_formation': [
+            ('The company was criticised for the ', 'vagueness', ' of its guidance. (VAGUE)',
+             'Abstract noun from the adjective.', None),
+            ('Breaking an embargo is treated as ', 'unprofessional', ' rather than illegal. (PROFESSION)',
+             'Negative prefix + adjective from the noun.', None),
+            ('The release was held back pending legal ', 'clearance', '. (CLEAR)',
+             'Noun from the verb.', None),
+            ('', 'Regrettably', ', the lede buried the only piece of news in the release. (REGRET)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('A spokesperson has to be ', 'credible', ' before anything she says is worth printing. (CREDIT)',
+             'Adjective. Not &ldquo;creditable&rdquo;: this one is about being believed.', None),
+            ('The two boards reached a workable ', 'alignment', ' on the wording. (ALIGN)',
+             'Noun from the verb.', None),
+            ('Material information must be published ', 'promptly', '. (PROMPT)',
+             'Adverb from the adjective.', None),
+        ],
+        'transformations': [
+            ('The board will meet on Thursday, according to the arrangement.', 'TO',
+             'The board ', 'is to meet', ' on Thursday.',
+             'be + to + infinitive, for a formal arrangement.', None),
+            ('The statement was expected to be released at noon, but it was not.', 'SUPPOSED',
+             'The statement ', 'was supposed to be released', ' at noon.',
+             'be supposed to, for an expectation that did not hold.', None),
+            ('It is obligatory for listed companies to disclose material information.', 'HAVE',
+             'Listed companies ', 'have to disclose', ' material information.',
+             'have to, for an obligation imposed from outside.', None),
+            ('The embargo was broken, and as a result the joint statement was brought forward.', 'CONSEQUENCE',
+             'The embargo was broken; ', 'as a consequence, the joint statement was', ' brought forward.',
+             'Formal linker in place of &ldquo;as a result&rdquo;.', 'in consequence, the joint statement was'),
+            ('Although the wording had been agreed, nobody was satisfied with it.', 'NOTWITHSTANDING',
+             '', 'Notwithstanding the agreed wording,', ' nobody was satisfied with it.',
+             'Formal concessive linker followed by a noun phrase.', None),
+            ('The spokesperson was not permitted to comment before noon.', 'WAS',
+             'The spokesperson ', 'was not to comment', ' before noon.',
+             'be to in the negative, for an instruction that was given.', None),
+        ],
+        'listen': {
+            'file': 'pc6_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A communications director, on what goes wrong in a statement. She is not a speaker '
+                       'you heard in the lesson.',
+            'text': (
+                "I have a rule that annoys everybody I work with. Before I read a draft, I ask the person "
+                "who wrote it to tell me what it says. Out loud. Without the document in front of them. "
+                "About a third of the time they cannot do it, and that is the end of the meeting, because a "
+                "statement nobody can summarise is not a statement. It is a set of paragraphs that survived "
+                "a committee. "
+                "The commonest failure is not legal and it is not stylistic. It is that the news has been "
+                "moved. Somebody has put the context first, because the context feels responsible, and the "
+                "actual development is now in line four. A journalist reads two lines. Two. If your news is "
+                "in line four, the story that appears is somebody else's version of it. "
+                "The second thing is over-qualification. Every reviewer adds one careful word, and each one "
+                "is defensible on its own, and by the fifth pass the sentence commits to nothing at all. "
+                "You have to protect the verb. If the verb goes soft, nothing else in the paragraph "
+                "matters. "
+                "And the last one, which people find uncomfortable. Decide what you would say if it goes "
+                "badly, before it goes well. Write the difficult version while everybody is calm. Nobody "
+                "writes anything sensible at eleven at night with a journalist on the phone, and that is "
+                "precisely when the drawer gets opened."),
+        },
+        'listen_choose': [
+            ('What is the rule that annoys her colleagues?',
+             ['She refuses to read drafts after five in the afternoon.',
+              'She asks the writer to say what the draft says, out loud, without the document.',
+              'She insists on approving every adjective.',
+              'She sends every draft to the legal team first.'], 1),
+            ('What does she conclude if the writer cannot do it?',
+             ['The draft needs a stronger lede.',
+              'It is not a statement, only paragraphs that survived a committee.',
+              'The subject is too technical for a statement.',
+              'Another person should write it.'], 1),
+            ('What does she say the commonest failure is?',
+             ['A legal problem with the wording.',
+              'The news has been moved down, with the context put first.',
+              'The statement is too long for the format.',
+              'The spokesperson is not named.'], 1),
+            ('Why does that matter so much?',
+             ['Editors cut the last paragraph first.',
+              'A journalist reads two lines, so the story becomes somebody else&rsquo;s version.',
+              'Regulators require the news in the first line.',
+              'It makes the embargo impossible to enforce.'], 1),
+            ('What happens through over-qualification?',
+             ['The statement becomes too long to publish.',
+              'Each careful word is defensible, and by the fifth pass the sentence commits to nothing.',
+              'The legal team refuses to clear it.',
+              'The key message contradicts the guidance.'], 1),
+            ('What does she say to do before things go badly?',
+             ['Agree a spokesperson with the board.',
+              'Write the difficult version while everybody is still calm.',
+              'Put every statement under embargo.',
+              'Keep the guidance as vague as possible.'], 1),
+        ],
     },
     'media': [
         {'id': 'podcast', 'type': 'Podcast', 'title': 'Freakonomics Radio &mdash; &ldquo;Why Is Academic Writing So Bad?&rdquo;',

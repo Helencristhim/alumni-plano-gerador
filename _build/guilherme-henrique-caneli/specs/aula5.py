@@ -295,6 +295,164 @@ L = {
             ('You want to admit the other person is right about one thing. You say:', ['I will concede the point on 2014.', 'I concord with you in parts.', 'You have the reason on 2014.'], 0),
         ],
         'think': 'You are moderating a flash debate: a sovereign fund says Brazil&rsquo;s framework is not investable, and the ministry says the framework is stable. In two minutes, restate both positions fairly, concede one point to each, turn the disagreement into a hypothesis without if, and close with a forward-looking question.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'The Question You Were Not Expecting',
+        'reading': [
+            'There is a moment in almost every panel when the prepared material runs out. Somebody asks the '
+            'question that was not on the list, and the next forty seconds decide how the room reads you for '
+            'the rest of the hour.',
+
+            'Most people reach for <b>a talking point</b>. It is the safest instrument and the most easily '
+            'detected: an audience can hear a rehearsed sentence arriving from a long way off. Worse, if the '
+            'point does not fit the question, what you have produced is <b>a non-answer</b>, and a room '
+            'forgives almost anything faster than it forgives that.',
+
+            'The alternative is not to answer everything. It is to be visible about what you are doing. To '
+            '<b>sidestep a question</b> openly &mdash; &ldquo;I am not going to give you a number, and I '
+            'will tell you why&rdquo; &mdash; costs far less than pretending. To <b>concede a point</b> '
+            'early costs almost nothing, and it buys the right to hold everything else.',
+
+            'The useful techniques are small ones. To <b>reframe</b> is to accept the subject and change the '
+            'terms: the question was about cost, and you answer about who carries it. To <b>push back</b> is '
+            'to disagree on the record, which is sometimes exactly what a room wants to watch. To '
+            '<b>play devil&rsquo;s advocate</b> lets you put an argument on the table without owning it, '
+            'although it wears thin if you do it twice in an hour.',
+
+            'Two traps. The first is <b>a straw man</b>: answering a weaker version of the question than the '
+            'one you were actually asked. Everyone notices, starting with the person who asked it. The '
+            'second is the unattached <b>caveat</b>, the qualification that swallows the sentence it was '
+            'attached to, until nobody in the room could say what was claimed.',
+
+            'What the good ones do is decide in advance where <b>a red line</b> really sits, and then say '
+            'everything else. They know which numbers they cannot give, and they give the rest freely, which '
+            'is why they sound open rather than evasive. They look for <b>common ground</b> before they need '
+            'it, they <b>steer the discussion</b> without appearing to, and when the temperature rises they '
+            '<b>rein in</b> the argument rather than the person making it. The skill is not winning the '
+            'exchange. It is to <b>take the heat out of</b> it and still leave the question answered.',
+        ],
+        'comprehension': [
+            ('What does the text say decides how the room reads you?',
+             ['The quality of your prepared material.',
+              'The forty seconds after the unexpected question.',
+              'Whether you agree with the other panellists.',
+              'How long you speak for in total.'], 1),
+            ('Why is a talking point risky?',
+             ['It takes too long to deliver.',
+              'A rehearsed sentence is easy to hear coming, and worse if it does not fit the question.',
+              'It usually contains a number that can be checked.',
+              'It commits you to a position you cannot leave.'], 1),
+            ('What does the text recommend instead of answering everything?',
+             ['Referring the question to another panellist.',
+              'Being visible about what you are refusing to answer, and why.',
+              'Promising to follow up after the session.',
+              'Answering a simpler version of the question.'], 1),
+            ('What is a straw man, as described here?',
+             ['An argument you put forward without owning it.',
+              'Answering a weaker version of the question than the one you were asked.',
+              'A qualification that swallows the claim it was attached to.',
+              'A number you are not allowed to give.'], 1),
+            ('Why do the good ones sound open rather than evasive?',
+             ['They answer every question they are asked.',
+              'They know exactly what they cannot say, and give everything else freely.',
+              'They avoid disagreeing with the audience.',
+              'They prepare more talking points than the others.'], 1),
+            ('According to the last paragraph, what is the real skill?',
+             ['Winning the exchange in front of the room.',
+              'Lowering the temperature while still answering the question.',
+              'Keeping the discussion away from the difficult subjects.',
+              'Getting the last word before the chair moves on.'], 1),
+        ],
+        'word_formation': [
+            ('The answer was polite, fluent and completely ', 'evasive', '. (EVADE)',
+             'Adjective from EVADE. Watch the internal change.', None),
+            ('Her ', 'refusal', ' to give a number was the most convincing thing she said. (REFUSE)',
+             'Noun from the verb.', None),
+            ('He conceded the point with surprising ', 'ease', '. (EASY)',
+             'Noun from the adjective.', None),
+            ('', 'Predictably', ', the panel spent ten minutes on the one question nobody could answer. (PREDICT)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('A caveat that long makes the whole claim ', 'meaningless', '. (MEANING)',
+             'Noun + negative suffix.', None),
+            ('The chair was praised for her ', 'handling', ' of a hostile room. (HANDLE)',
+             'Noun from the verb, formed with -ing.', None),
+            ('It is ', 'unwise', ' to play devil&rsquo;s advocate twice in the same hour. (WISE)',
+             'Negative prefix + adjective.', None),
+        ],
+        'transformations': [
+            ('If the minister had known, she would not have said it.', 'HAD',
+             '', 'Had the minister known,', ' she would not have said it.',
+             'Third conditional without &ldquo;if&rdquo;: invert HAD and the subject.', None),
+            ('If you need a number, I will give you a range instead.', 'SHOULD',
+             '', 'Should you need a number,', ' I will give you a range instead.',
+             'First conditional without &ldquo;if&rdquo;: Should + subject + bare infinitive.', None),
+            ('If the tariff were reopened, the lenders would walk away.', 'WERE',
+             '', 'Were the tariff to be reopened,', ' the lenders would walk away.',
+             'Second conditional without &ldquo;if&rdquo;: Were + subject + to + infinitive.', 'Were the tariff reopened,'),
+            ('I cannot give you that figure today.', 'POSITION',
+             'I am ', 'not in a position to give you', ' that figure today.',
+             'Diplomatic paraphrase: not in a position to ...', None),
+            ('You are wrong about the consultation.', 'QUITE',
+             'I am ', 'not sure that is quite right', ' about the consultation.',
+             'Soften a flat contradiction without withdrawing it.', 'not quite sure that is right'),
+            ('If it had not been for the guarantee, the deal would have died.', 'BEEN',
+             'Had it ', 'not been for the guarantee,', ' the deal would have died.',
+             'Inverted form of &ldquo;if it had not been for&rdquo;.', None),
+        ],
+        'listen': {
+            'file': 'pc5_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A media trainer who prepares executives for hostile panels. She is not a speaker '
+                       'you heard in the lesson.',
+            'text': (
+                "The first thing I tell people is that the audience is not scoring your answer. They are "
+                "scoring your face while you decide what to say. That half second before you open your "
+                "mouth carries more information than the sentence that follows it. "
+                "So the drill is not about clever phrases. It is about the pause. You take the question, "
+                "you let one full beat go by, and then you speak. It feels endless from the inside. From "
+                "the outside it reads as somebody who is thinking rather than reciting. "
+                "Now, the content. There are three honest moves and everybody forgets two of them. You can "
+                "answer it. You can say why you are not going to answer it. Or you can say you do not know "
+                "and tell the room when you will. What people do instead is a fourth thing, which is to "
+                "answer a neighbouring question and hope nobody noticed. They always notice. "
+                "I also make people write down their red lines before the event. Not vague ones. The "
+                "specific numbers and names they will not give, in writing, the night before. It sounds "
+                "bureaucratic and it is the single most useful thing on the list, because once you know "
+                "exactly what you are protecting, you stop protecting everything. That is the difference "
+                "between an executive who sounds open and one who sounds like a press release. "
+                "And when it gets hot, slow down. Everybody speeds up. The person who slows down owns the "
+                "room."),
+        },
+        'listen_choose': [
+            ('What does the speaker say the audience is really scoring?',
+             ['The accuracy of the answer given.',
+              'Your face in the moment before you answer.',
+              'How long you speak for.',
+              'Whether you agree with the questioner.'], 1),
+            ('What is the drill she teaches?',
+             ['Preparing a phrase for every likely question.',
+              'Taking the question, letting one full beat pass, and then speaking.',
+              'Repeating the question back before answering it.',
+              'Looking at the chair before you begin.'], 1),
+            ('How many honest moves does she describe?',
+             ['Two.', 'Three.', 'Four.', 'Five.'], 1),
+            ('What is the fourth thing people do instead?',
+             ['They refuse to answer at all.',
+              'They answer a neighbouring question and hope nobody noticed.',
+              'They pass the question to another panellist.',
+              'They promise to follow up in writing.'], 1),
+            ('Why does she make people write down their red lines in advance?',
+             ['So the chair can avoid those subjects.',
+              'Because once you know what you are protecting, you stop protecting everything.',
+              'Because the legal team requires it.',
+              'So they can be shared with the other panellists.'], 1),
+            ('What does she say to do when the exchange gets hot?',
+             ['Concede the point and move on.',
+              'Slow down, because everybody else speeds up.',
+              'Ask the questioner to repeat the question.',
+              'Hand the question back to the chair.'], 1),
+        ],
     },
     'media': [
         {'id': 'talk', 'type': 'Talk', 'title': 'Julia Dhar &mdash; &ldquo;How to disagree productively and find common ground&rdquo; (TED)',

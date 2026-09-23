@@ -295,6 +295,167 @@ L = {
             ('You want to help the interpreters. You say:', ['For our colleagues in the booth, let me summarize that in one sentence.', 'Interpreters, translate fast now.', 'Sorry for the booth.'], 0),
         ],
         'think': 'You are opening a multilateral panel on infrastructure finance. Record two minutes: two ground rules, the four panelists introduced with one precise noun phrase each, the first question, and one sentence summarized for the interpretation booth.',
+
+        # ── Stages 1.6 a 1.9 — preparacao de prova (22/09/2026) ───────────────
+        # Anatomia trazida da aula 2, depois do feedback do professor Andre.
+        # Nenhum item daqui existe no deck: a pre-class PREPARA, nao repete.
+        'reading_title': 'How a Room of Sixty Reaches One Sentence',
+        'reading': [
+            'The hardest format in this business is not the keynote. It is the closed session: sixty people '
+            'around a horseshoe, four nationalities, three languages, and ninety minutes to produce '
+            'something that can be written down afterwards.',
+
+            'It begins before anybody speaks, with <b>the lineup</b>. A good one is not a list of the most '
+            'senior people available; it is a list chosen so that the disagreements already in the room are '
+            'represented on the floor. If everyone at the table would answer the question the same way, the '
+            'session has failed before it opens and the chair has ninety minutes to fill.',
+
+            'Then come <b>ground rules</b>, and they are worth the two minutes they cost. Who may be quoted. '
+            'Whether <b>a follow-up question</b> is allowed from the floor or only from the chair. How long '
+            '<b>a speaking slot</b> runs. A chair who says none of this will spend the hour negotiating it '
+            'one intervention at a time.',
+
+            '<b>Simultaneous interpretation</b> changes everything about pace. The interpreter is roughly '
+            'eight seconds behind, which means a joke lands twice and an interruption lands on top of '
+            'somebody else&rsquo;s sentence. Experienced chairs <b>time-box</b> each intervention on purpose '
+            'and say the number out loud, because a delegate who knows she has four minutes takes four '
+            'minutes, and one who does not takes eleven.',
+
+            'The machinery in the middle is familiar enough. <b>A breakout session</b> takes twenty people '
+            'into a smaller room where they will actually speak. <b>A lightning round</b> puts one question '
+            'to everybody in turn, sixty seconds each, and it is the fastest way to find out where a room '
+            'really is. <b>A rapporteur</b> writes down what was said, which is a defined job and not a '
+            'favour asked of the youngest person present.',
+
+            'The end is where most sessions are lost. <b>A closing round</b> in which everyone offers '
+            '<b>a parting thought</b> is pleasant and produces nothing at all. If the session was convened '
+            'to deliver <b>a consensus statement</b>, somebody has to put a draft sentence on the screen '
+            'before the room starts to leave, and the chair has to <b>wrap up</b> by reading it aloud. '
+            '<b>A multilateral development bank</b> will send four people to a session like this, and '
+            'either all four report the same sentence or none of them does.',
+        ],
+        'comprehension': [
+            ('What makes a good lineup, according to the text?',
+             ['The most senior people who are available that day.',
+              'A list chosen so the disagreements in the room are represented on the floor.',
+              'A balance of nationalities and languages.',
+              'Speakers who have not appeared at the event before.'], 1),
+            ('Why are ground rules worth stating at the start?',
+             ['The organisers require them to be read out.',
+              'Otherwise the chair spends the hour negotiating them one intervention at a time.',
+              'They protect the rapporteur from being quoted.',
+              'They shorten the closing round.'], 1),
+            ('What effect does simultaneous interpretation have?',
+             ['It makes the session longer by about a third.',
+              'It puts the interpreter eight seconds behind, so interruptions land on other people.',
+              'It prevents follow-up questions from the floor.',
+              'It requires every speaking slot to be written out in advance.'], 1),
+            ('Why do experienced chairs say the time limit out loud?',
+             ['The interpreters need it for their notes.',
+              'A delegate who knows she has four minutes takes four, and one who does not takes eleven.',
+              'It is a requirement of the ground rules.',
+              'It allows the rapporteur to time the session.'], 1),
+            ('What does the text say about the rapporteur?',
+             ['The role should rotate between the delegates.',
+              'It is a defined job, not a favour asked of the youngest person there.',
+              'The rapporteur should also chair the breakout sessions.',
+              'The notes are confidential until the statement is agreed.'], 1),
+            ('Why is a closing round of parting thoughts criticised?',
+             ['It runs over time in almost every session.',
+              'It is pleasant and produces nothing that can be written down.',
+              'It excludes the delegates who spoke earlier.',
+              'It cannot be interpreted accurately.'], 1),
+        ],
+        'word_formation': [
+            ('The chair&rsquo;s ', 'insistence', ' on the time limit saved the session. (INSIST)',
+             'Noun from the verb.', None),
+            ('Sixty people in three languages is ', 'unmanageable', ' without ground rules. (MANAGE)',
+             'Negative prefix + -able adjective.', None),
+            ('The rapporteur produced a ', 'summary', ' of four hundred words. (SUM)',
+             'Noun. Not &ldquo;summation&rdquo;: this is the document.', None),
+            ('', 'Surprisingly', ', the lightning round produced the only real disagreement. (SURPRISE)',
+             'Sentence adverb, capital letter, comma after it.', None),
+            ('A breakout room should be small enough to make silence ', 'uncomfortable', '. (COMFORT)',
+             'Negative prefix + adjective.', None),
+            ('The delegates reached ', 'agreement', ' on a single sentence. (AGREE)',
+             'Noun from the verb.', None),
+            ('Her ', 'interventions', ' were short and never wasted. (INTERVENE)',
+             'Plural noun from the verb. Watch the internal change.', None),
+        ],
+        'transformations': [
+            ('The table was round, it was old, and it was made of wood.', 'WOODEN',
+             'It was ', 'an old round wooden', ' table.',
+             'Age, then shape, then material.', None),
+            ('The delegate was young, Brazilian, and extremely articulate.', 'BRAZILIAN',
+             'She was ', 'an extremely articulate young Brazilian', ' delegate.',
+             'Opinion, then age, then origin.', None),
+            ('The room was small, square, and painted white.', 'WHITE',
+             'It was ', 'a small square white', ' room.',
+             'Size, then shape, then colour.', None),
+            ('She used a pointer that was thin, black, and made of metal.', 'METAL',
+             'She used ', 'a thin black metal', ' pointer.',
+             'Size, then colour, then material.', None),
+            ('They booked a room for the breakout sessions; it was large and on the second floor.', 'BREAKOUT',
+             'They booked ', 'a large second-floor breakout', ' room.',
+             'Size, then location, then purpose.', None),
+            ('The rapporteur produced notes that were detailed, handwritten, and six pages long.', 'HANDWRITTEN',
+             'The rapporteur produced ', 'detailed six-page handwritten', ' notes.',
+             'Opinion, then measurement, then the participle that behaves like material.', None),
+        ],
+        'listen': {
+            'file': 'pc7_listen_choose.mp3', 'voice': 'sarah_us',
+            'caption': 'A conference producer, on what makes a closed session work. She is not a speaker '
+                       'you heard in the lesson.',
+            'text': (
+                "People think producing one of these is about logistics. Rooms, microphones, name cards. It "
+                "is not. It is about who is sitting where, and about the first eight minutes. "
+                "The seating is not neutral. If you put the two people who disagree at opposite ends of a "
+                "horseshoe, they will speak past each other for an hour and the room will watch a tennis "
+                "match. Put them three seats apart and they have to talk, because it becomes physically "
+                "awkward to perform. I have moved a name card twenty minutes before a session and changed "
+                "the entire outcome. "
+                "The first eight minutes decide the rest. If the first three interventions are all "
+                "agreement, you are finished. Everybody who was going to say something difficult has now "
+                "decided this is not that kind of room, and they will say it to you in the corridor "
+                "afterwards, which is no use to anybody. So I brief one person in advance to go second and "
+                "disagree. Not aggressively. Just clearly. "
+                "The other thing nobody plans for is the end. Chairs plan the opening in detail and then "
+                "improvise the last ten minutes, which is exactly backwards. If you want a sentence out of "
+                "the room, you draft that sentence before the session, you put it up imperfect, and you let "
+                "them correct it. People will not write a sentence together. They will happily fix one."),
+        },
+        'listen_choose': [
+            ('What does the speaker say producing a session is really about?',
+             ['Logistics: rooms, microphones and name cards.',
+              'Who is sitting where, and the first eight minutes.',
+              'Choosing the most senior speakers available.',
+              'Keeping strictly to the published timings.'], 1),
+            ('What happens if the two people who disagree sit at opposite ends?',
+             ['The interpreters cannot follow the exchange.',
+              'They speak past each other and the room watches a tennis match.',
+              'The chair loses control of the timings.',
+              'Neither of them speaks at all.'], 1),
+            ('Why does she seat them three seats apart instead?',
+             ['So the microphones reach both of them.',
+              'Because it becomes physically awkward to perform, so they have to talk.',
+              'Because the rapporteur can hear both sides.',
+              'So the chair can interrupt either one.'], 1),
+            ('What is the problem if the first three interventions all agree?',
+             ['The session will finish early.',
+              'Anyone with something difficult to say decides this is not that kind of room.',
+              'The chair has to change the ground rules.',
+              'The lightning round becomes impossible.'], 1),
+            ('What does she do about it?',
+             ['She asks the chair to challenge the first speaker.',
+              'She briefs someone in advance to go second and disagree clearly.',
+              'She shortens the opening remarks.',
+              'She moves the breakout session earlier.'], 1),
+            ('What does she say about getting a sentence out of the room?',
+             ['Ask the rapporteur to draft it during the session.',
+              'Draft it beforehand, put it up imperfect, and let them correct it.',
+              'Leave the last ten minutes free for it.',
+              'Take it to a breakout group of five people.'], 1),
+        ],
     },
     'media': [
         {'id': 'podcast', 'type': 'Podcast', 'title': 'Freakonomics Radio &mdash; &ldquo;How to Make Meetings Less Terrible&rdquo;',
