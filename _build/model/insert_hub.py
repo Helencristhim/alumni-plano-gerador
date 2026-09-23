@@ -633,6 +633,14 @@ def main():
     cfg_path = os.path.abspath(args[0])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
+    # Vozes da AULA = global + cfg['voices'] (eixo de sotaque/voz POR ALUNO). MESMA
+    # resolução do build_from_model.main() e do gen_audio.py. Sem isto, o insert_hub
+    # aborta em `assign_voices` ("voz desconhecida") em TODO aluno que declara uma voz
+    # própria — o builder gera a aula e o hub fica órfão (medido na aula 3 da Bruna
+    # Viana, 23/09/2026, com "voice_female": "sarah").
+    _extra = cfg.get('voices') or {}
+    if isinstance(_extra, dict):
+        B.VOICES = {**B.VOICES, **_extra}
     if hub_tabs:
         for pasta, is_aluno in (('professor', False), ('aluno', True)):
             p = os.path.join(ROOT, 'public', pasta, f'{cfg["slug"]}.html')
