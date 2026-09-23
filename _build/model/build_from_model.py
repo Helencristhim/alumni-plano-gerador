@@ -1866,9 +1866,24 @@ def audio_filename(text, prefix, taken):
 
 
 def assign_voices(phrases, prefix, cfg):
-    """REGRA 7: 1-2 palavras = arthur; frases alternam; data-voice (diálogo) vence;
-    falas em 1a pessoa do aluno = voz do gênero do aluno."""
-    student_voice = 'ellen' if cfg['gender'] == 'f' else 'arthur'
+    """REGRA 7: 1-2 palavras = voz masculina; frases alternam; data-voice (diálogo) vence;
+    falas em 1a pessoa do aluno = voz do gênero do aluno.
+
+    Os DOIS nomes de voz saem do config (`voice_female`/`voice_male`), com o padrão de
+    sempre — arthur/ellen — quando o config não diz nada, então material que não declara
+    nada sai byte a byte igual ao de antes.
+
+    Por que virou campo: `ellen` estava cravado aqui, e `cfg["voices"]` (o override por
+    aula, do README) só alcançava o DIÁLOGO, que é onde o `data-voice` manda. A alternância
+    automática — o Pre-class inteiro — continuava em ellen aconteça o que acontecer. Na
+    Bruna Viana isso apareceu como Pre-class com sotaque alemão numa aluna cujo eixo é
+    justamente sotaque americano (a voz "Ellen" da ElevenLabs é cadastrada com
+    accent=german). Declarar `"voice_female": "sarah"` + o id em `"voices"` resolve pelo
+    config, sem tocar em quem já existe.
+    """
+    fem = cfg.get('voice_female', 'ellen')
+    mas = cfg.get('voice_male', 'arthur')
+    student_voice = fem if cfg['gender'] == 'f' else mas
     first = re.escape(cfg['first_name'])
     first_person = re.compile(rf"\bI am {first}\b|\bI'm {first}\b|\bMy name is {first}\b")
     entries = {}
@@ -1885,11 +1900,11 @@ def assign_voices(phrases, prefix, cfg):
         if hint:
             voice = hint
         elif len(text.split()) <= 2:
-            voice = 'arthur'
+            voice = mas
         elif first_person.search(text):
             voice = student_voice
         else:
-            voice = 'ellen' if alt % 2 == 0 else 'arthur'
+            voice = fem if alt % 2 == 0 else mas
             alt += 1
         assert voice in VOICES, f'voz desconhecida "{voice}" (disponíveis: {sorted(VOICES)})'
         entries[text] = dict(voice=voice, file=audio_filename(text, prefix, taken))
