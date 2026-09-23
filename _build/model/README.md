@@ -217,6 +217,12 @@ reprova isso, e o canário prova que ele ainda morde.
     DIV_IMBAL, MENU_MIX, OLD_SHELL. Sai != 0 (bloqueia) se o hub tocado tiver defeito.
     Fix = mover o </div> de fechamento da aba de ANTES do 1º bloco-órfão para DEPOIS
     do último bloco da aba, até auditor limpo (0 ESCAPE/ORPHAN) e balanço de divs = 0.
+7c. ALUNO NOVO — ÍNDICE DE ANATOMIAS (GATE, bloqueante):
+                                        python3 scripts/build_anatomias.py
+    O CI roda `--check` e reprova o PR se `public/data/anatomias.json` não refletir o
+    disco. Aluno NOVO nasce ausente dali, então o primeiro PR dele reprova se este passo
+    faltar (medido na aula 1 da Bruna Viana, 23/09/2026 — custou uma rodada de CI).
+    Aluno que já existe: no-op.
 8. PR → merge → deploy automático via GitHub (NUNCA vercel --prod)
 ```
 
@@ -259,6 +265,35 @@ Regras bloqueantes do validador:
 - personagens distintos no MESMO diálogo = vozes distintas
 - diálogo com mais falantes que vozes disponíveis = ERRO (reescrever ou declarar voz)
 - cross-check: o MP3 de cada fala (audio_manifest.json) foi gerado com a voz do `data-voice`
+
+### A voz feminina da ALTERNÂNCIA: `voice_female` (o `voices` sozinho não alcança)
+
+`cfg["voices"]` troca o ID por trás de um NOME de voz, e é o que o `data-voice` do diálogo
+usa. Mas quem escolhe o nome na alternância automática da REGRA 7 — as frases do Pre-class,
+survival card, vocabulário — é o `assign_voices`, e ali os nomes vinham cravados
+(`ellen`/`arthur`). Resultado medido na aula 1 da Bruna Viana (23/09/2026): o diálogo saía
+com a voz certa e **o Pre-class inteiro saía com a voz errada**.
+
+Para trocar a voz de um aluno, declare as DUAS coisas no config da aula:
+
+```json
+"voice_female": "sarah",
+"voices": { "sarah": "uG1JFy6xppqckhHCs2KG" }
+```
+
+Sem `voice_female`/`voice_male` o padrão continua `ellen`/`arthur` — material que não declara
+nada gera byte a byte igual ao de antes (provado reconstruindo uma aula de outro aluno: o
+`audio_manifest.json` não muda).
+
+**O que o campo NÃO alcança, de propósito:** voz declarada à mão continua mandando — os
+`characters` do diálogo e o `voice` de cada `listenings[]`. Se você trocar a voz do aluno,
+troque também essas duas listas, senão a aula fica com duas vozes femininas diferentes.
+
+> **A "Ellen" da ElevenLabs é cadastrada com `accent: german`**, não americana (medido em
+> `GET /v1/voices/{id}`, campo `labels.accent`, 22/09/2026). A feminina americana já na conta
+> é a **Sarah US** `uG1JFy6xppqckhHCs2KG`. Trocar o padrão global do roster inteiro é decisão
+> do Dan e NÃO foi tomada: mudaria a voz das próximas aulas de alunos que já têm aulas no ar
+> com a Ellen, e o aluno ouviria duas vozes diferentes dentro do mesmo pacote.
 
 ### Voz de sotaque: `cfg["voices"]` da AULA, nunca o voices.json global
 
