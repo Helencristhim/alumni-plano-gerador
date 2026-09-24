@@ -175,6 +175,15 @@ L = {
         {'situation': 'Report a rumor you cannot confirm about an operator preparing a large claim.', 'tips': ['The operator is said to be preparing a rebalancing claim, but nobody has confirmed it.', 'is said to + be + -ing for something happening now.']},
         {'situation': 'A lender asks what happens if the operator fails to invest for two years.', 'tips': ['That would be a material breach, and the lenders could use their step-in right to replace the operator.', 'Material breach first, then the consequence.']},
     ],
+    # Cinco vozes para a Part 4 do deck. O voices.json global so tem tres e e
+    # compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; The News', 'title': "The Agency <span class='accent'>Responds</span>",
          'blurb': 'A business news report on a regulator&rsquo;s statement. Sound first &mdash; no text.',

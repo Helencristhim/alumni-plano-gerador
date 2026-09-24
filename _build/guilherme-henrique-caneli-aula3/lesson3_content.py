@@ -488,3 +488,21 @@ WRITING_TEACHER = (
     "avalia. Diga so que o leitor e cetico e tem pressa. O reveal em ingles e o criterio; se ele pedir mais, "
     "devolva a pergunta: 'what would have to be true?'."
 )
+
+# ── ROLE-PLAY GUIADO ─────────────────────────────────────────────────────────
+# O contrato do framework desta aula (imersivo-prototipo@1) EXIGE um exercicio
+# de role-play, e o GATE 16 so roda no servidor: sem ele o deck inteiro reprova
+# depois de tudo pronto. E o degrau guiado antes do long turn, com chips na tela.
+ROLEPLAY_SCENARIO = (
+    "You are chairing the opening session of a regional infrastructure forum. Your teacher is a delegate "
+    "who has been to fourteen of these and expects nothing. You have two minutes to make her put her "
+    "phone down."
+)
+ROLEPLAY_CHIPS = ['a curtain-raiser', 'a framing device', 'set the tone', 'an inflection point',
+                  'not since', 'only by']
+ROLEPLAY_TEACHER = (
+    "Role-play guiado (4 min): voce e a delegada, sem pressa de ser simpatica -- olhe o telefone ate ele "
+    "dar um motivo para voce parar. Cronometre os dois minutos. Este e o degrau GUIADO, com chips na tela; "
+    "o long turn a seguir e o mesmo conteudo sem apoio nenhum, e a diferenca entre os dois e o que voce "
+    "devolve como feedback."
+)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Monta os slides IN CLASS da Aula 3 no formato de prova e grava slides.html.
+"""Monta os slides IN CLASS da Aula 4 no formato de prova e grava slides.html.
 
 Mesmo caminho da aula 2. O que e generico (envelope do slide, cartoes, escolhas,
 pareamento, players, gabarito) vive em ../guilherme-henrique-caneli/cpe_deck.py,
@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(HERE, '..', 'guilherme-henrique-caneli'))
 import cpe_deck as D                                                   # noqa: E402
 from cpe_deck import (slide, head, card, choices, matching, reveal,    # noqa: E402
                       player, player_mini, vocab_grid, checklist, roleplay, AUDIO)
-import lesson3_content as C                                            # noqa: E402
+import lesson4_content as C                                            # noqa: E402
 
 # As sete imagens dos divisores. Os specs nao usam as mesmas chaves em todas as
 # aulas (umas tem ch3, outras ch4, outras ch7), entao pega-se o que existe, na
@@ -27,7 +27,7 @@ import lesson3_content as C                                            # noqa: E
 _imgs = [v for k, v in C.L['imgs'].items() if k != 'pc']
 IMG = {i: _imgs[(i - 1) % len(_imgs)] for i in range(1, 8)}
 PHASES = ['Lead-in', 'The Lexis', 'Reading: Parts 6 &amp; 5', 'Use of English',
-          'Listening: Parts 2 &amp; 4', 'The Inversion', 'Speaking &amp; Wrap']
+          'Listening: Parts 2 &amp; 4', 'Reported Speech', 'Speaking &amp; Wrap']
 
 
 def divisor(n, num, titulo, accent, sub):
@@ -42,11 +42,11 @@ def deck():
     D.reset()
 
     # ── FASE 1 — Lead-in ──────────────────────────────────────────────────────
-    slide(1, '<div class="passport-badge">Lesson 3</div>\n'
+    slide(1, '<div class="passport-badge">Lesson 4</div>\n'
              '  <h1 style="font-family:\'Cormorant Garamond\',serif;font-size:3.4rem;line-height:1.05;'
-             'margin:.6rem 0">The Art of<br><span class="accent">the Opening</span></h1>\n'
-             '  <p class="subtitle">The sentence that makes a room sit up, and the grammar that puts it '
-             'where it cannot be missed</p>',
+             'margin:.6rem 0">The Rules of<br><span class="accent">the Game</span></h1>\n'
+             '  <p class="subtitle">What a regulated contract promises, what it merely indicates, and the '
+             'verbs that tell the two apart</p>',
           'Abertura (2 min): diga a moldura em uma frase -- "hoje tudo e tarefa de prova, e o texto e um '
           'que voce leria de verdade". Nao explique o formato ainda; o slide seguinte faz isso.',
           kind='image', bg=IMG[1])
@@ -60,63 +60,64 @@ def deck():
             ('Reading', '18 min', 'Gapped text (Paper 1, Part 6), then the two questions that separate C1 from C2.'),
             ('Use of English', '8 min', 'Word formation and key-word transformations, said aloud first.'),
             ('Listening', '14 min', 'Multiple matching: five speakers, two tasks at the same time.'),
-            ('The Inversion', '7 min', 'Not what the form is, but what it does to the sentence.'),
+            ('Reported Speech', '7 min', 'Not how to report, but how much each verb commits the speaker.'),
             ('Speaking', '9 min', 'Long turn and follow-up, then two debates, and in the second you do not choose your side.'),
         ])
     slide(1, head('The Shape of Today', 'Every Task Is an', 'Exam Task') +
           card('Cambridge C2 Proficiency format, on your material', plan),
           'Plano (1 min): o formato e o mesmo da aula 2, entao nao reapresente -- diga so o que muda: '
-          'hoje a gramatica e a inversao, e ela vai ser cobrada NO long turn, nao so num exercicio.')
+          'hoje a gramatica e o verbo de relato, e ela vai ser cobrada NO long turn: ele tem de dizer QUEM se comprometeu com o que.')
 
     slide(1, head('Lead-in', 'Books', 'Closed') +
           card('Answer in full sentences, before any vocabulary appears',
                '<div class="ic-lf-list">%s</div>' % ''.join(
                    '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s</span></div>' % (i, q)
                    for i, q in enumerate([
-                       'You have ninety seconds to open a session for four hundred people. What is the '
-                       'first sentence FOR?',
-                       'A chair asks for a show of hands in minute two. What has she bought, and what has '
-                       'she spent?',
-                       'Name a conference session you left early. What, precisely, had the opening failed '
-                       'to give you?'], 1))),
+                       'A minister tells you the government has &ldquo;no current intention&rdquo; of '
+                       'revisiting the framework. What, exactly, have you been given?',
+                       'Your note says approvals &ldquo;were obtained&rdquo;. Who obtained them, and what '
+                       'was conceded in order to obtain them?',
+                       'Name a clause you have signed and never read. What would have to happen for you to '
+                       'read it?'], 1))),
           'Lead-in (5 min): ele responde os tres em voz alta. NAO corrija lingua aqui -- anote duas '
           'imprecisoes de LEXICO para cobrar na fase 2. A terceira pergunta e a semente do artigo.',
           kind='dark')
 
-    slide(1, head('Ninety Seconds', 'No Notes,', 'No Warm-up') +
-          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;Open a session on the future of '
-          'this sector. You have ninety seconds and you may not use the word <i>exciting</i>.&rdquo;</div>'
+    slide(1, head('Ninety Seconds', 'Report It,', 'Cold') +
+          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;Report to me, in ninety seconds, '
+          'what a regulator last told you. You may not use the verb <i>say</i>.&rdquo;</div>'
           '<div class="ic-predict-q">Do it now, cold. We come back to this recording at the end of the '
           'lesson.</div></div>',
-          'Diagnostico (3 min): grave mentalmente TRES coisas: onde ele poe a ideia central, se ele pede '
-          'desculpa no inicio, e se ha alguma inversao. Nao devolva nada agora. Isto volta no slide do '
-          'long turn, e a comparacao e a aula.', kind='dark')
+          'Diagnostico (3 min): grave mentalmente TRES coisas: quantos verbos de relato DIFERENTES ele '
+          'usa, se ele distingue o que vincula do que nao vincula, e se o agente aparece. Nao devolva nada '
+          'agora: isto volta no long turn, e a comparacao e a aula.', kind='dark')
 
     # ── FASE 2 — The Lexis ────────────────────────────────────────────────────
-    divisor(2, 2, 'The Words of', 'the Room', 'Fourteen terms you half know, separated by what each one does')
+    divisor(2, 2, 'The Words of', 'the File', 'Fourteen terms you half know, separated by what each one does')
 
     slide(2, head('Collocation', 'Words That', 'Travel Together') +
           card('Say the whole chunk, never the single word',
                '<div class="ic-bank">%s</div>' % ''.join(
                    '<span class="ic-b">%s</span>' % c for c in C.COLLOC_BANK)),
-          'Collocation (2 min): ele le em voz alta e diz, para cada uma, QUEM faz isso numa sessao. '
-          'Chunk dito solto nao gruda; dito com o agente, gruda.')
+          'Collocation (2 min): ele le em voz alta e diz, para cada uma, QUEM faz isso e CONTRA quem. '
+          'Chunk dito solto nao gruda; dito com as duas partes, gruda.')
 
     slide(2, head('The Front of the Card', 'The Definition', 'Comes First') +
-          '<div class="cpe-tight">%s</div>' % vocab_grid('vgrid-l3a', 'vcount-l3a', C.VOCAB_CARDS_1),
+          '<div class="cpe-tight">%s</div>' % vocab_grid('vgrid-l4a', 'vcount-l4a', C.VOCAB_CARDS_1),
           'Vocabulario 1 (4 min): a DEFINICAO esta na frente. Ele PRODUZ o termo antes de revelar. Para '
           'quem ja tem o vocabulario passivo, reconhecer nao ensina nada; produzir, sim.')
 
     slide(2, head('Five More', 'Same Rule,', 'Harder Five') +
-          '<div class="cpe-tight">%s</div>' % vocab_grid('vgrid-l3b', 'vcount-l3b', C.VOCAB_CARDS_2),
+          '<div class="cpe-tight">%s</div>' % vocab_grid('vgrid-l4b', 'vcount-l4b', C.VOCAB_CARDS_2),
           'Vocabulario 2 (4 min): mesma rotina. Se ele travar, de a COLLOCATION como pista, nunca a '
           'primeira letra.')
 
     pares = [(str(i + 1), w, 'abcdefgh'[i], m) for i, (w, m) in enumerate(C.MATCH_ROWS)]
     slide(2, matching('Which One Is It, Exactly',
                       'Six terms, six distinctions. Two of them differ by one word.', pares),
-          'Discriminacao (4 min): o par que importa e framing device x rhetorical pivot. Um diz COMO '
-          'ouvir; o outro MOVE a sala. Se ele trocar os dois, volte ao artigo depois e mostre a frase.')
+          'Discriminacao (4 min): o par que importa e force majeure x rebalancing claim. Um cobre o que '
+          'ninguem PODIA evitar; o outro devolve a aritmetica quando algo de fora a quebrou. Trocar os '
+          'dois custa dinheiro de verdade.')
 
     cloze_linhas = ''.join(
         '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s<span class="ic-blank">&nbsp;&nbsp;'
@@ -128,30 +129,32 @@ def deck():
                   '<div class="ic-bank" style="margin-top:.9rem">%s</div>' % ''.join(
                       '<span class="ic-b">%s</span>' % b for b in C.CLOZE_BANK) +
                   reveal('Which one was not needed?',
-                         'Nothing here needs <b>%s</b>. It names a FORMAT, and every one of these seven '
-                         'gaps is about a function.' % C.CLOZE_NOT_NEEDED)),
+                         'Nothing here needs <b>%s</b>. Every one of these seven gaps names an '
+                         'INSTRUMENT or a document; that one names a PROCESS.' % C.CLOZE_NOT_NEEDED)),
           'Cloze (5 min): ele diz a expressao INTEIRA, com artigo. Se disser so o substantivo, devolva a '
           'frase e peca de novo: na prova a lacuna aberta e digitada, e o artigo conta.')
 
-    slide(2, choices('Which of these would a chair in this world <b>not</b> say?', [
-        ('A', 'Let me hand over to our first panellist.', False),
-        ('B', 'Rather than read you the agenda, let me ask for a quick show of hands.', False),
-        ('C', 'I would like to open the floor for a rhetorical pivot.', True),
-        ('D', 'Not since the last cycle has this question been worth asking.', False)]) +
+    slide(2, choices('Which of these would a regulatory lawyer <b>not</b> say?', [
+        ('A', 'We filed the rebalancing claim within the thirty-day window.', False),
+        ('B', 'The authority has not yet exercised its step-in right.', False),
+        ('C', 'We declared force majeure over the change in the tariff formula.', True),
+        ('D', 'Environmental licensing remains the binding constraint on the timetable.', False)]) +
         reveal('Why C is the one',
-               'A <i>rhetorical pivot</i> is something you DO, not something you announce and certainly '
-               'not something you open the floor for. The collocation exists; the agency does not. This is '
-               'the class of error that survives fluency.'),
+               'Force majeure covers what nobody could have PREVENTED. A change in a tariff formula is a '
+               'decision somebody took; that is a rebalancing claim, or it is a dispute, but it is not '
+               'force majeure. The collocation exists; the meaning does not. This is the class of error '
+               'that survives fluency, and in this field it survives all the way to arbitration.'),
         'Registro (3 min): esta e a pergunta que separa quem sabe a palavra de quem sabe o uso. Se ele '
         'acertar de primeira, peca para reescrever (C) de um jeito que funcione.')
 
     # ── FASE 3 — Reading ──────────────────────────────────────────────────────
-    divisor(3, 3, 'Why the Room', 'Still Matters', 'Paper 1, Part 6: six sentences removed, seven on offer, one useless')
+    divisor(3, 3, 'The Clause Nobody', 'Reads', 'Paper 1, Part 6: six sentences removed, seven on offer, one useless')
 
     slide(3, head('Before You Read', 'One Line, One', 'Prediction') +
-          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;The prediction was confident and '
-          'it was wrong.&rdquo;</div><div class="ic-predict-q">That is the first sentence of the article. '
-          'What is the second half of this paragraph going to do?</div></div>',
+          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;Every long contract contains a '
+          'paragraph that nobody reads at signing and everybody reads at three in the morning four years '
+          'later.&rdquo;</div><div class="ic-predict-q">That is the first sentence. Which paragraph is he '
+          'about to say it is?</div></div>',
           'Predicao (2 min): aceite QUALQUER palpite, nao confirme nem corrija. A predicao ativa o que '
           'ele ja sabe; o que importa e ele perceber depois que a frase monta um contraste.',
           kind='dark', extra=' data-task-for="reading"')
@@ -185,18 +188,17 @@ def deck():
           'Leitura (3 min): em SILENCIO, paragrafo a paragrafo, e ele diz em uma frase o que cada um faz '
           'no argumento. Nao deixe ir para as opcoes antes disso.')
     slide(3, head('The Text', 'Paragraphs Three and', 'Four') + artigo(C.ARTICLE[2:4], '3 and 4'),
-          'Leitura (3 min): peca a ligacao entre os dois antes de virar. O terceiro diz o que uma '
-          'conferencia FAZ; o quarto diz onde isso aparece.')
+          'Leitura (3 min): peca a ligacao entre os dois antes de virar. O terceiro estreita o force '
+          'majeure; o quarto passa para os instrumentos do ESTADO.')
     slide(3, head('The Text', 'Paragraphs Five and', 'Six') + artigo(C.ARTICLE[4:6], '5 and 6'),
-          'Leitura (3 min): aqui entra o teatro. Se ele reconhecer as tecnicas do trabalho dele, otimo: '
-          'a tarefa nao e entender o conteudo, e achar a frase que falta.')
+          'Leitura (3 min): aqui entra o que fica fora do balanco. Se ele reconhecer isto do trabalho '
+          'dele, otimo: a tarefa nao e entender o conteudo, e achar a frase que falta.')
 
     slide(3, head('Before the Last Paragraph', 'Predict, Then', 'Place') +
-          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;So the room survives, and it '
-          'survives for a reason that flatters nobody.&rdquo;</div>'
+          '<div class="ic-predict"><div class="ic-predict-line">&ldquo;What survives all of it is the '
+          'oldest question in the field, and it is not a legal question.&rdquo;</div>'
           '<div class="ic-predict-q">That is how the last paragraph opens, and it is the only one with no '
-          'gap. Does the writer end by defending the conference, by convicting it, or by explaining '
-          'it?</div></div>'
+          'gap. Is the question about money, about people, or about words?</div></div>'
           '<div class="ic-card" style="margin-top:1rem"><div class="ic-card-h3">Then the task you have '
           'been reading for</div>'
           '<div class="comp-q comp-q-task"><div class="q-text">Gap 1 -- which sentence belongs here?'
@@ -204,15 +206,15 @@ def deck():
           '<p style="font-size:.92rem;color:var(--text-mid);margin:.6rem 0 0">Six gaps, seven sentences, '
           'one of them useless. Decide each by what the text points back to, not by what sounds true.</p>'
           '</div>',
-          'Tarefa (2 min): ele responde a predicao PRIMEIRO, em uma palavra -- defend, convict ou '
-          'explain. Depois diz de qual lacuna menos tem certeza. Anote: quase sempre e a 5.',
+          'Tarefa (2 min): ele responde a predicao PRIMEIRO, em uma palavra -- money, people ou words. '
+          'Depois diz de qual lacuna menos tem certeza. Anote: quase sempre e a 4.',
           extra=' data-task-for="reading"')
 
     slide(3, head('The Text', 'The Last', 'Paragraph') + artigo(C.ARTICLE[6:], 'no gap') +
           '<p style="margin-top:.9rem;font-size:.95rem;color:var(--text-mid)">No gap here. Read it '
           'twice.</p>',
-          'Fecho da leitura (2 min): sem lacuna de proposito. Peca que ele leia a ultima frase em voz '
-          'alta e diga o que ela acusa. E dela que sai o capitulo da gramatica.')
+          'Fecho da leitura (2 min): sem lacuna de proposito. Peca que ele leia em voz alta a frase dos '
+          'verbos (shall x may) e diga o que muda. E dela que sai o capitulo da gramatica.')
 
     letras = {k: v for k, v in C.GAP_OPTIONS}
     for gap_n, right in C.GAP_ANSWERS:
@@ -261,10 +263,10 @@ def deck():
         for i, it in enumerate(C.WORD_FORMATION[:5], 1))
     slide(4, head('Part 3', 'Word', 'Formation') +
           card('Say the word before you write it', wf_rows +
-               reveal('Reveal 1 to 5', '1 organisers &middot; 2 decisions &middot; 3 exclusion &middot; '
-                                       '4 contestable &middot; 5 appearance')),
-          'Word formation (4 min): ele fez em casa, com OUTROS itens. Aqui cobre a FAMILIA: de "exclude", '
-          'quantas palavras em dez segundos (exclusion, exclusive, exclusively, excluding)?')
+               reveal('Reveal 1 to 5', '1 compliance &middot; 2 liabilities &middot; 3 justifiable &middot; '
+                                       '4 foreseeable &middot; 5 arbitration')),
+          'Word formation (4 min): ele fez em casa, com OUTROS itens. Aqui cobre a FAMILIA: de "comply", '
+          'quantas palavras em dez segundos (compliance, compliant, non-compliance, complying)?')
 
     def kwt(items, ini):
         linhas = ''.join(
@@ -276,37 +278,38 @@ def deck():
 
     slide(4, head('Part 4', 'Key-word', 'Transformations') +
           card('Three to eight words. Do not change the key word.', kwt(C.TRANSFORMATIONS[:3], 1)),
-          'Transformations 1 (4 min): ele DIZ antes de escrever. O item 2 (CIRCUMSTANCES) e o que mais '
-          'trava: o modal vem antes do sujeito, e quase todo mundo escreve "the chair should".')
+          'Transformations 1 (4 min): ele DIZ antes de escrever. O item 2 (ADMITTED) e o que mais trava: '
+          'admit pede TO + -ing, e quase todo mundo escreve "admitted to miss".')
 
     slide(4, head('Part 4', 'Three', 'More') +
           card('Same rule, harder three', kwt(C.TRANSFORMATIONS[3:], 4) +
                reveal('Reveal the answer key', C.TRANSFORM_KEY)),
-          'Transformations 2 (4 min): o item 4 (SUCH) exige o SUBSTANTIVO tirado do adjetivo -- bluntness, '
-          'nao blunt. E o unico do conjunto que testa word formation dentro de uma transformation.')
+          'Transformations 2 (4 min): o item 6 (SUGGESTED) e a armadilha classica de quem ja fala bem: '
+          'suggest NUNCA pede infinitivo. Se ele escrever "suggested to run", nao corrija -- peca que '
+          'diga em voz alta e escute.')
 
-    slide(4, head('Application', 'Your Opening,', 'Rewritten') +
-          card('Take the first sentence you recorded ninety minutes ago',
+    slide(4, head('Application', 'What You Were', 'Actually Told') +
+          card('Take the report you recorded ninety minutes ago',
                '<div class="ic-lf-list">'
                '<div class="ic-lf"><span class="ic-lbl">1</span><span>Say it again, exactly as you said '
                'it.</span></div>'
-               '<div class="ic-lf"><span class="ic-lbl">2</span><span>Now say it with one inversion from '
-               'today.</span></div>'
-               '<div class="ic-lf"><span class="ic-lbl">3</span><span>Tell me what the inversion bought, '
-               'in one sentence. If it bought nothing, drop it.</span></div></div>'),
+               '<div class="ic-lf"><span class="ic-lbl">2</span><span>Now report it twice: once with a '
+               'verb that binds, once with a verb that does not.</span></div>'
+               '<div class="ic-lf"><span class="ic-lbl">3</span><span>Which of the two is what actually '
+               'happened? Say how you know.</span></div></div>'),
           'Aplicacao (4 min): este e o slide que liga a gramatica ao trabalho dele. A pergunta 3 e a que '
-          'conta: inversao que nao compra nada e enfeite, e ele tem de conseguir dizer isso sozinho.',
+          'conta: se ele nao consegue dizer COMO sabe, ele nao ouviu a diferenca, so a produziu.',
           kind='dark')
 
     # ── FASE 5 — Listening ────────────────────────────────────────────────────
     divisor(5, 5, 'Five Voices,', 'Two Tasks', 'Paper 3, Part 4: what each speaker is, and what each one is arguing')
 
     slide(5, head('Part 2 -- Checked', 'The Talk You Heard at', 'Home') +
-          player('mp-l3-talk', AUDIO + C.TALK_FILE,
+          player('mp-l4-talk', AUDIO + C.TALK_FILE,
                  'Three minutes. He completed the eight sentences before the lesson.') +
           reveal('The eight answers',
-                 '1 sentence &middot; 2 constraint &middot; 3 capital &middot; 4 false &middot; '
-                 '5 a side &middot; 6 left out &middot; 7 seating &middot; 8 differently'),
+                 '1 not in the room &middot; 2 criteria &middot; 3 description &middot; 4 complete '
+                 '&middot; 5 procedure &middot; 6 licence &middot; 7 nobody imagined &middot; 8 reasons'),
           'Checagem (4 min): NAO toque o audio inteiro de novo. Toque so os trechos dos itens que ele '
           'errou, e pergunte o que ele OUVIU em vez do que estava la. Em Part 2 o erro quase nunca e de '
           'compreensao: e de escrever o sinonimo em vez da palavra dita.',
@@ -314,7 +317,7 @@ def deck():
 
     for s in C.SPEAKERS:
         slide(5, head('Speaker %d' % s['n'], 'Listen', 'Twice') +
-              player('mp-l3-mm%d' % s['n'], AUDIO + s['file'],
+              player('mp-l4-mm%d' % s['n'], AUDIO + s['file'],
                      'First pass: what is this person? Second pass: what is the argument?'),
               'Falante %d (2 min): toque duas vezes, sem texto. Na primeira, so a Task One. Na segunda, a '
               'Task Two. Nao deixe ele anotar as duas de uma vez -- a tarefa dupla e o que a prova mede.'
@@ -322,7 +325,7 @@ def deck():
 
     t1 = {k: v for k, v in C.TASK1_OPTS}
     t2 = {k: v for k, v in C.TASK2_OPTS}
-    tira = ''.join(player_mini('mp-l3-mmx%d' % sp['n'], AUDIO + sp['file'], 'Speaker %d' % sp['n'])
+    tira = ''.join(player_mini('mp-l4-mmx%d' % sp['n'], AUDIO + sp['file'], 'Speaker %d' % sp['n'])
                    for sp in C.SPEAKERS)
     caixa1 = matching('Task One &mdash; what each speaker <b>is</b>',
                       'Three of the eight roles are not used.',
@@ -343,21 +346,22 @@ def deck():
 
     slide(5, head('Part 4', 'What Gave Each One', 'Away') +
           reveal('Task One &mdash; key, and the word that decides it',
-                 '1 B (&ldquo;<i>we</i> start with one claim&rdquo;, &ldquo;in our office&rdquo;) &middot; '
-                 '2 E (&ldquo;I went for eleven years and last year I stopped&rdquo;) &middot; '
-                 '3 A (&ldquo;what <i>we</i> are buying&rdquo;, &ldquo;our chief executive&rdquo;) &middot; '
-                 '4 C (&ldquo;I file four pieces a week&rdquo;) &middot; '
-                 '5 D (&ldquo;the decisions <i>I deal with</i>&rdquo;).') +
+                 '1 C (&ldquo;legal exists to paper the deal&rdquo;, &ldquo;I go to the commercial '
+                 'meetings&rdquo;) &middot; 2 F (&ldquo;it is my name on the decision&rdquo;, &ldquo;the '
+                 'department&rdquo;) &middot; 3 A (&ldquo;my credit paper&rdquo;) &middot; 4 D '
+                 '(&ldquo;what comes <i>before me</i>&rdquo;, &ldquo;I decide these cases&rdquo;) &middot; '
+                 '5 E (&ldquo;we put in a forty-page response&rdquo;).') +
           reveal('Task Two &mdash; key, and why the extra three are there',
-                 '1 A &middot; 2 C &middot; 3 D &middot; 4 B &middot; 5 H. '
-                 'The unused options (E, F, G) are all things these people might plausibly believe. None '
-                 'of them is what any of them said.'),
+                 '1 B &middot; 2 E &middot; 3 D &middot; 4 A &middot; 5 H. '
+                 'The unused options (C, F, G) are all things these people might plausibly believe. None '
+                 'of them is what any of them said. Speaker 5 is the trap: he is a campaigner, so C sounds '
+                 'like him &mdash; but what he actually argued is H.'),
           'Correcao (5 min): a pista da Task One nunca e o assunto, e o PRONOME e o verbo -- faca ele '
           'apontar a palavra exata. Na Task Two, cobre a diferenca entre "o que ele diria" e "o que ele '
           'disse": as tres que sobram existem para pegar quem responde pelo perfil do falante.')
 
     # ── FASE 6 — The Inversion ────────────────────────────────────────────────
-    divisor(6, 6, 'Where the Sentence', 'Lands', 'Not how the inversion is formed, but what it does to the room')
+    divisor(6, 6, 'Who Said It,', 'And How Hard', 'Not how to report, but how much each verb commits the person who said it')
 
     def linhas(rs, base):
         return ''.join(
@@ -366,43 +370,43 @@ def deck():
             '<span style="font-size:.9rem">%s</span></span></div>' % (base + i, a, b, c)
             for i, (a, b, c) in enumerate(rs))
 
-    slide(6, head('The Forms', 'Four You Already', 'Produce') +
+    slide(6, head('The Verbs', 'Four You Already', 'Use') +
           '<div class="cpe-tight">%s</div>' % card(
-              'What each one puts first, and therefore what the room hears first',
+              'What each one commits the person who said it to',
               linhas(C.GRAMMAR_ROWS[:4], 1)),
-          'Formas 1 (3 min): nao explique a regra -- ele ja a tem. Pergunte, em cada linha, O QUE VEM '
-          'PRIMEIRO e por que isso muda o que a sala guarda.')
+          'Formas 1 (3 min): nao explique a regra -- ele ja a tem. Pergunte, em cada linha, QUANTO aquele '
+          'verbo compromete quem falou, e o que um advogado faria com a frase.')
 
     slide(6, head('The Forms', 'Three', 'More') +
-          card('The limiting ones, where the inversion is the whole argument',
+          card('The ones that report an impression and delete whoever created it',
                linhas(C.GRAMMAR_ROWS[4:], 5)),
-          'Formas 2 (3 min): "Only by X can we Y" e a mais util para ele. Peca um exemplo do trabalho '
-          'dele, em voz alta, antes de seguir.')
+          'Formas 2 (3 min): "we were given to understand" e a mais util e a mais perigosa para ele. '
+          'Peca um exemplo do trabalho dele, em voz alta, antes de seguir.')
 
     for i, q in enumerate(C.GRAMMAR_QUIZ[:3], 1):
         slide(6, choices(q[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q[1])]),
-              'Discriminacao %d (2 min): o erro util aqui e achar que inversao e so formalidade. Se ele '
-              'marcar a opcao "mais formal", pergunte o que a sala OUVE primeiro em cada versao.' % i)
+              'Discriminacao %d (2 min): o erro util aqui e achar que verbo de relato e questao de estilo. Se '
+              'ele marcar a opcao "mais formal", pergunte o que um arbitro faria com cada versao.' % i)
 
     slide(6, choices(C.GRAMMAR_QUIZ[3][0], [(k, t, ok) for k, (t, ok) in zip('abcd', C.GRAMMAR_QUIZ[3][1])]) +
           reveal('Why the answer is (b)',
-                 'Inversion buys emphasis by DELAYING. In a short, hostile exchange the room wants the '
-                 'answer first and has no patience for a frame. The same sentence that opens a keynote '
-                 'sounds evasive in a two-line reply.'),
-          'Discriminacao 4 (3 min): este e o item que impede o aluno de sair daqui invertendo tudo. Se '
-          'ele errar, volte ao artigo: nenhuma resposta curta do texto usa inversao.')
+                 'SUGGEST reports a proposal without endorsing it, and MAY leaves the conclusion open. '
+                 'Every other option puts the writer behind the claim. In a board paper the reporting verb '
+                 'is not decoration: it is where the writer&rsquo;s own exposure is set.'),
+          'Discriminacao 4 (3 min): este e o item que liga a gramatica ao risco dele. Se ele errar, '
+          'devolva a pergunta: "if this turns out to be wrong, which of these four sentences is yours?"')
 
     prod = ''.join(
         '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s<span class="ic-blank">&nbsp;&nbsp;'
         '</span>%s</span></div>' % (i, it['before'], it['after'])
         for i, it in enumerate(C.GRAMMAR_PRODUCTION, 1))
-    slide(6, head('Produce It', 'Say It Both', 'Ways') +
-          card('Say the plain version first, then the inverted one, and tell me what changed',
-               prod + reveal('Reveal', '1 Never before has &middot; 2 Only with a framing device can '
-                                       '&middot; 3 Under no circumstances should &middot; '
-                                       '4 Not until the closing session did')),
-          'Producao (5 min): as DUAS versoes, em voz alta, e ele nomeia o que mudou. Se ele so souber '
-          'dizer "e mais forte", nao aprendeu: peca O QUE a sala ouve primeiro em cada uma.')
+    slide(6, head('Produce It', 'Name the Party,', 'Then Hide It') +
+          card('Say the version that names the agent first, then the one that hides it, and tell me what changed',
+               prod + reveal('Reveal', '1 accused the ministry of leaking &middot; 2 advised us not to sign '
+                                       '&middot; 3 agreed to publish &middot; 4 raised the concern')),
+          'Producao (5 min): as DUAS versoes, em voz alta, e ele nomeia o que mudou. O item 4 e o mais '
+          'importante: e o CONSERTO. Se ele so souber dizer "e mais direto", nao aprendeu -- peca QUEM '
+          'some na outra versao.')
 
     # ── FASE 7 — Speaking & Wrap ──────────────────────────────────────────────
     divisor(7, 7, 'Your', 'Turn', 'The long turn, the follow-up, and two debates')
@@ -411,17 +415,17 @@ def deck():
           roleplay(C.ROLEPLAY_SCENARIO, C.ROLEPLAY_CHIPS),
           C.ROLEPLAY_TEACHER)
 
-    slide(7, head('Collaborative Task', 'Who Is in the', 'Room') + card('Four minutes, together',
+    slide(7, head('Collaborative Task', 'The One Change', 'You Demand') + card('Four minutes, together',
           '<p style="font-size:.95rem;line-height:1.7">%s</p>' % C.COLLAB_TASK),
-          'Collaborative (4 min): entre no debate como PAR, nao como professor. O que se mede e '
-          'negociacao: ele tem de ceder alguma coisa para fechar a frase nos quatro minutos.')
+          'Collaborative (4 min): entre como PAR, nao como professor. O que se mede e negociacao: ele tem '
+          'de ceder alguma coisa para fechar a redacao da exigencia nos quatro minutos.')
 
     slide(7, head('Long Turn', 'Two Minutes,', 'Uninterrupted') +
           card('No notes. No apology at the start.',
                '<p style="font-size:.95rem;line-height:1.7">%s</p>' % C.LONG_TURN),
-          'Long turn (3 min): NAO interrompa, nem para elogiar. Anote tres coisas: onde a ideia central '
-          'cai, quantas inversoes ele produz sem pensar, e a melhor frase dele. Compare com a gravacao '
-          'do slide 4 -- a comparacao E a devolutiva.', kind='dark')
+          'Long turn (3 min): NAO interrompa, nem para elogiar. Anote tres coisas: quantos verbos de '
+          'relato diferentes ele usa, se ele separa o que vincula do que nao vincula, e a melhor frase '
+          'dele. Compare com a gravacao do slide 4 -- a comparacao E a devolutiva.', kind='dark')
 
     slide(7, head('Follow-up', 'Four Questions,', 'No Restarting') +
           card(C.FOLLOW_UP_INTRO,
@@ -435,8 +439,8 @@ def deck():
                '<div class="ic-lf-list">%s</div>' % ''.join(
                    '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s</span></div>' % (i, r)
                    for i, r in enumerate(C.DEBATE_1_RULES, 1))),
-          'Debate 1 (5 min): ele escolhe o lado, e abre pelo argumento mais forte CONTRA si mesmo. Se '
-          'ele abrir defendendo, pare e peca de novo: e a abertura que treina a inversao sob pressao.')
+          'Debate 1 (5 min): ele escolhe o lado, e abre pelo argumento mais forte CONTRA si mesmo. Cobre a '
+          'regra 3: toda alegacao atribuida a alguem tem de vir com um verbo de relato do tamanho certo.')
 
     slide(7, head('Debate Two', 'The Side You Were', 'Given') +
           card(C.DEBATE_2_MOTION,
@@ -464,19 +468,19 @@ def deck():
                    'I can read a gapped text and justify each choice by reference, not by topic.',
                    'I can spot the option that is true and still wrong.',
                    'I can hear five speakers and separate what they are from what they argue.',
-                   'I can produce an inversion under pressure and say what it bought me.',
-                   'I can open a session in ninety seconds without apologising first.'])),
+                   'I choose a reporting verb for its strength, and I can say what it commits.',
+                   'I can tell a committee what binds and what does not, without hedging everything.'])),
           'Autoavaliacao (2 min): peca uma PROVA oral de cada item marcado. O que ele nao marcar entra '
-          'como foco da aula 4.')
+          'como foco da aula 5.')
 
     slide(7, '<div class="chapter-label">Lesson Complete</div>\n'
              '  <h1 style="font-family:\'Cormorant Garamond\',serif;font-size:3rem;line-height:1.1">'
-             'The Art of the Opening<br><span class="accent">Badge Earned</span></h1>'
-             '<p class="subtitle">The sentence that makes a room sit up, and where it has to land</p>'
+             'The Rules of the Game<br><span class="accent">Badge Earned</span></h1>'
+             '<p class="subtitle">What binds, what only indicates, and the verbs that tell them apart</p>'
              '<p style="margin-top:1.2rem;font-size:.95rem;color:rgba(255,255,255,.8)">Homework: the '
-             'proposal, 280 to 320 words. Next lesson: The Rules of the Game.</p>',
-          'Fechamento (1 min): devolva as tres anotacoes do long turn, nessa ordem: lexico, onde a ideia '
-          'caiu, melhor frase. Termine pela melhor frase dele.', kind='image', bg=IMG[1])
+             'report, 280 to 320 words. Next lesson: Holding the Room.</p>',
+          'Fechamento (1 min): devolva as tres anotacoes do long turn, nessa ordem: lexico, verbo de '
+          'relato mal escolhido, melhor frase. Termine pela melhor frase dele.', kind='image', bg=IMG[1])
 
 
 if __name__ == '__main__':
