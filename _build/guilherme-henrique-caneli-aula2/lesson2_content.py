@@ -923,3 +923,58 @@ THINK_PC = (
     "that text, was it right to be judged that way? Use at least four of the expressions from Stage 2.1, "
     "and say the number that matters to your argument."
 )
+
+# ── PC 2.11 -- gramatica, itens novos ────────────────────────────────────────
+# O unico stage que o professor nao tinha comentado. Segue o mesmo criterio que
+# ele deu tres vezes para os outros: manter a atividade, trocar as frases, e
+# trocar do lado do pre class. O grammar_point NAO muda (causativo have/get x
+# passiva): muda o item.
+#
+# Sem `phrase` de proposito: o botao Listen le o audioMap pelo texto da frase, e
+# estas frases nao tem MP3. Com o botao, o aluno clicaria num botao mudo.
+GRAMMAR_QUIZ_PC = [
+    ("&ldquo;The ministry <b>was persuaded</b> to publish the revised tariff.&rdquo; What this sentence "
+     "withholds is", [
+         ("the date on which the tariff was published.", False),
+         ("who did the persuading, and therefore what was traded for it.", True),
+         ("whether the tariff was in fact revised at all.", False),
+         ("which of the ministries is being referred to.", False)]),
+    ("Compare &ldquo;We <b>had</b> the site surveyed&rdquo; with &ldquo;We <b>got</b> the site "
+     "surveyed&rdquo;. The second suggests that", [
+         ("the survey was more thorough than in the first version.", False),
+         ("it took effort to arrange, or somebody had to be pushed.", True),
+         ("the speaker carried out the survey personally.", False),
+         ("the survey has not been completed yet.", False)]),
+    ("In a board paper, &ldquo;The guarantee <b>was secured</b> in March&rdquo; is weaker than "
+     "&ldquo;We <b>secured</b> the guarantee in March&rdquo; because", [
+         ("the passive is a less formal register than the active.", False),
+         ("it removes the party that did the work, and the credit with it.", True),
+         ("it leaves the date open to interpretation.", False),
+         ("it implies a third party obtained the guarantee.", False)]),
+    ("&ldquo;We <b>had</b> a development bank <b>take</b> the first loss.&rdquo; The bare infinitive after "
+     "<i>had</i> tells you that", [
+         ("the bank resisted before it agreed.", False),
+         ("the speaker arranged it, and is naming the party that acted.", True),
+         ("the loss has not yet occurred.", False),
+         ("the arrangement was informal rather than contractual.", False)]),
+    ("A minute reads: &ldquo;Concerns <b>were raised</b> about the traffic model.&rdquo; The most useful "
+     "question to put to that sentence is", [
+         ("how serious were the concerns?", False),
+         ("who raised them, and what became of them afterwards?", True),
+         ("were the concerns recorded in writing at the time?", False),
+         ("which version of the model was being discussed?", False)]),
+]
+GRAMMAR_PRODUCTION_PC = [
+    dict(before="Before the committee met, we ", after=" by outside counsel.",
+         answer="had the term sheet reviewed", alt="had the term sheet checked",
+         hint="have + object + past participle. They did the work; you arranged it."),
+    dict(before="After two refusals, the sponsor finally ", after=".",
+         answer="got the licence renewed",
+         hint="get + object + past participle: there was resistance to get past."),
+    dict(before="We ", after=" the first five years.",
+         answer="got the development bank to cover", alt="got a development bank to cover",
+         hint="get + person + to + infinitive: name the party you caused to act."),
+    dict(before="Equity ", after=" every other lender has been made whole.",
+         answer="is only repaid once", alt="is repaid only once",
+         hint="Passive with the agent deleted, because the queue already says who pays."),
+]

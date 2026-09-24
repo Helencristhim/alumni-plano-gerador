@@ -646,6 +646,10 @@ def render_config(L):
         'listenings': [{'file': 'a%d_listening%d.mp3' % (n, i + 1), 'voice': li['voice'], 'text': li['text']}
                        for i, li in enumerate(L['listenings'])],
     }
+    # O eixo de sotaque e POR ALUNO e por aula: o voices.json global so tem tres
+    # vozes, e a Part 4 da prova precisa de cinco falantes distintos. Quem declara
+    # o override e o spec; o voices.json global NAO e tocado, porque e de todo
+    # mundo. (gen_audio e validate_lesson ja leem este campo.)
     if L['model'] == 'reading':
         R = L['reading']
         lesson['inclass_blocks'] = {
@@ -664,6 +668,12 @@ def render_config(L):
         'characters': {'guilherme': 'arthur', L['guest_key']: L['guest_voice']},
         'stamps': stamps, 'lesson': lesson, 'hub': 'new' if n == 1 else 'snippets',
     }
+    # O eixo de sotaque e POR ALUNO e por aula, e mora no TOPO do config, que e
+    # onde o gen_audio o procura. O voices.json global so tem tres vozes e a Part
+    # 4 da prova precisa de cinco falantes distintos; ele NAO e tocado, porque e
+    # compartilhado com todos os alunos.
+    if L.get('voices'):
+        cfg['voices'] = L['voices']
     return cfg
 
 
