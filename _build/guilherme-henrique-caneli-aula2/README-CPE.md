@@ -280,6 +280,63 @@ e workflow) tem de entrar juntas, num PR proprio.
 Destrava com `gh auth refresh -s workflow`. O script esta pronto e testado
 (selftest + medicao dos 1.924 pares); falta so poder mexer no workflow.
 
+## Quinta rodada: o pacote inteiro em formato de prova (24/09/2026)
+
+Com as oito Pre-class prontas (#2829, #2842), os decks das aulas 3 a 8 vieram
+para o modelo da aula 2, e o Stage 2.11 -- o unico que o professor nao tinha
+comentado -- foi fechado pelo mesmo criterio dos outros.
+
+### Onde mora o que
+
+O que era generico do deck de prova saiu deste builder e virou
+`_build/guilherme-henrique-caneli/cpe_deck.py`, **verbatim**: o envelope do
+slide, os cartoes, as escolhas, o pareamento, os players e o gabarito. A aula 2
+continua usando o builder dela, que veio primeiro. Cada aula de 3 a 8 tem um
+`deck_cpe.py` proprio com a PROSA dela (titulo, ordem, nota ao professor) e um
+`lesson{N}_content.py` com o conteudo de prova.
+
+O conteudo importa o lexico e o `grammar_point` do `specs/aula{N}.py` em vez de
+copiar: o spec continua sendo o dono, e os dois nunca divergem.
+
+### As travas que valem para toda aula daqui para a frente
+
+1. **Nada do deck pode estar na Pre-class daquela aula.** Conferido item a item
+   em cada uma: 110 a 147 itens por aula, zero coincidencias. Duas foram
+   pegas e reescritas (uma opcao de multipla escolha na aula 5 e um item de
+   producao de gramatica na aula 3, que batia com o Survival Card).
+2. **Os 14 termos aparecem no material de leitura da aula.**
+3. **Zero telas cortando** a 1400x900 e a 1280x800, nas oito.
+
+### Armadilhas desta rodada
+
+- **O `mklesson.py` tambem grava `slides.html`.** Os dois builders gravavam no
+  mesmo nome e quem rodasse por ultimo vencia, sem erro nenhum. O deck de prova
+  grava `slides_cpe.html`.
+- **O GATE 16 exige um exercicio de role-play** pelo contrato do framework
+  (`imersivo-prototipo@1`), e so roda no servidor. A aula 2 tinha; os decks
+  novos nao, e reprovaram depois de tudo pronto. Agora todos tem o degrau
+  guiado, com chips na tela, antes do collaborative task.
+- **As chaves de imagem mudam de aula para aula** (umas tem `ch3`, outras `ch4`,
+  outras `ch7`). O deck pega o que o spec declarou, na ordem, e cicla.
+- **Portugues na tela reprova.** O `WRITING_MODEL` foi escrito em portugues e
+  caiu num reveal: a REGRA 13 proibe portugues no IN CLASS. O recado ao
+  professor vive no `data-teacher`; o criterio na tela vai em ingles.
+- **Cinco falantes exigem cinco vozes.** O `voices.json` global so tem tres e e
+  compartilhado com todos os alunos. O override por aula vive no spec e o
+  `mklesson` o passa para o TOPO do `config.json`, que e onde o `gen_audio` o
+  procura -- dentro de `lesson` ele e ignorado em silencio.
+- **Os slides 7 a 10 desta aula cortavam desde a segunda rodada** (127 a 406px)
+  e ficaram assim porque nenhum gate mede corte: so o Chrome. Resolvido com a
+  classe `.cpe-tight` e, no cloze, dividindo as oito lacunas em duas telas --
+  apertar mais deixaria a letra ilegivel num projetor.
+
+### Audio
+
+42 MP3 novos: seis por aula (um talk de 3 min para a Part 2 e cinco falantes
+para a Part 4), nas aulas 3 a 8. Vozes `daniel`, `alice`, `arthur`, `matilda`,
+`george` e `antonio`. A `sarah_us` NAO aparece em nenhum deck: ela e a voz das
+Pre-class, e o aluno nao pode chegar na aula tendo ouvido a mesma pessoa.
+
 ## Proximo passo
 
 Se o professor aprovar, as aulas 3 a 8 seguem o mesmo caminho: escrever o

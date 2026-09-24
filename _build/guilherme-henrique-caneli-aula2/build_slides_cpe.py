@@ -289,45 +289,62 @@ def deck():
           'e "bankability" na mesma frase.')
 
     slide(2, head('Produce It', 'The Definition Is the', 'Front of the Card') +
-          vocab_grid('vocabGrid1', 'vocabCount1', C.VOCAB[:5]),
+          '<div class="cpe-tight">%s</div>' % vocab_grid('vocabGrid1', 'vocabCount1', C.VOCAB[:5]),
           'Reveal 1-5 (4 min): a definicao esta na frente e a PALAVRA e o que esta escondido. Ele '
           'produz o termo em voz alta antes de revelar. Para quem ja tem o vocabulario passivo, o '
           'reveal so vale nesse sentido. CCQ de risk-adjusted return: "is fifteen percent always '
           'better than nine?".')
 
     slide(2, head('Produce It', 'Five', 'More') +
-          vocab_grid('vocabGrid2', 'vocabCount2', C.VOCAB[5:10]),
+          '<div class="cpe-tight">%s</div>' % vocab_grid('vocabGrid2', 'vocabCount2', C.VOCAB[5:10]),
           'Reveal 6-10 (4 min): mesma rotina. As duas que costumam sair trocadas sao credit '
           'enhancement e de-risking mechanism: pergunte qual delas mexe no RATING.')
 
     pares = [(str(i + 1), w, 'abcdefgh'[i], m) for i, (w, m) in enumerate(C.MATCH_ROWS)]
     slide(2, head('Precision', 'Which One Is It,', 'Exactly') +
-          matching('Match each term to the distinction it makes',
-                   'Tap a term, then tap its meaning. These are distinctions, not dictionary definitions.',
-                   pares),
+          '<div class="cpe-tight">%s</div>' % matching(
+              'Match each term to the distinction it makes',
+              'Tap a term, then tap its meaning. These are distinctions, not dictionary definitions.',
+              pares),
           'Matching (5 min): ele fecha o par EM VOZ ALTA antes de clicar. As duplas que pegam sao '
           'credit enhancement x de-risking mechanism e concessional lending x blended finance. Se ele '
           'errar, nao de a resposta: peca a diferenca entre as duas opcoes que ele considerou.')
 
     # As oito frases do cloze, com a lacuna marcada. O banco fica a vista: na aula a
     # tarefa nao e lembrar a palavra, e justificar por que so uma serve.
-    cloze_linhas = ''.join(
-        '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s'
-        '<span class="ic-blank">&nbsp;&nbsp;</span>%s</span></div>'
-        % (i, re.sub(r'^\d+\.\s*', '', it['before']), it['after'])
-        for i, it in enumerate(C.CLOZE_ITEMS, 1))
+    # DUAS telas, nao uma. Oito lacunas com o banco e o gabarito na mesma tela
+    # cortavam 35px a 1280x800 mesmo com .cpe-tight, e apertar mais deixaria a
+    # letra ilegivel num projetor. Quatro e quatro cabem, e a divisao ainda
+    # ajuda: o professor cobra a justificativa de duas lacunas por vez.
+    def cloze_bloco(itens, base):
+        return ''.join(
+            '<div class="ic-lf"><span class="ic-lbl">%d</span><span>%s'
+            '<span class="ic-blank">&nbsp;&nbsp;</span>%s</span></div>'
+            % (base + i, re.sub(r'^\d+\.\s*', '', it['before']), it['after'])
+            for i, it in enumerate(itens))
+
+    banco = '<div class="ic-bank ic-soft">%s</div>' % ''.join(
+        '<span class="ic-b">%s</span>' % b for b in C.CLOZE_BANK)
+
     slide(2, head('In Context', 'Put the Lexis to', 'Work') +
-          card('One expression in the bank is not needed',
-               '<div class="ic-lf-list">%s</div><div class="ic-bank ic-soft">%s</div>' % (
-                   cloze_linhas, ''.join('<span class="ic-b">%s</span>' % b for b in C.CLOZE_BANK)) +
-               reveal('Reveal the key',
-                      '1 fiduciary duty &middot; 2 an off-take agreement &middot; 3 a currency hedge &middot; '
-                      '4 concessional lending &middot; 5 blended finance &middot; 6 credit enhancement &middot; '
-                      '7 an anchor investor &middot; 8 yield compression. <b>Not needed:</b> %s.'
-                      % C.CLOZE_NOT_NEEDED)),
-          'Cloze (4 min): ele ja digitou isto em casa. Aqui a tarefa e OUTRA: peca a JUSTIFICATIVA de '
-          'duas lacunas -- por que a 4 nao pode ser blended finance, por que a 6 nao pode ser de-risking '
-          'mechanism. E peca que ele diga qual sobrou e por que sobrou.')
+          '<div class="cpe-tight">%s</div>' % card(
+              'One expression in the bank is not needed. Gaps 1 to 4.',
+              '<div class="ic-lf-list">%s</div>%s' % (cloze_bloco(C.CLOZE_ITEMS[:4], 1), banco)),
+          'Cloze 1 (2 min): ele ja digitou isto em casa. Aqui a tarefa e OUTRA: peca a JUSTIFICATIVA da '
+          'lacuna 4 -- por que nao pode ser blended finance. O banco fica a vista de proposito.')
+
+    slide(2, head('In Context', 'Gaps Five to', 'Eight') +
+          '<div class="cpe-tight">%s</div>' % card(
+              'Same bank. One expression is still not needed.',
+              '<div class="ic-lf-list">%s</div>%s' % (cloze_bloco(C.CLOZE_ITEMS[4:], 5), banco) +
+              reveal('Reveal the key',
+                     '1 fiduciary duty &middot; 2 an off-take agreement &middot; 3 a currency hedge '
+                     '&middot; 4 concessional lending &middot; 5 blended finance &middot; 6 credit '
+                     'enhancement &middot; 7 an anchor investor &middot; 8 yield compression. '
+                     '<b>Not needed:</b> %s.' % C.CLOZE_NOT_NEEDED)),
+          'Cloze 2 (2 min): peca a justificativa da lacuna 6 -- por que nao pode ser de-risking '
+          'mechanism. E peca que ele diga qual sobrou e POR QUE sobrou: e a unica pergunta do slide que '
+          'nao tem resposta no banco.')
 
     slide(2, choices('Which of these would a native speaker in this sector <b>not</b> say?', [
         ('a', 'The tranche ranks behind the senior loan.', False),

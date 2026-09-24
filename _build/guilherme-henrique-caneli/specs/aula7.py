@@ -123,6 +123,15 @@ L = {
             ('What is her parting thought?', 'Stop asking whether Brazil is ready; ask which projects are ready, and fund those first.'),
         ],
     },
+    # Cinco vozes para a Part 4 do deck. O voices.json global so tem tres e e
+    # compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; An Interpreter', 'title': "A Few Words <span class='accent'>Behind You</span>",
          'blurb': 'A conference interpreter on what speakers do to the booth. Sound first &mdash; no text.',

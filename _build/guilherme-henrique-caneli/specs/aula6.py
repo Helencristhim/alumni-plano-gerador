@@ -175,6 +175,15 @@ L = {
         {'situation': 'A journalist wants to quote the arbitration figures a fund manager mentioned privately. Say no, politely.', 'tips': ['Those figures were shared on background, so we cannot put them on the record.', 'on background = use it, do not name the source.']},
         {'situation': 'Announce the ministry&rsquo;s next step as an official plan.', 'tips': ['In light of today&rsquo;s discussion, the ministry is to present a draft model by March.', 'be to + verb sounds official and planned.']},
     ],
+    # Cinco vozes para a Part 4 do deck. O voices.json global so tem tres e e
+    # compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; A Communications Director', 'title': "The Six O&rsquo;Clock <span class='accent'>Reader</span>",
          'blurb': 'A communications director on writing for international investors. Sound first &mdash; no text.',

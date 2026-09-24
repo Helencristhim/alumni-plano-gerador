@@ -123,6 +123,15 @@ L = {
             ('What are her two instructions at the end?', 'Keep one housekeeping note for the very end, and do not open the floor until after the second question.'),
         ],
     },
+    # Cinco vozes para a Part 4 do deck (multiple matching). As mesmas da aula 2:
+    # o voices.json global so tem tres, e ele e compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; A Speaking Coach', 'title': "The Thirty Seconds Nobody <span class='accent'>Plans</span>",
          'blurb': 'A coach on why most conference openings fail. Sound first &mdash; no text.',

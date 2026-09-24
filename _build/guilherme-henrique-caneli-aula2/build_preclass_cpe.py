@@ -224,13 +224,12 @@ def s_grammar():
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1.2rem 0 .6rem;font-style:italic">'
             'Five items on the difference the form makes. Every option is grammatical; only one is what the '
             'sentence means.</p>' +
-            L.exam('l2-grammar-choice', 'Grammar', len(C.GRAMMAR_QUIZ),
-                   L.quiz(C.GRAMMAR_QUIZ), label='What the form does') +
+            L.exam('l2-grammar-choice', 'Grammar', len(C.GRAMMAR_QUIZ_PC),
+                   L.quiz(C.GRAMMAR_QUIZ_PC), label='What the form does') +
             '<p style="font-size:.84rem;color:var(--text-dim);margin:1.2rem 0 .6rem;font-style:italic">'
-            'Now produce the structure, not a single word. Listen first if you want the rhythm of the whole '
-            'sentence.</p>' +
-            L.exam('l2-grammar-produce', 'Grammar', len(C.GRAMMAR_PRODUCTION),
-                   L.fill_items(C.GRAMMAR_PRODUCTION), label='Produce the structure'))
+            'Now produce the structure, not a single word. Say it aloud before you type it.</p>' +
+            L.exam('l2-grammar-produce', 'Grammar', len(C.GRAMMAR_PRODUCTION_PC),
+                   L.fill_items(C.GRAMMAR_PRODUCTION_PC), label='Produce the structure'))
     return L.section('Stage 2.11 -- Who Made It Happen', 'Grammar', 'badge badge-grammar',
                      rubric=paper('Grammar in focus &middot; 10 min') +
                      'Four structures you already produce. The question is no longer how to form them, but what '
@@ -287,7 +286,7 @@ def grade():
         ('Reading', len(C.COMPREHENSION_PC)),
         ('Use of English', len(C.WORD_FORMATION_PC) + len(C.TRANSFORMATIONS_PC)),
         ('Listening', len(C.LISTEN_CHOOSE_PC)),
-        ('Grammar', len(C.GRAMMAR_QUIZ) + len(C.GRAMMAR_PRODUCTION)),
+        ('Grammar', len(C.GRAMMAR_QUIZ_PC) + len(C.GRAMMAR_PRODUCTION_PC)),
     ]
     return L.grade_panel(
         papers,
