@@ -123,6 +123,15 @@ L = {
             ('What would she offer in return, and in what form does she want it?', 'A twenty-year commitment and an anchor ticket, in writing, not in a speech.'),
         ],
     },
+    # Cinco vozes para a Part 4 do deck. O voices.json global so tem tres e e
+    # compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; A Negotiation Coach', 'title': "Restate Before You <span class='accent'>Respond</span>",
          'blurb': 'A negotiation coach on staying in control of a hostile exchange. Sound first &mdash; no text.',
