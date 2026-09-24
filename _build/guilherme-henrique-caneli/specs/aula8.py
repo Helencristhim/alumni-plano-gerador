@@ -175,6 +175,15 @@ L = {
         {'situation': 'Give the room a single call to action.', 'tips': ['My call to action is simple: before March, every fund here names one project it will study.', 'One action, one deadline.']},
         {'situation': 'Describe what your English will be doing a year from now, as a closing line to your teacher.', 'tips': ['A year from now, I will be opening panels without a script, and I will have stopped preparing every sentence.', 'Mix will be + -ing and will have + past participle.']},
     ],
+    # Cinco vozes para a Part 4 do deck. O voices.json global so tem tres e e
+    # compartilhado com todos os alunos.
+    'voices': {
+        "daniel": "onwK4e9ZLuTAKqWW03F9",
+        "alice": "Xb7hH8MSUJpSbSDYk0k2",
+        "antonio": "htFfPSZGJwjBv1CL0aMD",
+        "matilda": "XrExE9yKIg1WjnnlVkGX",
+        "george": "JBFqnCBsd6RMkjVDRZzb"
+    },
     'listenings': [
         {'label': 'Listening 1 &middot; An Executive Coach', 'title': "Never End With <span class='accent'>That Is All</span>",
          'blurb': 'A coach on the last three minutes of any event. Sound first &mdash; no text.',

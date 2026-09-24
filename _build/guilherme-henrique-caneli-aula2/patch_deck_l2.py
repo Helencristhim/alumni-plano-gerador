@@ -76,6 +76,32 @@ CSS_KEY = CSS_INI + """
 .ic-card[data-dense] .ic-choices { gap:.35rem; }
 .ic-card[data-dense] .ic-choice { font-size:.82rem;line-height:1.33;padding:.42rem .7rem;gap:.6rem;align-items:flex-start;border-radius:9px; }
 .ic-card[data-dense] .ic-opt { margin-top:.05rem; }
+
+/* --- .cpe-tight: telas que cortam no projetor sem isto ---
+   Os slides 7 a 10 cortavam 127 a 406px desde que esta aula virou prova, e
+   ficaram assim por duas rodadas porque o corte nao aparece em gate nenhum:
+   so medindo no Chrome. 5 cartoes de vocabulario em 2 colunas sao 3 fileiras
+   de 220px; em 3 colunas sao 2. */
+.cpe-tight .ic-lf { font-size:.72rem;line-height:1.26;padding:.16rem 0;gap:.5rem; }
+.cpe-tight .ic-lf .ic-lbl { font-size:.68rem;flex:0 0 1.1rem; }
+.cpe-tight .ic-bank { gap:.26rem;margin-top:.45rem; }
+.cpe-tight .ic-b { font-size:.72rem;padding:.2rem .45rem; }
+.cpe-tight .ic-card { padding:.75rem .95rem;margin-bottom:.6rem; }
+.cpe-tight .ic-chip { font-size:.76rem;line-height:1.28;padding:.3rem .5rem;margin-bottom:.24rem; }
+.cpe-tight .ic-match { gap:.7rem; }
+.cpe-tight .ic-match-col h4 { font-size:.66rem;margin-bottom:.3rem; }
+.cpe-tight .ic-match-hint, .cpe-tight .ic-match-score { font-size:.72rem;margin-bottom:.3rem; }
+.cpe-tight .ic-card-h3 { font-size:1rem;margin-bottom:.4rem; }
+.cpe-tight .cpe-reveal { margin-top:.6rem; }
+.cpe-tight .vocab-grid { grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:.8rem; }
+.cpe-tight .vocab-card { min-height:0; }
+.cpe-tight .vocab-card .card-icon { height:64px;padding:.4rem;min-height:0;gap:.3rem; }
+.cpe-tight .vocab-card .card-hint { font-size:.72rem;line-height:1.3;margin-top:.3rem; }
+.cpe-tight .vocab-card .card-body { padding:.6rem .7rem; }
+.cpe-tight .vocab-card .card-word { font-size:1rem; }
+.cpe-tight .vocab-card .card-def { font-size:.76rem;line-height:1.35; }
+.cpe-tight .vocab-card .card-example { font-size:.74rem;line-height:1.35;margin-top:.3rem; }
+.cpe-tight .vocab-card .card-audio { margin-top:.35rem; }
 """ + CSS_FIM
 
 
