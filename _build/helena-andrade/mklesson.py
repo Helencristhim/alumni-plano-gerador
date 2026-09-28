@@ -588,6 +588,44 @@ def build_preclass(s):
         sit += (f'      <div class="quiz-item"><div class="quiz-question">{q["q"]}</div>'
                 f'<div class="quiz-options">{opts}</div></div>\n')
 
+    # WRITING NO ESTILO CAMBRIDGE (opcional, `pc_writing`). Pedido de 28/09/2026: a prova
+    # e escrita e ela quer writing no pre-class. Dois formatos do Use of English do B2 First,
+    # de resposta fechada, corrigidos pelo checkBlank que o hub ja tem:
+    #   kwt = Key Word Transformation: [frase original, PALAVRA, antes, resposta, depois, alt]
+    #   wf  = Word Formation:          [antes, resposta, depois, RAIZ, alt, dica]
+    # A frase original e a palavra-chave ficam FORA do .fill-blank-sentence: o gate
+    # check_preclass_blanks exige antes + resposta + depois == data-phrase (o audio).
+    def _wblank(antes, resp, depois, dica, alt):
+        frase = f'{antes}{resp}{depois}'
+        a = f' data-alt="{esc(alt)}"' if alt else ''
+        return (f'<div class="fill-blank-item"><div class="fill-blank-sentence">&quot;{antes}'
+                f'<input class="blank-input" data-answer="{esc(resp)}"{a} data-hint="{esc(dica)}" '
+                f'data-phrase="{esc(frase)}" placeholder="___">{depois}&quot;</div>'
+                f'<button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>'
+                f'<button class="check-btn" onclick="checkBlank(this)">Check</button></div>')
+    KEY = ('display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:.75rem;'
+           'letter-spacing:.05em;border-radius:4px;padding:.1rem .45rem;margin-left:.3rem')
+    writing = ''
+    W = s.get('pc_writing')
+    if W:
+        kwt = ''.join(
+            f'      <div style="margin-bottom:1rem"><p style="font-size:.88rem;margin-bottom:.35rem">'
+            f'{i + 1}. {o} <span style="{KEY}">{k}</span></p>\n      '
+            + _wblank(a, r, d, f'Hint: use {k}. Write {len(r.split())} words.', alt) + '</div>\n'
+            for i, (o, k, a, r, d, alt) in enumerate(W['kwt']))
+        wf = ''.join(
+            f'      <div style="margin-bottom:.6rem"><p style="font-size:.8rem;color:var(--text-dim);'
+            f'margin-bottom:.25rem">{i + 1}. Use the word <span style="{KEY}">{root}</span></p>\n      '
+            + _wblank(a, r, d, dica, alt) + '</div>\n'
+            for i, (a, r, d, root, alt, dica) in enumerate(W['wf']))
+        writing = f'''
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 4.5: Writing -- Say It Another Way</h4><span class="badge badge-practice">Writing</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Part A: complete the second sentence so it means the same as the first. Use the word in the box and write 2 to 5 words.</p>
+{kwt}      <p style="font-size:.82rem;color:var(--text-dim);margin:1.2rem 0 .8rem;font-style:italic">Part B: change the word in the box so it fits the sentence.</p>
+{wf}    </div>
+'''
+
     surv = ''.join(
         f'      <div class="survival-phrase"><span class="sp-num">{i+1}</span>'
         f'<span class="sp-en">{p}</span>'
@@ -664,7 +702,7 @@ def build_preclass(s):
       <div class="section-header-row"><h4>Stage 4: Exam-Format Questions</h4><span class="badge badge-quiz">Quiz</span></div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">{L.get("exam", "Same format as the exam. Every wrong option says something the text does not say -- in words the text never used.")}</p>
 {sit}    </div>
-
+{writing}
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">{L.get("think", "Record your answer. Saying the text back in your own words is the skill the exam measures.")}</p>
@@ -833,6 +871,10 @@ def main():
     assert pc.count('<div') == pc.count('</div>'), 'preclass.html: <div> desbalanceado'
     for b in spec['pc_blanks']:
         assert b[1] in f'{b[0]}{b[1]}{b[2]}'
+    if spec.get('pc_writing'):
+        for o, k, a, r, d, alt in spec['pc_writing']['kwt']:
+            assert 2 <= len(r.split()) <= 5, f'KWT: resposta fora de 2-5 palavras: {r!r}'
+            assert k.lower() in r.lower().replace("n't", ' not'), f'KWT: {k} nao esta na resposta {r!r}'
     assert len(spec['vocab']) == 10, 'a aula tem 10 palavras novas'
     esperado = (30 + len(spec['listenings']) + (2 if spec.get('reading2') else 0)
                 + (len(spec['write_slide']) if isinstance(spec.get('write_slide'), list)
