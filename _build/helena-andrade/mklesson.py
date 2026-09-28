@@ -159,6 +159,20 @@ def player(pid, src, qid, questions, waveform):
     <div class="comp-questions" id="{qid}" style="max-width:520px;margin:1.2rem auto 0">{qs}</div>'''
 
 
+def gloss_box(r):
+    """Glossario curto do texto (opcional, campo `gloss` da ficha). Entrou na aula 5
+    quando o nivel desceu: o vocabulario tecnico fica, a sintaxe cai, e as 5-6 palavras
+    de apoio que nao sao da aula ficam na tela para a leitura nao travar."""
+    if not r.get('gloss'):
+        return ''
+    items = ''.join(f'<span style="display:inline-block;margin:.15rem .5rem .15rem 0">'
+                    f'<strong>{w}</strong> = {d}</span>' for w, d in r['gloss'])
+    return (f'    <div style="max-width:720px;margin:.6rem auto 0;background:var(--accent-dim);'
+            f'border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;font-size:.8rem;'
+            f'line-height:1.5"><span style="font-weight:700;color:var(--accent)">Glossary: </span>'
+            f'{items}</div>\n')
+
+
 def build_slides(s):
     n = s['n']
     out = []
@@ -236,6 +250,7 @@ def build_slides(s):
     out.append(slide(11, 3, 'slide-light', T['s11'],
         f'    <div class="chapter-label">Reading</div>\n'
         f'    {heading(s["reading_title_html"])}\n'
+        + gloss_box(s['reading']) +
         f'    <!--IC-BLOCKS:reading-->'))
     out.append(slide(12, 3, 'slide-light', T['s12'],
         f'    <div class="chapter-label">Main Idea</div>\n'
@@ -245,7 +260,7 @@ def build_slides(s):
         f'    <div class="chapter-label">Detail</div>\n'
         f'    {heading("True or <span class=\'accent\'>False?</span>")}\n'
         f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">'
-        f'Not one of these sentences uses the words the text uses.</p>\n'
+        f'{s.get("tf_lead", "Not one of these sentences uses the words the text uses.")}</p>\n'
         f'    <!--IC-BLOCKS:tf-->'))
 
     # ── FASE 4 — gramatica ──────────────────────────────────────────────────
@@ -302,7 +317,7 @@ def build_slides(s):
         f'    <div class="chapter-label">Practice</div>\n'
         f'    {heading("Which Form, <span class=\'accent\'>Which Meaning?</span>")}\n'
         f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">'
-        f'Say it first, then click to check</p>\n'
+        f'{s.get("practice_lead", "Say it first, then click to check")}</p>\n'
         f'    <div class="fill-grid">{fills}</div>'))
 
     errs = ''.join(
@@ -358,6 +373,7 @@ def build_slides(s):
         out.append(slide(0, 5, 'slide-light', T['s22a'],
             f'    <div class="chapter-label">Second Text</div>\n'
             f'    {heading(s["reading2_title_html"])}\n'
+            + gloss_box(s['reading2']) +
             f'    <!--IC-BLOCKS:reading2-->'))
         out.append(slide(0, 5, 'slide-light', T['s22b'],
             f'    <div class="chapter-label">Detail</div>\n'
@@ -382,6 +398,31 @@ def build_slides(s):
             f'{ls["sub"]}</p>\n'
             + player(pid, f'/audio/{SLUG}/a{n}_listening{k+1}.mp3', f'listening{k+1}Qs',
                      ls['questions'], f'waveform{k+1}')))
+
+    # TELA DE ESCRITA (opcional, `write_slide`). Quando a aula fica com UM listening so,
+    # a tela do segundo vira escrita guiada -- o deck nao perde tela (check_no_regression)
+    # e a nota de professor dela e a do slide que ela substitui.
+    ws = s.get('write_slide') or []
+    for wi, w in enumerate(ws if isinstance(ws, list) else [ws]):
+        k = len(s['listenings'])
+        mid = f'model{n}w{wi + 1}'
+        out.append(slide(24 + k, 6, 'slide-light', T[w.get('tkey', f's{24+k}')],
+            f'    <div class="chapter-label">{w["label"]}</div>\n'
+            f'    {heading(w["h"])}\n'
+            f'    <div class="roleplay-body" style="max-width:560px;margin:1rem auto 0;'
+            f'background:var(--accent-dim);border:1px solid var(--accent);border-radius:12px;padding:1.4rem">\n'
+            f'      <p class="roleplay-scenario" style="font-size:.9rem;margin-bottom:1rem">'
+            f'<strong>Task:</strong> {w["task"]}</p>\n'
+            f'      <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Start with:</p>'
+            f'<div style="display:flex;flex-wrap:wrap;gap:.4rem">{chips(w["chips"], dark=False)}</div>\n'
+            f'    </div>\n'
+            f'    <button class="primary-btn" style="margin:1rem auto 0;display:block;background:var(--accent);'
+            f'color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;'
+            f'cursor:pointer" onclick="var t=document.getElementById(\'{mid}\');'
+            f't.style.display=(t.style.display===\'none\'||!t.style.display)?\'block\':\'none\'">Show a Model Answer</button>\n'
+            f'    <div id="{mid}" style="display:none;max-width:560px;margin:.8rem auto 0;background:var(--bg-card);'
+            f'border:1px solid var(--border);border-radius:8px;padding:.9rem;font-size:.88rem;line-height:1.6">'
+            f'{w["model"]}</div>'))
 
     grads_rp = ['var(--accent-dim),rgba(22,50,92,.05)',
                 'rgba(22,50,92,.08),rgba(22,50,92,.02)',
@@ -554,6 +595,7 @@ def build_preclass(s):
         f'onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>\n'
         for i, p in enumerate(s['survival']))
 
+    L = s.get('pc_leads', {})
     return f'''<div class="lesson-card" id="ex-lesson-{n}">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('{IMG}{s["images"][0]}?w=600&q=80')"></div>
@@ -615,17 +657,17 @@ def build_preclass(s):
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read each sentence out loud. Saying the technical words is how you stop skipping them when you read.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">{L.get("pron", "Read each sentence out loud. Saying the technical words is how you stop skipping them when you read.")}</p>
 {speech}    </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Exam-Format Questions</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Same format as the exam. Every wrong option says something the text does not say -- in words the text never used.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">{L.get("exam", "Same format as the exam. Every wrong option says something the text does not say -- in words the text never used.")}</p>
 {sit}    </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record your answer. Saying the text back in your own words is the skill the exam measures.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">{L.get("think", "Record your answer. Saying the text back in your own words is the skill the exam measures.")}</p>
       <div class="think-card">
         <div class="think-question">{s["pc_think"]}</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Free Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
@@ -792,7 +834,9 @@ def main():
     for b in spec['pc_blanks']:
         assert b[1] in f'{b[0]}{b[1]}{b[2]}'
     assert len(spec['vocab']) == 10, 'a aula tem 10 palavras novas'
-    esperado = 34 if spec.get('reading2') else 32
+    esperado = (30 + len(spec['listenings']) + (2 if spec.get('reading2') else 0)
+                + (len(spec['write_slide']) if isinstance(spec.get('write_slide'), list)
+                   else 1 if spec.get('write_slide') else 0))
     assert len(re.findall(r'data-slide=', sl)) == esperado, f'esperados {esperado} slides autorais'
     print(f'  ok  _build/{SLUG}-aula{n}/  ({len(sl)//1024} KB de slides)')
 
