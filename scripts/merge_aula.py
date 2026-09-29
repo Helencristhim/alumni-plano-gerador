@@ -166,12 +166,14 @@ def slugs_do_pr(arquivos):
       nasce ao lado em `{slug}-c1.html`; contar os dois como pessoas diferentes fazia o
       guarda ver dois alunos onde ha um.
     - o MOLDE nao e aluno.
+    - `{slug}-anterior` e o hub imersivo PRESERVADO num cutover (GATE 47): o mesmo aluno.
+      Acrescentar uma aba nele (Stella, 29/09/2026) nao e mexer no material de outro.
 
     O que o guarda protege continua protegido: PR de um aluno que mexe no material de OUTRO
     segue bloqueado, que e o acidente que ele existe para impedir."""
     achados = set()
     for p in arquivos:
-        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+|-c(?:iclo)?\d+)?\.html$",
+        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+|-c(?:iclo)?\d+|-anterior)?\.html$",
                    r"^public/audio/([a-z0-9-]+)/",
                    r"^_build/([a-z0-9-]+)-aula\d+/",
                    r"^_build/consultivo/([a-z0-9-]+)/"):
