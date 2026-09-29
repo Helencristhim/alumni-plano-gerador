@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Gera os MP3 ElevenLabs das abas suplementares da Joyce Michalczuk e alimenta o audioMap.
 
 Copia do `_build/fernando-meneghelli-bottura-extras/gen_audio_extras.py` (mesmo contrato:
@@ -6,30 +8,6 @@ prefixos destas abas, nos DOIS hubs). Diferenca: nas duas abas com audio (Shadow
 Brazil) cada card declara a voz em `data-accent` no botao Listen, e TODA frase do card sai com
 essa voz, para ela repetir o mesmo sotaque que acabou de ouvir. Vozes conferidas pela API em
 29/09/2026. A aba Your Daily Plan nao tem audio.
-
-USO
-    ELEVENLABS_API_KEY=... python3 gen_audio_extras.py [--dry-run] [--only=a.mp3,b.mp3]
-"""Gera os MP3 ElevenLabs das abas suplementares do Fernando e alimenta o audioMap.
-
-Mesmo contrato do `_build/diego-leonel-george-wached-extras/gen_audio_extras.py`
-(REGRA 7, alternancia de vozes, procedencia no `_src.json` / GATE 5c, so chaves
-novas no audioMap), com tres diferencas:
-
-1. DOIS HUBS. As abas entram no hub do aluno e no do professor, entao o audioMap
-   e alimentado (e limpo de orfas) nos dois.
-
-2. VOZ DE SOTAQUE POR CARD. Na aba Accents cada card (`ac-voice-N`) declara a
-   voz em `data-accent` no botao do monologo. TODA frase daquele card (o
-   monologo e a linha de eco do speech card) sai com essa voz: o aluno repete o
-   mesmo sotaque que acabou de ouvir. As vozes ficam AQUI, nao no voices.json
-   global (README, "Voz de sotaque": decisao pedagogica por aluno). Vieram da
-   conta compartilhada e ainda NAO foram validadas de ouvido.
-
-3. Real-Speed English usa Arthur + Sarah, as duas accent=american: a aba existe
-   para ensinar como o americano fala (a Ellen esta catalogada como german).
-
-Prefixos wr_ / rs_ / ac_ nao existem no material dele (que usa pc* / a*), entao
-nenhum MP3 existente e sobrescrito. Studyweek e Series & Films nao tem audio.
 
 USO
     ELEVENLABS_API_KEY=... python3 gen_audio_extras.py [--dry-run] [--only=a.mp3,b.mp3]
