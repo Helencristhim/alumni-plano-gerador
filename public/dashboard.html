@@ -318,6 +318,7 @@
     <a href="index.html">Novo Aluno</a>
     <a href="dashboard.html" id="navImersivo">Alunos Imersivo</a>
     <a href="dashboard.html?anatomia=consultivo" id="navConsultivo">Alunos Consultivo</a>
+    <a href="dashboard.html?aba=kids" id="navKids">Alunos Kids</a>
     <a href="catalogo.html">Catálogo de Modelos</a>
     <a href="controle-aulas.html">Controle de Aulas</a>
 </nav>
@@ -868,9 +869,74 @@
     }
 
     function pintaNav() {
-        var n1=document.getElementById('navImersivo'), n2=document.getElementById('navConsultivo');
-        if(n1) n1.classList.toggle('active', anatVista==='imersivo');
-        if(n2) n2.classList.toggle('active', anatVista==='consultivo');
+        var n1=document.getElementById('navImersivo'), n2=document.getElementById('navConsultivo'),
+            n3=document.getElementById('navKids');
+        if(n1) n1.classList.toggle('active', !ABA_KIDS && anatVista==='imersivo');
+        if(n2) n2.classList.toggle('active', !ABA_KIDS && anatVista==='consultivo');
+        if(n3) n3.classList.toggle('active', ABA_KIDS);
+    }
+
+    // ── ABA ALUNOS KIDS ─────────────────────────────────────────────────────────────
+    // Os alunos Kids nao moram na tabela `perfis` deste gerador: moram no app proprio
+    // (alumni-kids.vercel.app), que devolve a lista em /api/perfis (liberada para este
+    // painel). A aba so LE: nome, nivel, professora e o link do Zoom de quem tem sala.
+    // O card inteiro abre o material do aluno; o link do Zoom abre so o Zoom.
+    var ABA_KIDS = new URLSearchParams(location.search).get('aba') === 'kids';
+    var KIDS_BASE = 'https://alumni-kids.vercel.app';
+    var KIDS_NIVEIS = {'pre-a1':['Pre-A1',0],'a1':['A1',1],'a1+':['A1+',2],'a2':['A2',3],'a2+':['A2+',4],'b1':['B1',5],'b1+':['B1+',6],'b2':['B2',7]};
+
+    // O nivel do card e o que aparece em mais habilidades; no empate, o mais alto.
+    // O detalhe por habilidade fica logo abaixo, porque e ele que a professora usa.
+    function nivelKids(k) {
+        var conta = {};
+        ['speaking','listening','reading','writing'].forEach(function(h){ if(k[h]) conta[k[h]]=(conta[k[h]]||0)+1; });
+        var melhor = null;
+        Object.keys(conta).forEach(function(n){
+            if(!melhor || conta[n]>conta[melhor] || (conta[n]===conta[melhor] && (KIDS_NIVEIS[n]||[0,0])[1]>(KIDS_NIVEIS[melhor]||[0,0])[1])) melhor=n;
+        });
+        return melhor ? (KIDS_NIVEIS[melhor]||[melhor])[0] : '—';
+    }
+    function rotuloNivel(n) { return (KIDS_NIVEIS[n]||[n||'—'])[0]; }
+
+    async function carregaKids() {
+        ['.stats','.toolbar','.filters','#avisoAnat'].forEach(function(sel){
+            var el=document.querySelector(sel); if(el) el.style.display='none';
+        });
+        pintaNav();
+        var container=document.getElementById('alunosList'), countEl=document.getElementById('count');
+        var lista=[];
+        try {
+            var r = await fetch(KIDS_BASE + '/api/perfis');
+            if(!r.ok) throw new Error('HTTP '+r.status);
+            lista = await r.json();
+        } catch(e) {
+            container.innerHTML='<div class="empty"><h3>Não consegui carregar os alunos Kids</h3><p>'+esc(String(e.message||e))+'</p></div>';
+            return;
+        }
+        lista.sort(function(a,b){ return String(a.nome).localeCompare(String(b.nome),'pt-BR'); });
+        countEl.textContent = lista.length + ' aluno' + (lista.length!==1?'s':'') + ' Kids';
+        container.innerHTML = lista.map(function(k){
+            var url = KIDS_BASE + '/api/material?perfil_id=' + encodeURIComponent(k.id);
+            var zoom = k.zoom_link || '';
+            var zoomH = zoom
+                ? '<a href="'+escAttr(zoom)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="s-btn s-btn--ghost">Entrar no Zoom</a>'
+                : '<span class="s-meta" style="font-size:.85rem">Sem link de Zoom</span>';
+            var skills = ['speaking','listening','reading','writing'].map(function(h){
+                return h.charAt(0).toUpperCase()+h.slice(1)+' '+esc(rotuloNivel(k[h]));
+            }).join(' <span class="s-meta-sep">&bull;</span> ');
+            return '<div class="s-card" style="cursor:pointer" role="link" tabindex="0" '
+                + 'onclick="window.open(\''+escAttr(url)+'\',\'_blank\')" '
+                + 'onkeydown="if(event.key===\'Enter\')window.open(\''+escAttr(url)+'\',\'_blank\')" '
+                + 'title="Abrir o material de '+escAttr(k.nome)+'">'
+                + '<div class="s-top"><div class="s-avatar" style="background:'+nameToColor(k.nome)+'">'+esc(getInitials(k.nome))+'</div>'
+                + '<div class="s-info"><div class="s-name-row"><span class="s-name">'+esc(k.nome)+'</span>'
+                + '<span class="s-badge s-badge--published">Nível '+esc(nivelKids(k))+'</span></div>'
+                + '<div class="s-meta">'+(k.idade?esc(k.idade)+' anos':'')
+                + (k.professora?' <span class="s-meta-sep">&bull;</span> Professora: '+esc(k.professora):'')+'</div>'
+                + '<div class="s-meta" style="font-size:.82rem;margin-top:2px">'+skills+'</div></div></div>'
+                + '<div class="s-actions"><a href="'+escAttr(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="s-btn s-btn--primary">Abrir Material</a>'
+                + zoomH + '</div></div>';
+        }).join('');
     }
 
     function filterAlunos() {
@@ -1524,14 +1590,14 @@
         } catch(e){ console.error('Sync failed:',e); }
     });
 
-    loadAlunos();
+    if (ABA_KIDS) carregaKids(); else loadAlunos();
 
     // Poll every 15s for newly deployed materials (skip if already checking).
     // Com a aba em segundo plano nao ha ninguem pra ver o botao mudar: adiamos pro proximo
     // tick visivel em vez de varrer o roster inteiro em background pra sempre.
-    setInterval(function() { if (!document.hidden) checkMaterialExists(); }, 15000);
+    setInterval(function() { if (!document.hidden && !ABA_KIDS) checkMaterialExists(); }, 15000);
     document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) checkMaterialExists();   // voltou pra aba: atualiza na hora
+        if (!document.hidden && !ABA_KIDS) checkMaterialExists();   // voltou pra aba: atualiza na hora
     });
 </script>
 </body>
