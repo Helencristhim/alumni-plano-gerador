@@ -73,7 +73,8 @@ def main():
             # `-c{N}` e o arquivo do ciclo consultivo (fase piloto): nasce ao lado do
             # material antigo do aluno, que continua intocado. Sem ele aqui, o PR do
             # primeiro bloco de qualquer aluno do consultivo e acusado de fora de escopo.
-            or re.match(rf'public/(professor|aluno)/{re.escape(slug)}(-aula\d+|-c\d+)?(\.html)', path)
+            # `-anterior` e o hub imersivo preservado num cutover: o mesmo aluno.
+            or re.match(rf'public/(professor|aluno)/{re.escape(slug)}(-aula\d+|-c\d+|-anterior)?(\.html)', path)
             or path.startswith(f'public/audio/{slug}/')
         )
         if not ok:
