@@ -1977,6 +1977,19 @@ def validate(path):
                 if bj < 0:
                     bj = hc.find('tab-inclass', bi)
                 blk = hc[bi:bj if bj > 0 else len(hc)]
+                # PISO DE VOCABULARIO POR ALUNO (29/09/2026). O 6 abaixo e o piso do
+                # imersivo; a Fabia (fabia-aparecida-alves-calusa) trabalha 4 palavras por
+                # aula e o pre-class tem de ter as MESMAS 4 -- ela mesma reclamou do
+                # pre-class com mais palavras que a aula. Decisao da Helen: o material dela
+                # segue o que ela precisa. A excecao mora no config.json DA AULA
+                # ("pc_vocab_min"), entao so vale onde for declarada; sem o campo, 6.
+                pc_vocab_min = 6
+                try:
+                    _cfg_pc = json.load(open(os.path.join(root, '_build', f'{slug}-aula{N}',
+                                                          'config.json'), encoding='utf-8'))
+                    pc_vocab_min = int(_cfg_pc.get('pc_vocab_min', 6))
+                except (OSError, ValueError, TypeError):
+                    pass
                 # As 5 etapas da REGRA 4 são a forma do PRE-CLASS DO IMERSIVO — onde a aula
                 # PREPARA o aluno com vocab+matching+gramática+fill antes da aula.
                 # No PPP o pre-class é FLIPPED: o documento pedagógico manda entregar o INPUT
@@ -1992,7 +2005,7 @@ def validate(path):
                     # nao agrega". A regra COBRAVA a monotonia.
                     # Agora exige o que importa — que exista pratica — e aceita as tres formas
                     # que o pedagogico aprovou: ordering, true/false e complete-the-text.
-                    REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
+                    REQ = [('vocab-card-pc', pc_vocab_min), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
                            ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
                 else:
                     # Este piso era declarado UNIVERSAL. NAO E — e a anatomia do imersivo.
@@ -2011,7 +2024,7 @@ def validate(path):
                     # nao ha o que cobrar aqui.
                     REQ = ([] if framework in ('reading-into-speaking', 'listening-into-interaction',
                                                'grammar-for-communication', 'esp-real-world')
-                           else [('vocab-card-pc', 6), ('speech-card', 2),
+                           else [('vocab-card-pc', pc_vocab_min), ('speech-card', 2),
                                  ('think-card', 1), ('survival-card', 1)])
                 missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
                 # PRATICA no Stage 2: uma das tres formas aprovadas basta.
