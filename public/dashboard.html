@@ -898,6 +898,52 @@
     }
     function rotuloNivel(n) { return (KIDS_NIVEIS[n]||[n||'—'])[0]; }
 
+    // QUANDO E A PROXIMA AULA, E ATE QUANDO O MATERIAL TEM DE ESTAR PRONTO.
+    // A Helen prepara a aula (texto, imagens, voz) ANTES do dia da aula: o prazo
+    // e o dia anterior. Tudo no horario de Sao Paulo, qualquer que seja o fuso de
+    // quem abre o painel. horarios: [{dia:0-6 (0 = domingo), hora:'HH:MM'}].
+    var KIDS_DIAS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+    var KIDS_DIAS_CURTO = ['dom','seg','ter','qua','qui','sex','sáb'];
+    function agoraSP() {
+        var f = new Intl.DateTimeFormat('en-US', {timeZone:'America/Sao_Paulo', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false, weekday:'short'});
+        var p = {}; f.formatToParts(new Date()).forEach(function(x){ p[x.type]=x.value; });
+        var dow = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[p.weekday];
+        return { y:+p.year, m:+p.month, d:+p.day, dow:dow, hm:(p.hour==='24'?'00':p.hour)+':'+p.minute };
+    }
+    function somaDias(a, n) {   // data de calendario, sem fuso no meio
+        var dt = new Date(Date.UTC(a.y, a.m-1, a.d + n));
+        return { y:dt.getUTCFullYear(), m:dt.getUTCMonth()+1, d:dt.getUTCDate(), dow:dt.getUTCDay() };
+    }
+    function ddmm(x) { return String(x.d).padStart(2,'0')+'/'+String(x.m).padStart(2,'0'); }
+    function proximaAulaKids(horarios) {
+        if (!Array.isArray(horarios) || !horarios.length) return null;
+        var hoje = agoraSP(), melhor = null;
+        horarios.forEach(function(h){
+            var falta = ((h.dia - hoje.dow) + 7) % 7;
+            if (falta === 0 && String(h.hora) <= hoje.hm) falta = 7;   // a de hoje ja passou
+            if (!melhor || falta < melhor.falta || (falta === melhor.falta && h.hora < melhor.hora)) melhor = {falta:falta, hora:h.hora};
+        });
+        var dia = somaDias(hoje, melhor.falta);
+        return { faltaDias: melhor.falta, hora: melhor.hora, dia: dia, prazo: somaDias(hoje, melhor.falta - 1), faltaPrazo: melhor.falta - 1 };
+    }
+    function quadroAgenda(k) {
+        var hs = Array.isArray(k.horarios) ? k.horarios.slice().sort(function(a,b){ return a.dia-b.dia || String(a.hora).localeCompare(String(b.hora)); }) : [];
+        if (!hs.length) return '<div class="s-meta" style="margin-top:8px;font-size:.85rem">Dias de aula ainda não cadastrados</div>';
+        var dias = hs.map(function(h){ return KIDS_DIAS[h.dia]+' '+esc(h.hora); }).join(' e ');
+        var px = proximaAulaKids(hs);
+        var quando = px.faltaDias === 0 ? 'hoje' : px.faltaDias === 1 ? 'amanhã' : 'em '+px.faltaDias+' dias';
+        var prazoTxt, cor, fundo;
+        if (px.faltaPrazo < 0) { prazoTxt = 'a aula é hoje: o material já devia estar pronto'; cor='#b91c1c'; fundo='#fef2f2'; }
+        else if (px.faltaPrazo === 0) { prazoTxt = 'preparar até HOJE ('+KIDS_DIAS_CURTO[px.prazo.dow]+' '+ddmm(px.prazo)+')'; cor='#b91c1c'; fundo='#fef2f2'; }
+        else if (px.faltaPrazo <= 2) { prazoTxt = 'preparar até '+KIDS_DIAS_CURTO[px.prazo.dow]+' '+ddmm(px.prazo)+' ('+(px.faltaPrazo>1?'faltam '+px.faltaPrazo+' dias':'falta 1 dia')+')'; cor='#b45309'; fundo='#fffbeb'; }
+        else { prazoTxt = 'preparar até '+KIDS_DIAS_CURTO[px.prazo.dow]+' '+ddmm(px.prazo)+' (faltam '+px.faltaPrazo+' dias)'; cor='#166534'; fundo='#f0fdf4'; }
+        return '<div class="s-meta" style="margin-top:8px;font-size:.88rem">'
+            + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#003080" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+            + '<span>Aulas: <b style="color:var(--text-primary)">'+dias+'</b>'+(k.modalidade?' <span class="s-meta-sep">&bull;</span> '+esc(k.modalidade.charAt(0).toUpperCase()+k.modalidade.slice(1)):'')+'</span></div>'
+            + '<div style="margin-top:8px;padding:8px 12px;border-radius:10px;background:'+fundo+';border:1px solid '+cor+'33;font:500 .88rem/1.45 var(--font-body);color:'+cor+'">'
+            + 'Próxima aula: <b>'+KIDS_DIAS_CURTO[px.dia.dow]+' '+ddmm(px.dia)+', '+esc(px.hora)+'</b> ('+quando+') &mdash; '+prazoTxt+'</div>';
+    }
+
     async function carregaKids() {
         ['.stats','.toolbar','.filters','#avisoAnat'].forEach(function(sel){
             var el=document.querySelector(sel); if(el) el.style.display='none';
@@ -913,14 +959,16 @@
             container.innerHTML='<div class="empty"><h3>Não consegui carregar os alunos Kids</h3><p>'+esc(String(e.message||e))+'</p></div>';
             return;
         }
-        lista.sort(function(a,b){ return String(a.nome).localeCompare(String(b.nome),'pt-BR'); });
+        // A aula mais proxima primeiro: e ela que precisa de material antes.
+        lista.forEach(function(k){ var px = proximaAulaKids(k.horarios); k._ordem = px ? px.faltaDias*10000 + parseInt(String(px.hora).replace(':',''),10) : 1e9; });
+        lista.sort(function(a,b){ return a._ordem - b._ordem || String(a.nome).localeCompare(String(b.nome),'pt-BR'); });
         countEl.textContent = lista.length + ' aluno' + (lista.length!==1?'s':'') + ' Kids';
         container.innerHTML = lista.map(function(k){
             var url = KIDS_BASE + '/api/material?perfil_id=' + encodeURIComponent(k.id);
             var zoom = k.zoom_link || '';
             var zoomH = zoom
                 ? '<a href="'+escAttr(zoom)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="s-btn s-btn--ghost">Entrar no Zoom</a>'
-                : '<span class="s-meta" style="font-size:.85rem">Sem link de Zoom</span>';
+                : '<span class="s-meta" style="font-size:.85rem">'+(k.modalidade==='presencial'?'Aula presencial':'Sem link de Zoom')+'</span>';
             var skills = ['speaking','listening','reading','writing'].map(function(h){
                 return h.charAt(0).toUpperCase()+h.slice(1)+' '+esc(rotuloNivel(k[h]));
             }).join(' <span class="s-meta-sep">&bull;</span> ');
@@ -933,7 +981,8 @@
                 + '<span class="s-badge s-badge--published">Nível '+esc(nivelKids(k))+'</span></div>'
                 + '<div class="s-meta">'+(k.idade?esc(k.idade)+' anos':'')
                 + (k.professora?' <span class="s-meta-sep">&bull;</span> Professora: '+esc(k.professora):'')+'</div>'
-                + '<div class="s-meta" style="font-size:.82rem;margin-top:2px">'+skills+'</div></div></div>'
+                + '<div class="s-meta" style="font-size:.82rem;margin-top:2px">'+skills+'</div>'
+                + quadroAgenda(k) + '</div></div>'
                 + '<div class="s-actions"><a href="'+escAttr(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="s-btn s-btn--primary">Abrir Material</a>'
                 + zoomH + '</div></div>';
         }).join('');
