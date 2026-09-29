@@ -865,6 +865,14 @@
         if (anatVista === 'consultivo' && ANAT && ANAT[id] && ANAT[id][papel]) {
             return ANAT[id][papel];
         }
+        // Depois de um CUTOVER, `{id}.html` passou a ser o consultivo e o imersivo ficou
+        // preservado em `{id}-anterior.html`. A aba imersivo abre o imersivo: o preservado.
+        // Caso da Stella Nassar (29/09/2026): o piloto consultivo nao serviu e ela voltou
+        // ao material imersivo, mas o card desta aba abria o consultivo.
+        if (anatVista === 'imersivo' && ANAT && ANAT[id] && ANAT[id][papel] === id &&
+            MATERIAIS && MATERIAIS[papel] && MATERIAIS[papel].has(id + '-anterior')) {
+            return id + '-anterior';
+        }
         return id;
     }
 
