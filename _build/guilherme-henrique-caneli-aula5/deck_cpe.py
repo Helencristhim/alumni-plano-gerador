@@ -20,6 +20,9 @@ from cpe_deck import (slide, head, card, choices, matching, reveal,    # noqa: E
                       player, player_mini, vocab_grid, checklist, roleplay, AUDIO)
 import lesson5_content as C                                            # noqa: E402
 
+# Onde cai a certa em cada escolha: equilibrado no deck inteiro, ver cpe_deck.Sorteio.
+S = D.Sorteio(5)
+
 # As sete imagens dos divisores. Os specs nao usam as mesmas chaves em todas as
 # aulas (umas tem ch3, outras ch4, outras ch7), entao pega-se o que existe, na
 # ordem, sem 'pc' (que e a miniatura da pre-class) e completa-se ciclando. Assim
@@ -132,18 +135,19 @@ def deck():
           'Cloze (5 min): ele diz a expressao INTEIRA, com artigo. Se disser so o substantivo, devolva a '
           'frase e peca de novo: na prova a lacuna aberta e digitada, e o artigo conta.')
 
-    slide(2, choices('Which of these would somebody who handles rooms well <b>not</b> say?', [
-        ('A', 'Let me push back on the premise rather than the number.', False),
-        ('B', 'I will concede that, and I will hold the rest.', False),
-        ('C', 'I would like to reframe your straw man for you.', True),
-        ('D', 'I am not going to give you that figure, and here is why.', False)]) +
-        reveal('Why C is the one',
+    lead, LL = D.posiciona([
+        ('Let me push back on the premise rather than the number.', False),
+        ('I will concede that, and I will hold the rest.', False),
+        ('I would like to reframe your straw man for you.', True),
+        ('I am not going to give you that figure, and here is why.', False)], S.posicao(4), 'ABCD')
+    slide(2, choices('Which of these would somebody who handles rooms well <b>not</b> say?', lead) +
+        reveal('Why %s is the one' % LL[2],
                'You never NAME the other side&rsquo;s straw man to their face and then offer to fix it. '
                'The term is for your own analysis, not for the exchange: said out loud it is an '
                'accusation, and an accusation is exactly what hardens the room you are trying to hold. '
                'The collocation exists; the move does not.'),
         'Registro (3 min): esta e a pergunta que separa quem sabe a palavra de quem sabe o uso. Se ele '
-        'acertar de primeira, peca para reescrever (C) de um jeito que funcione.')
+        'acertar de primeira, peca para reescrever (%s) de um jeito que funcione.' % LL[2])
 
     # ── FASE 3 — Reading ──────────────────────────────────────────────────────
     divisor(3, 3, 'What a Hostile Room', 'Is Testing', 'Paper 1, Part 6: six sentences removed, seven on offer, one useless')
@@ -223,9 +227,9 @@ def deck():
               'seguinte aponta para tras. Se ele acertar por eliminacao, pergunte por que cada descartada '
               'foi descartada.' % (gap_n, right))
 
-    slide(3, choices('One sentence fits <b>no</b> gap at all. Which one, and what is wrong with it?', [
+    slide(3, choices('One sentence fits <b>no</b> gap at all. Which one, and what is wrong with it?', D.reordena([
         ('A', letras['A'], False), ('D', letras['D'], True),
-        ('F', letras['F'], False), ('G', letras['G'], False)], cls='cpe-long') +
+        ('F', letras['F'], False), ('G', letras['G'], False)], S.posicao(4)), cls='cpe-long') +
         reveal('Why D is the distractor',
                'D is true, it is on topic, and it would sit comfortably in a conversation about this '
                'article. What it never does is answer a reference or complete an argument. That is the '
@@ -235,17 +239,18 @@ def deck():
         'dizer, em cada uma, o que quebra.')
 
     q3 = C.MCQ[2]
-    slide(3, choices(q3[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q3[1])]) +
-          reveal('The trap in (a) and (d)',
+    q3_opts, q3L = D.posiciona(q3[1], S.posicao(4))
+    slide(3, choices(q3[0], q3_opts) +
+          reveal('The trap in (%s) and (%s)' % tuple(sorted((q3L[0], q3L[3]))),
                  'Both are TRUE statements about corridors. They are still wrong, because the question '
                  'asks what the sentence is <i>for</i>, not what it contains. In Part 5, at least one '
                  'option in every item is true and irrelevant.'),
-          'Discriminador 1 (4 min): se ele escolher (a), NAO diga que errou. Pergunte: "is that what the '
+          'Discriminador 1 (4 min): se ele escolher (%s), NAO diga que errou. Pergunte: "is that what the '
           'sentence says, or what the sentence is doing?". Essa distincao e a diferenca entre C1 e C2 em '
-          'leitura.')
+          'leitura.' % q3L[0])
 
     q6 = C.MCQ[5]
-    slide(3, choices(q6[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q6[1])]) +
+    slide(3, choices(q6[0], D.posiciona(q6[1], S.posicao(4))[0]) +
           reveal('Why this matters today',
                  'The writer ends on what the room EXPOSES, not on what it decides. That is the bridge '
                  'into the grammar: an inversion does the same job in one sentence -- it puts the thing '
@@ -383,15 +388,16 @@ def deck():
           'e corrija a entonacao antes da forma: dita errado, qualquer uma delas vira briga.')
 
     for i, q in enumerate(C.GRAMMAR_QUIZ[:3], 1):
-        slide(6, choices(q[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q[1])]),
+        slide(6, choices(q[0], D.posiciona(q[1], S.posicao(4))[0]),
               'Discriminacao %d (2 min): o erro util aqui e achar que a invertida e so registro. Se ele marcar '
               '"mais formal", pergunte como a frase SOA para quem esta perguntando.' % i)
 
-    slide(6, choices(C.GRAMMAR_QUIZ[3][0], [(k, t, ok) for k, (t, ok) in zip('abcd', C.GRAMMAR_QUIZ[3][1])]) +
-          reveal('Why the answer is (a)',
+    g4_opts, g4L = D.posiciona(C.GRAMMAR_QUIZ[3][1], S.posicao(4))
+    slide(6, choices(C.GRAMMAR_QUIZ[3][0], g4_opts) +
+          reveal('Why the answer is (%s)' % g4L[0],
                  'SHOULD makes the condition hypothetical and therefore lighter: it offers without '
                  'assuming the other person needs anything. The IF version is neutral; the imperative '
-                 'reading of (b) is what you get if you drop the inversion and keep the tone.'),
+                 'reading of (%s) is what you get if you drop the inversion and keep the tone.' % g4L[1]),
           'Discriminacao 4 (3 min): este e o item que impede o aluno de sair daqui invertendo tudo. A '
           'invertida serve para OFERECER e para RECUSAR; nao serve para instruir.')
 

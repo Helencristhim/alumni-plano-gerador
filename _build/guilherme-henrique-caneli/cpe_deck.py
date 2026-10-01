@@ -18,6 +18,7 @@ So usa blocos que o deck ja sabe renderizar e validar:
     lp/mp*     + mpToggle     player de audio do deck
 """
 import os
+import random
 
 A = 'guilherme-henrique-caneli'
 AUDIO = '/audio/%s/' % A
@@ -82,6 +83,58 @@ def choices(question, opts, kind='gist', cls=''):
     return ('<div data-kind="%s" class="ic-card"%s><div class="ic-card-h3">%s</div>'
             '<div class="ic-choices">%s</div></div>'
             % (kind, ' data-dense="1"' if cls else '', question, rows))
+
+
+class Sorteio:
+    """Onde cai a resposta certa, slide a slide, sem padrao.
+
+    Os decks 3 a 8 nasceram com a certa sempre na mesma letra (o conteudo e
+    escrito com ela em segundo, e a letra ia junto), e os alunos perceberam que
+    "e sempre a B". Aqui cada tamanho de lista tem um saco com todas as posicoes,
+    embaralhado e esvaziado antes de encher de novo: no deck, A, B, C e D saem
+    na mesma quantidade, e a mesma letra nunca repete na virada de um saco para
+    o outro. Semente fixa (o numero da aula): regerar da o mesmo deck.
+    """
+
+    def __init__(self, semente):
+        self._r = random.Random('cpe:%s' % semente)
+        self._sacos = {}
+        self._ultima = None
+
+    def posicao(self, n):
+        saco = self._sacos.setdefault(n, [])
+        if not saco:
+            saco.extend(range(n))
+            self._r.shuffle(saco)
+            if n > 1 and saco[-1] == self._ultima:
+                saco.insert(0, saco.pop())
+        self._ultima = saco.pop()
+        return self._ultima
+
+
+def posiciona(itens, alvo, letras='abcd'):
+    """Poe a certa na posicao alvo e devolve (opcoes, letra de cada original).
+
+    itens: (texto, certa?) na ordem em que foram escritos. As erradas mantem a
+    ordem relativa entre si. O dicionario de volta diz em que letra cada item
+    ORIGINAL foi parar -- e com ele que reveal e nota ao professor citam a
+    letra, para o texto nunca apontar para a opcao errada depois do sorteio.
+    """
+    certa = [i for i, (_t, ok) in enumerate(itens) if ok]
+    assert len(certa) == 1, 'escolha precisa de exatamente uma certa: %r' % (itens,)
+    resto = [i for i in range(len(itens)) if i != certa[0]]
+    ordem = resto[:alvo] + certa + resto[alvo:]
+    opts = [(letras[k], itens[i][0], itens[i][1]) for k, i in enumerate(ordem)]
+    return opts, {i: letras[k] for k, i in enumerate(ordem)}
+
+
+def reordena(opts, alvo):
+    """Como posiciona, para lista cuja letra E o nome do item (as frases A-G da
+    Part 6): a letra viaja com a frase, so a ordem na tela muda."""
+    certa = [o for o in opts if o[2]]
+    resto = [o for o in opts if not o[2]]
+    assert len(certa) == 1
+    return resto[:alvo] + certa + resto[alvo:]
 
 
 def matching(title, hint, pairs, opts=None):
