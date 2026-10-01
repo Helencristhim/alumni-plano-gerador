@@ -85,6 +85,17 @@ time), descoberta "have or had?", Fix it com seis frases reais dela, recado de v
 três role-plays (Never have I ever, Two truths and a lie, Recommend it) e o "dever de casa da professora".
 As aulas 8 a 11 do currículo não foram geradas; os pontos delas voltam depois do checkpoint, na ordem acima.
 
+### Aulas 13 e 14 (geradas em 01/10/2026)
+
+| # | Formato | Tema | Foco linguístico | Vídeo em aula |
+|---|---|---|---|---|
+| 13 | FALA | **Match Day (Consolidation)** — futebol; fato dono: ir ao estádio com o pai | consolidação 2 do Present Perfect: *just / already / yet* ao vivo + o par "PP abre, past simple conta" | Maracanã, The Stadium Files (YouTube) |
+| 14 | LEITURA | **The Night of the Concert** — música e shows; fato dono: o show do Bruno Mars | **past perfect contrastado com o present perfect** (o *had* ganha a casa certa; a vida até agora continua *have*). Era a aula 08 do desenho original | Count on Me, Bruno Mars (lyric video oficial) |
+
+**Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
+
+Cada aula abre com o **veredito da professora** sobre o "Recommend it" da aula anterior. A leitura (aulas pares) é **sempre em voz alta, juntas**, nunca silenciosa.
+
 ---
 
 ## Re-nivelamento para B2, a partir da aula 4 (09/09/2026)
