@@ -20,6 +20,9 @@ from cpe_deck import (slide, head, card, choices, matching, reveal,    # noqa: E
                       player, player_mini, vocab_grid, checklist, roleplay, AUDIO)
 import lesson7_content as C                                            # noqa: E402
 
+# Onde cai a certa em cada escolha: equilibrado no deck inteiro, ver cpe_deck.Sorteio.
+S = D.Sorteio(7)
+
 # As sete imagens dos divisores. Os specs nao usam as mesmas chaves em todas as
 # aulas (umas tem ch3, outras ch4, outras ch7), entao pega-se o que existe, na
 # ordem, sem 'pc' (que e a miniatura da pre-class) e completa-se ciclando. Assim
@@ -134,18 +137,19 @@ def deck():
           'Cloze (5 min): ele diz a expressao INTEIRA, com artigo. Se disser so o substantivo, devolva a '
           'frase e peca de novo: na prova a lacuna aberta e digitada, e o artigo conta.')
 
-    slide(2, choices('Which of these would an experienced chair <b>not</b> say?', [
-        ('A', 'We will time-box each intervention at four minutes.', False),
-        ('B', 'I will take follow-up questions from the floor after the third speaker.', False),
-        ('C', 'Let us wrap up with a lightning round of parting thoughts.', True),
-        ('D', 'The rapporteur will circulate the consensus statement tonight.', False)]) +
-        reveal('Why C is the one',
+    lead, LL = D.posiciona([
+        ('We will time-box each intervention at four minutes.', False),
+        ('I will take follow-up questions from the floor after the third speaker.', False),
+        ('Let us wrap up with a lightning round of parting thoughts.', True),
+        ('The rapporteur will circulate the consensus statement tonight.', False)], S.posicao(4), 'ABCD')
+    slide(2, choices('Which of these would an experienced chair <b>not</b> say?', lead) +
+        reveal('Why %s is the one' % LL[2],
                'A lightning round is an instrument for FINDING OUT where a room is: one question, '
                'everybody, sixty seconds. Parting thoughts are the opposite &mdash; they ask for nothing '
                'and produce nothing. Welding the two together sounds efficient and delivers the weakest '
                'possible ending. The collocation exists; the purpose cancels itself.'),
         'Registro (3 min): esta e a pergunta que separa quem sabe a palavra de quem sabe o uso. Se ele '
-        'acertar de primeira, peca para reescrever (C) de um jeito que funcione.')
+        'acertar de primeira, peca para reescrever (%s) de um jeito que funcione.' % LL[2])
 
     # ── FASE 3 — Reading ──────────────────────────────────────────────────────
     divisor(3, 3, 'The Eight-Second', 'Delay', 'Paper 1, Part 6: six sentences removed, seven on offer, one useless')
@@ -225,9 +229,9 @@ def deck():
               'seguinte aponta para tras. Se ele acertar por eliminacao, pergunte por que cada descartada '
               'foi descartada.' % (gap_n, right))
 
-    slide(3, choices('One sentence fits <b>no</b> gap at all. Which one, and what is wrong with it?', [
+    slide(3, choices('One sentence fits <b>no</b> gap at all. Which one, and what is wrong with it?', D.reordena([
         ('A', letras['A'], False), ('D', letras['D'], True),
-        ('F', letras['F'], False), ('G', letras['G'], False)], cls='cpe-long') +
+        ('F', letras['F'], False), ('G', letras['G'], False)], S.posicao(4)), cls='cpe-long') +
         reveal('Why D is the distractor',
                'D is true, it is on topic, and it would sit comfortably in a conversation about this '
                'article. What it never does is answer a reference or complete an argument. That is the '
@@ -237,17 +241,18 @@ def deck():
         'dizer, em cada uma, o que quebra.')
 
     q3 = C.MCQ[2]
-    slide(3, choices(q3[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q3[1])]) +
-          reveal('The trap in (a) and (d)',
+    q3_opts, q3L = D.posiciona(q3[1], S.posicao(4))
+    slide(3, choices(q3[0], q3_opts) +
+          reveal('The trap in (%s) and (%s)' % tuple(sorted((q3L[0], q3L[3]))),
                  'Both are TRUE statements about corridors. They are still wrong, because the question '
                  'asks what the sentence is <i>for</i>, not what it contains. In Part 5, at least one '
                  'option in every item is true and irrelevant.'),
-          'Discriminador 1 (4 min): se ele escolher (a), NAO diga que errou. Pergunte: "is that what the '
+          'Discriminador 1 (4 min): se ele escolher (%s), NAO diga que errou. Pergunte: "is that what the '
           'sentence says, or what the sentence is doing?". Essa distincao e a diferenca entre C1 e C2 em '
-          'leitura.')
+          'leitura.' % q3L[0])
 
     q6 = C.MCQ[5]
-    slide(3, choices(q6[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q6[1])]) +
+    slide(3, choices(q6[0], D.posiciona(q6[1], S.posicao(4))[0]) +
           reveal('Why this matters today',
                  'The writer ends on what the room EXPOSES, not on what it decides. That is the bridge '
                  'into the grammar: an inversion does the same job in one sentence -- it puts the thing '
@@ -386,12 +391,13 @@ def deck():
           '"senior", "technical": ele acerta por ouvido e erra quando pensa. Peca sempre em voz alta.')
 
     for i, q in enumerate(C.GRAMMAR_QUIZ[:3], 1):
-        slide(6, choices(q[0], [(k, t, ok) for k, (t, ok) in zip('abcd', q[1])]),
+        slide(6, choices(q[0], D.posiciona(q[1], S.posicao(4))[0]),
               'Discriminacao %d (2 min): o erro util aqui e ele PENSAR. Se travar, peca as duas versoes em voz '
               'alta, rapido, e a resposta aparece sozinha -- e assim que um nativo decide.' % i)
 
-    slide(6, choices(C.GRAMMAR_QUIZ[3][0], [(k, t, ok) for k, (t, ok) in zip('abcd', C.GRAMMAR_QUIZ[3][1])]) +
-          reveal('Why the answer is (b)',
+    g4_opts, g4L = D.posiciona(C.GRAMMAR_QUIZ[3][1], S.posicao(4))
+    slide(6, choices(C.GRAMMAR_QUIZ[3][0], g4_opts) +
+          reveal('Why the answer is (%s)' % g4L[1],
                  'Size, then colour, then material: <i>narrow grey steel</i>. Every other order puts '
                  'material or colour ahead of size, and a native ear rejects all three instantly without '
                  'being able to say why. That is the point: the rule exists so that you can get there on '

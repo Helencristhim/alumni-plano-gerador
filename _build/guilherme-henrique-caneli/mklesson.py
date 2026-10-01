@@ -23,10 +23,18 @@ import os
 import random
 import sys
 
+from cpe_deck import Sorteio, posiciona  # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 
 SLUG = 'guilherme-henrique-caneli'
+
+# A partir desta aula, a resposta certa de cada quiz da Pre-class sai em posicao
+# sorteada (equilibrada, ver cpe_deck.Sorteio). O conteudo e escrito com a certa
+# em segundo lugar e os alunos perceberam que "e sempre a B". As aulas antes desta
+# ja foram dadas e ficam como estao, byte a byte.
+EMBARALHA_DESDE = 4
 STUDENT = 'Guilherme Henrique Caneli'
 FIRST = 'Guilherme'
 TOTAL = 8
@@ -412,6 +420,15 @@ def render_preclass(L):
     P = L['pc']
     V = L['vocab']
     rnd = random.Random(1000 + n)
+    sorteio = Sorteio('pc%d' % n) if n >= EMBARALHA_DESDE else None
+
+    def ordem(opts_, right):
+        """(texto, certa?) na ordem da tela: a escrita, ou a sorteada."""
+        itens = [(t, j == right) for j, t in enumerate(opts_)]
+        if sorteio is None:
+            return itens
+        return [(t, ok) for _k, t, ok in posiciona(itens, sorteio.posicao(len(itens)))[0]]
+
     out = []
     out.append('<div class="lesson-card" id="ex-lesson-%d">\n  <div class="lesson-header" onclick="toggleLesson(this)">\n'
                '    <div class="lesson-header-img" style="background-image:url(\'%s\')"></div>\n'
@@ -455,7 +472,7 @@ def render_preclass(L):
     qz = []
     for i, (q, opts_, right) in enumerate(P['context_quiz']):
         o = ''.join('<div class="quiz-option" onclick="selectQuiz(this)" data-correct="%s"><span class="option-letter">%s</span> %s</div>'
-                    % ('true' if j == right else 'false', 'ABC'[j], t) for j, t in enumerate(opts_))
+                    % ('true' if ok else 'false', 'ABC'[j], t) for j, (t, ok) in enumerate(ordem(opts_, right)))
         qz.append('      <div class="quiz-item"><div class="quiz-question">%d. %s</div><div class="quiz-options">%s</div></div>' % (i + 1, q, o))
     section('Stage 1.3: Grammar in Context', 'badge-vocab', 'GRAMMAR', 'Read the text, then answer the questions.',
             '      <div class="context-text" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem;font-size:.9rem;line-height:1.7;margin-bottom:1rem">\n%s\n      </div>\n%s'
@@ -505,8 +522,8 @@ def render_preclass(L):
         for i, (q, opts_, right) in enumerate(itens, 1):
             o = ''.join('<div class="quiz-option" onclick="selectQuiz(this)" data-correct="%s">'
                         '<span class="option-letter">%s</span> %s</div>'
-                        % ('true' if j == right else 'false', letras[j], t)
-                        for j, t in enumerate(opts_))
+                        % ('true' if ok else 'false', letras[j], t)
+                        for j, (t, ok) in enumerate(ordem(opts_, right)))
             out_.append('      <div class="quiz-item"><div class="quiz-question">%d. %s</div>'
                         '<div class="quiz-options">%s</div></div>' % (i, q, o))
         return '\n'.join(out_)
@@ -581,7 +598,7 @@ def render_preclass(L):
     qz = []
     for q, opts_, right in P['quiz']:
         o = ''.join('<div class="quiz-option" onclick="selectQuiz(this)" data-correct="%s"><span class="option-letter">%s</span> "%s"</div>'
-                    % ('true' if j == right else 'false', 'ABC'[j], t) for j, t in enumerate(opts_))
+                    % ('true' if ok else 'false', 'ABC'[j], t) for j, (t, ok) in enumerate(ordem(opts_, right)))
         qz.append('      <div class="quiz-item"><div class="quiz-question">%s</div><div class="quiz-options">%s</div></div>' % (q, o))
     section('Stage 4: Situational Quiz', 'badge-quiz', 'Quiz', 'Choose the answer a real speaker would give.', '\n'.join(qz))
 
