@@ -20,6 +20,73 @@
 
 ---
 
+## ATUALIZAÇÃO 01/10/2026: feedback da professora + análise das 11 aulas (VALE SOBRE O RESTO DESTE DOCUMENTO)
+
+**Fontes:** reunião da professora Bárbara Ellen com a coordenação (01/10/2026) e as 11 aulas gravadas
+de 26/08 a 30/09 (Análise de Aulas, ids 1100 a 1764). Até 30/09 só as lições 1 a 4 do material
+foram usadas; desde 11/09 a professora vinha saindo do material porque a aluna não engajava.
+
+### O que mudou e por quê
+
+| Achado (com evidência nas transcrições) | Decisão |
+|---|---|
+| Viagem só engaja quando é real (EUA com o pai, escala para a África do Sul). Grécia é desejo vago ("I want to travel to these places"); Atenas hipotética rendeu respostas de uma palavra | **Viagem sai como espinha do programa.** Os blocos 2 (Grécia), 4 (Espanha) e 6 (Zanzibar) ficam **SUBSTITUÍDOS** (ver tabela de blocos abaixo). Viagem só volta como callback das viagens reais dela |
+| O material soa adulto e "profissional" (persona turista, reclamação em restaurante, vocabulário de consultoria tipo *overrated, worth it*) | Tom juvenil sem infantilizar; personagens da idade dela (Ruby agora é colega de escola) |
+| O que a faz falar: escola e amigas, futebol (Flamengo), comida, mostrar coisas na câmera, recomendar e cobrar a volta, opinar sobre coisas reais, jogo de descrever a palavra | Esses são os temas e as mecânicas do formato novo |
+| O que a desliga: ler e responder, pergunta de previsão ou abstrata, exercício silencioso de completar ou ligar (1-3 min de silêncio), conteúdo repetido, começar a frio | Proibidos no formato novo (lista abaixo) |
+| Present Perfect: o erro tem nome. Ela traduz o "já" por **had already** ("I had already went", "No, I hadn't"), usa **went** como particípio, acha que o tempo é presente, junta *ever* e *already*. Entende "com data / sem data" na hora e esquece em 8 dias. O "had" nunca foi corrigido | Aula 12 = checkpoint que ataca esse erro (Fix it com as frases dela). **O past perfect (antiga aula 8) só entra depois que o Present Perfect estiver firme, e contrastado com ele de propósito** |
+| Professora fala 60-66% do tempo, espera < 1 s depois da pergunta (dados da análise) | O material marca pausa ("conte até 10") e metade das perguntas é ELA que faz |
+
+**O que NÃO muda:** nível B2 (decisão do Dan a pedido do pai), um ponto gramatical por aula, zero português na tela,
+lista de proibições de idade, REGRA DO FATO ÚNICO, Word Arena.
+
+### Formato novo da aula (vale da aula 12 em diante): "conversa com estrutura por baixo"
+
+60 min, só fala, quase sem leitura; a gramática vive nas perguntas.
+
+| Bloco | Min | O que é |
+|---|---|---|
+| Show me | 5-8 | Ela mostra algo na câmera; as perguntas do slide já usam a estrutura da aula |
+| Question cards | 20 | Cartas sobre o mundo dela; **metade ela pergunta à professora**, que responde modelando a estrutura; follow-up pronto em chips |
+| Describe it / Word Arena | 8-10 | Jogo com as palavras da aula |
+| Fix it | 5-8 | Frases reais dela, com o erro, para consertar como desafio |
+| Recommend it | 5 | Ela recomenda algo; a professora promete testar e a aula seguinte abre com o veredito |
+
+- **Rota "dia de prova / sem energia"** marcada no data-teacher do slide 1 de toda aula (só Show me + Question cards + Recommend).
+- **Proibido:** reading longo, gap-fill ou matching silencioso no in-class, pergunta de previsão ou abstrata, persona adulta, vocabulário de consultoria, slide escuro com foto filtrada.
+- **Visual:** fundos claros em tons pastel, caderno pautado, cards inclinados com fita adesiva, stickers. Tudo inline na própria aula; o molde teens não é tocado.
+- O pre-class continua com o piso do validador, mas curto (~10 min) em semana de provas.
+
+### Blocos temáticos novos (substituem os destinos)
+
+A coluna "Foco linguístico" da tabela abaixo continua valendo como CONTRATO de gramática (REGRA 22), com uma
+troca de ordem: **o past perfect sai da aula 8 e entra depois do checkpoint de Present Perfect**. Os temas
+passam a sair desta lista, sempre um fato só por aula (livro-razão):
+
+| Bloco | Tema | Fatos dela que ancoram (um por aula) |
+|---|---|---|
+| A | Escola e amigas | provas, apresentação em inglês na escola, projeto em grupo, Educação Física, a matéria favorita |
+| B | Futebol | Flamengo, ir ao estádio com o pai, altinha no recreio, futsal |
+| C | Comida | açaí, frozen yogurt, japonês, bolo colorido, comida sem tradução (contorno lexical) |
+| D | Arte e moda | desenhos da escola, quer ser estilista, colagem de moda, museu |
+| E | Música e shows | Rock in Rio, show do Bruno Mars, Benson Boone, estudar ouvindo música |
+| F | Séries e filmes | o que ela vê e por que prefere ver sozinha |
+| G | Fazer e vender | pulseiras na feira da escola, bolos vendidos no prédio |
+| H | Rio × São Paulo | a mudança, o que sente falta, o frio |
+
+Romance e namoro seguem proibidos (lista de idade), mesmo quando aparecem na conversa dela.
+
+### Aula 12 (02/10/2026)
+
+**Checkpoint: Have You Ever...?** — 12º encontro. Semana de provas como contexto, oito palavras que ela precisou
+nas aulas e disse em português (braid, mushroom, jam, sprinkles, condensed milk, still life, warm colours, screen
+time), descoberta "have or had?", Fix it com seis frases reais dela, recado de voz e diálogo da Ruby, Song time
+(LyricsTraining com *Beautiful Things* ou *Memories*, sugestão da coordenação), quatro rodadas de question cards,
+três role-plays (Never have I ever, Two truths and a lie, Recommend it) e o "dever de casa da professora".
+As aulas 8 a 11 do currículo não foram geradas; os pontos delas voltam depois do checkpoint, na ordem acima.
+
+---
+
 ## Re-nivelamento para B2, a partir da aula 4 (09/09/2026)
 
 **O pai deu retorno de que o conteúdo gramatical não estava desafiador.** A ordem do Dan:
