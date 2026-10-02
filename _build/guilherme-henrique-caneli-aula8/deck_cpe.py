@@ -114,9 +114,12 @@ def deck():
           'Vocabulario 2 (4 min): mesma rotina. Se ele travar, de a COLLOCATION como pista, nunca a '
           'primeira letra.')
 
-    pares = [(str(i + 1), w, 'abcdefgh'[i], m) for i, (w, m) in enumerate(C.MATCH_ROWS)]
+    # A definicao de cada termo cai numa letra sorteada: na ordem escrita, 1 ia com a, 2 com b...
+    _p = D.desarruma(len(C.MATCH_ROWS), 'match8')
+    pares = [(str(i + 1), w, 'abcdefgh'[_p[i]], m) for i, (w, m) in enumerate(C.MATCH_ROWS)]
+    _defs = sorted((k, r) for _n, _w, k, r in pares)
     slide(2, matching('Which One Is It, Exactly',
-                      'Six terms, six distinctions. Two of them differ by one word.', pares),
+                      'Six terms, six distinctions. Two of them differ by one word.', pares, opts=_defs),
           'Discriminacao (4 min): o par que importa e benchmark x milestone, e a confusao custa dinheiro. '
           'Um e dos outros, o outro e seu. Quem troca os dois bate todas as metas e perde mercado.')
 

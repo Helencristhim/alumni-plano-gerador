@@ -23,7 +23,7 @@ import os
 import random
 import sys
 
-from cpe_deck import Sorteio, posiciona  # noqa: E402
+from cpe_deck import Sorteio, desarruma, posiciona  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -583,10 +583,17 @@ def render_preclass(L):
                 'One speaker, heard twice, and six questions. Play it a second time before you answer.',
                 player + '\n' + quiz_bloco(P['listen_choose']))
 
+    def ordem_tela(frases):
+        """(posicao certa, frase) na ordem em que aparecem. Ate a aula 3, a escrita,
+        que ja era a resposta; dali em diante, nenhuma frase no proprio lugar."""
+        if sorteio is None:
+            return list(enumerate(frases))
+        return [(i, frases[i]) for i in desarruma(len(frases), 'ordem%d' % n)]
+
     oi = '\n'.join('        <div class="order-item" draggable="true" data-order="%d" onclick="selectOrderItem(this,\'order-l%d\')"><span class="order-num">?</span>'
                    '<span class="order-text">"%s"</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,\'order-l%d\')">&#9650;</button>'
                    '<button class="arrow-btn" onclick="moveItem(this,1,\'order-l%d\')">&#9660;</button></span></div>' % (i + 1, n, t, n, n)
-                   for i, t in enumerate(P['order']))
+                   for i, t in ordem_tela(P['order']))
     section('Stage 2: %s' % P['order_title'], 'badge-order', 'Order', P['order_lead'],
             '      <div class="order-container" id="order-l%d">\n%s\n      </div>\n      <button class="verify-all-btn" onclick="checkOrder(\'order-l%d\')">Check Order</button>' % (n, oi, n))
 
