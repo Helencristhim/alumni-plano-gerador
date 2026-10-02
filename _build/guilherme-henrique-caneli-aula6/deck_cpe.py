@@ -240,9 +240,10 @@ def deck():
     q3_opts, q3L = D.posiciona(q3[1], S.posicao(4))
     slide(3, choices(q3[0], q3_opts) +
           reveal('The trap in (%s) and (%s)' % tuple(sorted((q3L[0], q3L[3]))),
-                 'Both are TRUE statements about corridors. They are still wrong, because the question '
-                 'asks what the sentence is <i>for</i>, not what it contains. In Part 5, at least one '
-                 'option in every item is true and irrelevant.'),
+                 '{0} is the one answer the text explicitly rules out: the fault is &ldquo;almost never the '
+                 'journalist&rsquo;s&rdquo;. {1} turns &ldquo;outsiders confuse them constantly&rdquo; into '
+                 '&ldquo;the distinction is unclear&rdquo;. The writer says the opposite: the distinction is '
+                 'clear, and the spokesperson who has not settled it should not be in the conversation.'.format('(%s)' % q3L[0], '(%s)' % q3L[3])),
           'Discriminador 1 (4 min): se ele escolher (%s), NAO diga que errou. Pergunte: "is that what the '
           'sentence says, or what the sentence is doing?". Essa distincao e a diferenca entre C1 e C2 em '
           'leitura.' % q3L[0])

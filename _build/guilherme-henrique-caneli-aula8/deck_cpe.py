@@ -241,10 +241,11 @@ def deck():
     q3 = C.MCQ[2]
     q3_opts, q3L = D.posiciona(q3[1], S.posicao(4))
     slide(3, choices(q3[0], q3_opts) +
-          reveal('The trap in (%s) and (%s)' % tuple(sorted((q3L[0], q3L[3]))),
-                 'Both are TRUE statements about corridors. They are still wrong, because the question '
-                 'asks what the sentence is <i>for</i>, not what it contains. In Part 5, at least one '
-                 'option in every item is true and irrelevant.'),
+          reveal('The trap in (%s) and (%s)' % tuple(sorted((q3L[0], q3L[2]))),
+                 '{0} describes what the two sentences are, not why they are quoted. {1} invents a contrast '
+                 'between them: both are commitments, and the contrast in the paragraph is with &ldquo;we will '
+                 'continue the conversation&rdquo;. They are quoted for their tense: each one lands on a date '
+                 'somebody can be held to.'.format('(%s)' % q3L[0], '(%s)' % q3L[2])),
           'Discriminador 1 (4 min): se ele escolher (%s), NAO diga que errou. Pergunte: "is that what the '
           'sentence says, or what the sentence is doing?". Essa distincao e a diferenca entre C1 e C2 em '
           'leitura.' % q3L[0])
