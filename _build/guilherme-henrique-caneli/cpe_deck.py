@@ -137,6 +137,21 @@ def reordena(opts, alvo):
     return resto[:alvo] + certa + resto[alvo:]
 
 
+def desarruma(n, semente):
+    """Permutacao de range(n) sem NENHUM item no proprio lugar (n >= 2).
+
+    Para ordenar e ligar: lista que ja nasce na ordem certa se resolve sem ler,
+    e lista com metade no lugar se resolve pela metade. A ordem invertida
+    tambem nao vale: e so ler de baixo para cima. Semente fixa.
+    """
+    r = random.Random('desarruma:%s' % semente)
+    while True:
+        p = list(range(n))
+        r.shuffle(p)
+        if all(i != v for i, v in enumerate(p)) and (n < 3 or p != list(range(n))[::-1]):
+            return p
+
+
 def matching(title, hint, pairs, opts=None):
     """pairs: (n, esquerda, letra, direita) -- gabarito no data-match da esquerda.
 
