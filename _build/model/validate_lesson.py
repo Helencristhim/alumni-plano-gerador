@@ -814,6 +814,7 @@ def check_task_before_exposure(c, fails, warns):
 GEN_PLAYER_E_PREDICAO = 1
 GEN_PREDICAO_EM_SLIDE = 2   # predição do listening em slide próprio · banco no gap-fill de vocab
 GEN_GAP_DRAG = 3            # drag and drop no gap-fill com banco (/lib/gap-drag.js + data-answer)
+GEN_SEM_PISTA = 4           # a certa nao fica sempre na mesma letra, ordenar/ligar nao nascem resolvidos
 
 
 def _gen(c):
@@ -1242,6 +1243,33 @@ def check_preclass_blanks(c, fails):
             f'data-phrase — se não dão, a resposta esperada não cabe na frase e o botão '
             f'Listen toca outra coisa. Quase sempre é sobra de uma versão anterior da aula, '
             f'cujo vocabulário/gramática mudou e o exercício não')
+
+
+def check_sem_pista(c, fails):
+    """O EXERCICIO NAO PODE SER ADIVINHAVEL POR PADRAO (bloqueante, escopado por geracao).
+
+    Alunos reclamaram em 01/10/2026 que "a certa e sempre a B". A auditoria do repo achou
+    57% das certas na B, a certa sendo a opcao mais longa em 68% das perguntas e o ordenar
+    ja na ordem certa em 45 alunos. O builder agora sorteia a posicao e desarruma o ordenar
+    (sem_pista.py, chamado no read_preclass e no fechamento do deck); este gate impede que
+    o padrao volte por outro caminho -- e cobra o que o builder NAO conserta sozinho: a
+    certa ser a mais longa, que so se resolve reescrevendo uma opcao errada.
+
+    Escopo igual ao do check_preclass_blanks: no hub, so os .lesson-card com data-gen >= 4
+    (cada aula medida sozinha); no standalone, o arquivo, se nasceu na geracao 4+.
+    """
+    import sem_pista
+    if '<div class="lesson-card"' in c:
+        alvos = [(m.group(2), m.group(0)) for m in re.finditer(
+            r'<div class="lesson-card"[^>]*data-gen="(\d+)"[^>]*id="ex-lesson-(\d+)".*?(?=<div class="lesson-card"|\Z)',
+            c, re.S) if int(m.group(1)) >= GEN_SEM_PISTA]
+    elif _gen(c) >= GEN_SEM_PISTA:
+        alvos = [('', c)]
+    else:
+        return
+    for n, bloco in alvos:
+        for p in sem_pista.problemas(sem_pista.medir(bloco)):
+            fails.append(f'PISTA NO EXERCICIO{(" (aula " + n + ")") if n else ""}: {p}')
 
 
 def check_gapfill_vocab(c, fails):
@@ -2160,6 +2188,7 @@ def validate(path):
     check_gap_drag(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
+    check_sem_pista(c, fails)
     check_input_no_detalhe(c, fails)
     check_pt_na_tela_inclass(c, fails, nivel_do_html(c))
     check_handlers_exist(c, fails)

@@ -1336,9 +1336,28 @@ Concept Checking Questions devem estar ESCRITAS no material do professor (Plano 
 
 ---
 
-## REGRA 24 — MATCHING EMBARALHADO
+## REGRA 24 — MATCHING EMBARALHADO (e nenhum exercicio adivinhavel por padrao)
 
 As opcoes do dropdown de matching DEVEM estar em ordem DIFERENTE da ordem das palavras. NUNCA na mesma posicao.
+
+**Vale para TODO exercicio com resposta (02/10/2026, alunos: "a certa e sempre a B").**
+A auditoria achou 57% das certas na B, a certa sendo a opcao MAIS LONGA em 68% das
+perguntas e o ordenar ja na ordem certa em 45 alunos. Desde o BUILDER_GEN 4:
+
+- **Posicao, ordenar e ligar: o builder resolve.** `sem_pista.py` roda no `read_preclass`
+  e no fechamento do deck: a certa vai para uma posicao sorteada (A, B, C, D na mesma
+  proporcao), o ordenar e o ligar saem sem nenhum item no lugar. Escreva o conteudo como
+  quiser (certa primeiro, historia em ordem); a tela embaralha. Grupo cujo texto CITA a
+  letra ("Why C is the one", "a resposta e B") NAO e reordenado -- nao cite letra em
+  reveal nem em nota de professor; cite o TEXTO da opcao.
+- **Tamanho: quem escreve resolve.** A certa nao pode ser quase sempre a mais longa. Em
+  cerca de 2 de cada 3 perguntas, pelo menos uma errada tem de ser mais longa que a certa,
+  mantendo o MESMO erro (gramatica errada continua errada, afirmacao falsa continua
+  falsa), com detalhe neutro do proprio cenario. O `validate_lesson` (check_sem_pista)
+  reprova a aula gen 4+ em que o padrao nao e acaso.
+- **Gerador proprio de aluno** (fora do build_from_model): rode
+  `python3 _build/model/sem_pista.py <slug> <aulas>` depois de publicar, e
+  `--check arquivo.html` para medir.
 
 ---
 
