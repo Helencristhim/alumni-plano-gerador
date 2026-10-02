@@ -86,6 +86,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 sys.path.insert(0, HERE)
 import transcripts  # noqa: E402  (Transcript accordion — opt-in por config)
+import sem_pista  # noqa: E402  (a certa nao fica sempre na mesma letra)
 PROF = os.path.join(ROOT, 'public', 'professor')
 ALUNO = os.path.join(ROOT, 'public', 'aluno')
 
@@ -314,7 +315,10 @@ FRAMEWORK_DEFAULT = 'imersivo-prototipo'
 #   3 = DRAG AND DROP no gap-fill com banco: a aula carrega /lib/gap-drag.js e toda lacuna
 #       do parágrafo (.ic-gaptext .ic-blank) leva data-answer, vindo do config
 #       ["1","resposta"] (14/09/2026, pedido do Dan na aula 2 da Helena Andrade)
-BUILDER_GEN = 3
+#   4 = SEM PISTA: a certa sai em posicao sorteada (saco equilibrado), o ordenar e o
+#       ligar saem desarrumados (sem_pista.py), e o gate cobra a certa nao ser quase
+#       sempre a opcao mais longa (02/10/2026, alunos: "a certa e sempre a B")
+BUILDER_GEN = 4
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
 MODEL_ACCENT_RGB = 'rgba(190,18,60'
@@ -1586,6 +1590,10 @@ def read_preclass(content_dir, cfg):
     pre = read(caminho)
     pre = inject_kids_game(pre, cfg)     # no-op fora do modelo kids
     pre = preclass_pre_a1(pre, cfg)      # no-op fora de A0
+    # Sem pista (02/10/2026): a certa sai em posicao sorteada e o ordenar/ligar sai
+    # desarrumado. O conteudo e escrito com a certa em segundo e a historia em ordem;
+    # alunos perceberam ("e sempre a B"). Ver sem_pista.py.
+    pre = sem_pista.limpa(pre, (cfg.get('slug'), 'pc', cfg['lesson']['n']))
     return pre
 
 
@@ -2921,6 +2929,10 @@ def build_standalone(cfg, content_dir, manifest):
         s = transcripts.ensure_assets(s)
     # Drag and drop do gap-fill com banco (BUILDER_GEN 3). O espelho do aluno herda de `s`.
     s = ensure_gap_drag(s)
+    # Sem pista no deck (ver sem_pista.py). Antes do espelho: o aluno deriva de `s` e
+    # herda a MESMA ordem, e a decisao de pular grupo que cita letra e tomada aqui, onde
+    # as notas do professor (data-teacher) ainda estao no arquivo.
+    s = sem_pista.limpa(s, (cfg['slug'], 'deck', n))
     final_asserts(s, cfg, f'prof aula{n}')
     write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
 
