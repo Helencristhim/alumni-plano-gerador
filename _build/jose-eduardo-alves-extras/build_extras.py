@@ -56,7 +56,8 @@ FOTO = {1: '1521737711867-e3b97375f902', 2: '1450101499163-c8848c66ca85',
         3: '1506784983877-45594efa4cbe', 4: '1423592707957-3b212afa6733',
         5: '1434030216411-0b793f4b4173', 6: '1494412574643-ff11b0a5c1c3',
         7: '1444723121867-7a241cacace9', 8: '1519003722824-194d4455a60c',
-        9: '1450101499163-c8848c66ca85', 10: '1524995997946-a1c2e315a42f'}
+        9: '1450101499163-c8848c66ca85', 10: '1524995997946-a1c2e315a42f',
+        11: '1454165804606-c3d57bc86b40'}
 
 
 def esc(t):
@@ -664,6 +665,50 @@ POST = [
                "We didn't use to have foreign clients, and now they are half of our work."],
          livre=('Tell Tom how your work changed: two things you used to do, one thing you did not use to do, '
                 'the turning point, and what you do now.')),
+
+    dict(n=11, titulo='Connecting Ideas', desc='Because, so, but, although and however, about a decision at the trading desk.',
+         s1_lead='Complete with because (the reason), so (the result), but, although or however (a problem). The hint tells you which job the word does.',
+         s1=[('We stopped the loading ', 'because it rained', ' for two days.',
+              'Hint: the REASON. because + it + rain in the past.'),
+             ('It rained for two days, ', 'so we stopped', ' the loading.',
+              'Hint: the RESULT. so + we + stop in the past.'),
+             ('', 'Although the delay', ' was expensive, the client accepted it.',
+              'Hint: a problem in the SAME sentence. Although + the delay.'),
+             ('The delay was expensive. ', 'However, the client', ' accepted it.',
+              'Hint: a problem in a NEW sentence. However + comma + the client.'),
+             ('The fee is high, ', 'but the work', ' is fast.',
+              'Hint: a simple contrast in the middle. but + the work.')],
+         msg=("Eduardo, Bianca Duarte, from the desk. I want to explain a decision. We stopped the loading on Tuesday, because it rained in Santos all day. "
+              "So the vessel left on Saturday, not on Thursday. The delay cost twenty thousand dollars. However, the buyer accepted the new date, "
+              "because rain is in clause twelve of the contract. Although the client is not happy, we do not pay for the delay. Please call him before noon."),
+         voz='ellen', quem='Bianca Duarte, trading desk',
+         msg_q=[('Why did they stop the loading on Tuesday?', 'It rained in Santos all day',
+                 ['The buyer was late', 'The vessel was full']),
+                ('How much did the delay cost?', 'Twenty thousand dollars',
+                 ['Twelve thousand dollars', 'Two thousand dollars']),
+                ('Which clause talks about rain?', 'Clause twelve', ['Clause nine', 'Clause two'])],
+         sit=[('A client asks why the ship is late. You give the reason:',
+               '"The ship is late because it rained for two days."',
+               ['"The ship is late so it rained for two days."', '"The ship is late, although it rained for two days."']),
+              ('You want to say the problem and keep your decision, in one sentence:',
+               '"Although the fee is high, I recommend this firm."',
+               ['"Although the fee is high, but I recommend this firm."', '"However the fee is high, I recommend this firm."']),
+              ('You want to say the result:',
+               '"The buyer paid late, so we stopped the second cargo."',
+               ['"The buyer paid late, because we stopped the second cargo."', '"So the buyer paid late, we stopped the second cargo."'])],
+         mail_to='Paulo Rezende',
+         mail=[('We cannot load this week ', 'because the port', ' is closed on Friday.',
+                'Hint: the REASON. because + the port.'),
+               ('The port is closed on Friday, ', 'so the vessel', ' leaves on Monday.',
+                'Hint: the RESULT. so + the vessel.'),
+               ('', 'Although the wait', ' is short, the buyer wants a new date in writing.',
+                'Hint: a problem in the SAME sentence. Although + the wait.'),
+               ('The new date is ready. ', 'However, clause nine', ' needs one change.',
+                'Hint: a problem in a NEW sentence. However + comma + clause nine.')],
+         fala=['We stopped the loading because it rained, so the ship left on Saturday.',
+               'Although the delay was expensive, the buyer accepted the new date.'],
+         livre=('Your client asks why you chose one option and not the other. Explain one real decision: '
+                'what you decided, the reason with because, the result with so, and one problem with although or however.')),
 ]
 
 
