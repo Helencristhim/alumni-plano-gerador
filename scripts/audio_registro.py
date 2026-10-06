@@ -94,8 +94,30 @@ def materializar(slug):
                              'regeraria audio que ja existe. Abortado.' % slug)
 
 
+def _pronto_para_subir():
+    """Chave do Blob + pacote @vercel/blob instalado (npm install)."""
+    tem_chave = bool(os.environ.get('BLOB_READ_WRITE_TOKEN')) or os.path.exists(
+        os.path.expanduser('~/.config/alumni/blob.token'))
+    return tem_chave and os.path.isdir(os.path.join(ROOT, 'node_modules', '@vercel', 'blob'))
+
+
+def _mp3_ainda_no_git(slug):
+    try:
+        saida = subprocess.run(['git', 'ls-files', 'public/audio/%s' % slug], cwd=ROOT,
+                               capture_output=True, text=True, timeout=60).stdout
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return any(l.endswith('.mp3') for l in saida.splitlines())
+
+
 def publicar(slug):
     """Sobe para o Blob os MP3 novos do aluno e atualiza o indice. Chamar DEPOIS de gerar."""
+    if not _pronto_para_subir() and _mp3_ainda_no_git(slug):
+        # Transicao: enquanto os MP3 ainda vao para o git, sem chave nao ha nada a fazer
+        # aqui -- o MP3 segue no commit como sempre e a virada sobe o que faltar no Blob.
+        print('(Blob: sem chave ou sem `npm install` nesta maquina — MP3 segue no git como '
+              'antes. Nada a fazer.)')
+        return True
     if _sync('subir', slug) != 0:
         print('⛔ MP3 gerado mas NAO subiu para o Blob. Rode: node scripts/audio_sync.mjs subir %s' % slug)
         return False

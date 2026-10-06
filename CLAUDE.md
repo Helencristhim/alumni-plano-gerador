@@ -767,7 +767,9 @@ Escreveu MP3 por outro caminho (script legado, na mao)? Rode o `subir {slug}` an
 `node scripts/audio_sync.mjs conferir` lista MP3 do disco que o Blob ainda nao tem.
 
 **Chave** (so para subir): `~/.config/alumni/blob.token` (chmod 600), mesmo esquema da
-chave da ElevenLabs — nunca no repo. Sem ela o gerador avisa "MP3 gerado mas NAO subiu".
+chave da ElevenLabs — nunca no repo. Enquanto os MP3 ainda forem para o git, sem chave o
+gerador so anota "MP3 segue no git como antes" (nada a fazer). Depois que sairem do git,
+sem chave ele avisa "MP3 gerado mas NAO subiu" e o gate do CI barra o PR.
 
 **Abrir a aula localmente com audio:** `python3 scripts/serve_local.py` (porta 8000). O
 `http.server` puro da 404 em todo audio que nao esta no disco; este redireciona para o Blob.
