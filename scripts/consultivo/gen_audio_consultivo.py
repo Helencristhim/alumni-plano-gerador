@@ -160,6 +160,13 @@ def main():
     destino = os.path.join(RAIZ, "public", "audio", slug)
     os.makedirs(destino, exist_ok=True)
 
+    # Os MP3s moram no Vercel Blob: gera() pula o que existe NO DISCO, entao traz antes os do
+    # aluno -- sem isso regeraria na ElevenLabs audio ja aprovado (e perderia a aprovacao).
+    sys.path.insert(0, os.path.join(RAIZ, "scripts"))
+    import audio_registro
+    if not dry:
+        audio_registro.materializar(slug)
+
     itens = audio_surface.manifesto(cfg, frag)
     print(f"=== audio oficial (Anexo P-A) — {slug}: {len(itens)} ativo(s)")
     k = None if dry else key()
@@ -202,6 +209,9 @@ def main():
 
     print(f"\ngerados={contagem['gerado']}  pulados={contagem['pulado']}"
           + (f"  geraria={contagem['geraria']}" if dry else ""))
+    if not dry:
+        # se nao subir, o aviso sai aqui e o gate de audio do CI barra o PR
+        audio_registro.publicar(slug)
     return 0
 
 

@@ -32,37 +32,17 @@ SKIP = re.compile(r"backup|teste|test|-new-", re.I)
 REF = re.compile(r"/audio/[A-Za-z0-9_./-]+\.mp3")
 
 
-def _audios_versionados():
-    """O DISCO NÃO É A FONTE DA VERDADE — o repositório é.
-
-    O repo usa sparse-checkout com `!/public/audio/`: os 60 mil MP3s estão versionados
-    mas NÃO materializados na árvore local (são gigabytes). Um os.path.exists() puro
-    responde "não existe" para TODO áudio do projeto — e este gate, que existe para
-    dizer "a aula subiu sem som", passa a gritar em cima de aula perfeitamente sonora.
-
-    No CI o checkout é completo, então lá passava verde. Localmente acusava 51 áudios
-    faltando numa aula cujos 51 MP3s estavam commitados. É falso positivo (alarme sem
-    incêndio, nunca o contrário) — mas já enganou quem estava gerando aula, e alarme
-    que mente é alarme que se aprende a ignorar.
-
-    Consultamos o disco E o git: existe se estiver em qualquer um dos dois.
-    """
-    import subprocess
-    try:
-        saida = subprocess.run(["git", "ls-files", "public/audio"], cwd=ROOT,
-                               capture_output=True, text=True, timeout=60).stdout
-        return {l.strip() for l in saida.splitlines() if l.strip()}
-    except Exception:
-        return set()          # sem git: cai para o disco, comportamento antigo
-
-
-_VERSIONADOS = _audios_versionados()
+# O DISCO NÃO É A FONTE DA VERDADE: os MP3s moram no Vercel Blob e o git guarda só o
+# índice de cada aluno (public/audio/{slug}/_blob.json). Um os.path.exists() puro gritaria
+# "ÁUDIO FALTANDO" em cima de aula perfeitamente sonora — alarme que mente é alarme que se
+# aprende a ignorar. Disco, índice do Blob e git respondem juntos em scripts/audio_registro.py.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audio_registro  # noqa: E402
 
 
 def audio_existe(ref):
     """ref = '/audio/slug/x.mp3'"""
-    return (os.path.exists(os.path.join(PUBLIC, ref.lstrip("/")))
-            or ("public" + ref) in _VERSIONADOS)
+    return audio_registro.audio_existe(ref, ROOT)
 
 
 def lesson_files():

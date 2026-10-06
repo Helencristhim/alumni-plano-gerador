@@ -145,6 +145,13 @@ def _save_ledger():
         _lf.write('\n')
 
 
+# Os MP3s moram no Vercel Blob (scripts/audio_sync.mjs). O loop abaixo pula o que EXISTE NO
+# DISCO: sem trazer antes os MP3 do aluno, regeraria na ElevenLabs áudio que já existe
+# (custo + voz diferente). Depois de gerar, sobe os novos e atualiza o índice _blob.json.
+sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import audio_registro  # noqa: E402
+audio_registro.materializar(cfg['slug'])
+
 gen = skip = err = stale = 0
 for p in manifest:
     fp = os.path.join(OUT, p['file'])
@@ -189,4 +196,6 @@ for p in manifest:
 _save_ledger()
 print('Done: %d gen (%d por texto reescrito), %d skip, %d err (total %d)'
       % (gen, stale, skip, err, len(manifest)))
+# Se não subir (sem chave do Blob, rede), o aviso sai aqui e o gate de áudio do CI barra o PR.
+audio_registro.publicar(cfg['slug'])
 sys.exit(1 if err else 0)

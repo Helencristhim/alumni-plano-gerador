@@ -35,6 +35,10 @@ LEGADO (REGRA 30): arquivo sem entrada no _src.json e anterior a esta trava —
 nao ha como saber de que texto nasceu, e o gate NAO exige nada dele. Ele so
 cobra o que o PR toca. Divida legada nao vira tarefa.
 
+MP3 NO VERCEL BLOB: o PR nao traz mais o .mp3, traz a entrada em
+public/audio/{slug}/_blob.json (scripts/audio_sync.mjs). R1 vale para as entradas
+novas ou com sha1 mudado — ver mp3_do_indice().
+
 USO: python3 scripts/check_audio_src.py <arquivos do PR...>
      exit 1 se algum audio do PR estiver sem procedencia ou fora de sincronia.
 """
@@ -42,6 +46,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,6 +65,43 @@ def load_ledger(slug):
         return {}
 
 
+def _git(*args):
+    try:
+        return subprocess.run(['git'] + list(args), cwd=ROOT, capture_output=True,
+                              text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def mp3_do_indice(slug, base='origin/main'):
+    """MP3 que o PR traz pelo indice do Vercel Blob (public/audio/{slug}/_blob.json).
+
+    Os MP3s moram no Blob, entao o PR nao traz mais o .mp3 -- traz a ENTRADA no indice.
+    Conta como trazido: entrada nova (nao estava no indice da base NEM versionada na base)
+    ou entrada cujo sha1 mudou (regerado). Entrada que so registra no indice um MP3 que a
+    base ja versionava (a mudanca de casa dos MP3s) nao e audio novo."""
+    try:
+        with open(os.path.join(ROOT, 'public', 'audio', slug, '_blob.json'), encoding='utf-8') as f:
+            novo = json.load(f)
+    except (IOError, ValueError):
+        return []
+    r = _git('show', '%s:public/audio/%s/_blob.json' % (base, slug))
+    try:
+        velho = json.loads(r.stdout) if r is not None and r.returncode == 0 else {}
+    except ValueError:
+        velho = {}
+    r = _git('ls-tree', '--name-only', '%s:public/audio/%s' % (base, slug))
+    na_base = set(r.stdout.split()) if r is not None and r.returncode == 0 else set()
+    trazidos = []
+    for n, meta in novo.items():
+        antes = velho.get(n)
+        if antes is None and n in na_base:
+            continue
+        if antes is None or antes.get('sha1') != meta.get('sha1'):
+            trazidos.append(n)
+    return trazidos
+
+
 def main(argv):
     files = [f for f in argv if f.strip()]
     mp3s = {}       # slug -> [nome do arquivo]
@@ -68,6 +110,12 @@ def main(argv):
         m = re.match(r'public/audio/([^/]+)/(.+\.mp3)$', f)
         if m:
             mp3s.setdefault(m.group(1), []).append(m.group(2))
+            continue
+        m = re.match(r'public/audio/([^/]+)/_blob\.json$', f)
+        if m:
+            for n in mp3_do_indice(m.group(1)):
+                if n not in mp3s.get(m.group(1), []):
+                    mp3s.setdefault(m.group(1), []).append(n)
             continue
         m = re.match(r'(_build/([^/]+)-aula\d+)/audio_manifest\.json$', f)
         if m:

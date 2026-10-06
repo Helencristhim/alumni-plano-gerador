@@ -33,12 +33,11 @@ def order_sentences(h,n):
     s=[clean(t) for _,t in items if clean(t)]
     return s or None
 
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+import audio_registro  # disco, índice do Blob (_blob.json) ou git — os MP3 moram no Blob
+
 def size_of(fp):
-    if os.path.exists(fp): return os.path.getsize(fp)
-    try:
-        bh=subprocess.check_output(['git','ls-files','-s',fp],stderr=subprocess.DEVNULL).split()
-        return int(subprocess.check_output(['git','cat-file','-s',bh[1]])) if bh else None
-    except: return None
+    return audio_registro.tamanho(fp[len('public'):] if fp.startswith('public/') else fp)
 
 def main():
     files=[a for a in sys.argv[1:] if a.endswith('.html') and os.path.exists(a)]

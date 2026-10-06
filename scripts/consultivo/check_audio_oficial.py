@@ -84,35 +84,18 @@ CONTEXTO_DE_VOZ = re.compile(
 JANELA = 80
 
 
-_NO_GIT = None
-
-
-def audio_versionado():
-    """Os MP3s que o REPOSITORIO tem — nao os que o disco tem.
-
-    O CI exclui `public/audio` da arvore de proposito: sao ~5 GiB, 86% do repo, e o
-    `actions/checkout` chegou a pendurar 50 minutos por causa deles (29/07/2026). Entao no
-    runner NAO HA mp3 nenhum, e um gate que pergunte ao disco reprova tudo -- foi
-    exatamente o que este aqui fez na sua primeira versao.
-
-    A regra da casa, ja escrita em tres outros gates: PERGUNTE AO GIT. `git ls-files` sabe
-    o que esta versionado mesmo com a arvore rala e com `--filter=blob:none`, porque o que
-    falta e o CONTEUDO do blob, nunca a entrada no indice."""
-    global _NO_GIT
-    if _NO_GIT is None:
-        try:
-            r = subprocess.run(["git", "-C", RAIZ, "ls-files", "public/audio"],
-                               capture_output=True, text=True, timeout=120)
-            _NO_GIT = set(r.stdout.split()) if r.returncode == 0 else set()
-        except (OSError, subprocess.SubprocessError):
-            _NO_GIT = set()
-    return _NO_GIT
+# Os MP3s moram no Vercel Blob; o git guarda so o indice de cada aluno
+# (public/audio/{slug}/_blob.json). No runner do CI nao ha mp3 nenhum (o checkout exclui
+# public/audio desde 29/07/2026), entao um gate que pergunte ao disco reprova tudo -- foi
+# exatamente o que este aqui fez na sua primeira versao. Disco, indice e git respondem
+# juntos em scripts/audio_registro.py, o mesmo dos outros gates.
+sys.path.insert(0, os.path.join(RAIZ, "scripts"))
+import audio_registro  # noqa: E402
 
 
 def audio_existe(src):
-    """Disco OU git. A ordem importa so por velocidade; o veredito e o mesmo."""
-    rel = "public/" + src.lstrip("/")
-    return os.path.exists(os.path.join(RAIZ, rel)) or rel in audio_versionado()
+    """Disco OU indice do Blob OU git."""
+    return audio_registro.audio_existe(src, RAIZ)
 
 
 def carimbo(c):

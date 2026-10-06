@@ -62,9 +62,15 @@ def audios_no_git():
 NO_GIT = audios_no_git()
 
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audio_registro  # noqa: E402  os MP3s moram no Vercel Blob (scripts/audio_sync.mjs)
+
+
 def existe_audio(ref):
-    """ref = '/audio/slug/x.mp3' -> o arquivo existe no repositório?"""
-    return ('public' + ref) in NO_GIT
+    """ref = '/audio/slug/x.mp3' -> existe no disco, no índice do Blob (_blob.json) ou no git?
+    Só o git já não basta: os MP3s saíram do repositório. Perguntar só a ele repetiria os
+    94.371 MP3s pedidos à ElevenLabs."""
+    return ('public' + ref) in NO_GIT or audio_registro.audio_existe(ref, RAIZ)
 
 
 def snake(t):
@@ -241,6 +247,9 @@ def main():
     print(f'caracteres na ElevenLabs    : {total_chars}')
     if DRY:
         print('\n(--dry — nada foi gerado nem gravado)')
+    elif total_gerados:
+        # os MP3s gerados ficam no disco; sobem para o Vercel Blob e entram no _blob.json
+        audio_registro.publicar_tudo()
 
 
 if __name__ == '__main__':
