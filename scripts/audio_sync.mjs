@@ -24,6 +24,7 @@
 //
 // Chave de escrita (so para `subir`): BLOB_READ_WRITE_TOKEN ou ~/.config/alumni/blob.token
 // (mesmo esquema da chave da ElevenLabs; nunca commitada). `baixar` e `conferir` nao precisam.
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
@@ -65,13 +66,27 @@ function slugsPedidos(args) {
   return existsSync(AUDIO) ? readdirSync(AUDIO).filter((n) => statSync(join(AUDIO, n)).isDirectory()) : [];
 }
 
-function chave() {
+function chaveOuNada() {
   if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN.trim();
   const f = join(homedir(), '.config', 'alumni', 'blob.token');
-  if (existsSync(f)) return readFileSync(f, 'utf8').trim();
-  console.error('ERRO: sem chave do Blob. Crie ~/.config/alumni/blob.token (chmod 600) ou exporte BLOB_READ_WRITE_TOKEN.');
-  process.exit(2);
+  return existsSync(f) ? readFileSync(f, 'utf8').trim() : null;
 }
+
+// MP3 que o git ainda versiona. Enquanto houver (antes da virada), MP3 sem Blob nao e
+// problema: ele segue no commit como sempre e a virada sobe o que faltar.
+function mp3NoGit() {
+  try {
+    const out = execFileSync('git', ['ls-files', 'public/audio'], {
+      cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return new Set(out.split('\n').filter((l) => l.toLowerCase().endsWith('.mp3')));
+  } catch {
+    return new Set();
+  }
+}
+
+const NOTA_TRANSICAO = '(Blob: sem chave nesta maquina — os MP3 ainda vao para o git como antes. '
+  + 'Nada a fazer: nao procure nem crie chave ou armazenamento do Blob; a chave chega na virada.)';
 
 let proxima = 0;
 async function vez() {
@@ -87,8 +102,13 @@ async function emParalelo(itens, n, fn) {
 }
 
 async function subir(slugs) {
+  const token = chaveOuNada();
+  if (!token) {
+    if (mp3NoGit().size) { console.log(NOTA_TRANSICAO); return; }
+    console.error('ERRO: sem chave do Blob. Crie ~/.config/alumni/blob.token (chmod 600) ou exporte BLOB_READ_WRITE_TOKEN.');
+    process.exit(2);
+  }
   const { put } = await import('@vercel/blob');
-  const token = chave();
   let subidos = 0, falhas = 0;
   for (const slug of slugsPedidos(slugs)) {
     const idx = lerIndice(slug);
@@ -155,6 +175,9 @@ async function baixar(slugs) {
 }
 
 function conferir(slugs) {
+  // Antes da virada o MP3 ainda vai para o git (inclusive o recem-gerado, antes do git add):
+  // nao ha o que conferir contra o Blob.
+  if (mp3NoGit().size) { console.log('(Blob: os MP3 ainda vao para o git como antes — nada a conferir ate a virada.)'); return; }
   const fora = [];
   for (const slug of slugsPedidos(slugs)) {
     const idx = lerIndice(slug);

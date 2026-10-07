@@ -116,7 +116,8 @@ def publicar(slug):
         # Transicao: enquanto os MP3 ainda vao para o git, sem chave nao ha nada a fazer
         # aqui -- o MP3 segue no commit como sempre e a virada sobe o que faltar no Blob.
         print('(Blob: sem chave ou sem `npm install` nesta maquina — MP3 segue no git como '
-              'antes. Nada a fazer.)')
+              'antes. Nada a fazer: nao procure nem crie chave ou armazenamento do Blob; a '
+              'chave chega na virada.)')
         return True
     if _sync('subir', slug) != 0:
         print('⛔ MP3 gerado mas NAO subiu para o Blob. Rode: node scripts/audio_sync.mjs subir %s' % slug)
