@@ -41,28 +41,19 @@ from html import unescape as html_unescape
 HERE = os.path.dirname(os.path.abspath(__file__))
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
 
-# O DISCO NÃO É A FONTE DA VERDADE — o repositório é.
-# O repo usa sparse-checkout com `!/public/audio/`: os 60 mil MP3s estão versionados
-# mas não materializados na árvore local. Um os.path.exists() puro responde "não existe"
-# para TODO áudio do projeto e este check acusa "N MP3s faltando" numa aula cujos MP3s
-# estão commitados. Já mordeu na geração do Diogo (24 falsos positivos, 0 reais).
-# Mesmo conserto que o scripts/check_lesson_integrity.py.
-_VERSIONADOS = {}
+# O DISCO NÃO É A FONTE DA VERDADE — o registro é.
+# Os MP3s moram no Vercel Blob (scripts/audio_sync.mjs); o git guarda só o índice de cada
+# aluno (public/audio/{slug}/_blob.json). Um os.path.exists() puro responde "não existe"
+# para TODO áudio que não está materializado — já mordeu na geração do Diogo (24 falsos
+# positivos, 0 reais). Disco, índice do Blob e git respondem juntos em scripts/audio_registro.py,
+# o mesmo que os outros gates usam.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(HERE)), 'scripts'))
+import audio_registro  # noqa: E402
 
 
 def audio_existe(root, ref):
-    """ref = '/audio/slug/x.mp3'. Existe se estiver no disco OU versionado no git."""
-    ref = ref.split('?')[0]         # tira o cache-buster (?v=2): no disco o arquivo não o tem
-    if os.path.exists(os.path.join(root, 'public' + ref)):
-        return True
-    if root not in _VERSIONADOS:
-        try:
-            saida = subprocess.run(['git', 'ls-files', 'public/audio'], cwd=root,
-                                   capture_output=True, text=True, timeout=60).stdout
-            _VERSIONADOS[root] = {l.strip() for l in saida.splitlines() if l.strip()}
-        except Exception:
-            _VERSIONADOS[root] = set()      # sem git: cai para o disco (comportamento antigo)
-    return ('public' + ref) in _VERSIONADOS[root]
+    """ref = '/audio/slug/x.mp3'. Existe se estiver no disco, no índice do Blob ou no git."""
+    return audio_registro.audio_existe(ref, root)
 
 # funções nativas/inline aceitas em handlers sem definição no arquivo
 BUILTIN_OK = {'event', 'window', 'document', 'this', 'location', 'localStorage', 'alert', 'confirm'}

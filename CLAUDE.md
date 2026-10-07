@@ -746,6 +746,39 @@ entrada no `_src.json` = FAIL; manifesto do PR cujo texto nao bate com a procede
 gravada = FAIL. Quem escreve MP3 fora do `gen_audio.py` grava o ledger tambem
 (`record_src()` em `scripts/repair_order_audio.py`).
 
+### 7.3 — O MP3 MORA NO VERCEL BLOB, NAO NO GIT
+
+**A regra.** Os MP3s ficam no Vercel Blob `alumni-plano-gerador-audio`. O site serve
+`/audio/*` por um rewrite do `vercel.json` para o Blob — os caminhos `/audio/{slug}/x.mp3`
+do audioMap NAO mudam. O git guarda, por aluno, so o indice
+`public/audio/{slug}/_blob.json` (`{"x.mp3": {"bytes": N, "sha1": "..."}}`) — e ele que diz
+"este audio existe" para os gates (`scripts/audio_registro.py`).
+
+**O fluxo nao muda para quem gera pelo caminho padrao.** `gen_audio.py`, `gen_audio_consultivo.py`,
+`heal_audio.py`, `repair_order_audio.py` e `wire_dataspeak_audio.py` fazem sozinhos:
+
+1. ANTES de gerar: `node scripts/audio_sync.mjs baixar {slug}` — traz do Blob os MP3s do
+   aluno que faltam no disco. Os geradores pulam o que EXISTE NO DISCO; sem isso
+   regerariam na ElevenLabs audio que ja existe (custo + voz diferente).
+2. DEPOIS de gerar: `node scripts/audio_sync.mjs subir {slug}` — sobe os MP3s novos ou
+   regerados e atualiza o `_blob.json`. Commite o `_blob.json` junto com a aula.
+
+Escreveu MP3 por outro caminho (script legado, na mao)? Rode o `subir {slug}` antes do PR.
+`node scripts/audio_sync.mjs conferir` lista MP3 do disco que o Blob ainda nao tem.
+
+**Chave** (so para subir): `~/.config/alumni/blob.token` (chmod 600), mesmo esquema da
+chave da ElevenLabs — nunca no repo. Enquanto os MP3 ainda forem para o git, sem chave o
+gerador so anota "MP3 segue no git como antes" (nada a fazer). Depois que sairem do git,
+sem chave ele avisa "MP3 gerado mas NAO subiu" e o gate do CI barra o PR.
+
+**Abrir a aula localmente com audio:** `python3 scripts/serve_local.py` (porta 8000). O
+`http.server` puro da 404 em todo audio que nao esta no disco; este redireciona para o Blob.
+
+**Por que.** Com ~130 mil MP3 (5 GiB) no repo, todo deploy da Vercel clonava tudo e o
+clone pendurava ate o limite de 45 min: 15 de 56 builds de producao entre 03 e 06/10/2026
+morreram assim — 60% do tempo de build cobrado, sem publicar nada. O CI ja tinha tirado
+`public/audio` do checkout pelo mesmo motivo (29/07/2026).
+
 ---
 
 ## REGRA 8 — PRONUNCIA (startRecording)

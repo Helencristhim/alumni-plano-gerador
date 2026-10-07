@@ -22,6 +22,9 @@ import sys
 import json
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audio_registro  # noqa: E402  MP3s no Vercel Blob (scripts/audio_sync.mjs)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUBLIC = os.path.join(ROOT, "public")
 KEY = os.environ.get("ELEVENLABS_API_KEY", "")
@@ -71,11 +74,17 @@ def main():
         sys.exit(2)
 
     total_gen = total_skip = total_orphan = 0
+    tocados = set()
     for f in files:
         html = open(os.path.join(ROOT, f) if not os.path.isabs(f) else f, encoding="utf-8").read()
         amap = parse_map(html)
         # todas refs .mp3 do HTML
         all_refs = set(re.findall(r"/audio/[A-Za-z0-9_./-]+\.mp3", html))
+        # Os MP3s moram no Vercel Blob: "faltando" e o que nao esta no disco NEM no Blob.
+        # Traz antes os do aluno -- senao este script "curaria" a aula inteira na ElevenLabs.
+        for slug in sorted({r.split("/")[2] for r in all_refs}):
+            audio_registro.materializar(slug)
+            tocados.add(slug)
         missing = sorted(r for r in all_refs if not os.path.exists(os.path.join(PUBLIC, r.lstrip("/"))))
         if not missing:
             print(f"✓ {os.path.basename(f)}: nada faltando")
@@ -102,6 +111,9 @@ def main():
             except Exception as e:
                 print(f"  ✗ FALHOU {os.path.basename(ref)}: {e}")
     print(f"\nresumo: gerados={total_gen} órfãos(sem texto)={total_orphan}")
+    if total_gen and not dry:
+        for slug in sorted(tocados):
+            audio_registro.publicar(slug)
 
 
 if __name__ == "__main__":

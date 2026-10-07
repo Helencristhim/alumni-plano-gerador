@@ -71,6 +71,9 @@ def audit(ref,slug,treelist=None):
     if h is None:return None
     TL=treelist if treelist is not None else tree(ref)
     disk={p.split('/')[-1] for p in TL if p.startswith(f'public/audio/{slug}/') and p.endswith('.mp3')}
+    # MP3s no Vercel Blob: o que existe tambem esta no indice do aluno (scripts/audio_sync.mjs)
+    try: disk|=set(json.loads(gshow(ref,f'public/audio/{slug}/_blob.json') or '{}'))
+    except ValueError: pass
     mani={}
     for f in [x for x in TL if re.match(rf'_build/{re.escape(slug)}-aula\d+/audio_manifest\.json$',x)]:
         try:

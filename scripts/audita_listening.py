@@ -62,13 +62,21 @@ def melhor_frase(resp,texto):
     cand=fr+[fr[i]+' '+fr[i+1] for i in range(len(fr)-1)]
     return max((cobertura(resp,c) for c in cand), default=0.0)
 
+BLOB_BASE='https://gbuok0mwkuvmaraz.public.blob.vercel-storage.com'  # = scripts/audio_sync.mjs
+
 def bytes_do_mp3(caminho_rel, raiz):
-    """O disco MENTE: worktree com sparse-checkout nao materializa public/audio.
-    A verdade e o git."""
+    """O disco MENTE: os MP3s moram no Vercel Blob e so ficam no disco quando materializados.
+    Ordem: disco, git (enquanto houver MP3 versionado), Blob."""
     abs_=os.path.join(raiz,caminho_rel)
     if os.path.exists(abs_): return open(abs_,'rb').read()
     r=subprocess.run(['git','show','origin/main:'+caminho_rel],cwd=raiz,capture_output=True)
-    return r.stdout if r.returncode==0 and r.stdout else None
+    if r.returncode==0 and r.stdout: return r.stdout
+    import urllib.request, urllib.parse
+    url=BLOB_BASE+'/'+urllib.parse.quote(caminho_rel[len('public/'):])
+    try:
+        with urllib.request.urlopen(url,timeout=60) as resp: return resp.read()
+    except Exception:
+        return None
 
 def transcreve(dados, cache, tmp):
     h=hashlib.sha1(dados).hexdigest()

@@ -17,6 +17,8 @@ ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FLOOR=40000
 BYTES_PER_CHAR=400  # < isso por char = truncado (text-aware)
 VOICES=json.load(open(os.path.join(ROOT,'_build/model/voices.json')))
+sys.path.insert(0,os.path.join(ROOT,'scripts'))
+import audio_registro  # MP3s no Vercel Blob (scripts/audio_sync.mjs)
 
 def blobsize_disk(p):
     return os.path.getsize(p) if os.path.exists(p) else None
@@ -51,13 +53,7 @@ def find_targets(slug):
             if not mo: continue
             n=int(mo.group(1))
             fp='public'+v
-            sz=blobsize_disk(fp)
-            if sz is None:  # sparse: pega do git
-                try:
-                    import subprocess
-                    bh=subprocess.check_output(['git','ls-files','-s',fp]).split()
-                    sz=int(subprocess.check_output(['git','cat-file','-s',bh[1]])) if bh else None
-                except: sz=None
+            sz=audio_registro.tamanho(v)  # disco, índice do Blob (_blob.json) ou git
             if sz is not None:
                 sents=order_sentences(h,n)
                 if sents:
@@ -117,6 +113,8 @@ def main():
                     nb=gen(txt,'arthur',fp,k); print(f"     -> REGENERADO {nb}b ~{round(nb/16000,1)}s"); grand+=1; time.sleep(0.3)
                 except Exception as e:
                     print(f"     -> ERRO: {str(e)[:140]}")
+        if apply:
+            audio_registro.publicar(slug)  # sobe os regenerados e atualiza o _blob.json
     print(f"\nTOTAL {'regenerado' if apply else '(dry-run) a regenerar'}: {grand if apply else 'ver acima'}")
 
 if __name__=='__main__': main()
