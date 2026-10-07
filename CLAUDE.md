@@ -683,7 +683,7 @@ const audioMap = {
 - **Formato**: MP3
 - **Diretorio**: `/audio/{slug}/`
 - **Nomenclatura**: frase em snake_case sem acentos, max 60 chars
-- **ZERO TOLERANCIA com Web Speech API**: TODOS os audios DEVEM ser gerados via ElevenLabs e existir como MP3 no disco. Web Speech API e APENAS fallback de emergencia, NUNCA metodo principal. Se o diretorio `/audio/{slug}/` nao existir ou estiver vazio, o material NAO esta pronto para deploy
+- **ZERO TOLERANCIA com Web Speech API**: TODOS os audios DEVEM ser gerados via ElevenLabs e existir como MP3 no Vercel Blob (entrada no `public/audio/{slug}/_blob.json` — ver 7.3). Web Speech API e APENAS fallback de emergencia, NUNCA metodo principal. Se o aluno nao tiver `_blob.json` ou ele estiver vazio, o material NAO esta pronto para deploy
 - **Speed control**: `currentAudio.playbackRate = audioSpeed`
 - **Validacao pre-deploy**: Contar speakText() no HTML e comparar com arquivos em `/audio/{slug}/`. Se houver QUALQUER frase sem MP3 correspondente → BLOQUEAR deploy
 
@@ -766,13 +766,16 @@ do audioMap NAO mudam. O git guarda, por aluno, so o indice
 Escreveu MP3 por outro caminho (script legado, na mao)? Rode o `subir {slug}` antes do PR.
 `node scripts/audio_sync.mjs conferir` lista MP3 do disco que o Blob ainda nao tem.
 
+**MP3 NUNCA entra no git.** `public/audio/**/*.mp3` esta no `.gitignore` e o CI barra PR que
+traga MP3 ("GATE A"). Se o CI barrar com "MP3 no git", quase sempre e copia desatualizada do
+gerador: `git pull origin main`, `node scripts/audio_sync.mjs subir {slug}`,
+`git rm --cached public/audio/{slug}/*.mp3`, commite o `_blob.json` e suba de novo.
+Depois do `git pull` os MP3 antigos somem da pasta local — esperado: o gerador traz do Blob
+o que precisar.
+
 **Chave** (so para subir): `~/.config/alumni/blob.token` (chmod 600), mesmo esquema da
-chave da ElevenLabs — nunca no repo. Enquanto os MP3 ainda forem para o git, sem chave o
-gerador e o `audio_sync` so anotam "Nada a fazer" — e e isso mesmo: **ate a virada, sem
-chave nao ha nada a fazer. NAO procure a chave, NAO crie chave nem outro armazenamento do
-Blob, NAO peca a chave a ninguem**; o MP3 segue no commit como sempre e a chave chega com
-a virada. Depois que os MP3 sairem do git, sem chave o gerador avisa "MP3 gerado mas NAO
-subiu" e o gate do CI barra o PR.
+chave da ElevenLabs — nunca no repo. Sem ela o gerador avisa "MP3 gerado mas NAO subiu" e o
+GATE 5 do CI barra o PR (audio que o indice nao tem = ÁUDIO FALTANDO).
 
 **Abrir a aula localmente com audio:** `python3 scripts/serve_local.py` (porta 8000). O
 `http.server` puro da 404 em todo audio que nao esta no disco; este redireciona para o Blob.
