@@ -768,8 +768,11 @@ Escreveu MP3 por outro caminho (script legado, na mao)? Rode o `subir {slug}` an
 
 **Chave** (so para subir): `~/.config/alumni/blob.token` (chmod 600), mesmo esquema da
 chave da ElevenLabs — nunca no repo. Enquanto os MP3 ainda forem para o git, sem chave o
-gerador so anota "MP3 segue no git como antes" (nada a fazer). Depois que sairem do git,
-sem chave ele avisa "MP3 gerado mas NAO subiu" e o gate do CI barra o PR.
+gerador e o `audio_sync` so anotam "Nada a fazer" — e e isso mesmo: **ate a virada, sem
+chave nao ha nada a fazer. NAO procure a chave, NAO crie chave nem outro armazenamento do
+Blob, NAO peca a chave a ninguem**; o MP3 segue no commit como sempre e a chave chega com
+a virada. Depois que os MP3 sairem do git, sem chave o gerador avisa "MP3 gerado mas NAO
+subiu" e o gate do CI barra o PR.
 
 **Abrir a aula localmente com audio:** `python3 scripts/serve_local.py` (porta 8000). O
 `http.server` puro da 404 em todo audio que nao esta no disco; este redireciona para o Blob.
