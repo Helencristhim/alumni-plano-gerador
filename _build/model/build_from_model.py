@@ -2735,6 +2735,19 @@ def inject_kids_postclass(s, cfg, posts, ativar=False):
     return s
 
 
+_CHECKMATCH_JS = (
+    "function checkMatch(select) {\n"
+    "  var row = select.closest('.match-row');\n"
+    "  if (!row) return;\n"
+    "  row.classList.remove('correct', 'wrong');\n"
+    "  if (select.value === row.dataset.answer) { row.classList.add('correct'); }\n"
+    "  else if (select.value !== '') {\n"
+    "    row.classList.add('wrong');\n"
+    "    setTimeout(function () { row.classList.remove('wrong'); select.value = ''; }, 1000);\n"
+    "  }\n"
+    "}\n")
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -2905,6 +2918,14 @@ def build_standalone(cfg, content_dir, manifest):
     # Update totalSlides to match actual slide count
     actual_slides = len(re.findall(r'data-slide=', slides))
     s = re.sub(r'var totalSlides = \d+', f'var totalSlides = {actual_slides}', s)
+    # MATCHING POR DROPDOWN NO IN CLASS (o mesmo do Pre-class, REGRA 5A). O shell de
+    # slides tem o CSS de .match-row mas nao a funcao: ate aqui o deck que usasse o
+    # dropdown abortava no assert_handlers_do_molde, e as aulas 6, 8, 9 e 10 da
+    # fabia-aparecida-alves-calusa tiveram de ser montadas fora do builder so por isso.
+    # Emite a funcao SO quando o slide a chama e o shell nao a tem -- aula sem dropdown
+    # no IN CLASS sai identica byte a byte.
+    if 'onchange="checkMatch(' in slides and 'function checkMatch(' not in s:
+        s = s.replace('var totalSlides = ', _CHECKMATCH_JS + 'var totalSlides = ', 1)
 
     entries = assign_voices(extract_phrases(slides), prefix=f'a{n}_', cfg=cfg)
     extra = L.get('extra_audio', [])
