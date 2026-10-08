@@ -23,7 +23,12 @@ Legal English da Adriana. O pre-class continua igual.
       uma com "EM PORTUGUÊS" logo abaixo
    6. Teste rápido com `<details>` (sem JS; respostas tiradas do fill-in da própria aula)
 2. Só a gramática da aula N e das anteriores (teto de nível). Sem travessão no português.
-3. Aplicar nos DOIS hubs:
+3. **Formato card (08/10/2026):** depois de escrever o bloco, rodar
+   `python3 ~/Documents/caio-de-souza-amante-fonte/gramatica_cards.py <worktree>`. Ele converte o bloco
+   em card que abre ao clicar na aba, e cola o mesmo conteúdo num card fechado "Explicação em português"
+   DENTRO do Pre-class (Stage 1.3, logo abaixo do texto). Exceção à REGRA 13 só para o Caio, decidida pela
+   Helen ("o material dele é diferente"). Idempotente. Ele já roda o insert_hub_extras abaixo.
+4. (Feito pelo script do passo 3) Aplicar nos DOIS hubs:
    ```
    python3 _build/model/insert_hub_extras.py --replace --hub public/professor/caio-de-souza-amante.html \
      --aba "gramatica:_build/caio-de-souza-amante-extras/gramatica.html:Gramática em português"
@@ -31,6 +36,6 @@ Legal English da Adriana. O pre-class continua igual.
      --aba "gramatica:_build/caio-de-souza-amante-extras/gramatica.html:Gramática em português"
    ```
    Atenção: o `insert_hub` de uma aula nova pode mexer no hub. Rodar o `--replace` DEPOIS dele.
-4. `git add --sparse` neste diretório (fica fora do sparse-checkout padrão).
+5. `git add --sparse` neste diretório (fica fora do sparse-checkout padrão).
 
 Histórico: aula 9 (PR #3060, texto em PT no #3063), aula 10, aulas 11-17 junto com cada aula, aulas 1-8 retroativas (08/10/2026).
