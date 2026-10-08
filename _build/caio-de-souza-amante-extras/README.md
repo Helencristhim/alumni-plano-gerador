@@ -33,4 +33,4 @@ Legal English da Adriana. O pre-class continua igual.
    Atenção: o `insert_hub` de uma aula nova pode mexer no hub. Rodar o `--replace` DEPOIS dele.
 4. `git add --sparse` neste diretório (fica fora do sparse-checkout padrão).
 
-Histórico: aula 9 (PR #3060, texto em PT no #3063), aula 10.
+Histórico: aula 9 (PR #3060, texto em PT no #3063), aula 10, aulas 11-17 junto com cada aula, aulas 1-8 retroativas (08/10/2026).
