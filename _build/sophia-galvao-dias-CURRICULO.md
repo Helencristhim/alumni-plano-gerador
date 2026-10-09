@@ -92,6 +92,15 @@ As aulas 8 a 11 do currículo não foram geradas; os pontos delas voltam depois 
 | 13 | FALA | **Match Day (Consolidation)** — futebol; fato dono: ir ao estádio com o pai | consolidação 2 do Present Perfect: *just / already / yet* ao vivo + o par "PP abre, past simple conta" | Maracanã, The Stadium Files (YouTube) |
 | 14 | LEITURA | **The Night of the Concert** — música e shows; fato dono: o show do Bruno Mars | **past perfect contrastado com o present perfect** (o *had* ganha a casa certa; a vida até agora continua *have*). Era a aula 08 do desenho original | Count on Me, Bruno Mars (lyric video oficial) |
 
+### Aulas 15 e 16 (geradas em 09/10/2026)
+
+Os pontos das antigas aulas 09 e 10 voltam na ordem do currículo, com temas da lista de blocos
+(um fato só por aula).
+
+| # | Formato | Tema | Foco linguístico | Vídeo em aula |
+|---|---|---|---|---|
+| 15 | FALA | **The Bracelet Stall** — bloco G; fato dono: as pulseiras que ela vendeu na feira da escola | **verbos de percepção + objeto**: see / hear / watch somebody *do* × *doing*. Era a aula 09 do desenho original | Masha Knots, Beginner's Guide to Bracelets (YouTube) |
+
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
 Cada aula abre com o **veredito da professora** sobre o "Recommend it" da aula anterior. A leitura (aulas pares) é **sempre em voz alta, juntas**, nunca silenciosa.
