@@ -100,6 +100,7 @@ Os pontos das antigas aulas 09 e 10 voltam na ordem do currículo, com temas da 
 | # | Formato | Tema | Foco linguístico | Vídeo em aula |
 |---|---|---|---|---|
 | 15 | FALA | **The Bracelet Stall** — bloco G; fato dono: as pulseiras que ela vendeu na feira da escola | **verbos de percepção + objeto**: see / hear / watch somebody *do* × *doing*. Era a aula 09 do desenho original | Masha Knots, Beginner's Guide to Bracelets (YouTube) |
+| 16 | LEITURA | **The Fashion Show Plan** — bloco D; fato dono: ela quer ser estilista | **formas de futuro em contraste**: will × going to × present continuous (o grau de decisão). Era a aula 10 do desenho original | Kirsten Brunner, Fashion Design for Kids (YouTube) |
 
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
