@@ -90,10 +90,14 @@ jobs:
           # aula passaria a "ter audio" em silencio (no disco do runner nao ha
           # mp3 nenhum mesmo) e o canario fica VERMELHO na hora.
           filter: blob:none
+          # Desde a virada (MP3 no Vercel Blob, CLAUDE.md 7.3) o git so tem em public/audio
+          # os indices _blob.json -- e e por eles que os gates sabem que um audio existe
+          # (scripts/audio_registro.py). Por isso a pasta entra; so MP3 fica de fora, caso
+          # algum volte a ser versionado (o GATE A barra).
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
-            !/public/audio
+            !/public/audio/**/*.mp3
 
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ CANARIO — o vigia que nao confia no verde do gate.                    ║
