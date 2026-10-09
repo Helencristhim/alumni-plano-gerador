@@ -90,10 +90,14 @@ jobs:
           # aula passaria a "ter audio" em silencio (no disco do runner nao ha
           # mp3 nenhum mesmo) e o canario fica VERMELHO na hora.
           filter: blob:none
+          # Desde a virada (MP3 no Vercel Blob, CLAUDE.md 7.3) o git so tem em public/audio
+          # os indices _blob.json -- e e por eles que os gates sabem que um audio existe
+          # (scripts/audio_registro.py). Por isso a pasta entra; so MP3 fica de fora, caso
+          # algum volte a ser versionado (o GATE A barra).
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
-            !/public/audio
+            !/public/audio/**/*.mp3
 
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ CANARIO — o vigia que nao confia no verde do gate.                    ║
@@ -226,6 +230,25 @@ jobs:
           echo "Novos: $ADDED"
           echo "Modificados: $MODIFIED"
           echo "Deletados: $DELETADO"
+
+      # Os MP3 moram no Vercel Blob desde a virada (CLAUDE.md 7.3): o clone de 9 GB de audio
+      # pendurava o deploy da Vercel ate o limite de 45 min. O .gitignore ja barra MP3 novo,
+      # mas uma copia do gerador anterior a virada ainda commita MP3 como antes -- e o PR
+      # traria o audio de volta para o repo. A mensagem diz o que fazer, porque quem le e
+      # o Claude de quem gera a aula.
+      - name: "GATE A — MP3 nao entra no git (mora no Vercel Blob)"
+        run: |
+          set -euo pipefail
+          BASE="origin/${{ github.base_ref }}"
+          MP3=$(git diff --no-renames --name-only --diff-filter=AM "$BASE"...HEAD -- 'public/audio/' | grep -i '\.mp3$' || true)
+          if [ -n "$MP3" ]; then
+            N=$(printf '%s\n' "$MP3" | wc -l | tr -d ' ')
+            echo "::error::Este PR traz $N MP3 para o git, mas os audios moram no Vercel Blob (CLAUDE.md, secao 7.3)."
+            echo "::error::Quase sempre e copia desatualizada do gerador. Para resolver: (1) git pull origin main; (2) node scripts/audio_sync.mjs subir <aluno>; (3) git rm --cached public/audio/<aluno>/*.mp3; (4) commite o public/audio/<aluno>/_blob.json e suba o PR de novo."
+            printf '%s\n' "$MP3" | head -20
+            exit 1
+          fi
+          echo "ok: nenhum MP3 no PR"
 
       - name: "GATE 1 — estrutura + vozes por personagem (arquivos novos)"
         if: steps.files.outputs.added != ''

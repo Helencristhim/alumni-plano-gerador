@@ -28,10 +28,11 @@ if [ -n "$UNTRACKED" ]; then
     echo ""
 fi
 
-# 1b. Check for untracked audio files
-UNTRACKED_AUDIO=$(git status public/audio/ --short 2>/dev/null | grep "^??" | grep "\.mp3$" | wc -l | tr -d ' ')
-if [ "$UNTRACKED_AUDIO" -gt 0 ]; then
-    echo "ERRO: $UNTRACKED_AUDIO arquivos MP3 nao commitados (audios vao falhar na Vercel)"
+# 1b. MP3 moram no Vercel Blob, nao no git (CLAUDE.md 7.3): todo MP3 do disco tem de ter
+# subido. Antes esta checagem cobrava MP3 fora do git -- agora fora do git e o normal.
+if ! SYNC_OUT=$(node scripts/audio_sync.mjs conferir 2>&1); then
+    echo "ERRO: MP3 gerado que nao subiu para o Vercel Blob (audios vao falhar na Vercel):"
+    echo "$SYNC_OUT" | sed 's/^/  /'
     ERRORS=$((ERRORS + 1))
     echo ""
 fi
