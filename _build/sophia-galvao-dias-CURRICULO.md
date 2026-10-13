@@ -102,6 +102,15 @@ Os pontos das antigas aulas 09 e 10 voltam na ordem do currículo, com temas da 
 | 15 | FALA | **The Bracelet Stall** — bloco G; fato dono: as pulseiras que ela vendeu na feira da escola | **verbos de percepção + objeto**: see / hear / watch somebody *do* × *doing*. Era a aula 09 do desenho original | Masha Knots, Beginner's Guide to Bracelets (YouTube) |
 | 16 | LEITURA | **The Fashion Show Plan** — bloco D; fato dono: ela quer ser estilista | **formas de futuro em contraste**: will × going to × present continuous (o grau de decisão). Era a aula 10 do desenho original | Kirsten Brunner, Fashion Design for Kids (YouTube) |
 
+### Aulas 17 e 18 (geradas em 13/10/2026)
+
+O ponto da antiga aula 11 fecha a fila do bloco 1. Da 18 em diante os pontos do desenho original
+(escritos em B1) voltam na ordem, elevados para B2 com o tema saindo da lista de blocos.
+
+| # | Formato | Tema | Foco linguístico | Vídeo em aula |
+|---|---|---|---|---|
+| 17 | FALA | **The Perfect Acai Bowl** — bloco C; fato dono: açaí | **frases clivadas para dar ênfase**: *What I love about it is…* / *It's the … that…* / *All I want is…*. Era a aula 11 do desenho original | Tess Begg, The Best Thick Acai Bowl Recipe (YouTube) |
+
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
 Cada aula abre com o **veredito da professora** sobre o "Recommend it" da aula anterior. A leitura (aulas pares) é **sempre em voz alta, juntas**, nunca silenciosa.
