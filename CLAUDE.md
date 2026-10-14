@@ -748,9 +748,11 @@ gravada = FAIL. Quem escreve MP3 fora do `gen_audio.py` grava o ledger tambem
 
 ### 7.3 — O MP3 MORA NO VERCEL BLOB, NAO NO GIT
 
-**A regra.** Os MP3s ficam no Vercel Blob `alumni-plano-gerador-audio`. O site serve
-`/audio/*` por um rewrite do `vercel.json` para o Blob — os caminhos `/audio/{slug}/x.mp3`
-do audioMap NAO mudam. O git guarda, por aluno, so o indice
+**A regra.** Os MP3s ficam no Vercel Blob `alumni-plano-gerador-audio`. O site manda
+`/audio/*` para o Blob por um REDIRECT temporario (307) do `vercel.json` — os caminhos
+`/audio/{slug}/x.mp3` do audioMap NAO mudam. Nunca volte para rewrite ("servir pelo mesmo
+dominio"): o cache do site guardava a sonda de 2 bytes do Safari e entregava 2 bytes para
+todo mundo, e a aula caia na voz robotica (14/10/2026). O CI barra ("GATE A2"). O git guarda, por aluno, so o indice
 `public/audio/{slug}/_blob.json` (`{"x.mp3": {"bytes": N, "sha1": "..."}}`) — e ele que diz
 "este audio existe" para os gates (`scripts/audio_registro.py`).
 
