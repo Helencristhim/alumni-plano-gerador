@@ -250,6 +250,15 @@ jobs:
           fi
           echo "ok: nenhum MP3 no PR"
 
+      # 14/10: o /audio como rewrite fazia o cache do site guardar a sonda de 2 bytes
+      # do Safari e servir 2 bytes pra todo mundo (aula na voz robotica). Agora e
+      # redirect 307 pro Blob; esta trava impede que alguem volte ao rewrite.
+      - name: "GATE A2 — selftest: prova que a trava do /audio ainda morde"
+        run: python3 scripts/check_audio_redirect.py --selftest
+
+      - name: "GATE A2 — /audio sai por redirect temporario pro Blob (nunca rewrite)"
+        run: python3 scripts/check_audio_redirect.py
+
       - name: "GATE 1 — estrutura + vozes por personagem (arquivos novos)"
         if: steps.files.outputs.added != ''
         run: python3 _build/model/validate_lesson.py ${{ steps.files.outputs.added }}
