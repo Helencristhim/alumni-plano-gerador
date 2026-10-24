@@ -112,6 +112,12 @@ O ponto da antiga aula 11 fecha a fila do bloco 1. Da 18 em diante os pontos do 
 | 17 | FALA | **The Perfect Acai Bowl** — bloco C; fato dono: açaí | **frases clivadas para dar ênfase**: *What I love about it is…* / *It's the … that…* / *All I want is…*. Era a aula 11 do desenho original | Tess Begg, The Best Thick Acai Bowl Recipe (YouTube) |
 | 18 | LEITURA | **Any Questions?** — bloco A; fato dono: apresentação em inglês na escola | **perguntas indiretas**: *Could you tell me where it is?* / *Do you know if…?* / *I wonder whether…* (ordem de frase afirmativa, sem do/does/did). É a antiga aula 13 (imperativo + pedir direções, B1) elevada para B2 | TED-Ed, What's the best way to give a presentation? (YouTube) |
 
+### Aula 19 (gerada em 24/10/2026)
+
+| # | Formato | Tema | Foco linguístico | Vídeo em aula |
+|---|---|---|---|---|
+| 19 | FALA | **Hardly Any Sun** — bloco H; fato dono: o frio de São Paulo (o Rio sem inverno como contraste) | **quantificadores com nuance**: *few* × *a few*, *little* × *a little*, *plenty of*, *hardly any* (contável × incontável). É a antiga aula 14 (contáveis/incontáveis + how much/how many, B1) elevada para B2 | SciShow Kids, Where Does Fog Come From? (YouTube) |
+
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
 Cada aula abre com o **veredito da professora** sobre o "Recommend it" da aula anterior. A leitura (aulas pares) é **sempre em voz alta, juntas**, nunca silenciosa.
