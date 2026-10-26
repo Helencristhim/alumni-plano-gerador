@@ -143,8 +143,11 @@ jobs:
           # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
           # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
           # runner, então o apt é conveniência, não requisito: se ele não responder em
-          # 5 min, baixamos só o navegador (~10 s) e seguimos.
-          timeout 300 python3 -m playwright install --with-deps chromium \
+          # 2 min, baixamos só o navegador (~10 s) e seguimos. (Era 5 min; com o
+          # chromium instalado em três jobs paralelos, o mirror lento pegava algum
+          # deles a cada dois runs e somava 5 min ao relógio do PR — 26/10/2026. Apt
+          # saudável leva ~20 s.)
+          timeout 120 python3 -m playwright install --with-deps chromium \
             || python3 -m playwright install chromium
 
       - name: "GATE 52 — selftest: prova que o gate de contraste ainda morde"
@@ -184,8 +187,11 @@ jobs:
           # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
           # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
           # runner, então o apt é conveniência, não requisito: se ele não responder em
-          # 5 min, baixamos só o navegador (~10 s) e seguimos.
-          timeout 300 python3 -m playwright install --with-deps chromium \
+          # 2 min, baixamos só o navegador (~10 s) e seguimos. (Era 5 min; com o
+          # chromium instalado em três jobs paralelos, o mirror lento pegava algum
+          # deles a cada dois runs e somava 5 min ao relógio do PR — 26/10/2026. Apt
+          # saudável leva ~20 s.)
+          timeout 120 python3 -m playwright install --with-deps chromium \
             || python3 -m playwright install chromium
 
       - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
@@ -574,8 +580,11 @@ jobs:
           # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
           # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
           # runner, então o apt é conveniência, não requisito: se ele não responder em
-          # 5 min, baixamos só o navegador (~10 s) e seguimos.
-          timeout 300 python3 -m playwright install --with-deps chromium \
+          # 2 min, baixamos só o navegador (~10 s) e seguimos. (Era 5 min; com o
+          # chromium instalado em três jobs paralelos, o mirror lento pegava algum
+          # deles a cada dois runs e somava 5 min ao relógio do PR — 26/10/2026. Apt
+          # saudável leva ~20 s.)
+          timeout 120 python3 -m playwright install --with-deps chromium \
             || python3 -m playwright install chromium
 
       - name: "GATE 28 — selftest: prova que o gate do reveal ainda morde"
