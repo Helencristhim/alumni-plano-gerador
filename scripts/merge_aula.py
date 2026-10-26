@@ -83,6 +83,15 @@ def avaliar(rollup):
     if falhas:
         return "falhou", falhas
     if not gates:
+        # Desde 26/10/2026 o `gates` e o job-veredito do validate-lessons.yml, com
+        # `needs` nos jobs paralelos (legado, navegador-*, demais). O GitHub so cria o
+        # check dele quando esses terminam — antes disso ele simplesmente nao existe no
+        # rollup. Ausente COM jobs ainda rodando = esperar; ausente sem nada rodando =
+        # falha, como sempre (sem `gates`, nada prova que a aula passou).
+        rodando = [p for p in pendentes if not PREVIEW.search(p)]
+        if rodando:
+            return "esperando", [f"'{GATE_OBRIGATORIO}' ainda nao criado; rodando: "
+                                 + ", ".join(rodando)]
         return "falhou", [f"o check '{GATE_OBRIGATORIO}' nao existe neste PR — "
                           "sem ele nao da pra afirmar que a aula passou"]
     if any(c and x not in OK for c, x in gates):

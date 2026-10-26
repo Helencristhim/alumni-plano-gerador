@@ -66,8 +66,8 @@ jobs:
   # 40272854375). Nenhum gate saiu, mudou ou afrouxou -- so mudou ONDE cada um roda,
   # repartido pelo tempo medido naquele run:
   #   legado               GATE 8 sozinho (~317s; e o piso do relogio)
-  #   navegador-deck       GATES 52 e 75 + selftests (~280s de chromium)
-  #   navegador-consultivo GATES 35, 36, 42 e 43 + selftests (~160s de chromium)
+  #   navegador-deck       GATE 52 + selftest (~190s de chromium)
+  #   navegador-consultivo GATES 35, 36, 42, 43 e 75 + selftests (~245s de chromium)
   #   demais               todo o resto, NA ORDEM ORIGINAL (canario, GATE 0, GATE M,
   #                        classificacao do PR, gates por-arquivo, consultivo...)
   # Cada job repete o checkout identico (blob:none + sparse sem MP3) e o setup de que
@@ -153,14 +153,6 @@ jobs:
       - name: "GATE 52 — nada fica ilegível nas telas escuras do deck (WCAG computado)"
         run: python3 scripts/consultivo/check_contraste_deck.py
 
-      - name: "GATE 75 — selftest: prova que o gate dos cartões encostados ainda morde"
-        run: python3 scripts/consultivo/check_cartoes_encostados.py --selftest
-
-      - name: "GATE 75 — dois cartões da mesma tela não encostam (medido no chromium)"
-        # Revisão da aula 21 da Gabriela (PR #2626): o .word-bank encostava no .two-col
-        # (0px). Só aparece com a tela desenhada e os recolhidos abertos.
-        run: python3 scripts/consultivo/check_cartoes_encostados.py
-
   navegador-consultivo:
     runs-on: ubuntu-latest
     steps:
@@ -220,6 +212,14 @@ jobs:
 
       - name: "GATE 43 — nada rola de lado, sai da tela ou fica cortado (375/768/1024/1440)"
         run: python3 scripts/consultivo/check_visual.py
+
+      - name: "GATE 75 — selftest: prova que o gate dos cartões encostados ainda morde"
+        run: python3 scripts/consultivo/check_cartoes_encostados.py --selftest
+
+      - name: "GATE 75 — dois cartões da mesma tela não encostam (medido no chromium)"
+        # Revisão da aula 21 da Gabriela (PR #2626): o .word-bank encostava no .two-col
+        # (0px). Só aparece com a tela desenhada e os recolhidos abertos.
+        run: python3 scripts/consultivo/check_cartoes_encostados.py
 
   demais:
     runs-on: ubuntu-latest
