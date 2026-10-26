@@ -58,7 +58,170 @@ on:
       - 'CLAUDE.md'
 
 jobs:
-  gates:
+  # ╔══════════════════════════════════════════════════════════════════════╗
+  # ║ QUATRO JOBS EM PARALELO + o `gates`, que so fica verde se os quatro   ║
+  # ║ ficarem.                                                              ║
+  # ╚══════════════════════════════════════════════════════════════════════╝
+  # Ate 26/10/2026 era um job so, com ~150 passos em fila: ~17 min por PR (run
+  # 40272854375). Nenhum gate saiu, mudou ou afrouxou -- so mudou ONDE cada um roda,
+  # repartido pelo tempo medido naquele run:
+  #   legado               GATE 8 sozinho (~317s; e o piso do relogio)
+  #   navegador-deck       GATES 52 e 75 + selftests (~280s de chromium)
+  #   navegador-consultivo GATES 35, 36, 42 e 43 + selftests (~160s de chromium)
+  #   demais               todo o resto, NA ORDEM ORIGINAL (canario, GATE 0, GATE M,
+  #                        classificacao do PR, gates por-arquivo, consultivo...)
+  # Cada job repete o checkout identico (blob:none + sparse sem MP3) e o setup de que
+  # os seus passos dependem. O passo `id: files` so existe no `demais`, porque so ali
+  # ha passo que le steps.files.outputs.* ou origin/<base>.
+  #
+  # Gate novo: entra no `demais` (ou no job de navegador, se precisar de chromium e
+  # for pesado). O `scripts/run_gates.py` le TODOS os jobs, entao roda local igual.
+
+  legado:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout IDENTICO ao do job `demais` (la esta o porque de cada opcao).
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/audio/**/*.mp3
+
+      # Antes da divisao em jobs o `pip install pyyaml` do GATE 0 valia para o job
+      # inteiro. Cada job roda em maquina propria, entao cada um instala de novo.
+      - name: "setup — pyyaml"
+        run: pip install pyyaml --quiet
+
+      - name: "GATE 8 — o legado não piora (varre o REPO INTEIRO, não só o diff)"
+        # TODOS os outros gates olham apenas os arquivos que o PR mudou. Um arquivo que
+        # quebrou e que ninguém mais tocou nunca mais é olhado — o defeito fica escondido
+        # até alguém encostar naquele aluno, e aí "aparece", como se tivesse nascido ali.
+        #
+        # E o jeito que as coisas quebram aqui NÃO é pelo diff: é por efeito colateral.
+        # Mexer no builder / no modelo / rodar um retrofit escreve em centenas de arquivos
+        # que o PR nem lista. Casos reais: o checkout defasado que apagou as aulas 6-10 de
+        # 4 hubs; um regex guloso que ia reescrever 2.182 arquivos em vez de 48.
+        #
+        # Este gate NÃO exige legado limpo (são 3.243 defeitos herdados, 1.428 arquivos —
+        # isso é campanha, não gate; e aula já dada NÃO se mexe). Ele exige uma coisa só:
+        #   NENHUM ARQUIVO GANHA UM DEFEITO QUE NÃO TINHA.
+        # O legado é o alvará congelado em scripts/legacy-baseline.json. Só pode CAIR.
+        # ~45s para 2.217 arquivos. Não escreve em nada: é alarme, não é reforma.
+        run: python3 scripts/check_legacy_baseline.py
+
+  navegador-deck:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout IDENTICO ao do job `demais` (la esta o porque de cada opcao).
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/audio/**/*.mp3
+
+      # Antes da divisao em jobs o `pip install pyyaml` do GATE 0 valia para o job
+      # inteiro. Cada job roda em maquina propria, entao cada um instala de novo.
+      - name: "setup — pyyaml"
+        run: pip install pyyaml --quiet
+
+      # Mesmo passo de chromium do job `demais` (la esta o porque do timeout e do fallback).
+      - name: "GATE 28 — Chromium (só este gate precisa de navegador)"
+        timeout-minutes: 12
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          NEEDRESTART_MODE: a
+          NEEDRESTART_SUSPEND: 1
+        run: |
+          pip install --quiet playwright
+          # `--with-deps` faz apt-get. Em 19/08/2026 o mirror azure.archive.ubuntu.com
+          # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
+          # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
+          # runner, então o apt é conveniência, não requisito: se ele não responder em
+          # 5 min, baixamos só o navegador (~10 s) e seguimos.
+          timeout 300 python3 -m playwright install --with-deps chromium \
+            || python3 -m playwright install chromium
+
+      - name: "GATE 52 — selftest: prova que o gate de contraste ainda morde"
+        run: python3 scripts/consultivo/check_contraste_deck.py --selftest
+
+      - name: "GATE 52 — nada fica ilegível nas telas escuras do deck (WCAG computado)"
+        run: python3 scripts/consultivo/check_contraste_deck.py
+
+      - name: "GATE 75 — selftest: prova que o gate dos cartões encostados ainda morde"
+        run: python3 scripts/consultivo/check_cartoes_encostados.py --selftest
+
+      - name: "GATE 75 — dois cartões da mesma tela não encostam (medido no chromium)"
+        # Revisão da aula 21 da Gabriela (PR #2626): o .word-bank encostava no .two-col
+        # (0px). Só aparece com a tela desenhada e os recolhidos abertos.
+        run: python3 scripts/consultivo/check_cartoes_encostados.py
+
+  navegador-consultivo:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout IDENTICO ao do job `demais` (la esta o porque de cada opcao).
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/audio/**/*.mp3
+
+      # Antes da divisao em jobs o `pip install pyyaml` do GATE 0 valia para o job
+      # inteiro. Cada job roda em maquina propria, entao cada um instala de novo.
+      - name: "setup — pyyaml"
+        run: pip install pyyaml --quiet
+
+      # Mesmo passo de chromium do job `demais` (la esta o porque do timeout e do fallback).
+      - name: "GATE 28 — Chromium (só este gate precisa de navegador)"
+        timeout-minutes: 12
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          NEEDRESTART_MODE: a
+          NEEDRESTART_SUSPEND: 1
+        run: |
+          pip install --quiet playwright
+          # `--with-deps` faz apt-get. Em 19/08/2026 o mirror azure.archive.ubuntu.com
+          # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
+          # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
+          # runner, então o apt é conveniência, não requisito: se ele não responder em
+          # 5 min, baixamos só o navegador (~10 s) e seguimos.
+          timeout 300 python3 -m playwright install --with-deps chromium \
+            || python3 -m playwright install chromium
+
+      - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
+        run: python3 scripts/consultivo/check_carga_limpa.py --selftest
+
+      - name: "GATE 35 — o shell do consultivo abre sem erro e constrói o que promete"
+        run: python3 scripts/consultivo/check_carga_limpa.py
+
+      - name: "GATE 36 — selftest: prova que o gate do isolamento ainda morde"
+        run: python3 scripts/consultivo/check_isolamento_aluno.py --selftest
+
+      - name: "GATE 36 — a URL do aluno não entrega o que não é dele"
+        run: python3 scripts/consultivo/check_isolamento_aluno.py
+
+      # Precisa do chromium, que o passo do GATE 28/35 ja instalou acima.
+      - name: "GATE 42 — selftest: prova que o gate do clique ainda morde"
+        run: python3 scripts/consultivo/check_clique.py --selftest
+
+      - name: "GATE 42 — clicar não estoura, o painel abre, e o pre-class responde a quem deve"
+        run: python3 scripts/consultivo/check_clique.py
+
+      - name: "GATE 43 — selftest: prova que o gate do layout ainda morde"
+        run: python3 scripts/consultivo/check_visual.py --selftest
+
+      - name: "GATE 43 — nada rola de lado, sai da tela ou fica cortado (375/768/1024/1440)"
+        run: python3 scripts/consultivo/check_visual.py
+
+  demais:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -348,23 +511,6 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_undefined_handlers.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
-      - name: "GATE 8 — o legado não piora (varre o REPO INTEIRO, não só o diff)"
-        # TODOS os outros gates olham apenas os arquivos que o PR mudou. Um arquivo que
-        # quebrou e que ninguém mais tocou nunca mais é olhado — o defeito fica escondido
-        # até alguém encostar naquele aluno, e aí "aparece", como se tivesse nascido ali.
-        #
-        # E o jeito que as coisas quebram aqui NÃO é pelo diff: é por efeito colateral.
-        # Mexer no builder / no modelo / rodar um retrofit escreve em centenas de arquivos
-        # que o PR nem lista. Casos reais: o checkout defasado que apagou as aulas 6-10 de
-        # 4 hubs; um regex guloso que ia reescrever 2.182 arquivos em vez de 48.
-        #
-        # Este gate NÃO exige legado limpo (são 3.243 defeitos herdados, 1.428 arquivos —
-        # isso é campanha, não gate; e aula já dada NÃO se mexe). Ele exige uma coisa só:
-        #   NENHUM ARQUIVO GANHA UM DEFEITO QUE NÃO TINHA.
-        # O legado é o alvará congelado em scripts/legacy-baseline.json. Só pode CAIR.
-        # ~45s para 2.217 arquivos. Não escreve em nada: é alarme, não é reforma.
-        run: python3 scripts/check_legacy_baseline.py
-
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ GATE 10 — VOCAB REVEAL NASCIDO ESCONDIDO (varre o REPO INTEIRO).     ║
       # ╚══════════════════════════════════════════════════════════════════════╝
@@ -454,12 +600,6 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_fill_reveal.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
-      - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
-        run: python3 scripts/consultivo/check_carga_limpa.py --selftest
-
-      - name: "GATE 35 — o shell do consultivo abre sem erro e constrói o que promete"
-        run: python3 scripts/consultivo/check_carga_limpa.py
-
       - name: "consultivo — selftest: prova que os asserts do builder ainda mordem"
         run: |
           python3 scripts/consultivo/extrai_fragmentos.py
@@ -494,12 +634,6 @@ jobs:
 
       - name: "consultivo — o inventário continua sendo o que o artefato mede"
         run: python3 scripts/consultivo/gen_inventario.py --check
-
-      - name: "GATE 36 — selftest: prova que o gate do isolamento ainda morde"
-        run: python3 scripts/consultivo/check_isolamento_aluno.py --selftest
-
-      - name: "GATE 36 — a URL do aluno não entrega o que não é dele"
-        run: python3 scripts/consultivo/check_isolamento_aluno.py
 
       - name: "consultivo — o shell continua sendo o artefato (nada reescrito no caminho)"
         run: python3 scripts/consultivo/extrai_shell.py --check
@@ -544,25 +678,6 @@ jobs:
 
       - name: "GATE 41 — o catálogo do auditor, na parte que a máquina prova"
         run: python3 scripts/consultivo/check_catalogo_auditor.py
-
-      # Precisa do chromium, que o passo do GATE 28/35 ja instalou acima.
-      - name: "GATE 42 — selftest: prova que o gate do clique ainda morde"
-        run: python3 scripts/consultivo/check_clique.py --selftest
-
-      - name: "GATE 42 — clicar não estoura, o painel abre, e o pre-class responde a quem deve"
-        run: python3 scripts/consultivo/check_clique.py
-
-      - name: "GATE 43 — selftest: prova que o gate do layout ainda morde"
-        run: python3 scripts/consultivo/check_visual.py --selftest
-
-      - name: "GATE 43 — nada rola de lado, sai da tela ou fica cortado (375/768/1024/1440)"
-        run: python3 scripts/consultivo/check_visual.py
-
-      - name: "GATE 52 — selftest: prova que o gate de contraste ainda morde"
-        run: python3 scripts/consultivo/check_contraste_deck.py --selftest
-
-      - name: "GATE 52 — nada fica ilegível nas telas escuras do deck (WCAG computado)"
-        run: python3 scripts/consultivo/check_contraste_deck.py
 
       - name: "GATE 44 — selftest: prova que o gate pedagógico ainda morde"
         run: python3 scripts/consultivo/check_pedagogico.py --selftest
@@ -664,14 +779,6 @@ jobs:
         # à ação da aluna; tempo autêntico da tarefa se declara no guia (`tempo_na_tela`).
         # Escopo: aulas com geracao.json gen>=1 — nenhuma aula anterior a 15/09 é medida.
         run: python3 scripts/consultivo/check_tempo_na_tela.py
-
-      - name: "GATE 75 — selftest: prova que o gate dos cartões encostados ainda morde"
-        run: python3 scripts/consultivo/check_cartoes_encostados.py --selftest
-
-      - name: "GATE 75 — dois cartões da mesma tela não encostam (medido no chromium)"
-        # Revisão da aula 21 da Gabriela (PR #2626): o .word-bank encostava no .two-col
-        # (0px). Só aparece com a tela desenhada e os recolhidos abertos.
-        run: python3 scripts/consultivo/check_cartoes_encostados.py
 
       - name: "GATE 76 — selftest: prova que o gate do deck declarado ainda morde"
         run: python3 scripts/consultivo/check_deck_declarado.py --selftest
@@ -882,7 +989,6 @@ jobs:
         # tempo. Caixa alta MARCANDO palavra continua liberada — o que barra é o comando.
         run: python3 scripts/check_teacher_notes.py
 
-
       - name: "GATE 21 — selftest: prova que o gate de paridade ainda morde"
         run: python3 scripts/check_artefato_paridade.py --selftest
 
@@ -1025,6 +1131,7 @@ jobs:
         # sobravam e a aula voltava a marcar 20-30% em vez de 0% (rafael-pelizaro 19/08/2026).
         # Cobra a REGRA 18.1 nos dois sentidos. Roda sempre: é lib global.
         run: python3 scripts/check_reset_completo.py
+
       - name: "GATE 32 — selftest: prova que o gate de senha ainda morde"
         run: python3 scripts/check_sem_senha_no_repo.py --selftest
 
@@ -1033,6 +1140,7 @@ jobs:
 
       - name: "GATE 33 — código de aluno não muda quando entra gente nova"
         run: python3 scripts/test_senhas_estaveis.py
+
       - name: "GATE 58 — selftest: prova que o gate da paridade de boot ainda morde"
         run: python3 scripts/consultivo/check_boot_paridade.py --selftest
 
@@ -1045,7 +1153,6 @@ jobs:
       - name: "GATE 59 — classe do conteudo existe no CSS do shell (consultivo)"
         run: python3 scripts/consultivo/check_classe_orfa.py
 
-
       - name: "GATE 34 — selftest: prova que o gate do pacote normativo ainda morde"
         run: python3 scripts/consultivo/check_docs_pacote.py --selftest
 
@@ -1056,3 +1163,32 @@ jobs:
         if: steps.files.outputs.modified != ''
         continue-on-error: true
         run: python3 _build/model/validate_lesson.py ${{ steps.files.outputs.modified }}
+
+
+  # ╔══════════════════════════════════════════════════════════════════════╗
+  # ║ `gates` — O NOME E CONTRATO. Nao renomear.                           ║
+  # ╚══════════════════════════════════════════════════════════════════════╝
+  # O scripts/merge_aula.py so mergeia com um check chamado exatamente `gates` em
+  # COMPLETED + SUCCESS. Antes ele era o job unico; agora e o veredito dos quatro.
+  # `if: always()` faz ele rodar mesmo quando um job falha -- senao ele sairia
+  # `skipped`, que o merge_aula.py conta como OK. E ele so passa se CADA job
+  # necessario terminou `success`: failure, cancelled ou skipped = vermelho, e um
+  # job que suma do `needs` tambem (a lista esperada esta escrita abaixo).
+  gates:
+    if: always()
+    needs: [legado, navegador-deck, navegador-consultivo, demais]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "todos os jobs de gate terminaram em success"
+        env:
+          RESULTADOS: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          echo "$RESULTADOS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          ESPERADOS='["demais","legado","navegador-consultivo","navegador-deck"]'
+          if ! echo "$RESULTADOS" | jq -e --argjson esp "$ESPERADOS" \
+              '(keys | sort) == $esp and all(.[]; .result == "success")' >/dev/null; then
+            echo "::error::Algum job de gate nao terminou em success (ou faltou no needs). O PR NAO passa."
+            exit 1
+          fi
+          echo "ok: os quatro jobs de gate passaram"
