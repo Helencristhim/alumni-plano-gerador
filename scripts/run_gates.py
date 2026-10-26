@@ -85,22 +85,37 @@ def classifica(base):
 
 
 def passos_do_workflow(raiz):
-    """Os passos com `run:` do job `gates`, na ordem, com nome/condicao/comando."""
+    """Os passos com `run:` de TODOS os jobs de gate, job a job, com nome/condicao/comando.
+
+    Desde 26/10/2026 os gates rodam em jobs paralelos (legado, navegador-*, demais) e o
+    job `gates` e so o veredito: `needs` em todos, verde so se todos forem `success`.
+    Ele nao tem gate dentro, entao fica de fora aqui. Passo repetido em mais de um job
+    (setup de pyyaml, instalacao do chromium) roda uma vez so localmente.
+    """
     import yaml
     with open(os.path.join(raiz, WORKFLOW), encoding="utf-8") as f:
         wf = yaml.safe_load(f)
-    job = wf.get("jobs", {}).get("gates")
-    if not job:
-        sys.exit(f"job `gates` nao encontrado em {WORKFLOW}")
-    out = []
-    for st in job.get("steps", []):
-        if "run" not in st:
-            continue                      # actions/checkout, setup-python, etc.
-        if st.get("id") == "files":
-            continue                      # replicado por classifica(), acima
-        out.append({"nome": st.get("name", "(sem nome)"),
-                    "cond": st.get("if"),
-                    "cmd": st["run"]})
+    jobs = wf.get("jobs", {})
+    if "gates" not in jobs:
+        sys.exit(f"job `gates` nao encontrado em {WORKFLOW} (o merge_aula.py exige esse check)")
+    out, vistos = [], set()
+    for nome_job, job in jobs.items():
+        if nome_job == "gates" and job.get("needs"):
+            continue                      # o agregador: so le o resultado dos outros
+        for st in job.get("steps", []):
+            if "run" not in st:
+                continue                  # actions/checkout, setup-python, etc.
+            if st.get("id") == "files":
+                continue                  # replicado por classifica(), acima
+            chave = (st.get("name"), st["run"], st.get("if"))
+            if chave in vistos:
+                continue
+            vistos.add(chave)
+            out.append({"nome": st.get("name", "(sem nome)"),
+                        "cond": st.get("if"),
+                        "cmd": st["run"]})
+    if not out:
+        sys.exit(f"nenhum passo de gate encontrado em {WORKFLOW}")
     return out
 
 
