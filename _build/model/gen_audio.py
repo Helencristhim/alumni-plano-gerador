@@ -125,6 +125,16 @@ def tts(text, voice):
 #   - hash diverge   -> REGENERA (o texto foi reescrito depois de gerar o audio)
 #   - sem entrada    -> pula (legado: nao sabemos de que texto nasceu; REGRA 30)
 # O gate scripts/check_audio_src.py exige o hash nos arquivos DO PR.
+# Os MP3s moram no Vercel Blob (scripts/audio_sync.mjs). O loop abaixo pula o que EXISTE NO
+# DISCO: sem trazer antes os MP3 do aluno, regeraria na ElevenLabs áudio que já existe
+# (custo + voz diferente). Depois de gerar, sobe os novos e atualiza o índice _blob.json.
+# Vem ANTES de ler o ledger: o materializar restaura do git o _src.json/_blob.json que o
+# sparse-checkout da worktree deixa de fora; lido antes, o ledger nascia vazio e o PR
+# apagava a procedencia das aulas anteriores (26/10/2026).
+sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import audio_registro  # noqa: E402
+audio_registro.materializar(cfg['slug'])
+
 LEDGER = os.path.join(OUT, '_src.json')
 
 
@@ -145,12 +155,6 @@ def _save_ledger():
         _lf.write('\n')
 
 
-# Os MP3s moram no Vercel Blob (scripts/audio_sync.mjs). O loop abaixo pula o que EXISTE NO
-# DISCO: sem trazer antes os MP3 do aluno, regeraria na ElevenLabs áudio que já existe
-# (custo + voz diferente). Depois de gerar, sobe os novos e atualiza o índice _blob.json.
-sys.path.insert(0, os.path.join(ROOT, 'scripts'))
-import audio_registro  # noqa: E402
-audio_registro.materializar(cfg['slug'])
 
 gen = skip = err = stale = 0
 for p in manifest:
