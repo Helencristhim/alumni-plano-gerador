@@ -86,8 +86,31 @@ def _sync(*args):
     return subprocess.run(['node', SYNC] + list(args), cwd=ROOT).returncode
 
 
+def _restaurar_indices(slug):
+    """Traz do git (HEAD) o _blob.json e o _src.json do aluno que nao estao no disco.
+
+    Worktree com sparse-checkout deixa public/audio/ de fora (26/10/2026). Sem os indices
+    no disco, o materializar nao baixava nada, e o gen_audio e o audio_sync recriavam os
+    dois so com os audios da aula nova: o PR apagava as entradas de todas as aulas
+    anteriores e o GATE 5 reprovava com centenas de "audio faltando". Aconteceu em 4 de 4
+    agentes do /repor daquela noite.
+    """
+    pasta = os.path.join(ROOT, 'public', 'audio', slug)
+    for nome in ('_blob.json', '_src.json'):
+        destino = os.path.join(pasta, nome)
+        if os.path.exists(destino):
+            continue
+        r = subprocess.run(['git', '-C', ROOT, 'show', 'HEAD:public/audio/%s/%s' % (slug, nome)],
+                           capture_output=True)
+        if r.returncode == 0:
+            os.makedirs(pasta, exist_ok=True)
+            with open(destino, 'wb') as f:
+                f.write(r.stdout)
+
+
 def materializar(slug):
     """Traz do Blob para o disco os MP3 do aluno que faltam. Chamar ANTES de gerar."""
+    _restaurar_indices(slug)
     if os.path.exists(os.path.join(ROOT, 'public', 'audio', slug, '_blob.json')):
         if _sync('baixar', slug) != 0:
             raise SystemExit('audio_sync baixar %s falhou: sem os MP3 locais o gerador '
