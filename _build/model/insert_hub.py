@@ -202,16 +202,24 @@ def merge_audiomap(s, cfg, content_dir):
 
     # dedup: chave duplicada no audioMap (herdada dos inserts com o parser quebrado).
     # Objeto JS aceita, o último vence — mas é podridão e esconde entrada errada.
+    #
+    # Fica a ULTIMA ocorrencia, nao a primeira: e a que o navegador usa (objeto literal
+    # com chave repetida -> o ultimo valor vence). Manter a primeira trocava, em silencio,
+    # o MP3 que aulas JA PUBLICADAS tocam (juliana-marques, 27/10/2026: 4 chaves com
+    # arquivos diferentes nas duas ocorrencias -- REGRA 30). Com a ultima, o runtime do
+    # legado fica identico ao de antes do insert.
     def dedup(m):
-        seen, out = set(), []
-        for line in m.group(1).split('\n'):
-            if not line.strip():
-                continue
+        lines = [ln for ln in m.group(1).split('\n') if ln.strip()]
+        last = {}
+        for i, line in enumerate(lines):
             k = ENTRY.match(line)
-            if k and k.group(1) in seen:
-                continue
             if k:
-                seen.add(k.group(1))
+                last[k.group(1)] = i
+        out = []
+        for i, line in enumerate(lines):
+            k = ENTRY.match(line)
+            if k and last[k.group(1)] != i:
+                continue
             out.append(line)
         return 'var audioMap = {\n' + '\n'.join(out) + '\n};'
     return re.sub(r'var audioMap = \{\n(.*?)\n\s*\};', dedup, s, count=1, flags=re.S)

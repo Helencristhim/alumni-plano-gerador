@@ -93,8 +93,11 @@ SHORT_WORDS = 2
 
 def _model_for(text):
     """(model_id, language_code) — trava o idioma onde falta contexto p/ o modelo deduzir."""
-    if LANG == 'en' and len(text.split()) <= SHORT_WORDS:
-        return 'eleven_turbo_v2_5', 'en'
+    # Vale para QUALQUER idioma-alvo, nao so ingles: em material de espanhol (lang='es')
+    # a palavra solta tem o mesmo problema ao contrario -- cognato ("Caro", "Seguro") sem
+    # contexto sai com fonetica de portugues/ingles. O language_code e o da aula.
+    if len(text.split()) <= SHORT_WORDS:
+        return 'eleven_turbo_v2_5', LANG
     return 'eleven_multilingual_v2', None
 
 
