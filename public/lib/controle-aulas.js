@@ -12,10 +12,11 @@
  * (o codigo dela esta inteiro no historico).
  *
  * ESTE ARQUIVO CONTINUA EXISTINDO porque os 153 hubs ja publicados o carregam via
- * <script src="/lib/controle-aulas.js">. Ele agora so carrega a tab irma "Resumos das
- * Aulas" — assim a tab nova chega em todos os hubs sem editar nenhum HTML de aluno
- * (REGRA 30 — o legado e intocavel). Nao remover este arquivo sem antes limpar as
- * tags <script> dos hubs.
+ * <script src="/lib/controle-aulas.js">. Ele agora so carrega as tabs irmas "Resumos das
+ * Aulas" e "Presenca" (esta, so no link do professor de material imersivo; a regra mora
+ * no proprio presenca-aula.js) — assim a tab nova chega em todos os hubs sem editar
+ * nenhum HTML de aluno (REGRA 30 — o legado e intocavel). Nao remover este arquivo sem
+ * antes limpar as tags <script> dos hubs.
  */
 (function() {
   'use strict';
@@ -24,6 +25,12 @@
     var resumosScript = document.createElement('script');
     resumosScript.src = '/lib/resumos-aula.js';
     document.body.appendChild(resumosScript);
+  }
+
+  if (!window.__PRESENCA_AULA_LOADED && !document.querySelector('script[src="/lib/presenca-aula.js"]')) {
+    var presencaScript = document.createElement('script');
+    presencaScript.src = '/lib/presenca-aula.js';
+    document.body.appendChild(presencaScript);
   }
 
 })();
