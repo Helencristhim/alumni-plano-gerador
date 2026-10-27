@@ -286,9 +286,9 @@ def remove_lesson_blocks(s, n, slug, is_aluno):
     # que a inserção nova não reaproveita (ela escreve o seu próprio par). Resultado visível
     # na tela do aluno: um título da versão substituída, sozinho, sem card nenhum embaixo.
     # Só remove quando a grade ficou de fato VAZIA — um <h4> com cards embaixo é de outra
-    # aula e nunca se toca.
+    # aula e nunca se toca. "Clase" e o rotulo do material em espanhol (lang='es').
     s = re.sub(
-        r'\n*<h4[^>]*>Lesson %d\s*(?:&mdash;|—|-)[^<]*</h4>\s*'
+        r'\n*<h4[^>]*>(?:Lesson|Clase) %d\s*(?:&mdash;|—|-)[^<]*</h4>\s*'
         r'<div class="media-grid">\s*</div>\n*' % n,
         '\n\n', s)
     # audioMap: some com as entradas pcN_/[order-lN] da versão ANTIGA. O merge_audiomap
