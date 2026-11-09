@@ -905,7 +905,7 @@ async function fetchHtmlCounts() {
 
 async function fetchPerfis() {
     try {
-        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,deactivated,professor,alocacao,data');
+        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,deactivated,professor,alocacao,dProfessor:data->>professor');
         return (resp.data || []);
     } catch (e) { console.error('Supabase perfis error:', e); return []; }
 }
@@ -984,7 +984,7 @@ async function loadAll() {
             if (merged[slug]) {
                 merged[slug].pacote = p.num_aulas || 0;
                 if (p.nome) merged[slug].name = p.nome;
-                merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || (p.data && p.data.professor) || profMap[slug] || '';
+                merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || p.dProfessor || profMap[slug] || '';
                 merged[slug].archived = p.deactivated === true;
             }
         });
