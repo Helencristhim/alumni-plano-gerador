@@ -134,6 +134,11 @@ sem colidir com *be supposed to* da 35. Tema já anunciado no fechamento da 21: 
 | # | Formato | Tema | Foco linguístico | Vídeo em aula |
 |---|---|---|---|---|
 | 21 | FALA | **The Lobby Cake Sale** — bloco G; fato dono: os bolos que ela vendeu no prédio | **obrigação e necessidade no passado**: *had to*, *didn't have to / didn't need to* (não precisou, não fez) × *needn't have* + particípio (fez sem precisar); *must* não tem passado. É a antiga aula 17 (*have to / don't have to*, B1) elevada para B2 | SciShow Kids, Baking a Cake with Science! (YouTube) |
+| 22 | LEITURA | **Exam Week Survival** — bloco A; fato dono: as provas | **conselho e aviso com nuance**: *should / ought to* (conselho) × *had better (not)* (aviso forte, agora) × *mustn't* (regra) × *don't have to* (escolha). É a antiga aula 18 (*must / mustn't × should*, B1) elevada para B2 | SciShow Kids, Why Do We Need Sleep? (YouTube) |
+
+**A próxima da fila (23) é a antiga 19** (*first conditional*, B1), a elevar para B2 sem colidir com o
+*second conditional* da 37 nem com o *third* da 55 — sugestão: condicionais de futuro com *unless / as long as /
+provided that / in case*.
 
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
