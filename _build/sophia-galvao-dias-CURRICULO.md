@@ -124,6 +124,17 @@ didn't need to / needn't have*), sem colidir com *be allowed to / let / make* da
 | 20 | LEITURA | **The Night the Wi-Fi Died** — bloco F; fato dono: as séries que ela vê e por que prefere ver sozinha | **tempos da narrativa**: *was/were + -ing* para a cena, past simple para o que corta (*when / while*), **past perfect continuous** (*had been + -ing*) para há quanto tempo | Michelle Schusterman, What Is a Cliffhanger? (YouTube) |
 | 19 | FALA | **Hardly Any Sun** — bloco H; fato dono: o frio de São Paulo (o Rio sem inverno como contraste) | **quantificadores com nuance**: *few* × *a few*, *little* × *a little*, *plenty of*, *hardly any* (contável × incontável). É a antiga aula 14 (contáveis/incontáveis + how much/how many, B1) elevada para B2 | SciShow Kids, Where Does Fog Come From? (YouTube) |
 
+### Aula 21 (gerada em 11/11/2026)
+
+**A próxima da fila (22) é a antiga 18** (*must / mustn't × should / shouldn't*, B1), a elevar para B2 —
+sugestão: conselho e aviso com nuance (*should / ought to / had better (not)* × *mustn't* × *don't have to*),
+sem colidir com *be supposed to* da 35. Tema já anunciado no fechamento da 21: bloco A, fato dono **as provas**
+(semana de provas e os conselhos que funcionam).
+
+| # | Formato | Tema | Foco linguístico | Vídeo em aula |
+|---|---|---|---|---|
+| 21 | FALA | **The Lobby Cake Sale** — bloco G; fato dono: os bolos que ela vendeu no prédio | **obrigação e necessidade no passado**: *had to*, *didn't have to / didn't need to* (não precisou, não fez) × *needn't have* + particípio (fez sem precisar); *must* não tem passado. É a antiga aula 17 (*have to / don't have to*, B1) elevada para B2 | SciShow Kids, Baking a Cake with Science! (YouTube) |
+
 **Vídeo em aula é liberado para a Sophia** (Helen, 01/10/2026): player YouTube *nocookie* embutido no slide, com as perguntas em stickers logo abaixo. Se não carregar na conexão dela, a professora pula.
 
 Cada aula abre com o **veredito da professora** sobre o "Recommend it" da aula anterior. A leitura (aulas pares) é **sempre em voz alta, juntas**, nunca silenciosa.
