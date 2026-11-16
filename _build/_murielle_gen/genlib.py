@@ -493,7 +493,9 @@ def render_preclass(D):
     ap('      <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>')
     ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence. The clue in parentheses helps. Tap Listen to hear it.</p>')
     for pre, ans, hint, phrase, post in D['fill']:
-        ap(f'      <div class="fill-blank-item"><div class="fill-blank-sentence">{pre}<input class="blank-input" data-answer="{ans}" data-hint="{hint}" data-phrase="{phrase}" placeholder="___">{post}</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>')
+        # o verbo-pista vai no placeholder: texto da frase + data-answer tem de fechar com o data-phrase
+        ph = hint[hint.rindex('(') + 1:-1] if hint.endswith(')') else '___'
+        ap(f'      <div class="fill-blank-item"><div class="fill-blank-sentence">{pre}<input class="blank-input" data-answer="{ans}" data-hint="{hint}" data-phrase="{phrase}" placeholder="{ph}">{post}</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>')
     ap('    </div>\n')
 
     ap('    <div class="exercise-section">')
