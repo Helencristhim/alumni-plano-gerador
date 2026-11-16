@@ -35,6 +35,15 @@ def js(s):
     return s.replace("'", "\\'")
 
 
+def at(s):
+    # REGRA 7.1: texto vai num ATRIBUTO (apostrofo cru), nunca dentro da string JS
+    return s.replace('"', '&quot;')
+
+
+SPEAK = 'onclick="speakText(this.dataset.speak,this)"'
+TOGGLE = 'onclick="this.textContent=this.textContent===this.dataset.t?this.dataset.a:this.dataset.t"'
+
+
 def slide_img(n, phase, N, img, teacher):
     return (f'<div class="slide slide-image" data-slide="{n}" data-phase="{phase}" data-lesson="{N}" '
             f'style="background-image:{DARK},url(\'{img}\');background-size:cover;background-position:center" '
@@ -42,7 +51,7 @@ def slide_img(n, phase, N, img, teacher):
 
 
 def listen_btn(phrase, cls="audio-btn-sm", extra=""):
-    return (f'<button class="{cls}"{extra} onclick="speakText(\'{js(phrase)}\',this)">{LISTEN_SVG} Listen</button>')
+    return (f'<button class="{cls}"{extra} data-speak="{at(phrase)}" {SPEAK}>{LISTEN_SVG} Listen</button>')
 
 
 # ---------------------------------------------------------------- SLIDES
@@ -117,7 +126,7 @@ def render_slides(D):
     ap('    </div>')
     ap('    <div style="display:flex;flex-direction:column;gap:.6rem;max-width:540px;margin:1.2rem auto 0">')
     for sit, ans in D['concept_drill']:
-        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.86rem">{sit}</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent===\'Show\'?\'{js(ans)}\':\'Show\'">Show</p></div>')
+        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.86rem">{sit}</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" data-t="Show" data-a="{at(ans)}" {TOGGLE}>Show</p></div>')
     ap('    </div>\n  </div>\n</div>\n')
 
     ap('<!-- ============ SLIDE 8: Pronunciation Focus ============ -->')
@@ -146,7 +155,7 @@ def render_slides(D):
     ap('    <h2 class="slide-heading">Listen and <span class="accent">Notice</span></h2>')
     ap('    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:560px;margin:1rem auto 0">')
     for html_ex, phrase in D['discovery']:
-        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">{html_ex}</p><button class="audio-btn-sm" onclick="speakText(\'{js(phrase)}\',this)">{LISTEN_SVG}</button></div>')
+        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">{html_ex}</p><button class="audio-btn-sm" data-speak="{at(phrase)}" {SPEAK} aria-label="Listen">{LISTEN_SVG}</button></div>')
     ap('    </div>')
     ap('    <button class="primary-btn" onclick="var t=document.getElementById(\'rule1\');t.style.display=(t.style.display===\'none\'||!t.style.display)?\'block\':\'none\'" style="margin:1.2rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer">Reveal the Rule</button>')
     ap('    <div id="rule1" style="display:none;max-width:560px;margin:1rem auto 0;overflow-x:auto">')
@@ -158,20 +167,22 @@ def render_slides(D):
         ap(f'          <tr style="border-bottom:1px solid var(--border){bg}"><td style="padding:.5rem;font-weight:600">{row[0]}</td><td style="padding:.5rem">{row[1]}</td><td style="padding:.5rem">{row[2]}</td></tr>')
     ap('        </tbody>\n      </table>\n    </div>\n  </div>\n</div>\n')
 
-    ap('<!-- ============ SLIDE 11: Common Mistake ============ -->')
-    ap(f'<div class="slide slide-light" data-slide="11" data-phase="3" data-lesson="{N}" data-teacher="{D["t"]["s11"]}">')
-    ap('  <div class="slide-inner">')
-    ap('    <div class="chapter-label">Common Mistake</div>')
-    ap('    <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>')
-    ap('    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">')
-    for wrong, right in D['mistakes']:
-        ap('      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">')
-        ap(f'        <div style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--danger);font-weight:700;margin-bottom:.3rem">&#10007; WRONG</p><p style="font-size:.88rem">{wrong}</p></div>')
-        ap(f'        <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--success);font-weight:700;margin-bottom:.3rem">&#10003; RIGHT</p><p style="font-size:.88rem">{right}</p></div>')
-        ap('      </div>')
-    ap('    </div>')
-    ap(f'    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;text-align:center;max-width:500px;margin-left:auto;margin-right:auto">{D["mistake_note"]}</p>')
-    ap('  </div>\n</div>\n')
+    # Common Mistake (Right vs Wrong) removido do material em 04/08/2026: so sai se D['mistakes'] existir
+    if D.get('mistakes'):
+        ap('<!-- ============ SLIDE 11: Common Mistake ============ -->')
+        ap(f'<div class="slide slide-light" data-slide="11" data-phase="3" data-lesson="{N}" data-teacher="{D["t"]["s11"]}">')
+        ap('  <div class="slide-inner">')
+        ap('    <div class="chapter-label">Common Mistake</div>')
+        ap('    <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>')
+        ap('    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">')
+        for wrong, right in D['mistakes']:
+            ap('      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">')
+            ap(f'        <div style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--danger);font-weight:700;margin-bottom:.3rem">&#10007; WRONG</p><p style="font-size:.88rem">{wrong}</p></div>')
+            ap(f'        <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--success);font-weight:700;margin-bottom:.3rem">&#10003; RIGHT</p><p style="font-size:.88rem">{right}</p></div>')
+            ap('      </div>')
+        ap('    </div>')
+        ap(f'    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;text-align:center;max-width:500px;margin-left:auto;margin-right:auto">{D["mistake_note"]}</p>')
+        ap('  </div>\n</div>\n')
 
     ap('<!-- ============ SLIDE 12: Grammar Practice ============ -->')
     ap(f'<div class="slide slide-light" data-slide="12" data-phase="3" data-lesson="{N}" data-teacher="{D["t"]["s12"]}">')
@@ -212,7 +223,7 @@ def render_slides(D):
     for i, ln in enumerate(D['dialogue'], 1):
         letter, bg, cls, voice, text_html, plain = ln
         vis = ' visible' if i == 1 else ''
-        ap(f'      <div class="dialogue-line{vis}" data-line="{i}" data-voice="{voice}"><div class="dialogue-avatar {cls}" style="background:{bg}">{letter}</div><div class="dialogue-bubble {cls}-bubble" style="background:rgba(255,255,255,.95);color:#1a1a2e">{text_html} <span class="audio-inline" onclick="speakText(\'{js(plain)}\',this)">{LISTEN_SVG}</span></div></div>')
+        ap(f'      <div class="dialogue-line{vis}" data-line="{i}" data-voice="{voice}"><div class="dialogue-avatar {cls}" style="background:{bg}">{letter}</div><div class="dialogue-bubble {cls}-bubble" style="background:rgba(255,255,255,.95);color:#1a1a2e">{text_html} <span class="audio-inline" data-speak="{at(plain)}" {SPEAK}>{LISTEN_SVG}</span></div></div>')
     ap('    </div>')
     ap('    <button class="primary-btn" id="nextLineBtn" onclick="nextDialogueLine()" style="margin:1.2rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer">Next Line</button>')
     ap('  </div>\n</div>\n')
@@ -224,7 +235,7 @@ def render_slides(D):
     ap('    <h2 class="slide-heading" style="color:#fff">Did You <span class="accent">Catch</span> It?</h2>')
     ap('    <div class="comp-questions" id="dialogueQs" style="max-width:520px;margin:1.2rem auto 0;text-align:left">')
     for i, (q, a) in enumerate(D['dlg_comp'], 1):
-        ap(f'      <div class="comp-q" onclick="revealComp(this)"><div class="q-text" style="color:rgba(255,255,255,.9)">{i}. {q}</div><div class="q-answer">{a}</div></div>')
+        ap(f'      <div class="comp-q" onclick="revealComp(this)"><div class="q-text"><span style="color:rgba(255,255,255,.9)">{i}. {q}</span></div><div class="q-answer">{a}</div></div>')
     ap('    </div>\n  </div>\n</div>\n')
 
     for li, L in enumerate(D['listenings'], 1):
@@ -255,7 +266,7 @@ def render_slides(D):
             for s in [0.5, 0.75, 1, 1.25])
         ap(f'      <div style="display:flex;gap:.4rem;justify-content:center">{spd}</div>')
         ap('    </div>')
-        ap(f'    <div class="comp-questions" id="{qid}" style="display:none;max-width:520px;margin:1.2rem auto 0">')
+        ap(f'    <div class="comp-questions" id="{qid}" style="max-width:520px;margin:1.2rem auto 0">')
         for i, (q, a) in enumerate(L['qs'], 1):
             ap(f'      <div class="comp-q" onclick="revealComp(this)"><div class="q-text" style="color:rgba(255,255,255,.9)">{i}. {q}</div><div class="q-answer">{a}</div></div>')
         ap('    </div>\n  </div>\n</div>\n')
@@ -293,7 +304,7 @@ def render_slides(D):
     ap('    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="qfScore">0 / 5</span></p>')
     ap('    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.2rem auto 0">')
     for i, (sit, ans) in enumerate(D['quickfire'], 1):
-        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>{i}.</strong> {sit}</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent===\'Show Answer\'?\'{js(ans)}\':\'Show Answer\'">Show Answer</p></div>')
+        ap(f'      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>{i}.</strong> {sit}</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" data-t="Show Answer" data-a="{at(ans)}" {TOGGLE}>Show Answer</p></div>')
     ap('    </div>\n  </div>\n</div>\n')
 
     ap('<!-- ============ SLIDE 22: Spot the Error ============ -->')
@@ -381,7 +392,7 @@ def render_slides(D):
     ap('    <h2 class="slide-heading" style="color:#fff">Phrases to <span class="accent">Take Away</span></h2>')
     ap('    <div style="max-width:520px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.6rem">')
     for i, ph in enumerate(D['keyphrases'], 1):
-        ap(f'      <div style="display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.7rem 1rem"><span style="color:var(--accent-light);font-weight:700;font-size:.9rem;min-width:24px">{i}</span><span style="color:rgba(255,255,255,.9);font-size:.88rem;flex:1">{ph}</span><button class="audio-btn-sm" onclick="speakText(\'{js(ph)}\',this)" style="background:var(--accent);border:none;color:#fff;border-radius:6px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;white-space:nowrap">{LISTEN_SVG12} Listen</button></div>')
+        ap(f'      <div style="display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.7rem 1rem"><span style="color:var(--accent-light);font-weight:700;font-size:.9rem;min-width:24px">{i}</span><span style="color:rgba(255,255,255,.9);font-size:.88rem;flex:1">{ph}</span><button class="audio-btn-sm" data-speak="{at(ph)}" {SPEAK} style="background:var(--accent);border:none;color:#fff;border-radius:6px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;white-space:nowrap">{LISTEN_SVG12} Listen</button></div>')
     ap('    </div>\n  </div>\n</div>\n')
 
     ap('<!-- ============ SLIDE 30: Checklist ============ -->')
@@ -433,15 +444,15 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ouça cada palavra e leia o exemplo. A tradução em português está entre parênteses. (Listen and read the example.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each word and read the example.</p>')
     ap('      <div class="vocab-cards">')
     for word, dfn, pt, ex in vocab:
-        ap(f'        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">{word}</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">{dfn} ({pt})</span></div><div class="vocab-card-example">"{ex}"</div></div><button class="audio-btn" onclick="speakText(\'{js(word)}\',this)">Listen</button></div>')
+        ap(f'        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">{word}</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">{dfn}</span></div><div class="vocab-card-example">"{ex}"</div></div><button class="audio-btn" data-speak="{at(word)}" {SPEAK}>Listen</button></div>')
     ap('      </div>\n    </div>\n')
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Combine cada palavra com a definição correta. (Match each word with the correct definition.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each word with the correct definition.</p>')
     ap(f'      <div class="match-grid" id="match-l{N}">')
     for word, dfn, pt, ex in vocab:
         opts = defs[:]
@@ -455,7 +466,7 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda as perguntas. (Read the text and answer the questions.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>')
     ap('      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">')
     ap(f'        <p>{D["gic_text"]}</p>')
     ap('      </div>')
@@ -480,9 +491,11 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase. A pista entre parênteses ajuda. (Complete each sentence. Tap Listen to hear it.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence. The clue in parentheses helps. Tap Listen to hear it.</p>')
     for pre, ans, hint, phrase, post in D['fill']:
-        ap(f'      <div class="fill-blank-item"><div class="fill-blank-sentence">{pre}<input class="blank-input" data-answer="{ans}" data-hint="{hint}" data-phrase="{phrase}" placeholder="___">{post}</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>')
+        # o verbo-pista vai no placeholder: texto da frase + data-answer tem de fechar com o data-phrase
+        ph = hint[hint.rindex('(') + 1:-1] if hint.endswith(')') else '___'
+        ap(f'      <div class="fill-blank-item"><div class="fill-blank-sentence">{pre}<input class="blank-input" data-answer="{ans}" data-hint="{hint}" data-phrase="{phrase}" placeholder="{ph}">{post}</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>')
     ap('    </div>\n')
 
     ap('    <div class="exercise-section">')
@@ -495,11 +508,10 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ouça cada frase e depois grave você mesma. (Listen, then record yourself.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself.</p>')
     for en, pt in D['speech']:
         ap(f'      <div class="speech-card" data-phrase="{en}">')
         ap(f'        <div class="speech-phrase">{en}</div>')
-        ap(f'        <div class="speech-translation">{pt}</div>')
         ap('        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>')
         ap('        <div class="speech-result"></div>')
         ap('      </div>')
@@ -507,7 +519,7 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada situação. (Choose the best answer for each situation.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each situation.</p>')
     for q, opts in D['sit_quiz']:
         ap('      <div class="quiz-item"><div class="quiz-question">' + q + '</div><div class="quiz-options">' +
            ''.join(f'<div class="quiz-option" onclick="selectQuiz(this)" data-correct="{"true" if corr else "false"}"><span class="option-letter">{chr(65+i)}</span> {txt}</div>' for i, (txt, corr) in enumerate(opts)) +
@@ -516,7 +528,7 @@ def render_preclass(D):
 
     ap('    <div class="exercise-section">')
     ap('      <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>')
-    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave você mesma respondendo a pergunta abaixo. Não existe resposta certa ou errada. (Record yourself. There is no right or wrong answer.)</p>')
+    ap('      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. There is no right or wrong answer.</p>')
     ap('      <div class="think-card">')
     ap(f'        <div class="think-question">{D["think"]}</div>')
     ap('        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>')
@@ -526,7 +538,7 @@ def render_preclass(D):
     ap('    <div class="survival-card">')
     ap(f'      <h4>Survival Card -- Lesson {N}</h4>')
     for i, (en, pt) in enumerate(D['survival'], 1):
-        ap(f'      <div class="survival-phrase"><span class="sp-num">{i}</span><span class="sp-en">{en}</span><span class="sp-pt">{pt}</span><button class="btn btn-listen" onclick="speakText(\'{js(en)}\',this)">&#9835;</button></div>')
+        ap(f'      <div class="survival-phrase"><span class="sp-num">{i}</span><span class="sp-en">{en}</span><button class="btn btn-listen" data-speak="{at(en)}" {SPEAK}>&#9835;</button></div>')
     ap('    </div>\n')
     ap('  </div>\n</div>')
     return '\n'.join(o) + '\n'
