@@ -222,6 +222,10 @@ to be a good fit · onboarding
 **Aula 10** — a hoodie · a fitting room · to try on · snug · baggy · a size up · a pattern ·
 turquoise · burgundy · a garment · to fade · machine washable
 
+**Aula 11** — to have people over · a host · a potluck · to RSVP · a dietary restriction ·
+to make yourself at home · to help yourself · a refill · seconds · to drop by · a housewarming ·
+leftovers
+
 ---
 
 ## 5. FORÇAS E FRAQUEZAS (para a aba Planejamento)
