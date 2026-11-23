@@ -787,6 +787,44 @@ clone pendurava ate o limite de 45 min: 15 de 56 builds de producao entre 03 e 0
 morreram assim — 60% do tempo de build cobrado, sem publicar nada. O CI ja tinha tirado
 `public/audio` do checkout pelo mesmo motivo (29/07/2026).
 
+### 7.4 — GRAVAR NAO E CONFERIR: TODO AUDIO E OUVIDO ANTES DE ENTREGAR (REGRA BLOQUEANTE)
+
+O MP3 existir e estar no indice (7.2, 7.3) prova que o audio TOCA, nao que ele diz a palavra
+certa. A ElevenLabs troca palavras, e erra mais justamente a **palavra solta**, sem frase em
+volta: o modelo chuta.
+
+**O que ja aconteceu (Alumni Kids, 23/11/2026).** Um exercicio "same sound or different?"
+(meat/meet, sea/see, read/red, eat/ate) saiu com *sea* dizendo "there", *meet* dizendo
+"neat" e *read* dizendo "red" — read/red soava IGUAL e o exercicio perdeu o sentido, na
+frente do aluno. A varredura das 4.974 falas gravadas achou mais 28 assim: read="red"
+(o read do presente), Kick!="Check!", Bolt="boat", "Age" lido como a letra H, "A, M, Y"
+virando "A-M-E", a lacuna `___` lida como palavra ("I aughts every day"), "First," virando
+"At first". Nenhum gate pegava: todos os MP3 existiam e tocavam.
+
+**A regra:**
+
+1. Depois de gerar o audio de uma aula, **transcrever cada MP3** (faster-whisper:
+   `small.en`; o que nao bater, reouvir com `medium.en`) e comparar com o texto da chave.
+   Aula so e entregue com zero divergencia, ou com cada divergencia OUVIDA e descartada.
+2. Falso alarme comum (nao regravar): nome proprio, grafias que soam igual
+   (write/right, mom/mum, color/colour, cart/kart, ate/eight).
+3. Erro de verdade: regravar com a MESMA voz e **reouvir a tomada nova** antes de aceitar
+   (tentar outra seed ou pontuacao: "Sea." no lugar de "sea"). Nunca aceitar a tomada sem
+   ouvir de novo.
+4. Mesma grafia com dois sons (read presente x passado, live, lead, wind, tear): o
+   transcritor nao separa. Grave a grafia de som unico ("Reed.") e deixe claro no material
+   qual pronuncia e.
+5. Lacuna `___` nunca vai crua para a ElevenLabs: vira pausa ("I ... every day").
+6. Exercicio de som (igual x diferente, minimal pairs): ouvir par por par, ordem nunca
+   previsivel (nao todos iguais primeiro) e gabarito no T do professor.
+
+**Material ativo** segue a REGRA 30: a regra vale para audio NOVO; regravar audio de aula
+ja entregue so com pedido do Dan para aquele aluno.
+
+Referencia de implementacao (gerador Kids, repo `alumni-kids`): `scripts/conferir-voz.py`
+(lista as suspeitas de uma aula) e `scripts/consertar-voz.py` (regrava, escuta e so aceita
+a tomada certa).
+
 ---
 
 ## REGRA 8 — PRONUNCIA (startRecording)

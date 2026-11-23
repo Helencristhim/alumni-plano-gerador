@@ -114,7 +114,8 @@ console.log('PASSOU — todos os áudios cobertos');
 3. Gerar MP3 para cada frase via ElevenLabs API
 4. Atualizar audioMap no HTML com os paths corretos
 5. Verificar que TODOS os MP3 existem
-6. SÓ ENTÃO fazer deploy
+6. **Ouvir cada MP3 (transcrição Whisper) e conferir que diz a frase da chave** — CLAUDE.md REGRA 7.4. Em 23/11/2026, no Kids, *sea* saiu "there" e *read* saiu "red" com todos os MP3 existindo.
+7. SÓ ENTÃO fazer deploy
 
 ---
 
@@ -186,7 +187,7 @@ Este script executa os 5 checks automaticamente e retorna PASS/FAIL para cada um
 | 1. Português | Acentuação perfeita | Zero erros | SIM |
 | 2. Inglês | Gramática + American English | Zero erros | SIM |
 | 3. Nível | Conteúdo adequado ao CEFR | Dentro do nível | SIM |
-| 4. Áudios | Todos via ElevenLabs | Zero frases sem MP3 | SIM |
+| 4. Áudios | Todos via ElevenLabs e conferidos de ouvido (REGRA 7.4) | Zero frases sem MP3, zero pronúncia trocada | SIM |
 | 5. Funcionalidade | Exercícios funcionam | Zero quebrados | SIM |
 
 **Todos os 5 checks são BLOQUEANTES. Material com qualquer falha NÃO é "pronto".**
