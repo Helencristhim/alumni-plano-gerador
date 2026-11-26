@@ -17,6 +17,10 @@ accordion  = section('inserir após o ex-lesson anterior, prof E aluno) -->', '<
 compl      = section('inserir na tab-complementary, prof E aluno) -->', '<!-- 4. ENTRADAS')
 audio_blk  = section('mesclar no audioMap do hub, prof E aluno) -->', '<!-- 5. Ajustar')
 audio_lines = re.search(r'<script>(.*?)</script>', audio_blk, re.S).group(1).strip('\n')
+# o snippet nao carrega as entradas extra_audio (chave entre colchetes): somar a do Escucha corta
+if '[recado-l34]' not in audio_lines:
+    audio_lines += '\n  "[recado-l34]": "/audio/daniel-bastos/pc34_recado_de_voz.mp3",'
+
 
 def insert_after(text, anchor, payload, label):
     assert anchor in text, f'ÂNCORA não encontrada ({label}): {anchor[:60]!r}'
